@@ -1,0 +1,16 @@
+#12-05-23
+
+How to launch a stand alone tulip library in python :
+
+linux:
+	export LD_LIBRARY_PATH="$tulip-instal-dir$/lib/tulip-X.X.so"
+	before launching the python script
+	in the python script:
+
+	import sys
+	sys.path.append("$tulip-install-dir$/lib/tulip-X.X.so")
+	from tulip import *
+	tlp.initTulipLib() #this to ensure the loading of internal variables, required to load plugins and graphs saved from the tulip-qt interface
+	tlp.loadPlugins() #to load the plugins installed with tulip
+
+	... enjoy ^^
