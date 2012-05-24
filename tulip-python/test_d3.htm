@@ -10,7 +10,7 @@
 <h1>Test python d3</h1> 
  
 <script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
-<script src="http://code.jquery.com/jquery.js"</script>
+<script src="http://code.jquery.com/jquery.js"></script>
 <script> 
  console.log("hello i'm here!");
 var width = 960,
@@ -37,17 +37,17 @@ svg.append("rect")
 var jqxhr = $.getJSON("http://127.0.0.1:8085/?n=5", function() {
   alert("success");
 })
-.success(function() { alert("second success"); })
-.error(function() { alert("error"); })
-.complete(function() { alert("complete"); });
 
+.error(function() { alert("error"); })
+.complete(function() { alert("complete"); })
+.success(function(data,b) { 
 
 //d3.json("127.0.0.1:8085/?n=5", function(data) {
-$.ajax({
-        url:"http://127.0.0.1:8080/?n=5",
-        dataType: "json",
-        success: function(data){
-console.log(data);
+//$.ajax({
+//        url:"http://127.0.0.1:8080/?n=5",
+//        dataType: "json",
+//        success: function(data){
+  console.log(data);
   var n = data.nodes.length;
  
   force.nodes(data.nodes);//.links(data.links);
@@ -106,9 +106,8 @@ console.log(data);
         .attr("x2", function(d) { return d.target.display.x; })
         .attr("y2", function(d) { return d.target.display.y; });
   });*/
-
 });
-};
+
 
 </script> 
  
