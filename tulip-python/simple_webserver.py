@@ -13,6 +13,8 @@ from tulip import *
 class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
 	print "path=",self.path
+        if len(self.path.split('?'))<2:
+            return
 	paramStr = self.path.split('?')[1]
         if len(paramStr) == 1:
             return
@@ -85,6 +87,9 @@ class tulipNode:
 def graphToJSON(graph):
     vLayout = graph.getLayoutProperty("viewLayout")
     nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]} for n in graph.getNodes()]}
+    nToI = {nList["nodes"][i]["name"]:i for i in range(len(nList["nodes"]))}
+    eList = {"links":[{"source":nToI[graph.source(e).id], "target":nToI[graph.target(e).id], "value":1} for e in graph.getEdges()]}
+    nList.update(eList)
     print "dumping: ", json.dumps(nList)
     return json.dumps(nList)
 		
