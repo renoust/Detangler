@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>Test python/D3</title>
+</head>
+<!--
+<style>
+svg {
+  border: solid 1px #ccc;
+}
+ 
+.background {
+  fill: black;
+  pointer-events: all;
+}
+</style>
+-->
+
+
+<body>
+ 
+<h1>Test python d3</h1> 
+<script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
+
+<script> 
+
+var width = 300,
+    height = 500;
+ 
+
+var svg = d3.select("body").append("svg:svg")
+    .attr("width", width)
+    .attr("height", height);
+ 
+svg.append("svg:rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+
+svg.append("circle")
+.attr("fill","red")
+.attr("cx",50)
+.attr("cy",50)
+.attr("r",50);
+
+svg.append("circle")
+.attr("fill","red")
+.attr("cx",100)
+.attr("cy",100)
+.attr("r",50);
+
+
+data = [{"x": 1.0, "y": 1.1}, {"x": 2.0, "y": 2.5}, {"x": 3.0, "y": 3.5}]
+
+svg.selectAll("circle")
+.data(data).enter().append("circle")
+	.attr("fill", "blue")
+	.attr("cx", function(d) { return d.x*10; })
+    	.attr("cy", function(d) { return d.y*10; })
+    	.attr("r", 5);
+
+
+</script>
+
+</body>
+</html>
