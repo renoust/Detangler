@@ -31,9 +31,12 @@ svg {
 
  
 <h1>Proof of concept: D3 and tulip-python</h1> 
-
+<!--
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
+-->
+<script src="jquery.js"></script>
+<script src="d3.v2.min.js"></script> 
 <script> 
  
 var width = 960,
@@ -83,7 +86,52 @@ var getSelection = function()
 
 var sendSelection = function(json)
 {
-	$.post(tulip_address, { json_string:json });
+	$.post(tulip_address, { json_string:json }, function(data){
+		var old = d3.selectAll("circle.node.selected").data();
+		/*for (i=0; i<old.length; i++)
+		{
+			old[i].x = data.nodes[i].x
+			old[i].y = data.nodes[i].y
+		}*/
+		console.log(data);
+
+	  var n = data.nodes.length;
+	  var ox = 0, oy = 0;
+	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+	  ox = ox / n - width / 2, oy = oy / n - height / 2;
+	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+		force
+		      .nodes(data.nodes)
+		      .links(data.links)
+		      .start()
+		      .stop();
+
+		var link = svg.selectAll("line.link")
+		      .data(data.links)
+	.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+			.exit().remove()
+
+		
+		var node = svg.selectAll("circle.node")
+		      .data(data.nodes)
+	.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+			.exit().remove()
+		      .call(force.drag)
+			
+
+		//d3.selectAll("circle.node.selected").data(old).exit().remove()
+		/*enter().append("circle")
+		.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; })
+		.style("fill","purple")
+		.classed("selected", 0);*/
+	});
 	/*var xmlhttp = new XmlHttpRequest();
 	xmlhttp.open("POST", tulip_address);
 	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

@@ -75,6 +75,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 		self.JSONtoGraph(graphJSON)
 
+
     def JSONtoGraph(self, json):
 	nodeList = []
 	graphNList = []
@@ -85,7 +86,21 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			graphNList.append(n)
 
 	g = self.graph.inducedSubGraph(graphNList)
-	print graphToJSON(g)
+	viewL = g.getLayoutProperty("viewLayout")
+	g.computeLayoutProperty("Random", viewL)
+	g.computeLayoutProperty("Circular", viewL)
+	
+	for n in self.graph.getNodes():
+		viewL[n] *= 10
+	
+	returnJSON = self.graphToJSON(g)
+	
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        print "this is to return: ",returnJSON
+        self.wfile.write(returnJSON)
+	
         
 
 
@@ -98,8 +113,9 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	tlp.SimpleTest.makeSimple(self.graph)
         #print [e for e in g.getEdges()]
 	viewL = self.graph.getLayoutProperty("viewLayout")
-	for n in self.graph.getNodes():
-		print viewL[n]
+	#for n in self.graph.getNodes():
+	#	print viewL[n]
+	self.graph.computeLayoutProperty("Random", viewL)
 	self.graph.computeLayoutProperty("Circular", viewL)
 
 	for n in self.graph.getNodes():
