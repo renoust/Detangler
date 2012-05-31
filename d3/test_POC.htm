@@ -163,6 +163,117 @@ var sendSelection = function(json)
 };
 
 
+var callForce = function()
+{
+
+	var params = {type:"layout", name:"FM^3 (OGDF)"}
+	
+
+	$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+		var old = d3.selectAll("circle.node.selected").data();
+		/*for (i=0; i<old.length; i++)
+		{
+			old[i].x = data.nodes[i].x
+			old[i].y = data.nodes[i].y
+		}*/
+		console.log(data);
+
+	  var n = data.nodes.length;
+	  var ox = 0, oy = 0;
+	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+	  ox = ox / n - width / 2, oy = oy / n - height / 2;
+	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+		force
+		      .nodes(data.nodes)
+		      .links(data.links)
+		      .start()
+		      .stop();
+
+		var link = svg.selectAll("line.link")
+		      .data(data.links)
+	.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+			.exit().remove()
+
+		
+		var node = svg.selectAll("circle.node")
+		      .data(data.nodes)
+	.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+			.exit().remove()
+		      .call(force.drag)
+			
+
+		//d3.selectAll("circle.node.selected").data(old).exit().remove()
+		/*enter().append("circle")
+		.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; })
+		.style("fill","purple")
+		.classed("selected", 0);*/
+	});
+};
+
+
+var callLayout = function(layoutName)
+{
+
+	var params = {type:"layout", name:layoutName}
+	
+
+	$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+		var old = d3.selectAll("circle.node.selected").data();
+		/*for (i=0; i<old.length; i++)
+		{
+			old[i].x = data.nodes[i].x
+			old[i].y = data.nodes[i].y
+		}*/
+		console.log(data);
+
+	  var n = data.nodes.length;
+	  var ox = 0, oy = 0;
+	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+	  ox = ox / n - width / 2, oy = oy / n - height / 2;
+	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+		force
+		      .nodes(data.nodes)
+		      .links(data.links)
+		      .start()
+		      .stop();
+
+		var link = svg.selectAll("line.link")
+		      .data(data.links)
+	.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+			.exit().remove()
+
+		
+		var node = svg.selectAll("circle.node")
+		      .data(data.nodes)
+	.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+			.exit().remove()
+		      .call(force.drag)
+			
+
+		//d3.selectAll("circle.node.selected").data(old).exit().remove()
+		/*enter().append("circle")
+		.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; })
+		.style("fill","purple")
+		.classed("selected", 0);*/
+	});
+};
+
+
+
 var loadJSON = function(data)
 {
 
@@ -346,15 +457,106 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-svg.append("rect")
-	.attr("class", "button")
-	.attr("width", 50)
+var bt1 = svg.selectAll("rect button1").data(["select subgraph"]).enter()
+
+bt1.append("rect")
+	.attr("class", "button1")
+	.attr("width", 120)
 	.attr("height", 20)
-	.attr("x", 40)
-	.attr("y", 40)
+	.attr("x", 10)
+	.attr("y", 10)
+	.style("fill", 'lightgray')
 	.on("click", function(){d3.select(this).style("fill","yellow"); sendSelection(getSelection());})
 	.on("mouseover", function(){d3.select(this).style("fill","red");})
-	.on("mouseout", function(){d3.select(this).style("fill","black");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt1.append("text")
+	.attr("x", 10)
+	.attr("y", 10)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("select subgraph")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); sendSelection(getSelection());})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
+
+
+
+var bt2 = svg.selectAll("rect button2").data(["force layout"]).enter()
+
+bt2.append("rect")
+	.attr("class", "button2")
+	.attr("width", 120)
+	.attr("height", 20)
+	.attr("x", 10)
+	.attr("y", 35)
+	.style("fill", 'lightgray')	
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("FM^3 (OGDF)")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt2.append("text")
+	.attr("x", 10)
+	.attr("y", 35)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("force layout")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("FM^3 (OGDF)")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
+
+
+
+var bt2 = svg.selectAll("rect button3").data(["force layout"]).enter()
+
+bt2.append("rect")
+	.attr("class", "button3")
+	.attr("width", 120)
+	.attr("height", 20)
+	.attr("x", 10)
+	.attr("y", 60)
+	.style("fill", 'lightgray')	
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("Circular")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt2.append("text")
+	.attr("x", 10)
+	.attr("y", 60)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("circular layout")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("Circular")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
+
+
+var bt2 = svg.selectAll("rect button4").data(["random layout"]).enter()
+
+bt2.append("rect")
+	.attr("class", "button4")
+	.attr("width", 120)
+	.attr("height", 20)
+	.attr("x", 10)
+	.attr("y", 85)
+	.style("fill", 'lightgray')	
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("Random")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt2.append("text")
+	.attr("x", 10)
+	.attr("y", 85)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("random layout")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); callLayout("Random")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
 
 
 
