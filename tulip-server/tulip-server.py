@@ -32,7 +32,6 @@ class graphManager():
 
 	viewL = graph.getLayoutProperty("viewLayout")
 	graph.computeLayoutProperty("Random", viewL)
-	graph.computeLayoutProperty("Circular", viewL)
 	
 	for n in self.graph.getNodes():
 		viewL[n] *= 10
@@ -180,13 +179,24 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 					g = self.graphMan.addGraph(graphJSON)
 					vL = g.getLayoutProperty("viewLayout")
 					g.computeLayoutProperty("FM^3 (OGDF)", vL)
-					graphJSON = self.graphMan.graphToJSON(g)
+					g = self.graphMan.modifyGraph(g)
+					graphJSON = self.graphMan.graphToJSON(g)					
 					self.sendJSON(graphJSON)
 
 
 			if postvars['type'][0] == 'algorithm':
 					print 'algo requested'
-
+					
+					if 'parameters' in postvars.keys():
+						params = postvars['parameters'][0]
+						params = json.loads(params)
+						if 'type' in params and 'name' in params:
+							if params['type'] == 'layout':
+								g = self.graphMan.graph
+								vL = g.getLayoutProperty("viewLayout")
+								g.computeLayoutProperty(params['name'].encode("utf-8"), vL)
+								graphJSON = self.graphMan.graphToJSON(g)					
+								self.sendJSON(graphJSON)
 
 			if postvars['type'][0] == 'update':
 					g = self.graphMan.JSONtoGraph(graphJSON)
