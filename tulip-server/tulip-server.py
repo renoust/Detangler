@@ -110,7 +110,7 @@ class graphManager():
 
         return self.graph
 
-    def graphToJSON(self, graph=0):
+    def graphToJSONO(self, graph=0):
 	if not graph:
 		graph = self.graph
  	vLayout = graph.getLayoutProperty("viewLayout")
@@ -121,6 +121,83 @@ class graphManager():
     	print "dumping: ", json.dumps(nList)
     	return json.dumps(nList)
 
+
+    def graphToJSON(self, graph=0, properties={}):
+	if not graph:
+		graph = self.graph
+	nList = {}
+	eList= {}
+
+	if not properties:
+	 	vLayout = graph.getLayoutProperty("viewLayout")
+	    	nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]} for n in graph.getNodes()]}
+	    	nToI = {nList["nodes"][i]["name"]:i for i in range(len(nList["nodes"]))}
+	    	eList = {"links":[{"source":nToI[graph.source(e).id], "target":nToI[graph.target(e).id], "value":1} for e in graph.getEdges()]}
+	    	nList.update(eList)
+	    	print "dumping: ", json.dumps(nList)
+	    	return json.dumps(nList)
+	else:
+		if 'nodes' in properties:
+			nodesProp = properties['nodes']
+			propInterface = {}
+			print nodesProp
+			for k in nodesProp:
+				if 'type' in k and 'name' in k:
+					if k['type'] == 'bool':
+						propInterface[k['name']] = graph.getBooleanProperty(k['name'])
+					if k['type'] == 'float':
+						propInterface[k['name']] = graph.getDoubleProperty(k['name'])
+					if k['type'] == 'string':
+						propInterface[k['name']] = graph.getStringProperty(k['name'])
+			
+			vLayout = graph.getLayoutProperty("viewLayout")
+			print propInterface
+			#getValue = lambda n, propInterface: {prop:propInterface[prop][n] for prop in propInterface }
+			getValue = lambda x: {prop:propInterface[prop][x] for prop in propInterface }
+			nList = []
+			for n in graph.getNodes():
+				v = {"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]}
+				v.update(getValue(n))
+				nList.append(v)			
+	    		nList = {"nodes":nList}
+			print nList
+		else:
+		    	nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]} for n in graph.getNodes()]}
+
+		nToI = {nList["nodes"][i]["name"]:i for i in range(len(nList["nodes"]))}
+
+		if 'edges' in properties:
+			edgesProp = properties['edges']
+			propInterface = {}
+			print edgesProp
+			for k in edgesProp:
+				if 'type' in k and 'name' in k:
+					if k['type'] == 'bool':
+						propInterface[k['name']] = graph.getBooleanProperty(k['name'])
+					if k['type'] == 'float':
+						propInterface[k['name']] = graph.getDoubleProperty(k['name'])
+					if k['type'] == 'string':
+						propInterface[k['name']] = graph.getStringProperty(k['name'])
+			
+			vLayout = graph.getLayoutProperty("viewLayout")
+			print propInterface
+			#getValue = lambda n, propInterface: {prop:propInterface[prop][n] for prop in propInterface }
+			getValue = lambda x: {prop:propInterface[prop][x] for prop in propInterface }
+			eList = []
+			for e in graph.getEdges():
+				v = {"source":nToI[graph.source(e).id], "target":nToI[graph.target(e).id], "value":1}
+				v.update(getValue(e))
+				eList.append(v)			
+	    		eList = {"edges":nList}
+			print eList
+		
+		else:
+		    	eList = {"links":[{"source":nToI[graph.source(e).id], "target":nToI[graph.target(e).id], "value":1} for e in graph.getEdges()]}
+	    		#nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]}.update(getValue(n)) for n in graph.getNodes()]}
+			
+	    	nList.update(eList)
+	    	print "dumping: ", json.dumps(nList)
+	    	return json.dumps(nList)
 
 
 
@@ -196,6 +273,12 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 								vL = g.getLayoutProperty("viewLayout")
 								g.computeLayoutProperty(params['name'].encode("utf-8"), vL)
 								graphJSON = self.graphMan.graphToJSON(g)					
+								self.sendJSON(graphJSON)
+							if params['type'] == 'float':
+								g = self.graphMan.graph
+								vM = g.getDoubleProperty("viewMetric")
+								g.computeDoubleProperty(params['name'].encode("utf-8"), vM)
+								graphJSON = self.graphMan.graphToJSON(g, {'nodes':[{'type':'float', 'name':'viewMetric'}]})					
 								self.sendJSON(graphJSON)
 
 			if postvars['type'][0] == 'update':
