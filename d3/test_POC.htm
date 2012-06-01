@@ -63,6 +63,7 @@ svg.append("rect")
 
 var tulip_address = "http://127.0.0.1:8085"
 var json_address = "http://mbostock.github.com/d3/ex/miserables.json"
+json_address = "miserables.json"
 
 var getSelection = function()
 {
@@ -259,6 +260,62 @@ var callLayout = function(layoutName)
 		      .data(data.nodes)
 	.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
+			.exit().remove()
+		      .call(force.drag)
+			
+
+		//d3.selectAll("circle.node.selected").data(old).exit().remove()
+		/*enter().append("circle")
+		.attr("cx", function(d) { return d.x; })
+	        .attr("cy", function(d) { return d.y; })
+		.style("fill","purple")
+		.classed("selected", 0);*/
+	});
+};
+
+
+var callFloatAlgorithm = function(floatAlgorithmName)
+{
+
+	var params = {type:"float", name:floatAlgorithmName}
+	
+
+	$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+		var old = d3.selectAll("circle.node.selected").data();
+		/*for (i=0; i<old.length; i++)
+		{
+			old[i].x = data.nodes[i].x
+			old[i].y = data.nodes[i].y
+		}*/
+		console.log(data);
+
+	  var n = data.nodes.length;
+	  var ox = 0, oy = 0;
+	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+	  ox = ox / n - width / 2, oy = oy / n - height / 2;
+	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+		force
+		      .nodes(data.nodes)
+		      .links(data.links)
+		      .start()
+		      .stop();
+
+		var link = svg.selectAll("line.link")
+		      .data(data.links)
+	.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+			.exit().remove()
+
+		
+		var node = svg.selectAll("circle.node")
+		      .data(data.nodes)
+	.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+	.attr("r", function(d) { return d.viewMetric; })
 			.exit().remove()
 		      .call(force.drag)
 			
@@ -509,9 +566,9 @@ bt2.append("text")
 
 
 
-var bt2 = svg.selectAll("rect button3").data(["force layout"]).enter()
+var bt3 = svg.selectAll("rect button3").data(["force layout"]).enter()
 
-bt2.append("rect")
+bt3.append("rect")
 	.attr("class", "button3")
 	.attr("width", 120)
 	.attr("height", 20)
@@ -522,7 +579,7 @@ bt2.append("rect")
 	.on("mouseover", function(){d3.select(this).style("fill","red");})
 	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
 
-bt2.append("text")
+bt3.append("text")
 	.attr("x", 10)
 	.attr("y", 60)
 	.attr("dx", 5)
@@ -534,9 +591,9 @@ bt2.append("text")
 	.on("mouseout", function(){d3.select(this).style("fill","green");})
 
 
-var bt2 = svg.selectAll("rect button4").data(["random layout"]).enter()
+var bt4 = svg.selectAll("rect button4").data(["random layout"]).enter()
 
-bt2.append("rect")
+bt4.append("rect")
 	.attr("class", "button4")
 	.attr("width", 120)
 	.attr("height", 20)
@@ -547,7 +604,7 @@ bt2.append("rect")
 	.on("mouseover", function(){d3.select(this).style("fill","red");})
 	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
 
-bt2.append("text")
+bt4.append("text")
 	.attr("x", 10)
 	.attr("y", 85)
 	.attr("dx", 5)
@@ -560,9 +617,45 @@ bt2.append("text")
 
 
 
+var bt5 = svg.selectAll("rect button5").data(["degree metric"]).enter()
+
+bt5.append("rect")
+	.attr("class", "button5")
+	.attr("width", 120)
+	.attr("height", 20)
+	.attr("x", 10)
+	.attr("y", 110)
+	.style("fill", 'lightgray')	
+	.on("click", function(){d3.select(this).style("fill","yellow"); callFloatAlgorithm("Degree")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt5.append("text")
+	.attr("x", 10)
+	.attr("y", 110)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("degree metric")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); callFloatAlgorithm("Degree")})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
+
+
+
 
 //d3.json(tulip_address+"?n=50", function(json) {
-d3.json(json_address, function(data) {
+//d3.json(json_address, function(data) {
+
+//for local use
+var jqxhr = $.getJSON("./miserables.json", function(){ //http://127.0.0.1:8085/?n=5", function() {
+  console.log("success");
+})
+
+.error(function() { alert("error"); })
+.complete(function() { console.log("complete"); })
+.success(function(data,b) { 
+	console.log('json loaded')
 	jsonData = JSON.stringify(data)
 	loadJSON(data)
 	addInteraction()
