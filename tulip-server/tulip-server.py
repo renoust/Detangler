@@ -12,9 +12,11 @@ from tulip import *
 
 class graphManager():
 
-    graph = tlp.newGraph()
+    root = 0
+    graph = 0
+    currentGraphID = 0
 
-    def JSONtoGraph(self, json):	
+    def inducedSubGraph(self, json):	
 	nodeList = []
 	graphNList = []
 	for n in json[u'nodes']:
@@ -23,8 +25,17 @@ class graphManager():
 		if n.id in nodeList:
 			graphNList.append(n)
 
-	g = self.graph.inducedSubGraph(graphNList)
-	return g
+	#self.graph.clear() 
+	#sg = self.graph.addSubGraph()
+	self.graph = self.root.inducedSubGraph(graphNList)
+	#for n in g.getNodes():
+	#	self.graph.addNode(n)
+	#for e in g.getEdges():
+	#	self.graph.addEdge(e)
+	#self.graph = g
+	return self.graph
+
+
 
     def modifyGraph(self, graph=0):
 	if not graph:
@@ -89,14 +100,15 @@ class graphManager():
 				prop = g.getDoubleProperty("id")
 				prop[v] = v.id
 
-	self.graph = g #temporary, we should manage sessions and graphIDs
+	self.root = g #temporary, we should manage sessions and graphIDs
+	self.graph = g
 	return g
 
 
 	
 
     def createGraph(self, nbNodes):
-	
+	#deprecated original request	
 	if not self.graph.numberOfNodes():
 		nodeList = [self.graph.addNode() for i in range(nbNodes)]
 		edgeList = [self.graph.addEdge(nodeList[i],nodeList[j]) for j in range(nbNodes) for i in range(0,nbNodes)]#j+1, n)]
@@ -112,7 +124,7 @@ class graphManager():
 
     def graphToJSONO(self, graph=0):
 	if not graph:
-		graph = self.graph
+		graph = self.root
  	vLayout = graph.getLayoutProperty("viewLayout")
     	nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]} for n in graph.getNodes()]}
     	nToI = {nList["nodes"][i]["name"]:i for i in range(len(nList["nodes"]))}
@@ -124,7 +136,7 @@ class graphManager():
 
     def graphToJSON(self, graph=0, properties={}):
 	if not graph:
-		graph = self.graph
+		graph = self.root
 	nList = {}
 	eList= {}
 
@@ -282,8 +294,9 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 								self.sendJSON(graphJSON)
 
 			if postvars['type'][0] == 'update':
-					g = self.graphMan.JSONtoGraph(graphJSON)
-					g = self.graphMan.modifyGraph(g)
+					graphJSON = json.loads(postvars['graph'][0])
+					g = self.graphMan.inducedSubGraph(graphJSON)
+					#g = self.graphMan.modifyGraph(g)
 					graphJSON = self.graphMan.graphToJSON(g)
 					self.sendJSON(graphJSON)
 

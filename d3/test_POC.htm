@@ -111,7 +111,7 @@ var graphToJSON = function()
 
 var sendSelection = function(json)
 {
-	$.post(tulip_address, { json_string:json }, function(data){
+	$.post(tulip_address, { type:"update", graph:json }, function(data){
 		var old = d3.selectAll("circle.node.selected").data();
 		/*for (i=0; i<old.length; i++)
 		{
@@ -185,9 +185,16 @@ var callForce = function()
 	  ox = ox / n - width / 2, oy = oy / n - height / 2;
 	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
 
+	/*
+	  var minX = 10^9, maxX = -10^9, minY = 10^9, maxY = -10^9;
+	  data.nodes.forEach(function(d) { 
+		if (d.x < minX){minX = d.x}
+		if (d.x > maxX){maxX = d.x}
+		if (d.y < minY){minY = d.y}
+		if (d.y < maxY){maxY = d.y}
+	  }*/
 
-		force
-		      .nodes(data.nodes)
+		force.nodes(data.nodes)
 		      .links(data.links)
 		      .start()
 		      .stop();
@@ -514,7 +521,7 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-var bt1 = svg.selectAll("rect button1").data(["select subgraph"]).enter()
+var bt1 = svg.selectAll("rect button1").data(["induced subgraph"]).enter()
 
 bt1.append("rect")
 	.attr("class", "button1")
@@ -532,7 +539,7 @@ bt1.append("text")
 	.attr("y", 10)
 	.attr("dx", 5)
         .attr("dy", 15)//".35em")
-        .text("select subgraph")
+        .text("induced subgraph")
 	.style("fill", 'green')
 	.on("click", function(){d3.select(this).style("fill","yellow"); sendSelection(getSelection());})
 	.on("mouseover", function(){d3.select(this).style("fill","red");})
