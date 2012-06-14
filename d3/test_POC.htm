@@ -61,9 +61,10 @@ svg.append("rect")
     .attr("height", height);
 */
 
-var tulip_address = "http://127.0.0.1:8085"
+var tulip_address = "http://localhost:8085"
 var json_address = "http://mbostock.github.com/d3/ex/miserables.json"
-json_address = "miserables.json"
+json_address = "./cluster1.json"
+//json_address = "./miserables.json"
 
 var getSelection = function()
 {
@@ -179,12 +180,13 @@ var callForce = function()
 		}*/
 		console.log(data);
 
+/*
 	  var n = data.nodes.length;
 	  var ox = 0, oy = 0;
 	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
 	  ox = ox / n - width / 2, oy = oy / n - height / 2;
 	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
-
+*/
 	/*
 	  var minX = 10^9, maxX = -10^9, minY = 10^9, maxY = -10^9;
 	  data.nodes.forEach(function(d) { 
@@ -241,12 +243,15 @@ var callLayout = function(layoutName)
 		}*/
 		console.log(data);
 
+/*
 	  var n = data.nodes.length;
 	  var ox = 0, oy = 0;
 	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
 	  ox = ox / n - width / 2, oy = oy / n - height / 2;
 	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+*/
 
+	  rescaleGraph(data)
 
 		force
 		      .nodes(data.nodes)
@@ -337,6 +342,14 @@ var callFloatAlgorithm = function(floatAlgorithmName)
 };
 
 
+var convertLinks = function(data)
+{
+	//console.log(data)
+	var nodeId = []
+	data.nodes.forEach(function(d, i){nodeId.push(d.id); d.id = i})
+	//console.log(nodeId)
+	data.links.forEach(function(d){d.source=nodeId.indexOf(d.source); d.target=nodeId.indexOf(d.target);})
+}
 
 var loadJSON = function(data)
 {
@@ -346,7 +359,6 @@ var loadJSON = function(data)
 	data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
 	ox = ox / n - width / 2, oy = oy / n - height / 2;
 	data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
-
 
 	force
 		.nodes(data.nodes)
@@ -477,11 +489,13 @@ var createTulipGraph = function(json)
 		}*/
 		console.log(data);
 
+/*
 	  var n = data.nodes.length;
 	  var ox = 0, oy = 0;
 	  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
 	  ox = ox / n - width / 2, oy = oy / n - height / 2;
 	  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+*/
 
 
 		force
@@ -491,7 +505,7 @@ var createTulipGraph = function(json)
 		      .stop();
 
 		var link = svg.selectAll("line.link")
-		      .data(data.links)
+		      .data(data.links)//.enter()
 	.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
@@ -500,7 +514,7 @@ var createTulipGraph = function(json)
 
 		
 		var node = svg.selectAll("circle.node")
-		      .data(data.nodes)
+		      .data(data.nodes)//.enter()
 	.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
 			.exit().remove()
@@ -516,6 +530,52 @@ var createTulipGraph = function(json)
 	});
 }
 
+var rescaleGraph = function(data)
+{
+	var buttonWidth = 130.0
+	var frame = 10.0
+	var w = width-(buttonWidth+2*frame)
+	var h = height-(2*frame)
+
+	var minX = data.nodes[0].x
+	var maxX = data.nodes[0].x
+	var minY = data.nodes[0].y
+	var maxY = data.nodes[0].y
+
+	
+	data.nodes.forEach(function(d){if (d.x < minX){minX = d.x}; if (d.x > maxX){maxX = d.x}; if (d.y < minY){minY = d.y}; if (d.y > maxY){maxY = d.y};})
+	
+	data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
+
+	scale = Math.min.apply(null, [w/(maxX-minX+0.00000000000000000001), h/(maxY-minY+0.00000000000000000001)])
+	
+	data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame;})
+
+
+	
+}
+
+/*
+var rescaleGraph = function()
+{
+	var data = svg.selectAll("circle.node").data()
+	var buttonWidth = 130
+	var frame = 10
+	var w = width-(buttonWidth+2*frame)
+	var h = height-(2*frame)
+
+	var minX = data[0].x
+	var maxX = data[0].x
+	var minY = data[0].y
+	var maxY = data[0].y
+
+	
+	data.forEach(function(d){if (d.x < minX){minX = d.x}; if (d.x > maxX){maxX = d.x}; if (d.y < minY){minY = d.y}; if (d.y > maxY){maxY = d.y};})
+	
+	scale = Math.abs(Math.min.apply(null, [w/(maxX-minX+1), h/(maxY-minY+1)]))	
+
+	data.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame;})
+}*/
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -649,13 +709,38 @@ bt5.append("text")
 	.on("mouseout", function(){d3.select(this).style("fill","green");})
 
 
+var bt6 = svg.selectAll("rect button6").data(["rescale"]).enter()
+
+/*
+bt6.append("rect")
+	.attr("class", "button6")
+	.attr("width", 120)
+	.attr("height", 20)
+	.attr("x", 10)
+	.attr("y", 135)
+	.style("fill", 'lightgray')	
+	.on("click", function(){d3.select(this).style("fill","yellow"); rescaleGraph()})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+bt6.append("text")
+	.attr("x", 10)
+	.attr("y", 135)
+	.attr("dx", 5)
+        .attr("dy", 15)//".35em")
+        .text("rescale")
+	.style("fill", 'green')
+	.on("click", function(){d3.select(this).style("fill","yellow"); rescaleGraph()})
+	.on("mouseover", function(){d3.select(this).style("fill","red");})
+	.on("mouseout", function(){d3.select(this).style("fill","green");})
+*/
 
 
 //d3.json(tulip_address+"?n=50", function(json) {
 //d3.json(json_address, function(data) {
 
 //for local use
-var jqxhr = $.getJSON("./miserables.json", function(){ //http://127.0.0.1:8085/?n=5", function() {
+var jqxhr = $.getJSON(json_address, function(){ 
   console.log("success");
 })
 
@@ -663,9 +748,12 @@ var jqxhr = $.getJSON("./miserables.json", function(){ //http://127.0.0.1:8085/?
 .complete(function() { console.log("complete"); })
 .success(function(data,b) { 
 	console.log('json loaded')
+	convertLinks(data)
 	jsonData = JSON.stringify(data)
 	loadJSON(data)
 	addInteraction()
+	console.log('sending to tulip... :')
+	console.log(jsonData)
 	createTulipGraph(jsonData)
 });
 
