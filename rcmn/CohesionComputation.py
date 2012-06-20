@@ -14,6 +14,9 @@ class CohesionComputation:
 	of nodes in the network
 	each node gets assigned a cohesion value stored in a metric
 	(doubleProperty) named cohesion
+	
+	caution: the graph on which the classe operates needs to be connected
+	otherwise raises division by zero exception
 	'''
 	
 	def __init__(self, graph, weightProperty):
