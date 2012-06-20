@@ -1,0 +1,77 @@
+
+<html>
+<head>
+<title>Test tulip-python/D3</title>
+</head>
+
+<style> 
+ 
+ 
+svg {
+  border: solid 1px #ccc;
+}
+ 
+.background {
+  fill: none;
+  pointer-events: all;
+}
+ 
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+ 
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+  stroke-width: 1.5px;
+}
+ 
+</style> 
+
+ 
+<h1>Proof of concept: D3 and tulip-python</h1> 
+<!--
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
+-->
+<script src="local/jquery.js"></script>
+<script src="local/d3.v2.js"></script> 
+<script> 
+ 
+var data=[[1,2],[3,4],[5,6]]
+
+var svg = d3.select("body").append("svg:svg")
+	.attr("width",400)
+	.attr("height",400)
+
+var node = svg.selectAll("node").data(data).enter()
+	
+node.append("svg:circle")
+		.attr("class", "node.circle")
+		.attr("cx", function(d,i){return i*100;})
+		.attr("cy", function(d,i){return i*100;})
+		.attr("r", 5)
+
+node.append("svg:text")
+	.attr("class", "node.text")
+	.attr("dx", function(d,i){return i*100;})
+	.attr("dy", function(d,i){return i*100;})
+	.text(function(d){return "hello"})
+	.style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
+
+nodes = d3.selectAll("circle").transition().delay(function(d, i){return i*1000})
+	.attr("cx", function(d,i){console.log("updating"); console.log(d); return 300;})
+
+console.log(d3.selectAll("circle"))
+
+</script> 
+ 
+<p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
+ 
+<p>We're just trying</p>
+ 
+<footer> 
+  <aside>May 25, 2012</aside> 
+  Benjamin Renoust (from Mike Bostock) 
+</footer> 
