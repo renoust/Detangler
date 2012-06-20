@@ -547,12 +547,10 @@ var rescaleGraph = function(data)
 	
 	data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
 
-	scale = Math.min.apply(null, [w/(maxX-minX+0.00000000000000000001), h/(maxY-minY+0.00000000000000000001)])
+	var delta = 0.00000000000000000001 //to avoid division by 0
+	scale = Math.min.apply(null, [w/(maxX-minX+delta), h/(maxY-minY+delta)])
 	
 	data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame;})
-
-
-	
 }
 
 /*
