@@ -32,7 +32,7 @@ class KublaiLoader:
 		self.graph = graph
 		self.fileName = fileName
 		self.type = self.graph.getStringProperty('type')
-		self.ids = self.graph.getStringProperty('id')
+		self.ids = self.graph.getStringProperty('rcmnId')
 		self.weights = self.graph.getDoubleProperty('edgeWeight')
 		self.substrate = 'group'
 		self.catalyst = 'member'
