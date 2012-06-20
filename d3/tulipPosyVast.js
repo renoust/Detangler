@@ -20,9 +20,7 @@ var TulipPosy = function()
 	    .size([width, height]);
 	
 	var tulip_address = "http://localhost:8085"
-	var json_address = "http://mbostock.github.com/d3/ex/miserables.json"
-	json_address = "./cluster1.json"
-	//json_address = "./miserables.json"
+	var json_address = "./cluster1.json"
 
 
 	var svg_substrate = d3.select("body").append("svg")
@@ -34,6 +32,10 @@ var TulipPosy = function()
 	    .attr("width", width)
 	    .attr("height", height);
 	
+	var graph_substrate = graph();
+	var graph_catalyst = graph();
+	//var drawing_substrate = graphDrawing();
+	//var drawing_catalyst = graphDrawing();
 
 	var getSelection = function()
 	{
@@ -132,58 +134,17 @@ var TulipPosy = function()
 	
 
 		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+			rescaleGraph(data)
+			graph_substrate.nodes(data.nodes)
+			graph_substrate.links(data.links)
+			graph_substrate.edgeBinding()
+			g = graphDrawing(graph_substrate, svg_substrate)
+			g.move(graph_substrate, 0)
 
-
-		  rescaleGraph(data)
-
-			/*
-			force_substrate
-			      .nodes(data.nodes)
-			      .links(data.links)
-			      .start()
-			      .stop();*/
-			/*
-			var link = svg_substrate.selectAll("link.line")
-			      .data(data.links).transition()
-				.attr("x1", function(d) { return d.source.x; })
-				.attr("y1", function(d) { return d.source.y; })
-				.attr("x2", function(d) { return d.target.x; })
-				.attr("y2", function(d) { return d.target.y; })
-			*/			//.exit().remove()
-
-		/*
-			var node = svg_substrate.selectAll("node")
-				.transition()
-				.attr("transform", function(d) { console.log("to change layout: ",d); return "translate(" + 200 + "," + 200 + ")"; })
-*/
-
-			var node = svg_substrate.selectAll()
-				.transition()
-				.attr("cx", function(d){console.log("I'm supposed to move!"); return 200})
-			console.log(svg_substrate)
-
-
-			/*	
-			      .data(data.nodes).transition()
-				.attr("cx", function(d) { return d.x; })
-				.attr("cy", function(d) { return d.y; })
-			*/
-				//.exit().remove()
-			      //.call(force_substrate.drag)
-
-		console.log("layout recieved and drawn");
-		//displayText();
-
-			
-
-			//d3.selectAll("circle.node.selected").data(old).exit().remove()
-			/*enter().append("circle")
-			.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
-			.style("fill","purple")
-			.classed("selected", 0);*/
 		});
 	};
+
+
 
 
 	var callFloatAlgorithm = function(floatAlgorithmName)
@@ -253,15 +214,29 @@ var TulipPosy = function()
 
 	var loadJSON = function(data)
 	{
-			/*
-		var n = data.nodes.length;
-		var ox = 0, oy = 0;
-		data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
-		ox = ox / n - width / 2, oy = oy / n - height / 2;
-		data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
-		*/
 		rescaleGraph(data)
 
+		graph_substrate.nodes(data.nodes)
+		graph_substrate.links(data.links)
+		graph_substrate.edgeBinding()
+		console.log("graph_substrate", graph_substrate)
+
+		var g = graphDrawing(graph_substrate, svg_substrate)
+		g.draw()
+		
+		/*
+		jsonGraph.nodes().forEach(function(d){d.x -= 10})
+		g.move(jsonGraph, 0)
+
+		jsonGraph.nodes().forEach(function(d){d.y = 50})
+		g.move(jsonGraph, 0)
+		*/
+		return
+	}
+	
+
+	var loadJSON_d3_force = function(data)
+	{
 		force_substrate
 			.nodes(data.nodes)
 			.links(data.links)
@@ -328,7 +303,7 @@ var TulipPosy = function()
 	}
 
 
-	var createGraph = function(json)
+	var createGraph_deprecated = function(json)
 	{
 	  var n = json.nodes.length;
 	  var ox = 0, oy = 0;
@@ -396,114 +371,33 @@ var TulipPosy = function()
 		$.post(tulip_address, {type:'analyse'}, function(data){
 			console.log("received data after analysis:")
 			console.log(data);
-			convertLinks(data);
-			//data.links.forEach(function (d){d.weight = 1;});
-			drawGraph(data, force_catalyst);
+			//convertLinks(data);
+			rescaleGraph(data)
+			graph_catalyst.nodes(data.nodes)
+			graph_catalyst.links(data.links)
+			graph_catalyst.edgeBinding()
+			g = graphDrawing(graph_catalyst, svg_catalyst)
+			g.draw()
 		});
 
 	}
 
-	var drawGraph = function(data, force)
-	{
-		console.log("this is to draw: ")
-		console.log(data)
-
-		data.nodes.forEach(function(d){console.log(d.x);})
-		rescaleGraph(data)
-
-		force
-		      .nodes(data.nodes)
-		      .links(data.links)
-		      .start()
-		      .stop();
-
-		
-		var link = svg_catalyst.selectAll("line.link")
-				.data(data.links)
-				.enter().append("line")
-				.attr("class", "link")
-				.attr("x1", function(d) { return d.source.x; })
-				.attr("y1", function(d) { return d.source.y; })
-				.attr("x2", function(d) { return d.target.x; })
-				.attr("y2", function(d) { return d.target.y; })
-				.style("stroke-width", function(d) { return Math.sqrt(d.value); })
-				
-		
-
-		
-		var node = svg_catalyst.selectAll("circle.node")
-				.data(data.nodes).enter().append("circle")
-				.attr("class", "node")
-				.attr("cx", function(d) { return d.x; })
-				.attr("cy", function(d) { return d.y; })
-				.attr("r", 5)
-				.attr("id", function(d, i) {return i;})
-				.style("fill", function(d) { return "red" })
-				.call(force.drag)
-			
-
-		//d3.selectAll("circle.node.selected").data(old).exit().remove()
-		/*enter().append("circle")
-			.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
-			.style("fill","purple")
-			.classed("selected", 0);*/
 
 
-	}
-
-	var addInteraction = function()
-	{
-	  var link = svg_substrate.selectAll("line.link")
-	      .style("stroke-width", function(d) { return Math.sqrt(d.value); })
-	      .on("mouseover", function(){d3.select(this).style("fill","red");});
-
-	  var node = svg_substrate.selectAll("circle.node")
-	      .attr("r", 5)
-	      .attr("id", function(d, i) {return i;})
-	      .style("fill", function(d) { return color(d.group); })
-	      .on("click", function(){
-			var o = d3.select(this); 
-			if (o.classed("selected"))
-			{
-			  o.classed("selected",0).style("fill","steelblue");
-			}else{
-			  o.classed("selected",1).style("fill","red");
-			}
-	       })
-	      .on("mouseover", function(){d3.select(this).style("fill","yellow"); })
-	      .on("mouseout",function(){
-			var o = d3.select(this); 
-			if (o.classed("selected")) 
-			{
-				o.style("fill","red");
-			}else{
-				o.style("fill","steelblue");
-			}
-	      });
-	}
 
 	var createTulipGraph = function(json)
 	{
 		$.post(tulip_address, { type:"creation", graph:json }, function(data){
-
-			var link = svg_substrate.selectAll("link.line")
-			      .data(data.links).transition()
-		.attr("x1", function(d) { return d.source.x; })
-		.attr("y1", function(d) { return d.source.y; })
-		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; })
-				//.exit().remove()
-
-		
-			var node = svg_substrate.selectAll("node.circle")
-			      .data(data.nodes).transition()
-		.attr("cx", function(d) { return d.x; })
-		.attr("cy", function(d) { return d.y; })
-				//.exit().remove()
-			      //.call(force_substrate.drag)
+			rescaleGraph(data)
+			graph_substrate.nodes(data.nodes)
+			graph_substrate.links(data.links)
+			graph_substrate.edgeBinding()
+			g = graphDrawing(graph_substrate, svg_substrate)
+			g.move(graph_substrate, 0)
 		});
 	}
+
+
 
 	var rescaleGraph = function(data)
 	{
@@ -520,7 +414,7 @@ var TulipPosy = function()
 	
 		data.nodes.forEach(function(d){if (d.x < minX){minX = d.x}; if (d.x > maxX){maxX = d.x}; if (d.y < minY){minY = d.y}; if (d.y > maxY){maxY = d.y};})
 	
-		data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
+		//data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
 
 		var delta = 0.00000000000000000001 //to avoid division by 0
 		scale = Math.min.apply(null, [w/(maxX-minX+delta), h/(maxY-minY+delta)])
@@ -528,20 +422,6 @@ var TulipPosy = function()
 		data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame;})
 	}
 
-	var displayText = function()
-	{
-		console.log("displaying text");
-		var nodes = svg_substrate.selectAll("circle.node")
-		nodes.append("text")
-			//.attr("dx", function(d) { return d.children ? -8 : 8; })
-			.attr("dx", 100)
-			.attr("dy", 100)
-			//.attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
-			.text(function(d) { console.log(d); console.log("here"); return 'hello'; })
-			.style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
-		console.log("text displayed");
-		console.log(nodes)
-	}
 
 
 	var addInterface = function()
@@ -689,7 +569,6 @@ var TulipPosy = function()
 			convertLinks(data)
 			jsonData = JSON.stringify(data)
 			loadJSON(data)
-			addInteraction()
 			console.log('sending to tulip... :')
 			console.log(jsonData)
 			createTulipGraph(jsonData)
@@ -699,5 +578,198 @@ var TulipPosy = function()
 	addInterface();
 	loadData();
 
+
+	var callLayout_d3_force = function(layoutName)
+	{
+
+		var params = {type:"layout", name:layoutName}
+	
+
+		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+
+
+		  rescaleGraph(data)
+
+			/*
+			force_substrate
+			      .nodes(data.nodes)
+			      .links(data.links)
+			      .start()
+			      .stop();*/
+			/*
+			var link = svg_substrate.selectAll("link.line")
+			      .data(data.links).transition()
+				.attr("x1", function(d) { return d.source.x; })
+				.attr("y1", function(d) { return d.source.y; })
+				.attr("x2", function(d) { return d.target.x; })
+				.attr("y2", function(d) { return d.target.y; })
+			*/			//.exit().remove()
+
+		/*
+			var node = svg_substrate.selectAll("node")
+				.transition()
+				.attr("transform", function(d) { console.log("to change layout: ",d); return "translate(" + 200 + "," + 200 + ")"; })
+*/
+
+			var node = svg_substrate.selectAll()
+				.transition()
+				.attr("cx", function(d){console.log("I'm supposed to move!"); return 200})
+			console.log(svg_substrate)
+
+
+			/*	
+			      .data(data.nodes).transition()
+				.attr("cx", function(d) { return d.x; })
+				.attr("cy", function(d) { return d.y; })
+			*/
+				//.exit().remove()
+			      //.call(force_substrate.drag)
+
+		console.log("layout recieved and drawn");
+		//displayText();
+
+			
+
+			//d3.selectAll("circle.node.selected").data(old).exit().remove()
+			/*enter().append("circle")
+			.attr("cx", function(d) { return d.x; })
+			.attr("cy", function(d) { return d.y; })
+			.style("fill","purple")
+			.classed("selected", 0);*/
+		});
+	};
+
+
+	var displayText_d3_force = function()
+	{
+		console.log("displaying text");
+		var nodes = svg_substrate.selectAll("circle.node")
+		nodes.append("text")
+			//.attr("dx", function(d) { return d.children ? -8 : 8; })
+			.attr("dx", 100)
+			.attr("dy", 100)
+			//.attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+			.text(function(d) { console.log(d); console.log("here"); return 'hello'; })
+			.style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
+		console.log("text displayed");
+		console.log(nodes)
+	}
+
+	var createTulipGraph_d3_force = function(json)
+	{
+		$.post(tulip_address, { type:"creation", graph:json }, function(data){
+
+			var link = svg_substrate.selectAll("link.line")
+			      .data(data.links).transition()
+		.attr("x1", function(d) { return d.source.x; })
+		.attr("y1", function(d) { return d.source.y; })
+		.attr("x2", function(d) { return d.target.x; })
+		.attr("y2", function(d) { return d.target.y; })
+				//.exit().remove()
+
+		
+			var node = svg_substrate.selectAll("node.circle")
+			      .data(data.nodes).transition()
+		.attr("cx", function(d) { return d.x; })
+		.attr("cy", function(d) { return d.y; })
+				//.exit().remove()
+			      //.call(force_substrate.drag)
+		});
+	}
+
+	var addInteraction_d3_force = function()
+	{
+	  var link = svg_substrate.selectAll("line.link")
+	      .style("stroke-width", function(d) { return Math.sqrt(d.value); })
+	      .on("mouseover", function(){d3.select(this).style("fill","red");});
+
+	  var node = svg_substrate.selectAll("circle.node")
+	      .attr("r", 5)
+	      .attr("id", function(d, i) {return i;})
+	      .style("fill", function(d) { return color(d.group); })
+	      .on("click", function(){
+			var o = d3.select(this); 
+			if (o.classed("selected"))
+			{
+			  o.classed("selected",0).style("fill","steelblue");
+			}else{
+			  o.classed("selected",1).style("fill","red");
+			}
+	       })
+	      .on("mouseover", function(){d3.select(this).style("fill","yellow"); })
+	      .on("mouseout",function(){
+			var o = d3.select(this); 
+			if (o.classed("selected")) 
+			{
+				o.style("fill","red");
+			}else{
+				o.style("fill","steelblue");
+			}
+	      });
+	}
+
+	var drawGraph_d3_force = function(data, force)
+	{
+		console.log("this is to draw: ")
+		console.log(data)
+
+		data.nodes.forEach(function(d){console.log(d.x);})
+		rescaleGraph(data)
+
+		force
+		      .nodes(data.nodes)
+		      .links(data.links)
+		      .start()
+		      .stop();
+
+		
+		var link = svg_catalyst.selectAll("line.link")
+				.data(data.links)
+				.enter().append("line")
+				.attr("class", "link")
+				.attr("x1", function(d) { return d.source.x; })
+				.attr("y1", function(d) { return d.source.y; })
+				.attr("x2", function(d) { return d.target.x; })
+				.attr("y2", function(d) { return d.target.y; })
+				.style("stroke-width", function(d) { return Math.sqrt(d.value); })
+				
+		
+
+		
+		var node = svg_catalyst.selectAll("circle.node")
+				.data(data.nodes).enter().append("circle")
+				.attr("class", "node")
+				.attr("cx", function(d) { return d.x; })
+				.attr("cy", function(d) { return d.y; })
+				.attr("r", 5)
+				.attr("id", function(d, i) {return i;})
+				.style("fill", function(d) { return "red" })
+				.call(force.drag)
+			
+
+		//d3.selectAll("circle.node.selected").data(old).exit().remove()
+		/*enter().append("circle")
+			.attr("cx", function(d) { return d.x; })
+			.attr("cy", function(d) { return d.y; })
+			.style("fill","purple")
+			.classed("selected", 0);*/
+
+
+	}
+
+	var analyseGraph_d3_force = function()
+	{
+	  	var params = {type:"analyse"}
+	
+
+		$.post(tulip_address, {type:'analyse'}, function(data){
+			console.log("received data after analysis:")
+			console.log(data);
+			convertLinks(data);
+			//data.links.forEach(function (d){d.weight = 1;});
+			drawGraph(data, force_catalyst);
+		});
+
+	}
 
 };
