@@ -5,6 +5,7 @@ from GraphHandler import *
 class CatalystProjector:
 	'''
 	this class takes as input a bipartite graph
+	(typically obtained using a loader class, see KublaiLoader for example)
 	and projects it on entities of one type
 	projected paths e1 - f - e2 induce edges e1 - e2
 	weights on edges e1 - f, f - e2 combine and define
