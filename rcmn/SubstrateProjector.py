@@ -26,10 +26,11 @@ class SubstrateProjector:
 	entities will be added to he original graph)
 	'''
 	
-	def __init__(self, bipartiteGraph, substrateTypeName = 'substrate', catalystTypeName = 'catalyst'):
+	def __init__(self, analysisGraph, substrateTypeName = 'substrate', catalystTypeName = 'catalyst'):
 		
-		self.bipartiteGraph = bipartiteGraph
-		self.superGraph = self.bipartiteGraph.getSuperGraph()
+		self.superGraph = analysisGraph
+		self.bipartiteGraph = analysisGraph.addCloneSubGraph()
+		self.bipartiteGraph.setName('bipartiteGraph')
 		self.substrateGraph = None
 		self.substrateTypeName = substrateTypeName
 		self.catalystTypeName = catalystTypeName
