@@ -15,7 +15,9 @@ graph = function() {
 		return links;
 	};
 
-   	g.edgeBinding = function() {
+
+	// previous binding based on indexing (d3.force) inspired
+   	g.edgeBindingIncrementalIndex = function() {
    		var n = nodes.length,
    			m = links.length,
    			o;
@@ -32,5 +34,30 @@ graph = function() {
    		}
 
    	}
+
+   	g.edgeBinding = function() {
+   		var n = nodes.length,
+   			m = links.length,
+   			o = {};
+
+   		for (var i = 0; i < n; ++i) {
+   			o[nodes[i].baseID] = nodes[i];
+   		}
+
+		console.log("nodeToBaseId : ",o)
+
+   		for (i = 0; i < m; ++i) {
+   			var l = links[i];
+   			if (typeof l.source == "number")
+			{
+				console.log("associating: ",l.source," with ",o[l.source])
+				 l.source = o[l.source];
+			}
+   			if (typeof l.target == "number") l.target = o[l.target];
+   		}
+
+   	}
+
+
    	return g;
 }
