@@ -83,19 +83,27 @@ var TulipPosy = function()
 
 
 
-	var callLayout = function(layoutName)
+	var callLayout = function(layoutName, graphName)
 	{
 
-		var params = {type:"layout", name:layoutName}
-	
+		var params = {type:"layout", name:layoutName, target:graphName}
+		console.log('going to send params as: ', params)
+		
+		cGraph = graph_substrate
+		svg = svg_substrate
+		if (graphName == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
 
 		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
 			rescaleGraph(data)
-			graph_substrate.nodes(data.nodes)
-			graph_substrate.links(data.links)
-			graph_substrate.edgeBinding()
-			g = graphDrawing(graph_substrate, svg_substrate)
-			g.move(graph_substrate, 0)
+			cGraph.nodes(data.nodes)
+			cGraph.links(data.links)
+			cGraph.edgeBinding()
+			g = graphDrawing(cGraph, svg)
+			g.move(cGraph, 0)
 
 		});
 	};
@@ -103,60 +111,33 @@ var TulipPosy = function()
 
 
 
-	var callFloatAlgorithm = function(floatAlgorithmName)
+	var callFloatAlgorithm = function(floatAlgorithmName, graphName)
 	{
 
-		var params = {type:"float", name:floatAlgorithmName}
+		var params = {type:"float", name:floatAlgorithmName, target:graphName}
+
+		cGraph = graph_substrate
+		svg = svg_substrate
+		if (graphName == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
 	
 
 		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-			var old = d3.selectAll("node.circle.selected").data();
-			/*for (i=0; i<old.length; i++)
-			{
-				old[i].x = data.nodes[i].x
-				old[i].y = data.nodes[i].y
-			}*/
-			console.log(data);
-
-		  var n = data.nodes.length;
-		  var ox = 0, oy = 0;
-		  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
-		  ox = ox / n - width / 2, oy = oy / n - height / 2;
-		  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
-
-
-			force_substrate
-			      .nodes(data.nodes)
-			      .links(data.links)
-			      .start()
-			      .stop();
-
-			var link = svg_substrate.selectAll("link.line")
-			      .data(data.links)
-		.attr("x1", function(d) { return d.source.x; })
-		.attr("y1", function(d) { return d.source.y; })
-		.attr("x2", function(d) { return d.target.x; })
-		.attr("y2", function(d) { return d.target.y; })
-				.exit().remove()
-
 		
-			var node = svg_substrate.selectAll("node.circle")
-			      .data(data.nodes)
-		.attr("cx", function(d) { return d.x; })
-		.attr("cy", function(d) { return d.y; })
-		.attr("r", function(d) { return d.viewMetric; })
-				.exit().remove()
-			      .call(force_substrate.drag)
-			
+			rescaleGraph(data)
+			cGraph.nodes(data.nodes)
+			cGraph.links(data.links)
+			cGraph.edgeBinding()
+			g = graphDrawing(cGraph, svg)
+			g.resize(cGraph, 0)
 
-			//d3.selectAll("circle.node.selected").data(old).exit().remove()
-			/*enter().append("circle")
-			.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
-			.style("fill","purple")
-			.classed("selected", 0);*/
 		});
 	};
+
+
 
 
 	var addBaseID = function(data, idName)
@@ -215,6 +196,7 @@ var TulipPosy = function()
 			graph_catalyst.links(data.links)
 			graph_catalyst.edgeBinding()
 			g = graphDrawing(graph_catalyst, svg_catalyst)
+			g.clear()
 			g.draw()
 		});
 
@@ -265,6 +247,7 @@ var TulipPosy = function()
 
 	var addInterfaceCatalyst = function()
 	{
+		var target = "catalyst"
 
 		var bt1 = svg_catalyst.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
@@ -289,7 +272,7 @@ var TulipPosy = function()
 
 		var bt2 = svg_catalyst.selectAll("rect button2").data(["force layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -309,7 +292,7 @@ var TulipPosy = function()
 
 		var bt3 = svg_catalyst.selectAll("rect button3").data(["circular layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -328,7 +311,7 @@ var TulipPosy = function()
 
 		var bt4 = svg_catalyst.selectAll("rect button4").data(["random layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -349,7 +332,7 @@ var TulipPosy = function()
 
 		var bt5 = svg_catalyst.selectAll("rect button5").data(["degree metric"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -391,6 +374,8 @@ var TulipPosy = function()
 
 	var addInterfaceSubstrate = function()
 	{
+		var target = 'substrate'
+
 		var bt1 = svg_substrate.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
 			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection());})
@@ -414,7 +399,7 @@ var TulipPosy = function()
 
 		var bt2 = svg_substrate.selectAll("rect button2").data(["force layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -434,7 +419,7 @@ var TulipPosy = function()
 
 		var bt3 = svg_substrate.selectAll("rect button3").data(["circular layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -453,7 +438,7 @@ var TulipPosy = function()
 
 		var bt4 = svg_substrate.selectAll("rect button4").data(["random layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -474,7 +459,7 @@ var TulipPosy = function()
 
 		var bt5 = svg_substrate.selectAll("rect button5").data(["degree metric"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree")})
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -541,6 +526,7 @@ var TulipPosy = function()
 	}
 
 	addInterfaceSubstrate();
+	addInterfaceCatalyst();
 	loadData();
 	
 
@@ -942,6 +928,65 @@ var TulipPosy = function()
 		//console.log(nodeId)
 		data.links.forEach(function(d){d.source=nodeId.indexOf(d.source); d.target=nodeId.indexOf(d.target);})
 	}
+
+
+	var callFloatAlgorithm_d3_force = function(floatAlgorithmName)
+	{
+
+		var params = {type:"float", name:floatAlgorithmName}
+	
+
+		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+			var old = d3.selectAll("node.circle.selected").data();
+			/*for (i=0; i<old.length; i++)
+			{
+				old[i].x = data.nodes[i].x
+				old[i].y = data.nodes[i].y
+			}*/
+			console.log(data);
+
+		  var n = data.nodes.length;
+		  var ox = 0, oy = 0;
+		  data.nodes.forEach(function(d) { ox += d.x, oy += d.y; });
+		  ox = ox / n - width / 2, oy = oy / n - height / 2;
+		  data.nodes.forEach(function(d) { d.x -= ox, d.y -= oy; });
+
+
+			force_substrate
+			      .nodes(data.nodes)
+			      .links(data.links)
+			      .start()
+			      .stop();
+
+			var link = svg_substrate.selectAll("link.line")
+			      .data(data.links)
+		.attr("x1", function(d) { return d.source.x; })
+		.attr("y1", function(d) { return d.source.y; })
+		.attr("x2", function(d) { return d.target.x; })
+		.attr("y2", function(d) { return d.target.y; })
+				.exit().remove()
+
+		
+			var node = svg_substrate.selectAll("node.circle")
+			      .data(data.nodes)
+		.attr("cx", function(d) { return d.x; })
+		.attr("cy", function(d) { return d.y; })
+		.attr("r", function(d) { return d.viewMetric; })
+				.exit().remove()
+			      .call(force_substrate.drag)
+			
+
+			//d3.selectAll("circle.node.selected").data(old).exit().remove()
+			/*enter().append("circle")
+			.attr("cx", function(d) { return d.x; })
+			.attr("cy", function(d) { return d.y; })
+			.style("fill","purple")
+			.classed("selected", 0);*/
+		});
+	};
+
+
+
 
 
 };

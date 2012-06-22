@@ -116,9 +116,24 @@ var graphDrawing = function(_graph, _svg)
 	}
 
 
+	g.resize = function(_graph, dTime)
+	{
+		g.cGraph = _graph
+
+		var node = g.svg.selectAll("g.node")
+			.data(g.cGraph.nodes(),function(d){return d.baseID})
+			.transition().delay(dTime)
+		node.select("circle.node")
+			.attr("r", function(d){return d.viewMetric*2})
+			//.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+			
+
+	}
+
+
 	g.exit = function(_graph, dTime)
 	{
-		//g.cGraph = _graph
+		g.cGraph = _graph
 		nodeIds = []
 		linkIds = []
 		_graph.nodes().forEach(function (d){nodeIds.push(d.baseID)})
@@ -126,23 +141,18 @@ var graphDrawing = function(_graph, _svg)
 		console.log(nodeIds)
 		var node = g.svg.selectAll("g.node").data(_graph.nodes(),function(d){return d.baseID})
 		node.exit().remove()
-		return
 
-		var node = g.svg.selectAll("g.node").filter(function(d){console.log(d.baseID, (nodeIds.indexOf(d.baseID) >= 0));return (nodeIds.indexOf(d.baseID) >= 0);})
-		node.selectAll("circle").data(_graph.nodes()).exit().remove()
-		console.log("filter:", node.selectAll("circle"))
-		//node.data(_graph.nodes)
-		//node.exit().remove()
-			//.filter(function(d){return (ids.indexOf(d.id) < 0);})
-			//
-			//.attr("transform", function(d) { console.log(d); return "translate(" + d.x + "," + d.y + ")"; })
-			
-		/*
-		var link = g.svg.selectAll("g.link.selected")
-			.data(g.cGraph.links())
-			.attr("transform", function(d) { console.log(d); return "translate(" + d.source.x + "," + d.source.y + ")"; })
-			.exit().remove()
-		*/
+		var link = g.svg.selectAll("g.link").data(_graph.links(),function(d){return d.baseID})
+		link.exit().remove()
+	}
+
+	g.clear = function()
+	{
+		var node = g.svg.selectAll("g.node").data([])
+		node.exit().remove()
+
+		var link = g.svg.selectAll("g.link").data([])
+		link.exit().remove()
 	}
 
 	return g
