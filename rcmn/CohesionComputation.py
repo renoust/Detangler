@@ -42,11 +42,12 @@ class CohesionComputation:
 			p = nodeHash[self.graph.source(e)]
 			q = nodeHash[self.graph.target(e)]
 			self.rawMatrix[p][q] = self.weights[e]
+			self.rawMatrix[q][p] = self.weights[e]
 
 	def __buildBurtMatrix__(self):
 		for i in range(self.graph.numberOfNodes()):
 			for j in range(self.graph.numberOfNodes()):
-				self.BurtMatrix[i][j] = self.rawMatrix[i][j] / self.rawMatrix[j][j]
+				self.BurtMatrix[i][j] = float(self.rawMatrix[i][j]) / float(self.rawMatrix[j][j])
 
 	def computeCohesion(self):
 		self.__buildRawMatrix__()
@@ -56,7 +57,7 @@ class CohesionComputation:
 		maxEigenval = max(eigenvals)
 		indexMax = np.argmax(eigenvals) #eigenvals.index(maxEigenval)
 		
-		self.networkIntensity = maxEigenval / self.graph.numberOfNodes()
+		self.networkIntensity = float(maxEigenval) / float(self.graph.numberOfNodes())
 		
 		i = 0
 		for n in self.graph.getNodes():
@@ -68,12 +69,12 @@ class CohesionComputation:
 		norm = 0.0
 		for n in self.graph.getNodes():
 			scalarProd += self.cohesionMetric[n]
-			norm += self.cohesionMetric[n] ** 2		
+			norm += self.cohesionMetric[n] ** 2			
 		norm = math.sqrt(norm)
 		
 		if np.iscomplexobj(scalarProd):
 			self.complexResult = True
 			print 'Complex numbers'
 			
-		self.networkHomogeneity = math.sqrt(scalarProd) / (norm * math.sqrt(self.graph.numberOfNodes()))
+		self.networkHomogeneity = scalarProd / (norm * math.sqrt(self.graph.numberOfNodes()))
 
