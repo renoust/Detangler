@@ -87,8 +87,9 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 
     def updateGraphRequest(self, request):
-	graphSelection = json.loads(request['graph'][0])
-	g = self.graphMan.inducedSubGraph(graphSelection)
+	print "update request: ",request
+	graphSelection = json.loads(request['graph'][0]) 
+	g = self.graphMan.inducedSubGraph(graphSelection, request['target'][0])
 	#g = self.graphMan.modifyGraph(g)
 	print 'recieved this list: ',graphSelection
 	graphJSON = self.graphMan.graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
@@ -109,10 +110,26 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		self.sendJSON(graphJSON)
 
     def analysisRequest(self, request):
-	catalyst = self.graphMan.analyseGraph()
-	graphJSON = self.graphMan.graphToJSON(catalyst, {'nodes':[{'type':'string', 'name':'label'}]})
-	print "Analysis return: "					
+	selection = 0
+	result = 0
+
+	print 'the request : ',request
+
+	if 'graph' in request:
+		selection = json.loads(request['graph'][0])
+
+	if request['target'][0] == 'substrate':
+		result = self.graphMan.analyseGraph(selection)
+		graphJSON = self.graphMan.graphToJSON(result, {'nodes':[{'type':'string', 'name':'label'}]})
+		print "Analysis return: "					
+
+
+	if request['target'][0] == 'catalyst':
+		graphJSON = self.graphMan.synchronizeFromCatalyst(selection)
+		
 	self.sendJSON(graphJSON)
+
+
 
     def handleRequest(self, request):
 	if 'type' in request.keys():

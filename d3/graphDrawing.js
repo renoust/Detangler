@@ -131,6 +131,26 @@ var graphDrawing = function(_graph, _svg)
 	}
 
 
+	g.show = function(_graph, dTime)
+	{
+		//g.cGraph = _graph
+
+		var node = g.svg.selectAll("g.node")
+			.data(g.cGraph.nodes(),function(d){return d.baseID})
+			.transition().delay(500)
+		node.select("circle.node")
+			.attr("r", function(d){return 10})
+
+		var node2 = g.svg.selectAll("g.node")
+			.data(g.cGraph.nodes(),function(d){return d.baseID})
+			.transition().delay(1000)
+		node.select("circle.node")
+			.style("fill", "pink")
+			//.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })			
+
+	}
+
+
 	g.exit = function(_graph, dTime)
 	{
 		g.cGraph = _graph
