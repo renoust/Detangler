@@ -44,13 +44,13 @@ graph = function() {
    			o[nodes[i].baseID] = nodes[i];
    		}
 
-		console.log("nodeToBaseId : ",o)
+		//console.log("nodeToBaseId : ",o)
 
    		for (i = 0; i < m; ++i) {
    			var l = links[i];
    			if (typeof l.source == "number")
 			{
-				console.log("associating: ",l.source," with ",o[l.source])
+				//console.log("associating: ",l.source," with ",o[l.source])
 				 l.source = o[l.source];
 			}
    			if (typeof l.target == "number") l.target = o[l.target];
