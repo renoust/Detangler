@@ -1,5 +1,5 @@
 
-var TulipPosy = function()
+var TulipPosy = function(originalJSON)
 { 
 
 	var width = 960,
@@ -179,7 +179,7 @@ var TulipPosy = function()
 		graph_substrate.nodes(data.nodes)
 		graph_substrate.links(data.links)
 		graph_substrate.edgeBinding()
-		console.log("graph_substrate", graph_substrate)
+		//console.log("graph_substrate", graph_substrate)
 
 		var g = graphDrawing(graph_substrate, svg_substrate)
 		g.draw()
@@ -587,34 +587,50 @@ var TulipPosy = function()
 
 
 
-	var loadData = function()
+	var loadData = function(json)
 	{
 		//d3.json(tulip_address+"?n=50", function(json) {
 		//d3.json(json_address, function(data) {
 
 		//for local use
-		var jqxhr = $.getJSON(json_address, function(){ 
-		  console.log("success");
-		})
+		if (json=="" || json==null)
+		{
+			var jqxhr = $.getJSON(json_address, function(){ 
+			  console.log("success");
+			})
 
-		.error(function() { alert("error"); })
-		.complete(function() { console.log("complete"); })
-		.success(function(data,b) { 
-			console.log('json loaded')
-			console.log(data)
+			.error(function(e) { alert("error!!", e); })
+			.complete(function() { console.log("complete"); })
+			.success(function(data,b) { 
+				//console.log('json loaded')
+				//console.log(data)
+				addBaseID(data, "id")
+				//convertLinks(data)
+				jsonData = JSON.stringify(data)
+				loadJSON(data)
+				//console.log('sending to tulip... :')
+				//console.log(jsonData)
+				createTulipGraph(jsonData)
+			});
+		}
+		else
+		{
+			//console.log('we should now send it as we have it:')
+			//console.log(json)
+			data = $.parseJSON(json)
+			//data = eval(json)
+			//console.log('###############################################################################################################################################################################')
+			//console.log('data loaded:')
+			//console.log(data);
 			addBaseID(data, "id")
-			//convertLinks(data)
-			jsonData = JSON.stringify(data)
+			json = JSON.stringify(data)
 			loadJSON(data)
-			console.log('sending to tulip... :')
-			console.log(jsonData)
-			createTulipGraph(jsonData)
-		});
+			createTulipGraph(json)
+		}
 	}
-
 	addInterfaceSubstrate();
 	addInterfaceCatalyst();
-	loadData();
+	loadData(originalJSON);
 	
 
 

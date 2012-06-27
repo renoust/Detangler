@@ -1,6 +1,8 @@
 
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link href="fileuploader.css" rel="stylesheet" type="text/css">	
 <title>Test tulip-python/D3</title>
 </head>
 
@@ -31,27 +33,124 @@ svg {
 
  
 <h1>Proof of concept: D3 and tulip-python</h1> 
+
 <!--
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
+<script src="http://malsup.github.com/jquery.form.js"></script> 
 -->
-<script src="local/jquery.js"></script>
-<script src="local/d3.v2.js"></script> 
-<script src="graph.js"></script> 
-<script src="graphDrawing.js"></script> 
-<script src="tulipPosyVast.js"></script> 
+<script src="local/jquery.js" type="text/javascript"></script>
+<script src="local/d3.v2.js" type="text/javascript"></script> 
+<script src="graph.js" type="text/javascript"></script> 
+<script src="graphDrawing.js" type="text/javascript"></script> 
+<script src="tulipPosyVast.js" type="text/javascript"></script>
 
-<script> 
- 
-TulipPosy();
 
-</script> 
  
 <p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
  
 <p>We're just trying</p>
  
+
+
+<input id=parameter type=text>
+<input id=files type=file>
+<input id=send value="send" type=button>
+
+<script>
+var url = 'http://localhost:8085'
+var xhr = new XMLHttpRequest();
+var file_object;
+document.getElementById('files').addEventListener('change', function(e) {
+     var file = this.files[0];
+     console.log('logging filebefore sending: ', this.files[0])
+    xhr.file = file; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
+        var done = e.position || e.loaded, total = e.totalSize || e.total;
+        console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
+    }, false);
+    if ( xhr.upload ) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded, total = e.totalSize || e.total;
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if ( 4 == this.readyState && this.status==200) {
+            console.log(['xhr upload complete', e]);
+	    //console.log(xhr.responseText);
+	    TulipPosy(xhr.responseText)
+        }
+    };
+
+
+
+    xhr.open('post', url, true);
+	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        xhr.setRequestHeader("X-File-Name", encodeURIComponent(this.files[0].name));
+        xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.send(xhr.file)
+}, false);
+
+
+document.getElementById('send').addEventListener('click', function(e) {
+	console.log('logging file: ', file_object)
+	TulipPosy()
+/*
+    var file = this.files[0];
+     console.log('logging filebefore sending: ', this.files[0])
+    xhr.file = file; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function(e) {
+        var done = e.position || e.loaded, total = e.totalSize || e.total;
+        console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
+    }, false);
+    if ( xhr.upload ) {
+        xhr.upload.onprogress = function(e) {
+            var done = e.position || e.loaded, total = e.totalSize || e.total;
+            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
+        };
+    }
+    xhr.onreadystatechange = function(e) {
+        if ( 4 == this.readyState ) {
+            console.log(['xhr upload complete', e]);
+        }
+    };
+    xhr.open('post', url, true);
+    xhr.send(xhr.file)*/
+
+
+
+}, false);
+
+</script>
+
+<p>
+<div>
+
+<script> 
+
+        
+//	var t = 0;
+   
+      //$(".button").click(function() { 
+//	if (t == 0){ 
+//	        t = TulipPosy();
+//	}
+     // });  
+   
+//        }); 
+ 
+   
+        
+	
+	
+
+</script> 
+</div>
+</p>
 <footer> 
   <aside>May 25, 2012</aside> 
   Benjamin Renoust (from Mike Bostock) 
 </footer> 
+</body>
+</html>

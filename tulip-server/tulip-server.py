@@ -50,6 +50,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	self.sendJSON(returnJSON)
 
     def do_POST(self):
+	print "These are the headers: ",self.headers
 	ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
 	print ctype
 	print pdict
@@ -60,13 +61,40 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		graphJSON = ""
 
 		self.handleRequest(postvars)
+	if ctype == 'application/octet-stream':
+		
+		length = int(self.headers.getheader('content-length'))
+		f = ""
+		try :
+			fStr = self.rfile.read(length)
+			f = json.loads(fStr)
+			print "gonna print the file:"
+			print fStr
+			print "gonna print the dict:"
+			print json.dumps(f)
+		except:
+			print 'cannot read input file'
 
-    def sendJSON(self, json):
+		self.handleFileUpload(json.dumps(f))
+
+		#length = int(self.headers.getheader('content-length'))
+        	#postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+
+
+    def handleFileUpload(self, jsonFile):
 	self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        print "this is to return: ",json
-        self.wfile.write(json)
+        print "this is the original json to return: ",jsonFile
+        self.wfile.write(jsonFile)#.encode('utf-8'))
+		
+
+    def sendJSON(self, jsonF):
+	self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        print "this is to return: ",jsonF
+        self.wfile.write(jsonF)
 
 	
     def algorithmRequest(self, request):

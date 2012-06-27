@@ -7,9 +7,18 @@ var graphDrawing = function(_graph, _svg)
 
 	g.draw = function()
 	{
-		console.log("drawing....", g.cGraph.links())
+		//console.log("drawing....", g.cGraph.links())
 		g.drawLinks()
 		g.drawNodes()
+		g.addInteraction()
+	}
+
+	g.addInteraction = function()
+	{
+		/*var brush = g.svg.brush()
+		      .on("brushstart", brushstart)
+		      .on("brush", brush)
+		      .on("brushend", brushend);*/
 	}
 
 	g.drawNodes = function()
@@ -58,7 +67,7 @@ var graphDrawing = function(_graph, _svg)
 			.style("stroke-width", 0.5)
 			.style("font-family", "Arial")
 			.style("font-size", 12)
-			.text(function(d) { console.log(d); return d.label; });		
+			.text(function(d) { return d.label; });		
 	}
 
 
