@@ -1,5 +1,5 @@
 
-var TulipPosy = function()
+var TulipPosy = function(originalJSON)
 { 
 
 	var width = 960,
@@ -37,10 +37,19 @@ var TulipPosy = function()
 	//var drawing_substrate = graphDrawing();
 	//var drawing_catalyst = graphDrawing();
 
-	var getSelection = function()
+	var getSelection = function(graphName)
 	{
+		cGraph = graph_substrate
+		svg = svg_substrate
+		if (graphName == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
+
+
 		console.log("The node selection= ");
-		var u = d3.selectAll("g.node.selected").data();
+		var u = svg.selectAll("g.node.selected").data();
 
 		var toStringify = {};
 		toStringify.nodes = new Array();
@@ -62,14 +71,22 @@ var TulipPosy = function()
 
 
 
-	var sendSelection = function(json)
+	var sendSelection = function(json, graphName)
 	{
-		$.post(tulip_address, { type:"update", graph:json }, function(data){
-			graph_substrate.nodes(data.nodes)
-			graph_substrate.links(data.links)
-			graph_substrate.edgeBinding()
-			g = graphDrawing(graph_substrate, svg_substrate)
-			g.exit(graph_substrate, 0)
+		cGraph = graph_substrate
+		svg = svg_substrate
+		if (graphName == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
+
+		$.post(tulip_address, { type:"update", graph:json, target:graphName }, function(data){
+			cGraph.nodes(data.nodes)
+			cGraph.links(data.links)
+			cGraph.edgeBinding()
+			g = graphDrawing(cGraph, svg)
+			g.exit(cGraph, 0)
 
 			
 		});
@@ -162,7 +179,7 @@ var TulipPosy = function()
 		graph_substrate.nodes(data.nodes)
 		graph_substrate.links(data.links)
 		graph_substrate.edgeBinding()
-		console.log("graph_substrate", graph_substrate)
+		//console.log("graph_substrate", graph_substrate)
 
 		var g = graphDrawing(graph_substrate, svg_substrate)
 		g.draw()
@@ -178,7 +195,35 @@ var TulipPosy = function()
 	}
 	
 
+	var syncGraph = function(selection, graphName)
+	{
+		console.log('sending a synchronization request: ', graphName)
 
+		cGraph = graph_catalyst
+		svg = svg_catalyst
+		if (graphName == 'catalyst')
+		{	
+			cGraph = graph_substrate
+			svg = svg_substrate
+		}
+
+	
+
+		$.post(tulip_address, {type:'analyse', graph:selection, target:graphName}, function(data){
+			console.log("received data after synchronization: ")
+			console.log(data);
+			//convertLinks(data);
+			rescaleGraph(data)
+			cGraph.nodes(data.nodes)
+			cGraph.links(data.links)
+			cGraph.edgeBinding()
+			g = graphDrawing(cGraph, svg)
+			//g.clear()
+			//g.draw()
+			g.show(cGraph)
+		});
+
+	}
 
 
 
@@ -187,7 +232,7 @@ var TulipPosy = function()
 	  	var params = {type:"analyse"}
 	
 
-		$.post(tulip_address, {type:'analyse'}, function(data){
+		$.post(tulip_address, {type:'analyse', target:'substrate'}, function(data){
 			console.log("received data after analysis:")
 			console.log(data);
 			//convertLinks(data);
@@ -251,7 +296,7 @@ var TulipPosy = function()
 
 		var bt1 = svg_catalyst.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
-			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection());})
+			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -370,6 +415,26 @@ var TulipPosy = function()
 			.style("fill", 'green')
 		*/
 
+		var bt7 = svg_catalyst.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+		
+		bt7.append("rect")
+			.attr("class", "button6")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", 'lightgray')	
+			.on("mouseover", function(){d3.select(this).style("fill","red");})
+			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+		bt7.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", 'green')
+
 	}
 
 	var addInterfaceSubstrate = function()
@@ -378,7 +443,7 @@ var TulipPosy = function()
 
 		var bt1 = svg_substrate.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
-			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection());})
+			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
 
@@ -495,39 +560,77 @@ var TulipPosy = function()
 			.attr("dy", 15)
 			.text(function(d){return d})
 			.style("fill", 'green')
+
+
+		var bt7 = svg_substrate.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+		
+		bt7.append("rect")
+			.attr("class", "button6")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", 'lightgray')	
+			.on("mouseover", function(){d3.select(this).style("fill","red");})
+			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+
+		bt7.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", 'green')
+
 	}
 
 
 
 
-	var loadData = function()
+	var loadData = function(json)
 	{
 		//d3.json(tulip_address+"?n=50", function(json) {
 		//d3.json(json_address, function(data) {
 
 		//for local use
-		var jqxhr = $.getJSON(json_address, function(){ 
-		  console.log("success");
-		})
+		if (json=="" || json==null)
+		{
+			var jqxhr = $.getJSON(json_address, function(){ 
+			  console.log("success");
+			})
 
-		.error(function() { alert("error"); })
-		.complete(function() { console.log("complete"); })
-		.success(function(data,b) { 
-			console.log('json loaded')
-			console.log(data)
+			.error(function(e) { alert("error!!", e); })
+			.complete(function() { console.log("complete"); })
+			.success(function(data,b) { 
+				//console.log('json loaded')
+				//console.log(data)
+				addBaseID(data, "id")
+				//convertLinks(data)
+				jsonData = JSON.stringify(data)
+				loadJSON(data)
+				//console.log('sending to tulip... :')
+				//console.log(jsonData)
+				createTulipGraph(jsonData)
+			});
+		}
+		else
+		{
+			//console.log('we should now send it as we have it:')
+			//console.log(json)
+			data = $.parseJSON(json)
+			//data = eval(json)
+			//console.log('###############################################################################################################################################################################')
+			//console.log('data loaded:')
+			//console.log(data);
 			addBaseID(data, "id")
-			//convertLinks(data)
-			jsonData = JSON.stringify(data)
+			json = JSON.stringify(data)
 			loadJSON(data)
-			console.log('sending to tulip... :')
-			console.log(jsonData)
-			createTulipGraph(jsonData)
-		});
+			createTulipGraph(json)
+		}
 	}
-
 	addInterfaceSubstrate();
 	addInterfaceCatalyst();
-	loadData();
+	loadData(originalJSON);
 	
 
 

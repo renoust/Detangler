@@ -7,9 +7,18 @@ var graphDrawing = function(_graph, _svg)
 
 	g.draw = function()
 	{
-		console.log("drawing....", g.cGraph.links())
+		//console.log("drawing....", g.cGraph.links())
 		g.drawLinks()
 		g.drawNodes()
+		g.addInteraction()
+	}
+
+	g.addInteraction = function()
+	{
+		/*var brush = g.svg.brush()
+		      .on("brushstart", brushstart)
+		      .on("brush", brush)
+		      .on("brushend", brushend);*/
 	}
 
 	g.drawNodes = function()
@@ -58,7 +67,7 @@ var graphDrawing = function(_graph, _svg)
 			.style("stroke-width", 0.5)
 			.style("font-family", "Arial")
 			.style("font-size", 12)
-			.text(function(d) { console.log(d); return d.label; });		
+			.text(function(d) { return d.label; });		
 	}
 
 
@@ -127,6 +136,26 @@ var graphDrawing = function(_graph, _svg)
 			.attr("r", function(d){return d.viewMetric*2})
 			//.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 			
+
+	}
+
+
+	g.show = function(_graph, dTime)
+	{
+		//g.cGraph = _graph
+
+		var node = g.svg.selectAll("g.node")
+			.data(g.cGraph.nodes(),function(d){return d.baseID})
+			.transition().delay(500)
+		node.select("circle.node")
+			.attr("r", function(d){return 10})
+
+		var node2 = g.svg.selectAll("g.node")
+			.data(g.cGraph.nodes(),function(d){return d.baseID})
+			.transition().delay(1000)
+		node.select("circle.node")
+			.style("fill", "pink")
+			//.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })			
 
 	}
 

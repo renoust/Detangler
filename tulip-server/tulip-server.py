@@ -50,6 +50,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	self.sendJSON(returnJSON)
 
     def do_POST(self):
+	print "These are the headers: ",self.headers
 	ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
 	print ctype
 	print pdict
@@ -60,13 +61,40 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		graphJSON = ""
 
 		self.handleRequest(postvars)
+	if ctype == 'application/octet-stream':
+		
+		length = int(self.headers.getheader('content-length'))
+		f = ""
+		try :
+			fStr = self.rfile.read(length)
+			f = json.loads(fStr)
+			print "gonna print the file:"
+			print fStr
+			print "gonna print the dict:"
+			print json.dumps(f)
+		except:
+			print 'cannot read input file'
 
-    def sendJSON(self, json):
+		self.handleFileUpload(json.dumps(f))
+
+		#length = int(self.headers.getheader('content-length'))
+        	#postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+
+
+    def handleFileUpload(self, jsonFile):
 	self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        print "this is to return: ",json
-        self.wfile.write(json)
+        print "this is the original json to return: ",jsonFile
+        self.wfile.write(jsonFile)#.encode('utf-8'))
+		
+
+    def sendJSON(self, jsonF):
+	self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        print "this is to return: ",jsonF
+        self.wfile.write(jsonF)
 
 	
     def algorithmRequest(self, request):
@@ -87,8 +115,9 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 
     def updateGraphRequest(self, request):
-	graphSelection = json.loads(request['graph'][0])
-	g = self.graphMan.inducedSubGraph(graphSelection)
+	print "update request: ",request
+	graphSelection = json.loads(request['graph'][0]) 
+	g = self.graphMan.inducedSubGraph(graphSelection, request['target'][0])
 	#g = self.graphMan.modifyGraph(g)
 	print 'recieved this list: ',graphSelection
 	graphJSON = self.graphMan.graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
@@ -109,10 +138,26 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		self.sendJSON(graphJSON)
 
     def analysisRequest(self, request):
-	catalyst = self.graphMan.analyseGraph()
-	graphJSON = self.graphMan.graphToJSON(catalyst, {'nodes':[{'type':'string', 'name':'label'}]})
-	print "Analysis return: "					
+	selection = 0
+	result = 0
+
+	print 'the request : ',request
+
+	if 'graph' in request:
+		selection = json.loads(request['graph'][0])
+
+	if request['target'][0] == 'substrate':
+		result = self.graphMan.analyseGraph(selection)
+		graphJSON = self.graphMan.graphToJSON(result, {'nodes':[{'type':'string', 'name':'label'}]})
+		print "Analysis return: "					
+
+
+	if request['target'][0] == 'catalyst':
+		graphJSON = self.graphMan.synchronizeFromCatalyst(selection)
+		
 	self.sendJSON(graphJSON)
+
+
 
     def handleRequest(self, request):
 	if 'type' in request.keys():
