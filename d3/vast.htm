@@ -44,7 +44,7 @@ svg {
 <script src="graph.js" type="text/javascript"></script> 
 <script src="graphDrawing.js" type="text/javascript"></script> 
 <script src="tulipPosyVast.js" type="text/javascript"></script>
-
+<script src="lasso.js" type="text/javascript"></script> 
 
  
 <p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
@@ -63,7 +63,7 @@ var xhr = new XMLHttpRequest();
 var file_object;
 document.getElementById('files').addEventListener('change', function(e) {
      var file = this.files[0];
-     console.log('logging filebefore sending: ', this.files[0])
+     console.log('logging file before sending: ', this.files[0])
     xhr.file = file; // not necessary if you create scopes like this
     xhr.addEventListener('progress', function(e) {
         var done = e.position || e.loaded, total = e.totalSize || e.total;
