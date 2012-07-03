@@ -79,7 +79,7 @@ document.getElementById('files').addEventListener('change', function(e) {
         if ( 4 == this.readyState && this.status==200) {
             console.log(['xhr upload complete', e]);
 	    //console.log(xhr.responseText);
-	    TulipPosy(xhr.responseText)
+	    TulipPosy({file:xhr.responseText})
         }
     };
 
