@@ -52,11 +52,14 @@ svg {
 <p>We're just trying</p>
  
 
-
+<p> Type your query:
 <input id=query type=text>
+<input id=send value="send" type=button><br>
+</p>
+<p>
+or choose a file to upload:
 <input id=files type=file>
-<input id=send value="send" type=button>
-
+</p>
 <script>
 var url = 'http://localhost:8085'
 var xhr = new XMLHttpRequest();

@@ -931,15 +931,15 @@ var TulipPosy = function(originalJSON)
 		if ('query' in originalJSON)
 		{
 			console.log('query is in json', originalJSON)
-			query = originalJSON
-			originalJSON  = callSearchQuery(query)
+			var recievedGraph  = callSearchQuery(originalJSON)
+			loadData(recievedGraph);
 			//console.log('new query: ',xyz)
 		}
-		if ('file' in originalJSON)
+		else if ('file' in originalJSON)
 		{
 			loadData(originalJSON.file);
 		}
-		loadData();
+		else loadData();
 	}
 
 	//addBrush("substrate");

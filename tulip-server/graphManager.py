@@ -93,7 +93,7 @@ class graphManager():
 					if k['type'] == 'float':
 						propInterface[k['name']] = graph.getDoubleProperty(k['name'])
 					if k['type'] == 'string':
-						propInterface[k['name']] = graph.getStringProperty(k['name'])
+						propInterface[k['name']] = graph.getStringProperty(k['name'])						
 			
 			vLayout = graph.getLayoutProperty("viewLayout")
 			print propInterface
@@ -103,6 +103,8 @@ class graphManager():
 			for e in edgeList:
 				v = {"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]}
 				v.update(getValue(e))
+				print v
+				print json.dumps(v)#str(v).decode().encode('utf-8', 'backslashreplace'))
 				eList.append(v)			
 	    		eList = {"links":eList}
 			print eList
@@ -111,15 +113,15 @@ class graphManager():
 		    	eList = {"links":[{"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]} for e in edgeList]}
 	    		#nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]}.update(getValue(n)) for n in graph.getNodes()]}
 		
-		print 'this is eList before appending: ',eList	
-		print 'this is nList before appending: ',nList	
+		print 'this is nList before appending: ',json.dumps(nList)	
+		print 'this is eList before appending: ',str(eList)	
+
 	    	nList.update(eList)
 		if 'data' in properties.keys():
 			nList.update({'data':properties['data']})
 	    	print "dumping: ", nList
-	    	return json.dumps(nList)
-
-
+	    	#return json.dumps(nList) #json.loads(str(nList))) #.decode().encode('utf-8', 'backslashreplace'))
+		return json.dumps(nList)
 
 
     def inducedSubGraph(self, jsonGraph, target):	
