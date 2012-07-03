@@ -12,6 +12,7 @@ from tulip import *
 sys.path.append("/home/brenoust/Dropbox/OTMedia/lighterPython")
 import clusterAnalysisLgt
 from graphManager import *
+import searchQuery
 
 
 class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
@@ -68,10 +69,10 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 		try :
 			fStr = self.rfile.read(length)
 			f = json.loads(fStr)
-			print "gonna print the file:"
-			print fStr
-			print "gonna print the dict:"
-			print json.dumps(f)
+			#print "gonna print the file:"
+			#print fStr
+			#print "gonna print the dict:"
+			#print json.dumps(f)
 		except:
 			print 'cannot read input file'
 
@@ -85,7 +86,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        print "this is the original json to return: ",jsonFile
+        #print "this is the original json to return: ",jsonFile
         self.wfile.write(jsonFile)#.encode('utf-8'))
 		
 
@@ -122,11 +123,32 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	print 'recieved this list: ',graphSelection
 	graphJSON = self.graphMan.graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
 	#graphJSON = self.graphMan.graphToJSON(g)
-	print 'sending this list: ',graphJSON
+	#print 'sending this list: ',graphJSON
 	self.sendJSON(graphJSON)
 
 
     def creationRequest(self, request):
+	if 'search' in request.keys():
+		print 'search is in request: ',request
+		query = request['search'][0]
+		g = searchQuery.main(query)
+		baseIDP = g.getDoubleProperty('baseID')
+		idP = g.getDoubleProperty('id')
+		label = g.getStringProperty('label')
+		vLabel = g.getStringProperty('viewLabel')
+		for n in g.getNodes():
+			baseIDP[n] = n.id
+			idP[n] = n.id
+			label[n] = vLabel[n]
+
+			
+		for e in g.getEdges():
+			baseIDP[e] = e.id
+			idP[e] = e.id
+
+		graphJSON = self.graphMan.graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}, {'type':'float', 'name':'id'}], 'edges':[{'type':'float', 'name':'id'}, {'type':'string', 'name':'descripteurs'}]})
+		self.sendJSON(graphJSON)
+
 	if 'graph' in request.keys():
 		#print postvars['graph'][0]
 		graphJSON = json.loads(request['graph'][0])
@@ -141,15 +163,15 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	selection = 0
 	result = 0
 
-	print 'the request : ',request
+	#print 'the request : ',request
 
 	if 'graph' in request:
 		selection = json.loads(request['graph'][0])
 
 	if request['target'][0] == 'substrate':
 		result = self.graphMan.analyseGraph(selection)
-		graphJSON = self.graphMan.graphToJSON(result, {'nodes':[{'type':'string', 'name':'label'}]})
-		print "Analysis return: "					
+		graphJSON = self.graphMan.graphToJSON(result[0], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'cohesion intensity':result[1], 'cohesion homogeneity':result[2]}})
+		#print "Analysis return: "					
 
 
 	if request['target'][0] == 'catalyst':
@@ -168,7 +190,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.analysisRequest(request)
 
 		if request['type'][0] == 'algorithm':
-			print 'algo requested'
+			#print 'algo requested'
 			self.algorithmRequest(request)
 
 		if request['type'][0] == 'update':

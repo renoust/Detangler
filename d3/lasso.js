@@ -13,6 +13,8 @@ var lasso = function(svg)
 	g.totalDistanceAlongDrag = 0.0
 	g.distanceFromStartToEnd = 0.0
 
+	g.fillColor = 'black'
+
 	g.updateDistance = function(cPoint)
 	{
 		if (g.pointList.length > 0)
@@ -85,7 +87,7 @@ var lasso = function(svg)
 							
 							d3.select("polygon.brush").data(g.pointList)
 								.attr("points", strPointList)
-								.attr("style","fill:black;stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125")
+								.attr("style","fill:"+g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125")
 						}else{
 							var p0 = g.pointList[0]
 							var p1 = g.pointList[g.pointList.length-1]
@@ -95,7 +97,7 @@ var lasso = function(svg)
 								.attr("y", Math.min(p0[1], p1[1]))
 								.attr("width", Math.abs(p0[0]-p1[0]))
 								.attr("height", Math.abs(p0[1]-p1[1]))
-								.style("fill", "black")
+								.style("fill", g.fillColor)
 								.style("fill-opacity", .125)
 								.style("stroke", "purple")
 								.style("stroke-width",2)
@@ -220,7 +222,7 @@ var lasso = function(svg)
 			g.group.append("polygon").data(g.pointList)
 				.attr("class", "brush")
 				.attr("points", strPointList)
-				.attr("style","fill:black;stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125")
+				.attr("style","fill:"+g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125")
 		}else{
 			var p0 = g.pointList[0]
 			var p1 = g.pointList[g.pointList.length-1]
@@ -232,7 +234,7 @@ var lasso = function(svg)
 				.attr("y", Math.min(p0[1], p1[1]))
 				.attr("width", Math.abs(p0[0]-p1[0]))
 				.attr("height", Math.abs(p0[1]-p1[1]))
-				.style("fill", "black")
+				.style("fill", g.fillColor)
 				.style("fill-opacity", .125)
 				.style("stroke", "purple")
 				.style("stroke-width",2)

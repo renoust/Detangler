@@ -40,10 +40,12 @@ class graphManager():
 	
 	if not properties:
 	 	vLayout = graph.getLayoutProperty("viewLayout")
-	    	nList = {"nodes":[{"label":n.id,"x":vLayout[n][0],"y":vLayout[n][1], "baseID":bID[n]} for n in nodeList]}
+	    	nList = {"nodes":[{"id":n.id,"x":vLayout[n][0],"y":vLayout[n][1], "baseID":bID[n]} for n in nodeList]}
 	    	#nToI = {nList["nodes"][i]["baseID"]:i for i in range(len(nList["nodes"]))}
 	    	eList = {"links":[{"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]} for e in edgeList]}
 	    	nList.update(eList)
+		if 'data' in properties.keys():
+			nList.update({'data':properties['data']})
 	    	print "dumping: ", json.dumps(nList)
 	    	return json.dumps(nList)
 	else:
@@ -102,15 +104,19 @@ class graphManager():
 				v = {"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]}
 				v.update(getValue(e))
 				eList.append(v)			
-	    		eList = {"edges":nList}
+	    		eList = {"links":eList}
 			print eList
 		
 		else:
 		    	eList = {"links":[{"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]} for e in edgeList]}
 	    		#nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]}.update(getValue(n)) for n in graph.getNodes()]}
-			
+		
+		print 'this is eList before appending: ',eList	
+		print 'this is nList before appending: ',nList	
 	    	nList.update(eList)
-	    	print "dumping: ", json.dumps(nList)
+		if 'data' in properties.keys():
+			nList.update({'data':properties['data']})
+	    	print "dumping: ", nList
 	    	return json.dumps(nList)
 
 
@@ -203,14 +209,14 @@ class graphManager():
 	
 	for e in json[u'links']:
 		if u'source' in e.keys() and u'target' in e.keys():
-			print 'edge: ',e
+			#print 'edge: ',e
 			v = g.addEdge(idToNode[e[u'source']], idToNode[e[u'target']])
-			print e
+			#print e
 			for k in e.keys():
 				if k not in [u'source', u'target']:
 					prop = 0
 					kType = type(e[k])
-					print 'type: ', type(e[k])
+					#print 'type: ', type(e[k])
 					if kType == int or kType == float:
 						prop = g.getDoubleProperty(k.encode("utf-8"))
 					if kType == str:
@@ -237,6 +243,9 @@ class graphManager():
     def analyseGraph(self, jsonGraph = 0):
 
 	graph = self.substrate
+	cohesionIntensity = 0
+	cohesionHomogeneity = 0
+
 	if jsonGraph:
 		nodeList = []
 		graphNList = []
@@ -260,12 +269,14 @@ class graphManager():
 		o_descP = graph.getStringProperty("descriptors")
 		for n in graph.getNodes():
 			descP[n] = o_descP[n]
-			print 'node ', descP[n]
+			#print 'node ', descP[n]
 		for e in graph.getEdges():
 			descP[e] = o_descP[e]
-			print 'edge ', descP[e]
+			#print 'edge ', descP[e]
 						
 	c = clusterAnalysisLgt.clusterAnalysisLgt(graph)
+	cohesionIntensity = float(c.globalCoherence)
+	cohesionHomogeneity = float(c.globalCosine)
 
 	vL = c.typeGraph.getLayoutProperty("viewLayout")
 	c.typeGraph.computeLayoutProperty("GEM (Frick)", vL)
@@ -283,7 +294,7 @@ class graphManager():
 
 
 	if jsonGraph:
-		return c.typeGraph
+		return [c.typeGraph, cohesionIntensity, cohesionHomogeneity]
 
 	if not self.catalyst:
 		self.catalyst = tlp.newGraph()
@@ -292,71 +303,9 @@ class graphManager():
 
 	tlp.copyToGraph(self.catalyst, c.typeGraph)
 
-	return self.catalyst
+	return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
 
 
-
-
-    def analyseGraph__(self, jsonGraph = 0):
-
-	graph = self.substrate
-	if jsonGraph:
-		nodeList = []
-		graphNList = []
-		print 'the selection: ',jsonGraph
-		for n in jsonGraph[u'nodes']:
-			nodeList.append(n[u'baseID'])
-
-		baseIDP = self.substrate.getDoubleProperty("baseID")
-		for n in self.substrate.getNodes():
-			if baseIDP[n] in nodeList:
-				graphNList.append(n)
-		if len(graphNList) > 1:
-			graph = self.substrate.inducedSubGraph(graphNList)
-
-	# this has to be set because of the clusterAnalysis script
-	
-	if not graph.existProperty("descripteurs"):
-		descP = graph.getStringProperty("descripteurs")
-		o_descP = graph.getStringProperty("descriptors")
-		for n in graph.getNodes():
-			descP[n] = o_descP[n]
-			print 'node ', descP[n]
-		for e in graph.getEdges():
-			descP[e] = o_descP[e]
-			print 'edge ', descP[e]
-						
-	c = clusterAnalysisLgt.clusterAnalysisLgt(graph)
-
-	if not jsonGraph:
-		return c.typeGraph
-
-	if not self.catalyst:
-		self.catalyst = tlp.newGraph()
-	else:
-		self.catalyst.clear()
-
-	tlp.copyToGraph(self.catalyst, c.typeGraph)
-
-
-	# those settings are needed for transmission to d3
-
-	vL = self.catalyst.getLayoutProperty("viewLayout")
-	self.catalyst.computeLayoutProperty("GEM (Frick)", vL)
-
-	tName = self.catalyst.getStringProperty("typeName")
-	label = self.catalyst.getStringProperty("label")
-	baseID = self.catalyst.getDoubleProperty("baseID")
-
-	for n in self.catalyst.getNodes():
-		label[n] = tName[n]
-		baseID[n] = n.id
-
-	for e in self.catalyst.getEdges():
-		baseID[e] = e.id
-
-
-	return self.catalyst
 
 
     def synchronizeFromCatalyst(self, jsonGraph):
@@ -458,3 +407,67 @@ class graphManager():
 	for n in self.graph.getNodes():
 		viewL[n] *= 10
 	return graph
+
+
+
+    def analyseGraph_deprecated(self, jsonGraph = 0):
+
+	graph = self.substrate
+	if jsonGraph:
+		nodeList = []
+		graphNList = []
+		print 'the selection: ',jsonGraph
+		for n in jsonGraph[u'nodes']:
+			nodeList.append(n[u'baseID'])
+
+		baseIDP = self.substrate.getDoubleProperty("baseID")
+		for n in self.substrate.getNodes():
+			if baseIDP[n] in nodeList:
+				graphNList.append(n)
+		if len(graphNList) > 1:
+			graph = self.substrate.inducedSubGraph(graphNList)
+
+	# this has to be set because of the clusterAnalysis script
+	
+	if not graph.existProperty("descripteurs"):
+		descP = graph.getStringProperty("descripteurs")
+		o_descP = graph.getStringProperty("descriptors")
+		for n in graph.getNodes():
+			descP[n] = o_descP[n]
+			print 'node ', descP[n]
+		for e in graph.getEdges():
+			descP[e] = o_descP[e]
+			print 'edge ', descP[e]
+						
+	c = clusterAnalysisLgt.clusterAnalysisLgt(graph)
+
+	if not jsonGraph:
+		return c.typeGraph
+
+	if not self.catalyst:
+		self.catalyst = tlp.newGraph()
+	else:
+		self.catalyst.clear()
+
+	tlp.copyToGraph(self.catalyst, c.typeGraph)
+
+
+	# those settings are needed for transmission to d3
+
+	vL = self.catalyst.getLayoutProperty("viewLayout")
+	self.catalyst.computeLayoutProperty("GEM (Frick)", vL)
+
+	tName = self.catalyst.getStringProperty("typeName")
+	label = self.catalyst.getStringProperty("label")
+	baseID = self.catalyst.getDoubleProperty("baseID")
+
+	for n in self.catalyst.getNodes():
+		label[n] = tName[n]
+		baseID[n] = n.id
+
+	for e in self.catalyst.getEdges():
+		baseID[e] = e.id
+
+
+	return self.catalyst
+

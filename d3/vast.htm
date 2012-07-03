@@ -53,7 +53,7 @@ svg {
  
 
 
-<input id=parameter type=text>
+<input id=query type=text>
 <input id=files type=file>
 <input id=send value="send" type=button>
 
@@ -94,8 +94,9 @@ document.getElementById('files').addEventListener('change', function(e) {
 
 
 document.getElementById('send').addEventListener('click', function(e) {
-	console.log('logging file: ', file_object)
-	TulipPosy()
+	query = document.getElementById('query').value
+	//console.log('logging file: ', query)
+	TulipPosy({'query':query})
 /*
     var file = this.files[0];
      console.log('logging filebefore sending: ', this.files[0])
