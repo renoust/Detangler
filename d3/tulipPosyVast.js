@@ -1,4 +1,5 @@
 
+
 var TulipPosy = function(originalJSON)
 { 
 
@@ -34,6 +35,10 @@ var TulipPosy = function(originalJSON)
 	
 	var graph_substrate = graph();
 	var graph_catalyst = graph();
+	var cohesion_intensity = 0.0;
+	var cohesion_homogeneity = 0.0;
+	var lasso_catalyst = null;
+	var lasso_substrate = null;
 	//var drawing_substrate = graphDrawing();
 	//var drawing_catalyst = graphDrawing();
 
@@ -64,9 +69,6 @@ var TulipPosy = function(originalJSON)
 		console.log(JSON.stringify(toStringify));
 		return JSON.stringify(toStringify)
 	};
-
-
-
 
 
 
@@ -175,7 +177,7 @@ var TulipPosy = function(originalJSON)
 	var loadJSON = function(data)
 	{
 		rescaleGraph(data)
-
+		console.log("the data to store:", data);
 		graph_substrate.nodes(data.nodes)
 		graph_substrate.links(data.links)
 		graph_substrate.edgeBinding()
@@ -221,6 +223,12 @@ var TulipPosy = function(originalJSON)
 			//g.clear()
 			//g.draw()
 			g.show(cGraph)
+			if ('data' in data)
+			{
+				cohesion_homogeneity = data['data']['cohesion homogeneity'];
+				cohesion_intensity = data['data']['cohesion intensity'];
+				cohesionCaught();
+			}
 		});
 
 	}
@@ -243,6 +251,9 @@ var TulipPosy = function(originalJSON)
 			g = graphDrawing(graph_catalyst, svg_catalyst)
 			g.clear()
 			g.draw()
+			cohesion_homogeneity = data['data']['cohesion homogeneity']
+			cohesion_intensity = data['data']['cohesion intensity']
+			cohesionCaught();
 		});
 
 	}
@@ -264,6 +275,23 @@ var TulipPosy = function(originalJSON)
 	}
 
 
+	var callSearchQuery = function(query)
+	{
+		var recieved_data;
+		console.log('calling search query ', query)
+		$.ajax({url:tulip_address, async:false, data:{ type:"creation", 'search':query['query'] }, type:'POST', 
+			success:function(data){
+				console.log('sending search request in tulip, and recieved data: ',data)
+				recieved_data = data
+			}
+		});
+		return JSON.stringify(recieved_data)
+		/*
+		$.post(tulip_address, { type:"creation", 'search':query['query'] }, function(data){
+			console.log('sending search request in tulip, and recieved data: ',data)
+			return JSON.stringify(data)
+		});*/
+	}
 
 	var rescaleGraph = function(data)
 	{
@@ -271,7 +299,8 @@ var TulipPosy = function(originalJSON)
 		var frame = 10.0
 		var w = width-(buttonWidth+2*frame)
 		var h = height-(2*frame)
-
+		if (data.nodes.length<=0) return
+		
 		var minX = data.nodes[0].x
 		var maxX = data.nodes[0].x
 		var minY = data.nodes[0].y
@@ -582,8 +611,271 @@ var TulipPosy = function(originalJSON)
 			.text(function(d){return d})
 			.style("fill", 'green')
 
+
+		var coh = svg_substrate.selectAll("rect cohesion").data(["cohesion"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 395 + ")"; })
+			
+		
+		coh.append("rect")
+			.attr("class", "cohesionframe")
+			.attr("width", 120)
+			.attr("height", 90)
+			.style("fill-opacity", 0)
+			.style("stroke-width", 1)
+			.style("stroke", 'black')	
+
+		coh.append("text")
+			.attr('class', 'cohesionlabel')
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text("Cohesion")
+			.style("fill", 'black')
+
+		coh.append("text")
+			.attr('class', 'intensitylabel')
+			.attr("dx", 10)
+			.attr("dy", 35)
+			.text("intensity:")
+			.style("fill", 'black')
+
+		coh.append("text")
+			.attr('class', 'intensity')
+			.attr("dx", 110)
+			.attr("dy", 50)
+			.text(function(d){return ""+cohesion_intensity})
+			.style("fill", 'blue')
+			.style('text-anchor', 'end')
+
+		coh.append("text")
+			.attr('class', 'homogeneitylabel')
+			.attr("dx", 10)
+			.attr("dy", 70)
+			.attr("width", 120)
+			.text('homogeneity:')
+			.style("fill", 'black')
+
+		coh.append("text")
+			.attr('class', 'homogeneity')
+			.attr("dx", 110)
+			.attr("dy", 85)
+			.text(function(d){return ""+cohesion_homogeneity})
+			.style('text-anchor', 'end')
+			.style("fill", 'blue')
+
 	}
 
+	var cohesionCaught = function()
+	{
+		var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+		svg_substrate.selectAll("text.homogeneity").text(function(d){return ""+round(cohesion_homogeneity,5)});
+		svg_substrate.selectAll("text.intensity").text(function(d){return ""+round(cohesion_intensity,5)});
+		var index = Math.round(cohesion_intensity*5)%6
+		svg_substrate.selectAll("rect.cohesionframe").transition().style('fill-opacity', 1)
+			.style("fill", brewerSeq[index])
+		if(lasso_catalyst) lasso_catalyst.fillColor = brewerSeq[index]
+		if(lasso_substrate) lasso_substrate.fillColor = brewerSeq[index]
+
+	}
+
+	var round = function(number, digits)
+	{
+		var factor = Math.pow(10, digits);
+		return Math.round(number*factor)/factor;
+	}
+
+	var addBrush = function(target)
+	{
+		var svg = null
+		var graph = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+			graph = graph_catalyst			
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+			graph = graph_substrate
+		}
+			
+		if (!target)
+			return
+
+		var h = svg.attr("height")
+		var w = svg.attr("width")
+		var buttonWidth = 131
+		
+		var xScale = d3.scale.linear().range([buttonWidth, w])
+		var yScale = d3.scale.linear().range([0,h])
+
+		console.log("svg element: ",svg, w, h)
+		
+
+		var brush = svg.append("g")
+		    .attr("class", "brush"+target)
+		    .call(d3.svg.brush().x(xScale).y(yScale)
+		    .on("brushstart", brushstart)
+		    .on("brush", brushmove)
+		    .on("brushend", brushend))
+		    .style('stroke', 'black')
+		    .style('stroke-width', 2)
+		    .style('fill-opacity', .125)
+		    .style('shape-rendering', 'crispEdges')
+
+
+
+		function brushstart() {
+		  svg.classed("selecting", true);
+		}
+
+		var prevSelList = [];
+
+		function brushmove() {
+		  var e = d3.event.target.extent();
+		  var node = svg.selectAll("g.node")
+		  var selList = []
+		  node.classed("selected", function(d) {
+			//console.log('object d ',d);
+			//console.log('pos (',e,') against (',d.x/w,',',d.y/h);
+		    wNorm = w - buttonWidth
+		    d.selected = e[0][0] <= (d.x-buttonWidth+1)/wNorm && (d.x-buttonWidth+1)/wNorm <= e[1][0]
+			&& e[0][1] <= d.y/h && d.y/h <= e[1][1];
+		    return d.selected;
+		  }).select("circle.node").style('fill', function(d){
+			if (d.selected)
+			{ selList.push(d.baseID); return 'red';}
+			return 'steelblue';
+		})
+
+		selList.sort()
+		if(selList.length>0)
+		{	
+			if(selList.length == prevSelList.length)
+			{
+				var i = 0;
+				var iMax = selList.length;
+				while(i<iMax && selList[i] == prevSelList[i])
+					i++;
+				if (i != iMax)
+				{
+					prevSelList.length = 0
+					prevSelList = selList.slice(0);
+					syncGraph(getSelection(target), target)
+				}
+			}else{
+					
+					prevSelList.length = 0
+					prevSelList = selList.slice(0);
+					syncGraph(getSelection(target), target)
+			}
+		}
+				
+			
+		
+		
+		  //syncGraph(getSelection(target), target)
+		//console.log(nbSelected, 'elements selected')
+		}
+
+		function brushend() {
+		  svg.classed("selecting", !d3.event.target.empty());
+		}
+
+
+
+	}
+
+	var addLasso = function(target)
+	{
+		if (!target)
+			return
+
+		var svg = null
+		var graph = null
+		var myL = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+			graph = graph_catalyst	
+			lasso_catalyst = lasso(svg);
+			myL = lasso_catalyst		
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+			graph = graph_substrate
+			lasso_substrate = lasso(svg);
+			myL = lasso_substrate
+		}
+		
+		//myL = lasso(svg);
+		var prevSelList = [];
+
+		myL.checkIntersect = function()
+		{
+			var g = this
+			var selList = []
+			svg.selectAll("g.node").classed("selected", function(d){
+					var x = d.x;
+					var y = d.y;
+					var pointArray = []
+					if (g.isLasso())
+					{
+						pointArray = g.pointList
+					}else{
+						var p0 = g.pointList[0]
+						var p1 = g.pointList[g.pointList.length-1]			
+						pointArray = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]]
+					}
+					d.selected = g.intersect(pointArray, x, y)
+					return d.selected
+
+				})
+				.select("circle.node").style('fill', function(d){
+					
+					if (d.selected){
+						selList.push(d.baseID)
+						return 'red';
+					}else
+						return 'steelblue';
+				});
+			
+			selList.sort()
+			if(selList.length>0)
+			{	
+				if(selList.length == prevSelList.length)
+				{
+					var i = 0;
+					var iMax = selList.length;
+					while(i<iMax && selList[i] == prevSelList[i])
+						i++;
+					if (i != iMax)
+					{
+						prevSelList.length = 0
+						prevSelList = selList.slice(0);
+						syncGraph(getSelection(target), target)
+					}
+				}else{
+					
+						prevSelList.length = 0
+						prevSelList = selList.slice(0);
+						syncGraph(getSelection(target), target)
+				}
+			}
+
+		}	
+
+
+		svg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
+		svg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
+		svg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});
+
+		
+	}
 
 
 
@@ -611,6 +903,7 @@ var TulipPosy = function(originalJSON)
 				//console.log('sending to tulip... :')
 				//console.log(jsonData)
 				createTulipGraph(jsonData)
+				analyseGraph()
 			});
 		}
 		else
@@ -619,18 +912,37 @@ var TulipPosy = function(originalJSON)
 			//console.log(json)
 			data = $.parseJSON(json)
 			//data = eval(json)
-			//console.log('###############################################################################################################################################################################')
 			//console.log('data loaded:')
 			//console.log(data);
 			addBaseID(data, "id")
 			json = JSON.stringify(data)
 			loadJSON(data)
 			createTulipGraph(json)
+			analyseGraph()
 		}
 	}
+
 	addInterfaceSubstrate();
 	addInterfaceCatalyst();
+	
+	if (originalJSON != null && originalJSON != "" )
+	{
+		console.log('orginialJSON not null', originalJSON)
+		if ('query' in originalJSON)
+		{
+			console.log('query is in json', originalJSON)
+			query = originalJSON
+			originalJSON  = callSearchQuery(query)
+			//console.log('new query: ',xyz)
+		}
+	}
+
 	loadData(originalJSON);
+	addBrush("substrate");
+	addBrush("catalyst");
+	//addLasso("substrate");
+	//addLasso("catalyst");
+	
 	
 
 

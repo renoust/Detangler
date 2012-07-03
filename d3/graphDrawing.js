@@ -10,16 +10,15 @@ var graphDrawing = function(_graph, _svg)
 		//console.log("drawing....", g.cGraph.links())
 		g.drawLinks()
 		g.drawNodes()
-		g.addInteraction()
+		//g.addInteraction()
 	}
 
-	g.addInteraction = function()
+	g.drawShape = function()
 	{
-		/*var brush = g.svg.brush()
-		      .on("brushstart", brushstart)
-		      .on("brush", brush)
-		      .on("brushend", brushend);*/
+		console.log("do something")
 	}
+
+
 
 	g.drawNodes = function()
 	{
@@ -30,13 +29,15 @@ var graphDrawing = function(_graph, _svg)
 			.attr("class", "node")
 			.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 
-			.on("click", function(){
+			.on("click", function(d){
 				var o = d3.select(this); 
 				if (o.classed("selected"))
 				{
+					d.selected = 1
 					o.classed("selected",0)
 					o.select("circle").style("fill","steelblue");
 				}else{
+					d.selected = 0
 					o.classed("selected",1)
 					o.select("circle").style("fill","red");
 				}
@@ -114,12 +115,12 @@ var graphDrawing = function(_graph, _svg)
 		var node = g.svg.selectAll("g.node")
 			.data(g.cGraph.nodes(),function(d){return d.baseID})
 			.transition().delay(dTime)
-			.attr("transform", function(d) { console.log(d); return "translate(" + d.x + "," + d.y + ")"; })
+			.attr("transform", function(d) { /*console.log(d);*/ return "translate(" + d.x + "," + d.y + ")"; })
 
 		var link = g.svg.selectAll("g.link")
 			.data(g.cGraph.links(),function(d){return d.baseID})
 			.transition().delay(dTime)
-			.attr("transform", function(d) { console.log(d); return "translate(" + d.source.x + "," + d.source.y + ")"; })
+			.attr("transform", function(d) { /*console.log(d);*/ return "translate(" + d.source.x + "," + d.source.y + ")"; })
 			.select("path")
 				.attr("d", function(d) { return "M"+0+" "+0 +" L"+(d.target.x - d.source.x)+" "+(d.target.y - d.source.y); })
 	}
@@ -143,6 +144,11 @@ var graphDrawing = function(_graph, _svg)
 	g.show = function(_graph, dTime)
 	{
 		//g.cGraph = _graph
+
+		var node = g.svg.selectAll("g.node")
+			.select("circle.node")
+			.style('fill', 'steelblue')
+			.attr('r', 5)
 
 		var node = g.svg.selectAll("g.node")
 			.data(g.cGraph.nodes(),function(d){return d.baseID})

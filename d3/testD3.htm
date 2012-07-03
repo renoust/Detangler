@@ -37,11 +37,13 @@ svg {
 -->
 <script src="local/jquery.js"></script>
 <script src="local/d3.v2.js"></script> 
-<script> 
+<script src="lasso.js"></script> 
+<script> 	
+		
  
 var data=[[1,2],[3,4],[5,6]]
 
-var svg = d3.select("body").append("svg:svg")
+var svg = d3.select("body").data([1]).append("svg:svg")
 	.attr("width",400)
 	.attr("height",400)
 
@@ -62,6 +64,13 @@ node.append("svg:text")
 
 nodes = d3.selectAll("circle").transition().delay(function(d, i){return i*1000})
 	.attr("cx", function(d,i){console.log("updating"); console.log(d); return 300;})
+
+var myL = lasso(svg);
+
+svg.on("mouseup", function(d){console.log("up");myL.mouseUp(d3.mouse(this))});
+svg.on("mousedown", function(d){console.log("down");myL.mouseDown(d3.mouse(this))});
+svg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});
+
 
 console.log(d3.selectAll("circle"))
 
