@@ -935,13 +935,17 @@ var TulipPosy = function(originalJSON)
 			originalJSON  = callSearchQuery(query)
 			//console.log('new query: ',xyz)
 		}
+		if ('file' in originalJSON)
+		{
+			loadData(originalJSON.file);
+		}
+		loadData();
 	}
 
-	loadData(originalJSON);
-	addBrush("substrate");
-	addBrush("catalyst");
-	//addLasso("substrate");
-	//addLasso("catalyst");
+	//addBrush("substrate");
+	//addBrush("catalyst");
+	addLasso("substrate");
+	addLasso("catalyst");
 	
 	
 
