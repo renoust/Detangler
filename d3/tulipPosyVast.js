@@ -1,5 +1,4 @@
 
-
 var TulipPosy = function(originalJSON)
 { 
 
@@ -26,12 +25,14 @@ var TulipPosy = function(originalJSON)
 
 	var svg_substrate = d3.select("body").append("svg")
 	    .attr("width", width)
-	    .attr("height", height);
+	    .attr("height", height)
+	    .attr("id", "svg_substrate")
 
 	
 	var svg_catalyst = d3.select("body").append("svg")
 	    .attr("width", width)
-	    .attr("height", height);
+	    .attr("height", height)
+	    .attr("id", "svg_catalyst")
 	
 	var graph_substrate = graph();
 	var graph_catalyst = graph();
