@@ -8,12 +8,18 @@ var lasso = function(svg)
 
 	g.canMove = false
 	g.moveLasso = false
+        g.isResizing = false
+        g.resizeDirection = "none"
 	g.prevMovePoint = []
 
 	g.totalDistanceAlongDrag = 0.0
 	g.distanceFromStartToEnd = 0.0
 
 	g.fillColor = 'black'
+
+        g.cSvg.style("cursor", "crosshair");
+
+        //style("cursor", "crosshair");
 
 	g.updateDistance = function(cPoint)
 	{
@@ -35,8 +41,9 @@ var lasso = function(svg)
 
 	g.mouseDown = function(e)
 	{
-		if (g.started || g.canMove) return;
-
+		if (g.started || g.canMove || g.isResizing)
+                        return;
+     
 		g.pointList= [];
 		g.totalDistanceAlongDrag = 0;
 		g.distanceFromStartToEnd = 0;
@@ -101,6 +108,9 @@ var lasso = function(svg)
 								.style("fill-opacity", .125)
 								.style("stroke", "purple")
 								.style("stroke-width",2)
+
+                                                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                                        g.drawResizeRectangles(p0,p1);
 								
 
 						}
@@ -152,8 +162,153 @@ var lasso = function(svg)
 		g.started = true
 	}
 	
+        g.resizeRectangleEvent = function(current, p0, p1)
+        {
+
+                        if(g.isResizing)
+                        {
+                                console.log('we are resizing the rectangle: ', g.resizeDirection)
+                                console.log("mouse: ", current)
+                        }
+                        
+                        if (g.resizeDirection == "north")
+                        {
+                                maxP = p0[1] > p1[1] ? p0 : p1
+                                minP = p0[1] > p1[1] ? p1 : p0
+                        
+
+                                if (current[1] >= maxP[1])
+                                {
+                                        g.resizeDirection = "south"
+                                        g.resizeRectangleEvent(current, minP, maxP)
+                                }
+                                else
+                                {
+                                        minP[1] = current[1]
+                                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                        g.drawResizeRectangles(minP, maxP)
+                                }
+                        }
+
+                        if (g.resizeDirection == "south")
+                        {
+                                maxP = p0[1] > p1[1] ? p0 : p1
+                                minP = p0[1] > p1[1] ? p1 : p0
+                        
+                                if (current[1] <= minP[1])
+                                {
+                                        g.resizeDirection = "north"
+                                        g.resizeRectangleEvent(current, minP, maxP)
+                                }
+                                else
+                                {
+                                        maxP[1] = current[1]
+                                        console.log("min, max",minP,maxP)
+                                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                        g.drawResizeRectangles(minP, maxP)
+                                }
+                        }
+
+
+                        if (g.resizeDirection == "east")
+                        {
+                                maxP = p0[0] > p1[0] ? p0 : p1
+                                minP = p0[0] > p1[0] ? p1 : p0
+                                
+                                if (current[0] <= minP[0])
+                                {
+                                        g.resizeDirection = "west"
+                                        g.resizeRectangleEvent(current, minP, maxP)
+                                }else
+                                {
+                                        maxP[0] = current[0]
+                                        console.log("min, max",minP,maxP)
+                                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                        g.drawResizeRectangles(minP, maxP)
+                                }
+                        }
+
+                        if (g.resizeDirection == "west")
+                        {
+                                maxP = p0[0] > p1[0] ? p0 : p1
+                                minP = p0[0] > p1[0] ? p1 : p0
+                        
+                                if (current[0] >= maxP[0])
+                                {
+                                        g.resizeDirection = "east"
+                                        g.resizeRectangleEvent(current, minP, maxP)
+                                }else
+                                {
+                                        minP[0] = current[0]
+                                        console.log("min, max",minP,maxP)
+                                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                        g.drawResizeRectangles(minP, maxP)
+                                }
+                        }
+
+
+                        if (g.resizeDirection == "south_west")
+                        {
+                                g.resizeDirection = "south"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "west"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "south_west"
+                        }
+
+                        if (g.resizeDirection == "north_west")
+                        {
+                                g.resizeDirection = "north"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "west"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "north_west"
+                        }
+
+                        if (g.resizeDirection == "north_east")
+                        {
+                                g.resizeDirection = "north"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "east"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "north_east"
+                        }
+
+                        if (g.resizeDirection == "south_east")
+                        {
+                                g.resizeDirection = "south"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "east"
+                                g.resizeRectangleEvent(current, p0, p1)
+                                g.resizeDirection = "south_east"
+                        }
+
+                        d3.select("rect.view").data([1])
+				.attr("x", Math.min(p0[0], p1[0]))
+				.attr("y", Math.min(p0[1], p1[1]))
+				.attr("width", Math.abs(p0[0]-p1[0]))
+				.attr("height", Math.abs(p0[1]-p1[1]))
+				.style("fill", g.fillColor)
+				.style("fill-opacity", .125)
+				.style("stroke", "purple")
+				.style("stroke-width",2)
+                        g.checkIntersect();
+                        return
+        }
+
 	g.mouseMove = function(e)
 	{
+                if(g.isResizing)
+                {
+                        
+                        var p0 = g.pointList[0]
+                        var p1 = g.pointList[g.pointList.length-1]
+
+                        var current = [e[0], e[1]]
+                        g.resizeRectangleEvent(current, p0, p1)
+                        
+                }
+
 		if (! g.started || g.canMove) return;
 		var prevPoint = g.pointList[g.pointList.length-1];
 		var newPoint = [e[0], e[1]];
@@ -187,9 +342,122 @@ var lasso = function(svg)
 		}
 			
 	}
+        /*
+        g.resizeRectangle = function(direction, mouse)
+        {
+                return;
+                
+               if(g.isResizing)
+                {
+                        var p0 = g.pointList[0]
+                        var p1 = g.pointList[g.pointList.length-1]
+                        var current = [mouse[0], mouse[1]]
+
+                        if(g.isResizing)
+                        {
+                                console.log('we are resizing the rectangle: ', g.resizeDirection)
+                                console.log("mouse: ", current)
+                        }else{
+                                return;
+                        }
+                        
+                        if (g.resizeDirection == "north")
+                        {
+                                maxP = p0[1] > p1[1] ? p0 : p1
+                                minP = p0[1] > p1[1] ? p1 : p0
+                        
+                                minP[1] = current[1]
+                                console.log("min, max",minP,maxP)
+                                g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                                g.drawResizeRectangles(minP, maxP)
+                        }
+                        return
+                }
+
+        }*/
+
+        g.overResizeRectangle = function(point)
+        {
+                //var point = d3.mouse(g.cSvg)
+                var strokeWidth = 3;
+
+                var left = Math.min(g.pointList[0][0], g.pointList[g.pointList.length-1][0])
+                var right = Math.max(g.pointList[0][0], g.pointList[g.pointList.length-1][0])
+                var up = Math.min(g.pointList[0][1], g.pointList[g.pointList.length-1][1])
+                var down = Math.max(g.pointList[0][1], g.pointList[g.pointList.length-1][1])
+
+                var position = ""
+  
+                if (Math.abs(point[0] - left) <= strokeWidth)
+                {
+                        position += "L"
+                }
+
+                if (Math.abs(point[0] - right) <= strokeWidth)
+                {
+                        position += "R"
+                }
+ 
+                if (Math.abs(point[1] - down) <= strokeWidth)
+                {
+                        position += "D"
+                }
+
+                if (Math.abs(point[1] - up) <= strokeWidth)
+                {
+                        position += "U"
+                } 
+                console.log("position: ", point," ", position)
+
+                
+                if (position == "L")
+                {
+                        return "w-resize";
+                }
+
+                if (position == "R")
+                {
+                        return "e-resize";
+                }
+ 
+                if (position == "D")
+                {
+                        return "s-resize";
+                }
+
+                if (position == "U")
+                {
+                        return "n-resize";
+                } 
+
+                if (position == "RU")
+                {
+                        return "ne-resize";
+                }
+
+                if (position == "LD")
+                {
+                        return "sw-resize";
+                }
+
+                if (position == "RD") 
+                {
+                        return "se-resize";
+                }
+
+                if (position == "LU")
+                {
+                        return "nw-resize";
+                }
+
+                return "auto"                
+                
+ 
+        }
 	
 	g.mouseUp = function(e)
 	{
+                if (g.isResizing) g.isResizing = false;
 		if (! g.started || g.canMove) return;
 		var prevPoint = g.pointList[g.pointList.length-1];
 		var newPoint = [e[0], e[1]];
@@ -238,8 +506,26 @@ var lasso = function(svg)
 				.style("fill-opacity", .125)
 				.style("stroke", "purple")
 				.style("stroke-width",2)
+                                .style("cursor", "move")
 			//g.pointList = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]]
 			//g.group.data(g.pointList)
+                        /*
+                        g.group.append("path")
+                                .data([1])
+                                .attr("class","pathview")
+                                .attr("d", function() { return "M"+p0[0]+" "+p0[1] +" L"+p0[0]+" "+p1[1]+" L"+p1[0]+" "+p1[1]+" L"+p1[0]+" "+p0[1]+" Z"; })
+                                .on("mousedown", function(d){g.isResizing = true;})
+                                .on("mousemove", g.resizeRectangle)
+                                .on("mouseup", function(d){g.isResizing = false;})
+                                //.style("cursor", g.overResizeRectangle)
+                                .style("stroke", "green")
+				.style("stroke-width",3)
+                                .style("fill", "none")
+                                .on("mouseover", function(d){g.cSvg.style("cursor",g.overResizeRectangle(d3.mouse(this)))})
+                        */
+                        g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                        g.drawResizeRectangles(p0, p1);
+                        
 
 		}
 
@@ -257,6 +543,134 @@ var lasso = function(svg)
 		g.cSvg.selectAll("path.brush").data(g.pointList).remove().exit()
 		
 	}
+
+        g.drawResizeRectangles = function(p0, p1)
+        {
+                
+
+                //g.group = g.cSvg.append("g")
+		//		.data(g.pointList)
+		//		.attr("class", "brush")
+
+                var resizeGroup = g.cSvg.append("g").attr("class", "resize")
+                resizeGroup.data([1]).enter()
+                                                
+
+                        //resizeGroup.selectAll("rect.resize").data([]).exit().remove()
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("west", true)
+                                .attr("x", Math.min(p0[0], p1[0]) - 5)
+				.attr("y", Math.min(p0[1], p1[1]) + 5)
+                                .attr("width", 10)
+				.attr("height", Math.abs(Math.abs(p0[1]-p1[1]) - 10))
+				.style("fill", "black")
+				.style("fill-opacity", 0)
+				.style("cursor", "w-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "west";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("east", true)
+                                .attr("x", Math.max(p0[0], p1[0]) - 5)
+				.attr("y", Math.min(p0[1], p1[1]) + 5)
+                                .attr("width", 10)
+				.attr("height", Math.abs(Math.abs(p0[1]-p1[1]) - 10))
+				.style("fill", "black")
+				.style("fill-opacity", 0)
+				.style("cursor", "e-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "east";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("north", true)
+                                .attr("x", Math.min(p0[0], p1[0]) + 5)
+				.attr("y", Math.min(p0[1], p1[1]) - 5)
+                                .attr("width", Math.abs(Math.abs(p0[0]-p1[0]) - 10))
+				.attr("height", 10)
+				.style("fill", "black")
+				.style("fill-opacity", 0)
+				.style("cursor", "n-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "north";})
+                                .on("mousemove", function(){})//g.resizeRectangle("north",d3.mouse(this));})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("south", true)
+                                .attr("x", Math.min(p0[0], p1[0]) + 5)
+				.attr("y", Math.max(p0[1], p1[1]) - 5)
+                                .attr("width", Math.abs(Math.abs(p0[0]-p1[0]) - 10))
+				.attr("height", 10)
+				.style("fill", "black")
+				.style("fill-opacity", 0)
+				.style("cursor", "s-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "south";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("north_west", true)
+                                .attr("x", Math.min(p0[0], p1[0]) - 5)
+				.attr("y", Math.min(p0[1], p1[1]) - 5)
+                                .attr("width", 10)
+				.attr("height", 10)
+				.style("fill", "red")
+				.style("fill-opacity", 0)
+				.style("cursor", "nw-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "north_west";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("south_west", true)
+                                .attr("x", Math.min(p0[0], p1[0]) - 5)
+				.attr("y", Math.max(p0[1], p1[1]) - 5)
+                                .attr("width", 10)
+				.attr("height", 10)
+				.style("fill", "red")
+				.style("fill-opacity", 0)
+				.style("cursor", "sw-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "south_west";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("south_east", true)
+                                .attr("x", Math.max(p0[0], p1[0]) - 5)
+				.attr("y", Math.max(p0[1], p1[1]) - 5)
+                                .attr("width", 10)
+				.attr("height", 10)
+				.style("fill", "red")
+				.style("fill-opacity", 0)
+				.style("cursor", "se-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "south_east";})
+                                .on("mouseup", function(){g.isResizing = false;})
+
+                        resizeGroup.append("rect")
+                                .data([1])
+                                .classed("resize", true)
+                                .classed("north_east", true)
+                                .attr("x", Math.max(p0[0], p1[0]) - 5)
+				.attr("y", Math.min(p0[1], p1[1]) - 5)
+                                .attr("width", 10)
+				.attr("height", 10)
+				.style("fill", "red")
+				.style("fill-opacity", 0)
+				.style("cursor", "ne-resize")
+                                .on("mousedown", function(){g.isResizing = true; g.resizeDirection = "north_east";})
+                                .on("mouseup", function(){g.isResizing = false;})
+        }
+
 	
 	g.checkIntersect = function()
 	{
@@ -277,7 +691,12 @@ var lasso = function(svg)
 				if (g.intersect(pointArray, x, y))
 					return 'red';
 				else
-					return 'blue';
+                                {
+                                        var e=window.event
+                                        //console.log('control pushed ', e.ctrlKey)
+                                        if (!e.ctrlKey)
+					        return 'blue';
+                                }
 			});
 	}
 
