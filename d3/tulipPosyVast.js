@@ -71,6 +71,15 @@ var TulipPosy = function(originalJSON)
         var select_mode = false;
         var move_mode = true;
 
+        var defaultFillColor = "white"
+        var highlightFillColor = "lavender"
+        var defaultTextColor = "black"
+        var defaultBorderColor = "lightgray"
+        var defaultBorderWidth = .5
+        var defaultTextFont = "Arial"        
+        var defaultTextSize = 14
+        
+
 
 	var getSelection = function(graphName)
 	{
@@ -358,318 +367,196 @@ var TulipPosy = function(originalJSON)
 
 	var addInterfaceCatalyst = function()
 	{
-		var target = "catalyst"
+		var target = "catalyst";
+                var svg = svg_catalyst
 
-		var bt1 = svg_catalyst.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
+		var bt1 = svg.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
 			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
 		bt1.append("rect")
 			.attr("class", "button1")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')
+			.style("fill", defaultFillColor)
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
 			
 
 		bt1.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
 
 
 
-		var bt2 = svg_catalyst.selectAll("rect button2").data(["force layout"]).enter().append('g')
+		var bt2 = svg.selectAll("rect button2").data(["force layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
 		bt2.append("rect")
 			.attr("class", "button2")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+        
 		bt2.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+			.style("fill", defaultTextColor)
 
 
 
-		var bt3 = svg_catalyst.selectAll("rect button3").data(["circular layout"]).enter().append('g')
+		var bt3 = svg.selectAll("rect button3").data(["circular layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
 		bt3.append("rect")
 			.attr("class", "button3")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
+			.style("fill", defaultFillColor)	
+                        .style("stroke", defaultBorderColor)
+                        .style("stroke-width", defaultBorderWidth)
 
 		bt3.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+			.style("fill", defaultTextColor)
 
-
-		var bt4 = svg_catalyst.selectAll("rect button4").data(["random layout"]).enter().append('g')
+		var bt4 = svg.selectAll("rect button4").data(["random layout"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
 		bt4.append("rect")
 			.attr("class", "button4")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+                        
 		bt4.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
 	
 
 
 
-		var bt5 = svg_catalyst.selectAll("rect button5").data(["degree metric"]).enter().append('g')
+		var bt5 = svg.selectAll("rect button5").data(["degree metric"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
 		bt5.append("rect")
 			.attr("class", "button5")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
 
 		bt5.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
 
 		/*
-		var bt6 = svg_catalyst.selectAll("rect button6").data(["analyse"]).enter().append('g')
+		var bt6 = svg.selectAll("rect button6").data(["analyse"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 135 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); analyseGraph()})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 		
 		bt6.append("rect")
 			.attr("class", "button6")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
-			.on("mouseover", function(){d3.select(this).style("fill","red");})
-			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+			.style("fill", defaultFillColor)	
+			.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
 
 		bt6.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
 		*/
 
-		var bt7 = svg_catalyst.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
+		var bt7 = svg.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
 			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 		
 		bt7.append("rect")
 			.attr("class", "button6")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
-			.on("mouseover", function(){d3.select(this).style("fill","red");})
-			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+			.style("fill", defaultFillColor)	
+			.style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+                        //.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
+			//.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
 
 		bt7.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
-			.style("fill", 'green')
-
-	}
-
-	var addInterfaceSubstrate = function()
-	{
-		var target = 'substrate'
-
-		var bt1 = svg_substrate.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
-			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-
-		bt1.append("rect")
-			.attr("class", "button1")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')
-			
-
-		bt1.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-
-
-		var bt2 = svg_substrate.selectAll("rect button2").data(["force layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-
-		bt2.append("rect")
-			.attr("class", "button2")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
-		bt2.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-
-
-		var bt3 = svg_substrate.selectAll("rect button3").data(["circular layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-
-		bt3.append("rect")
-			.attr("class", "button3")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
-		bt3.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-
-		var bt4 = svg_substrate.selectAll("rect button4").data(["random layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-
-		bt4.append("rect")
-			.attr("class", "button4")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
-		bt4.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-	
-
-
-
-		var bt5 = svg_substrate.selectAll("rect button5").data(["degree metric"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-
-		bt5.append("rect")
-			.attr("class", "button5")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-
-		bt5.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-
-		var bt6 = svg_substrate.selectAll("rect button6").data(["analyse"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 135 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); analyseGraph()})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-		
-		bt6.append("rect")
-			.attr("class", "button6")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-			.on("mouseover", function(){d3.select(this).style("fill","red");})
-			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
-
-		bt6.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-
-		var bt7 = svg_substrate.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill","red");})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill","lightgray");})
-		
-		bt7.append("rect")
-			.attr("class", "button7")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", 'lightgray')	
-			.on("mouseover", function(){d3.select(this).style("fill","red");})
-			.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
-
-		bt7.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", 'green')
-
-                var bt8 = svg_substrate.selectAll("rect button8").data([{text:"move", colorOver:'lightgray', colorOut:'red'}]).enter().append('g')
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
+                        
+                var bt8 = svg.selectAll("rect button8").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 185 + ")"; })
 			.on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove();
+                                toggleSelectMove(target);
                         })
 			.on("mouseover", function(d){
                                 if(!move_mode){
-                                        d.colorOver = "red"; 
-                                        d.colorOut = "lightgray";
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
                                 }else{
-                                        d.colorOver = "lightgray"; 
-                                        d.colorOut = "red";
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOver);})
 			.on("mouseout", function(d){
                                 if(!move_mode){
-                                        d.colorOver = "red"; 
-                                        d.colorOut = "lightgray";
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
                                 }else{
-                                        d.colorOver = "lightgray"; 
-                                        d.colorOut = "red";
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOut);})
 		
@@ -677,39 +564,43 @@ var TulipPosy = function(originalJSON)
 			.attr("class", "button8")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'red')	
-			//.on("mouseover", function(){d3.select(this).style("fill","red");})
-			//.on("mouseout", function(){d3.select(this).style("fill","lightgray");})
+			.style("fill", highlightFillColor)	
+			.style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+                        //.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
+			//.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
 
 		bt8.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d.text})
-			.style("fill", 'green')
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
 
 
-                var bt9 = svg_substrate.selectAll("rect button9").data([{text:"select", colorOver:'red', colorOut:'lightgray'}]).enter().append('g')
+                var bt9 = svg.selectAll("rect button9").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 210 + ")"; })
 			.on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove();   
+                                toggleSelectMove(target);   
                         })
 			.on("mouseover", function(d){
                                 if(!select_mode){
-                                        d.colorOver = "red"; 
-                                        d.colorOut = "lightgray";
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
                                 }else{
-                                        d.colorOver = "lightgray"; 
-                                        d.colorOut = "red";
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOver);})
 			.on("mouseout", function(d){
                                 if(!select_mode){
-                                        d.colorOver = "red"; 
-                                        d.colorOut = "lightgray";
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
                                 }else{
-                                        d.colorOver = "lightgray"; 
-                                        d.colorOut = "red";
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOut);})
 		
@@ -717,17 +608,278 @@ var TulipPosy = function(originalJSON)
 			.attr("class", "button9")
 			.attr("width", 120)
 			.attr("height", 20)
-			.style("fill", 'lightgray')	
-			//.on("mouseover", function(d){d3.select(this).style("fill",d.colorOver);})
+			.style("fill", defaultFillColor)	
+			.style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+                        //.on("mouseover", function(d){d3.select(this).style("fill",d.colorOver);})
 			//.on("mouseout", function(d){d3.select(this).style("fill",d.colorOut);})
 
 		bt9.append("text")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d.text})
-			.style("fill", 'green')
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
 
-		var coh = svg_substrate.selectAll("rect cohesion").data(["cohesion"]).enter().append('g')
+
+
+
+	}
+
+	var addInterfaceSubstrate = function()
+	{
+		var target = 'substrate'
+                var svg = svg_substrate
+
+		var bt1 = svg.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
+			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+
+		bt1.append("rect")
+			.attr("class", "button1")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)			
+
+		bt1.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+
+
+
+		var bt2 = svg.selectAll("rect button2").data(["force layout"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+
+		bt2.append("rect")
+			.attr("class", "button2")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt2.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
+
+
+
+		var bt3 = svg.selectAll("rect button3").data(["circular layout"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+
+		bt3.append("rect")
+			.attr("class", "button3")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt3.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+
+
+		var bt4 = svg.selectAll("rect button4").data(["random layout"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+
+		bt4.append("rect")
+			.attr("class", "button4")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt4.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+	
+
+
+
+		var bt5 = svg.selectAll("rect button5").data(["degree metric"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+
+		bt5.append("rect")
+			.attr("class", "button5")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt5.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+
+
+		var bt6 = svg.selectAll("rect button6").data(["analyse"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 135 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); analyseGraph()})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+		
+		bt6.append("rect")
+			.attr("class", "button6")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke", defaultBorderColor)
+                        .style("stroke-width", defaultBorderWidth)
+
+		bt6.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
+
+
+		var bt7 = svg.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
+			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
+			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+		
+		bt7.append("rect")
+			.attr("class", "button7")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt7.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+
+                var bt8 = svg.selectAll("rect button8").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 185 + ")"; })
+			.on("click", function(d){
+                                d3.select(this).select("rect").style("fill","yellow"); 
+                                toggleSelectMove(target);
+                        })
+			.on("mouseover", function(d){
+                                if(!move_mode){
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
+                                }else{
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
+                                }
+                                d3.select(this).select("rect").style("fill", d.colorOver);})
+			.on("mouseout", function(d){
+                                if(!move_mode){
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
+                                }else{
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
+                                }
+                                d3.select(this).select("rect").style("fill", d.colorOut);})
+		
+		bt8.append("rect")
+			.attr("class", "button8")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", highlightFillColor)	
+                        .style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt8.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d.text})
+			.style("fill", defaultTextColor)
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
+
+
+                var bt9 = svg.selectAll("rect button9").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
+			.attr("transform", function(d) { return "translate(" + 10 + "," + 210 + ")"; })
+			.on("click", function(d){
+                                d3.select(this).select("rect").style("fill","yellow"); 
+                                toggleSelectMove(target);   
+                        })
+			.on("mouseover", function(d){
+                                if(!select_mode){
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
+                                }else{
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
+                                }
+                                d3.select(this).select("rect").style("fill",d.colorOver);})
+			.on("mouseout", function(d){
+                                if(!select_mode){
+                                        d.colorOver = highlightFillColor; 
+                                        d.colorOut = defaultFillColor;
+                                }else{
+                                        d.colorOver = defaultFillColor; 
+                                        d.colorOut = highlightFillColor;
+                                }
+                                d3.select(this).select("rect").style("fill",d.colorOut);})
+		
+		bt9.append("rect")
+			.attr("class", "button9")
+			.attr("width", 120)
+			.attr("height", 20)
+			.style("fill", defaultFillColor)	
+			.style("stroke-width", defaultBorderWidth)
+                        .style("stroke", defaultBorderColor)
+
+		bt9.append("text")
+			.attr("dx", 5)
+			.attr("dy", 15)
+			.text(function(d){return d.text})
+                        .style("font-family", defaultTextFont)
+			.style("fill", defaultTextColor)
+                        .style("font-size", defaultTextSize)
+
+		var coh = svg.selectAll("rect cohesion").data(["cohesion"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 395 + ")"; })
 			
 		
@@ -745,6 +897,8 @@ var TulipPosy = function(originalJSON)
 			.attr("dy", 15)
 			.text("Cohesion")
 			.style("fill", 'black')
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
 
 		coh.append("text")
 			.attr('class', 'intensitylabel')
@@ -752,6 +906,8 @@ var TulipPosy = function(originalJSON)
 			.attr("dy", 35)
 			.text("intensity:")
 			.style("fill", 'black')
+                        .style("font-size", defaultTextSize)
+                        .style("font-family", defaultTextFont)
 
 		coh.append("text")
 			.attr('class', 'intensity')
@@ -759,6 +915,8 @@ var TulipPosy = function(originalJSON)
 			.attr("dy", 50)
 			.text(function(d){return ""+cohesion_intensity})
 			.style("fill", 'blue')
+                        .style("font-family", defaultTextFont)
+                        .style("font-size", defaultTextSize)
 			.style('text-anchor', 'end')
 
 		coh.append("text")
@@ -766,7 +924,9 @@ var TulipPosy = function(originalJSON)
 			.attr("dx", 10)
 			.attr("dy", 70)
 			.attr("width", 120)
+                        .style("font-family", defaultTextFont)
 			.text('homogeneity:')
+                        .style("font-size", defaultTextSize)
 			.style("fill", 'black')
 
 		coh.append("text")
@@ -775,7 +935,9 @@ var TulipPosy = function(originalJSON)
 			.attr("dy", 85)
 			.text(function(d){return ""+cohesion_homogeneity})
 			.style('text-anchor', 'end')
+                        .style("font-family", defaultTextFont)
 			.style("fill", 'blue')
+                        .style("font-size", defaultTextSize)
 
 	}
 
@@ -860,7 +1022,7 @@ var TulipPosy = function(originalJSON)
 		                    return d.selected;
 		                  }).select("circle.node").style('fill', function(d){
 			                if (d.selected)
-			                { selList.push(d.baseID); return 'red';}
+			                { selList.push(d.baseID); return highlightFillColor;}
 			                return 'steelblue';
 		          })
 
@@ -981,11 +1143,11 @@ var TulipPosy = function(originalJSON)
 					if (e.ctrlKey && d.selected == true)
                                         {
                                                 selList.push(d.baseID)
-                                                return 'red';
+                                                return highlightFillColor;
                                         }
 					if (d.selected){
 						selList.push(d.baseID)
-						return 'red';
+						return highlightFillColor;
 					}else
 						return 'steelblue';
 				});
@@ -1080,58 +1242,43 @@ var TulipPosy = function(originalJSON)
                 d3.select(window).on("keydown", callback);  
         };
 
-        var addZoom = function()
+        var addZoom = function(target)
         {
-                /*svg_catalyst.call (d3.behavior.zoom()
-                    .translate ([0, 0])
-                    .scale (1.0)
-                    .scaleExtent([0.5, 2.0])
-                    .on("zoom", function() {
-//                        svg_catalyst.selectAll(".node,.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")");
-                        svg_catalyst.selectAll(".node,.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")");
-                    })
-                );*/
-                svg_substrate.call (d3.behavior.zoom()
+
+                if (!target)
+			return
+
+		var svg = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+		}
+
+                svg.call (d3.behavior.zoom()
                             .translate ([0, 0])
                             .scale (1.0)
                             .scaleExtent([0.5, 2.0])
                             .on("zoom", function() {
-                                
-                                //registerKeyboardHandler(this.keyDown());
-                               
-                                //console.log("the scale", d3.event);
-                                //console.log(d3.event.sourceEvent.shiftKey)
                                 
                                 if (!move_mode)
                                 {
                                          return;
                                 }
 
-                                nodeDatum = svg_substrate.selectAll("g.node").data()
-                                //console.log("the data", nodeDatum)
+                                nodeDatum = svg.selectAll("g.node").data()
                                 nodeDatum.forEach(function(d){d.currentX = (d.x*Math.pow(d3.event.scale,2)+d3.event.translate[0]*(1+d3.event.scale));
                                                               d.currentY = (d.y*Math.pow(d3.event.scale,2)+d3.event.translate[1]*(1+d3.event.scale));
                                                                 });
-                                //svg_substrate.selectAll("g.node").data(nodeDatum)
+                                
 
-                                /*
-                                svg_substrate.selectAll("circle.test").data([]).exit().remove();
-
-                                svg_substrate.selectAll("circle.test").data(nodeDatum).enter().append("svg:circle")
-                                        .attr("class","test")
-                                        .attr("cx", function(d){console.log('currentX ',d.currentX); return d.currentX})
-                                        .attr("cy", function(d){ return d.currentY})
-                                        .attr("r", 4)
-                                        .style('fill', 'red')
-                                        .style('fill-opacity', 1)
-
-                                console.log( svg_substrate.selectAll("circle.test"))
-                                */
-
-                                svg_substrate.selectAll(".node,.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
- //                               svg_substrate.selectAll("text.node").style("font-size", function(){ console.log(12.0/d3.event.scale); return Math.round(12.0/d3.event.scale);});
-                                //svg_substrate.selectAll(".node,.link").attr("transform","scale(" +  d3.event.scale + ")");
-                                svg_substrate.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/(d3.event.scale*d3.event.scale));});
+                                svg.selectAll(".node,.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
+                                svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/(d3.event.scale*d3.event.scale));});
                             })
                         );
         }
@@ -1182,26 +1329,40 @@ var TulipPosy = function(originalJSON)
 	}
 
 
-        var toggleSelectMove = function()
+        var toggleSelectMove = function(target)
         {
+
+                if (!target)
+			return
+
+		var svg = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+		}
+
                 select_mode = ! select_mode;
                 move_mode = ! move_mode;
 
                 if(select_mode)
                 {
-                        svg_substrate.select('rect.button8').style('fill', 'lightgray');
-                        svg_substrate.select('rect.button9').style('fill', 'red');
-                        addLasso("substrate");
-                        addLasso("catalyst");                        
+                        svg.select('rect.button8').style('fill', defaultFillColor);
+                        svg.select('rect.button9').style('fill', highlightFillColor);
+                        addLasso(target);
                 }
 
                 if(move_mode)
                 {
-                        svg_substrate.style("cursor", "all-scroll");
-                        svg_substrate.select('rect.button8').style('fill', 'red');
-                        svg_substrate.select('rect.button9').style('fill', 'lightgray');                        
-                        removeLasso("substrate")
-                        removeLasso("catalyst")
+                        svg.style("cursor", "all-scroll");
+                        svg.select('rect.button8').style('fill', highlightFillColor);
+                        svg.select('rect.button9').style('fill', defaultFillColor);                        
+                        removeLasso(target)
                 }
         }
 
@@ -1214,11 +1375,11 @@ var TulipPosy = function(originalJSON)
 
                 if(move_mode)
                 {
-                        svg_substrate.select('rect.button8').style('fill', 'lightgray');
+                        svg_substrate.select('rect.button8').style('fill', defaultFillColor);
                 }
                 if(select_mode)
                 {
-                        svg_substrate.select('rect.button9').style('fill', 'lightgray');                        
+                        svg_substrate.select('rect.button9').style('fill', defaultFillColor);                        
                 }
         }*/
 
@@ -1244,6 +1405,7 @@ var TulipPosy = function(originalJSON)
 
 	createLasso("substrate");
         createLasso("catalyst");
-        addZoom();
+        addZoom("substrate");
+        addZoom("catalyst");
 };
 
