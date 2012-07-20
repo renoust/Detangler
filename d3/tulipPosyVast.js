@@ -117,8 +117,8 @@ var TulipPosy = function(originalJSON)
 			cGraph.nodes(data.nodes)
 			cGraph.links(data.links)
 			cGraph.edgeBinding()
-			g = graphDrawing(cGraph, svg)
-			g.exit(cGraph, 0)
+			graph_drawing = graphDrawing(cGraph, svg)
+			graph_drawing.exit(cGraph, 0)
 
 			
 		});
@@ -151,8 +151,8 @@ var TulipPosy = function(originalJSON)
 			cGraph.nodes(data.nodes)
 			cGraph.links(data.links)
 			cGraph.edgeBinding()
-			g = graphDrawing(cGraph, svg)
-			g.move(cGraph, 0)
+			graph_drawing = graphDrawing(cGraph, svg)
+			graph_drawing.move(cGraph, 0)
 
 		});
 	};
@@ -180,8 +180,8 @@ var TulipPosy = function(originalJSON)
 			cGraph.nodes(data.nodes)
 			cGraph.links(data.links)
 			cGraph.edgeBinding()
-			g = graphDrawing(cGraph, svg)
-			g.resize(cGraph, 0)
+			graph_drawing = graphDrawing(cGraph, svg)
+			graph_drawing.resize(cGraph, 0)
 
 		});
 	};
@@ -191,6 +191,7 @@ var TulipPosy = function(originalJSON)
 
 	var addBaseID = function(data, idName)
 	{
+                data.nodes.forEach(function(d){d.currentX = d.x; d.currentY = d.y;})
 		if (idName == "")
 		{
 			data.nodes.forEach(function(d, i){d.baseID = i})
@@ -213,8 +214,8 @@ var TulipPosy = function(originalJSON)
 		graph_substrate.edgeBinding()
 		//console.log("graph_substrate", graph_substrate)
 
-		var g = graphDrawing(graph_substrate, svg_substrate)
-		g.draw()
+		var graph_drawing = graphDrawing(graph_substrate, svg_substrate)
+		graph_drawing.draw()
 		
 		/*
 		jsonGraph.nodes().forEach(function(d){d.x -= 10})
@@ -242,17 +243,23 @@ var TulipPosy = function(originalJSON)
 	
 
 		$.post(tulip_address, {type:'analyse', graph:selection, target:graphName}, function(data){
+                        
 			console.log("received data after synchronization: ")
 			console.log(data);
 			//convertLinks(data);
 			rescaleGraph(data)
+                        
 			cGraph.nodes(data.nodes)
+                        
 			cGraph.links(data.links)
 			cGraph.edgeBinding()
-			g = graphDrawing(cGraph, svg)
+                        
+			graph_drawing = graphDrawing(cGraph, svg)
+                        
+
 			//g.clear()
 			//g.draw()
-			g.show(cGraph)
+			graph_drawing.show(cGraph)
 			if ('data' in data)
 			{
 				cohesion_homogeneity = data['data']['cohesion homogeneity'];
@@ -278,9 +285,9 @@ var TulipPosy = function(originalJSON)
 			graph_catalyst.nodes(data.nodes)
 			graph_catalyst.links(data.links)
 			graph_catalyst.edgeBinding()
-			g = graphDrawing(graph_catalyst, svg_catalyst)
-			g.clear()
-			g.draw()
+			graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
+			graph_drawing.clear()
+			graph_drawing.draw()
 			cohesion_homogeneity = data['data']['cohesion homogeneity']
 			cohesion_intensity = data['data']['cohesion intensity']
 			cohesionCaught();
@@ -299,8 +306,8 @@ var TulipPosy = function(originalJSON)
 			graph_substrate.nodes(data.nodes)
 			graph_substrate.links(data.links)
 			graph_substrate.edgeBinding()
-			g = graphDrawing(graph_substrate, svg_substrate)
-			g.move(graph_substrate, 0)
+			graph_drawing = graphDrawing(graph_substrate, svg_substrate)
+			graph_drawing.move(graph_substrate, 0)
 		});
 	}
 
@@ -344,7 +351,7 @@ var TulipPosy = function(originalJSON)
 		var delta = 0.00000000000000000001 //to avoid division by 0
 		scale = Math.min.apply(null, [w/(maxX-minX+delta), h/(maxY-minY+delta)])
 	
-		data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame;})
+		data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame; d.currentX = d.x; d.currentY = d.y;})
 	}
 
 
@@ -895,7 +902,7 @@ var TulipPosy = function(originalJSON)
 
 	}
 
-	var addLasso = function(target)
+	var createLasso = function(target)
 	{
 		if (!target)
 			return
@@ -908,7 +915,7 @@ var TulipPosy = function(originalJSON)
 		{
 			svg = svg_catalyst
 			graph = graph_catalyst	
-			lasso_catalyst = lasso(svg);
+			lasso_catalyst = new lasso(svg);
 			myL = lasso_catalyst		
 		}
 	
@@ -916,7 +923,7 @@ var TulipPosy = function(originalJSON)
 		{
 			svg = svg_substrate
 			graph = graph_substrate
-			lasso_substrate = lasso(svg);
+			lasso_substrate = new lasso(svg);
 			myL = lasso_substrate
 		}
 		
@@ -925,30 +932,32 @@ var TulipPosy = function(originalJSON)
 
 		myL.checkIntersect = function()
 		{
-			var g = this
+			var __g = this
 			var selList = []
                         var e=window.event
                         //console.log('control pushed ', e.ctrlKey)
                         
 			svg.selectAll("g.node").classed("selected", function(d){
+                                        //console.log('current obj', d)
 					var x = d.currentX;
 					var y = d.currentY;
 					var pointArray = []
-					if (g.isLasso())
+					if (__g.isLasso())
 					{
-						pointArray = g.pointList
+						pointArray = __g.pointList
 					}else{
-						var p0 = g.pointList[0]
-						var p1 = g.pointList[g.pointList.length-1]			
+						var p0 = __g.pointList[0]
+						var p1 = __g.pointList[__g.pointList.length-1]			
 						pointArray = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]]
 					}
-                                        console.log("before")
+                                        //console.log("before")
                                         
 
                                         if (e.ctrlKey && d.selected == true)
                                                 return true;
 
-                                        var intersects = g.intersect(pointArray, x, y)
+                                        var intersects = __g.intersect(pointArray, x, y)
+                                        //console.log('result of intersects? ',intersects,pointArray,x,y)
 
                                         if (e.shiftKey && intersects)
                                         {
@@ -961,7 +970,7 @@ var TulipPosy = function(originalJSON)
                                                 d.selected = true;
                                         }else
                                         {    
-                                                console.log ("d.selected = ",intersects);
+                                                //console.log ("d.selected = ",intersects);
         					d.selected = intersects;
                                         }
 
@@ -980,6 +989,7 @@ var TulipPosy = function(originalJSON)
 					}else
 						return 'steelblue';
 				});
+
 			
 			selList.sort()
                         //console.log("secltion list: ",selList)
@@ -1008,12 +1018,61 @@ var TulipPosy = function(originalJSON)
 		}	
 
 
-		svg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
-		svg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
-		svg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});
+		//svg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
+		//svg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
+		//svg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});
 
 		
 	}
+
+        var addLasso = function(target)
+	{
+		if (!target)
+			return
+
+		var mySvg = null
+		var myL = null
+
+		if (target == "catalyst")
+		{
+			mySvg = svg_catalyst
+			myL = lasso_catalyst		
+		}
+	
+		if (target == "substrate")
+		{
+			mySvg = svg_substrate
+			myL = lasso_substrate
+		}
+
+        	mySvg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
+		mySvg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
+		mySvg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});	
+	}
+
+
+        var removeLasso = function(target)
+	{
+		if (!target)
+			return
+
+		var svg = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+		}
+
+        	svg.on("mouseup", null);
+		svg.on("mousedown", null);
+		svg.on("mousemove", null);
+	}
+
         //permet d'appeler une fonction lors d'un appel d'une touche
         var registerKeyboardHandler = function(callback) 
         {
@@ -1049,7 +1108,7 @@ var TulipPosy = function(originalJSON)
                                 }
 
                                 nodeDatum = svg_substrate.selectAll("g.node").data()
-                                console.log("the data", nodeDatum)
+                                //console.log("the data", nodeDatum)
                                 nodeDatum.forEach(function(d){d.currentX = (d.x*Math.pow(d3.event.scale,2)+d3.event.translate[0]*(1+d3.event.scale));
                                                               d.currentY = (d.y*Math.pow(d3.event.scale,2)+d3.event.translate[1]*(1+d3.event.scale));
                                                                 });
@@ -1141,9 +1200,8 @@ var TulipPosy = function(originalJSON)
                         svg_substrate.style("cursor", "all-scroll");
                         svg_substrate.select('rect.button8').style('fill', 'red');
                         svg_substrate.select('rect.button9').style('fill', 'lightgray');                        
-                        svg_substrate.on("mouseup", null);
-		        svg_substrate.on("mousedown", null);
-		        svg_substrate.on("mousemove", null);
+                        removeLasso("substrate")
+                        removeLasso("catalyst")
                 }
         }
 
@@ -1184,7 +1242,8 @@ var TulipPosy = function(originalJSON)
 		else loadData();
 	}
 
-	
+	createLasso("substrate");
+        createLasso("catalyst");
         addZoom();
 };
 
