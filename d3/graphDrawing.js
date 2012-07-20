@@ -23,11 +23,11 @@ var graphDrawing = function(_graph, _svg)
 	g.drawNodes = function()
 	{
 	
-
+                
 		var node = g.svg.selectAll("g.node")
 			.data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
 			.attr("class", "node")
-			//.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+			.attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
 
 			.on("click", function(d){
 				var o = d3.select(this); 
