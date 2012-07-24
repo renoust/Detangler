@@ -1105,16 +1105,16 @@ var TulipPosy = function(originalJSON)
 
                 if(select_mode)
                 {
-                        svg.select('rect.button8').style('fill', defaultFillColor);
-                        svg.select('rect.button9').style('fill', highlightFillColor);
+                        svg.select('rect.moveButton').style('fill', defaultFillColor);
+                        svg.select('rect.selectButton').style('fill', highlightFillColor);
                         addLasso(target);
                 }
 
                 if(move_mode)
                 {
                         svg.style("cursor", "all-scroll");
-                        svg.select('rect.button8').style('fill', highlightFillColor);
-                        svg.select('rect.button9').style('fill', defaultFillColor);                        
+                        svg.select('rect.moveButton').style('fill', highlightFillColor);
+                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
                         removeLasso(target)
                 }
         }
