@@ -66,7 +66,7 @@ var lasso = function(svg)
 					var p = d3.mouse(this);
 					__g.prevMovePoint = [p[0], p[1]];
 					__g.moveLasso = true;
-                                        console.log("svg to move:", svg)
+                                        //console.log("svg to move:", svg)
 				})
 				.on("mousemove", function(d){
                                         //console.log('g object:',this)

@@ -60,8 +60,8 @@ var TulipPosy = function(originalJSON)
 	    .attr("height", height)
 	    .attr("id", "svg_catalyst")
 	
-	var graph_substrate = graph();
-	var graph_catalyst = graph();
+	var graph_substrate = new graph();
+	var graph_catalyst = new graph();
 	var cohesion_intensity = 0.0;
 	var cohesion_homogeneity = 0.0;
 	var lasso_catalyst = null;
@@ -74,7 +74,7 @@ var TulipPosy = function(originalJSON)
         var defaultFillColor = "white"
         var highlightFillColor = "lavender"
         var defaultTextColor = "black"
-        var defaultBorderColor = "lightgray"
+        var defaultBorderColor = "gray"
         var defaultBorderWidth = .5
         var defaultTextFont = "Arial"        
         var defaultTextSize = 14
@@ -83,8 +83,15 @@ var TulipPosy = function(originalJSON)
 
 	var getSelection = function(graphName)
 	{
-		cGraph = graph_substrate
-		svg = svg_substrate
+		var cGraph = null
+		var svg = null
+
+                if (graphName == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
+
 		if (graphName == 'catalyst')
 		{	
 			cGraph = graph_catalyst
@@ -92,7 +99,7 @@ var TulipPosy = function(originalJSON)
 		}
 
 
-		console.log("The node selection= ");
+		console.log("The node selection= ", svg.selectAll("g.node.selected"));
 		var u = svg.selectAll("g.node.selected").data();
 
 		var toStringify = {};
@@ -114,8 +121,15 @@ var TulipPosy = function(originalJSON)
 
 	var sendSelection = function(json, graphName)
 	{
-		cGraph = graph_substrate
-		svg = svg_substrate
+		var cGraph = null
+		var svg = null
+
+                if (graphName == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
+
 		if (graphName == 'catalyst')
 		{	
 			cGraph = graph_catalyst
@@ -147,8 +161,15 @@ var TulipPosy = function(originalJSON)
 		var params = {type:"layout", name:layoutName, target:graphName}
 		console.log('going to send params as: ', params)
 		
-		cGraph = graph_substrate
-		svg = svg_substrate
+		var cGraph = null
+		var svg = null
+
+                if (graphName == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
+
 		if (graphName == 'catalyst')
 		{	
 			cGraph = graph_catalyst
@@ -174,8 +195,15 @@ var TulipPosy = function(originalJSON)
 
 		var params = {type:"float", name:floatAlgorithmName, target:graphName}
 
-		cGraph = graph_substrate
-		svg = svg_substrate
+		var cGraph = null
+		var svg = null
+
+                if (graphName == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
+
 		if (graphName == 'catalyst')
 		{	
 			cGraph = graph_catalyst
@@ -221,7 +249,7 @@ var TulipPosy = function(originalJSON)
 		graph_substrate.nodes(data.nodes)
 		graph_substrate.links(data.links)
 		graph_substrate.edgeBinding()
-		//console.log("graph_substrate", graph_substrate)
+		console.log("loading JSON", graph_substrate.nodes(), graph_catalyst.nodes())
 
 		var graph_drawing = graphDrawing(graph_substrate, svg_substrate)
 		graph_drawing.draw()
@@ -239,13 +267,22 @@ var TulipPosy = function(originalJSON)
 
 	var syncGraph = function(selection, graphName)
 	{
-		console.log('sending a synchronization request: ', graphName)
+		console.log('sending a synchronization request: ', selection)
 
-		cGraph = graph_catalyst
-		svg = svg_catalyst
+		var cGraph = null
+		var svg = null
+
+                if (graphName == 'substrate')
+		{	
+		        cGraph = graph_catalyst
+		        svg = svg_catalyst
+                }
+
 		if (graphName == 'catalyst')
 		{	
+                        console.log('target is catalyst');
 			cGraph = graph_substrate
+                        console.log(graph_catalyst.nodes())
 			svg = svg_substrate
 		}
 
@@ -253,22 +290,38 @@ var TulipPosy = function(originalJSON)
 
 		$.post(tulip_address, {type:'analyse', graph:selection, target:graphName}, function(data){
                         
+
+                        //var oldData = cGraph.nodes();
+                        //var selectedID = [];
+                        //var selectedNodes = [];
+                        //data.nodes.forEach(function(d){selectedID.push(d.baseID);});
+                        //console.log("selectedIDs",selectedID);
+                        //console.log('cGraph',graphName, cGraph.nodes())
+                        //cGraph.nodes().forEach(function(d){if(selectedID.indexOf(d.baseID) > -1) selectedNodes.push(d);});
+                        //console.log("Selected Nodes:", selectedNodes);
+
 			console.log("received data after synchronization: ")
 			console.log(data);
 			//convertLinks(data);
-			rescaleGraph(data)
+			//rescaleGraph(data)
                         
-			cGraph.nodes(data.nodes)
+                        var tempGraph = new graph()
+			tempGraph.nodes(data.nodes)
+			tempGraph.links(data.links)
+
+			tempGraph.edgeBinding()
+
+			//cGraph.nodes(data.nodes)
+			//cGraph.links(data.links)
+
+			//cGraph.edgeBinding()
                         
-			cGraph.links(data.links)
-			cGraph.edgeBinding()
-                        
-			graph_drawing = graphDrawing(cGraph, svg)
+			var graph_drawing = graphDrawing(cGraph, svg)
                         
 
 			//g.clear()
 			//g.draw()
-			graph_drawing.show(cGraph)
+			graph_drawing.show(tempGraph)
 			if ('data' in data)
 			{
 				cohesion_homogeneity = data['data']['cohesion homogeneity'];
@@ -284,14 +337,16 @@ var TulipPosy = function(originalJSON)
 	var analyseGraph = function()
 	{
 	  	var params = {type:"analyse"}
-	
+	        console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 
 		$.post(tulip_address, {type:'analyse', target:'substrate'}, function(data){
 			console.log("received data after analysis:")
 			console.log(data);
 			//convertLinks(data);
 			rescaleGraph(data)
+                        console.log("right before:",graph_catalyst.nodes(), graph_substrate.nodes())
 			graph_catalyst.nodes(data.nodes)
+                        console.log("right after:",graph_catalyst.nodes(), graph_substrate.nodes())
 			graph_catalyst.links(data.links)
 			graph_catalyst.edgeBinding()
 			graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
@@ -299,6 +354,7 @@ var TulipPosy = function(originalJSON)
 			graph_drawing.draw()
 			cohesion_homogeneity = data['data']['cohesion homogeneity']
 			cohesion_intensity = data['data']['cohesion intensity']
+                        console.log("after analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 			cohesionCaught();
 		});
 
@@ -1022,7 +1078,7 @@ var TulipPosy = function(originalJSON)
 		                    return d.selected;
 		                  }).select("circle.node").style('fill', function(d){
 			                if (d.selected)
-			                { selList.push(d.baseID); return highlightFillColor;}
+			                { selList.push(d.baseID); return 'red';}
 			                return 'steelblue';
 		          })
 
@@ -1098,11 +1154,20 @@ var TulipPosy = function(originalJSON)
 			var selList = []
                         var e=window.event
                         //console.log('control pushed ', e.ctrlKey)
-                        
+                        //console.log("svg operating the selection", svg)
 			svg.selectAll("g.node").classed("selected", function(d){
-                                        //console.log('current obj', d)
-					var x = d.currentX;
-					var y = d.currentY;
+                                        console.log('current obj', d)
+                                        var x = 0;
+                                        var y = 0;
+                                        if (!('currentX' in d))
+                                        {
+                                                x = d.x;
+                                                y = d.y;
+                                        } else
+                                        { 
+					        x = d.currentX;
+					        y = d.currentY;
+                                        }
 					var pointArray = []
 					if (__g.isLasso())
 					{
@@ -1119,6 +1184,7 @@ var TulipPosy = function(originalJSON)
                                                 return true;
 
                                         var intersects = __g.intersect(pointArray, x, y)
+                                        if (intersects) console.log("node intersects", d)
                                         //console.log('result of intersects? ',intersects,pointArray,x,y)
 
                                         if (e.shiftKey && intersects)
@@ -1135,7 +1201,7 @@ var TulipPosy = function(originalJSON)
                                                 //console.log ("d.selected = ",intersects);
         					d.selected = intersects;
                                         }
-
+                                        console.log("returning selection:",d.selected)
 					return d.selected
 
 				})
@@ -1143,19 +1209,20 @@ var TulipPosy = function(originalJSON)
 					if (e.ctrlKey && d.selected == true)
                                         {
                                                 selList.push(d.baseID)
-                                                return highlightFillColor;
+                                                return 'red';
                                         }
 					if (d.selected){
 						selList.push(d.baseID)
-						return highlightFillColor;
+						return 'red';
 					}else
 						return 'steelblue';
 				});
 
 			
 			selList.sort()
-                        //console.log("secltion list: ",selList)
-			if(selList.length>0)
+                        console.log("secltion list: ",selList)
+                        
+			if(selList.length>0)// && target == "substrate")
 			{	
 				if(selList.length == prevSelList.length)
 				{
@@ -1386,6 +1453,8 @@ var TulipPosy = function(originalJSON)
 	addInterfaceSubstrate();
 	addInterfaceCatalyst();
 	
+        console.log("beginning of the generation", graph_substrate.nodes(), graph_catalyst.nodes());
+
 	if (originalJSON != null && originalJSON != "" )
 	{
 		console.log('orginialJSON not null', originalJSON)
