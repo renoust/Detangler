@@ -420,20 +420,33 @@ var TulipPosy = function(originalJSON)
 	}
 
 
+                
+        var addButton = function(target, positionNumber, buttonLabel, className, callback)
+        {
+                var cGraph = null
+		var svg = null
 
-	var addInterfaceCatalyst = function()
-	{
-		var target = "catalyst";
-                var svg = svg_catalyst
+                if (target == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
 
-		var bt1 = svg.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
-			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
+		if (target == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
+
+                var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
+                        .attr("class", className)
+			.attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
+			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callback();})
 			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
 			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
 
-		bt1.append("rect")
-			.attr("class", "button1")
+		bt.append("rect")
+			.attr("class", className)
 			.attr("width", 120)
 			.attr("height", 20)
 			.style("fill", defaultFillColor)
@@ -441,158 +454,37 @@ var TulipPosy = function(originalJSON)
                         .style("stroke", defaultBorderColor)
 			
 
-		bt1.append("text")
+		bt.append("text")
+                        .attr("class", className)
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d})
 			.style("fill", defaultTextColor)
                         .style("font-family", defaultTextFont)
                         .style("font-size", defaultTextSize)
+        }
 
 
+        var addGraphInteractorButtons = function(target, positionNumber)
+        {
+                var cGraph = null
+		var svg = null
 
-		var bt2 = svg.selectAll("rect button2").data(["force layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+                if (target == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
 
-		bt2.append("rect")
-			.attr("class", "button2")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-        
-		bt2.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-			.style("fill", defaultTextColor)
+		if (target == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
 
-
-
-		var bt3 = svg.selectAll("rect button3").data(["circular layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt3.append("rect")
-			.attr("class", "button3")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke", defaultBorderColor)
-                        .style("stroke-width", defaultBorderWidth)
-
-		bt3.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-			.style("fill", defaultTextColor)
-
-		var bt4 = svg.selectAll("rect button4").data(["random layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt4.append("rect")
-			.attr("class", "button4")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-                        
-		bt4.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
-	
-
-
-
-		var bt5 = svg.selectAll("rect button5").data(["degree metric"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt5.append("rect")
-			.attr("class", "button5")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt5.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
-
-		/*
-		var bt6 = svg.selectAll("rect button6").data(["analyse"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 135 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); analyseGraph()})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-		
-		bt6.append("rect")
-			.attr("class", "button6")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-			.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
-
-		bt6.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-		*/
-
-		var bt7 = svg.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-		
-		bt7.append("rect")
-			.attr("class", "button6")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-			.style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-                        //.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
-			//.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
-
-		bt7.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
-                        
-                var bt8 = svg.selectAll("rect button8").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 185 + ")"; })
+                var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
+			.attr("class", "moveButton")
+                        .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
 			.on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
                                 toggleSelectMove(target);
@@ -616,8 +508,8 @@ var TulipPosy = function(originalJSON)
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOut);})
 		
-		bt8.append("rect")
-			.attr("class", "button8")
+		btMove.append("rect")
+			.attr("class", "moveButton")
 			.attr("width", 120)
 			.attr("height", 20)
 			.style("fill", highlightFillColor)	
@@ -626,8 +518,9 @@ var TulipPosy = function(originalJSON)
                         //.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
 			//.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
 
-		bt8.append("text")
-			.attr("dx", 5)
+		btMove.append("text")
+			.attr("class", "moveButton")
+                        .attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d.text})
                         .style("font-family", defaultTextFont)
@@ -635,8 +528,9 @@ var TulipPosy = function(originalJSON)
                         .style("font-size", defaultTextSize)
 
 
-                var bt9 = svg.selectAll("rect button9").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 210 + ")"; })
+                var btSelect = svg.selectAll("rect.selectButton").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
+			.attr("class", "selectButton")
+                        .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*(positionNumber+1)) + ")"; })
 			.on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
                                 toggleSelectMove(target);   
@@ -660,8 +554,8 @@ var TulipPosy = function(originalJSON)
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOut);})
 		
-		bt9.append("rect")
-			.attr("class", "button9")
+		btSelect.append("rect")
+			.attr("class", "selectButton")
 			.attr("width", 120)
 			.attr("height", 20)
 			.style("fill", defaultFillColor)	
@@ -670,274 +564,35 @@ var TulipPosy = function(originalJSON)
                         //.on("mouseover", function(d){d3.select(this).style("fill",d.colorOver);})
 			//.on("mouseout", function(d){d3.select(this).style("fill",d.colorOut);})
 
-		bt9.append("text")
+		btSelect.append("text")
+                        .attr("class", "selectButton")
 			.attr("dx", 5)
 			.attr("dy", 15)
 			.text(function(d){return d.text})
 			.style("fill", defaultTextColor)
                         .style("font-family", defaultTextFont)
                         .style("font-size", defaultTextSize)
+        }
 
+        var addCohesionFeedback = function(target)
+        {
+                var cGraph = null
+		var svg = null
 
+                if (target == 'substrate')
+		{	
+		        cGraph = graph_substrate
+		        svg = svg_substrate
+                }
 
-
-	}
-
-	var addInterfaceSubstrate = function()
-	{
-		var target = 'substrate'
-                var svg = svg_substrate
-
-		var bt1 = svg.selectAll("rect button1").data(["induced subgraph"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 10 + ")"; })
-			.on("click", function(){console.log("This,",this);d3.select(this).select("rect").style("fill","yellow"); sendSelection(getSelection(target), target);})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt1.append("rect")
-			.attr("class", "button1")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)			
-
-		bt1.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-
-
-
-		var bt2 = svg.selectAll("rect button2").data(["force layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 35 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("FM^3 (OGDF)", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt2.append("rect")
-			.attr("class", "button2")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt2.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
-
-
-
-		var bt3 = svg.selectAll("rect button3").data(["circular layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 60 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Circular", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt3.append("rect")
-			.attr("class", "button3")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt3.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-
-
-		var bt4 = svg.selectAll("rect button4").data(["random layout"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 85 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callLayout("Random", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt4.append("rect")
-			.attr("class", "button4")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt4.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-	
-
-
-
-		var bt5 = svg.selectAll("rect button5").data(["degree metric"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 110 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callFloatAlgorithm("Degree", target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-
-		bt5.append("rect")
-			.attr("class", "button5")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt5.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-
-
-		var bt6 = svg.selectAll("rect button6").data(["analyse"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 135 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); analyseGraph()})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-		
-		bt6.append("rect")
-			.attr("class", "button6")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke", defaultBorderColor)
-                        .style("stroke-width", defaultBorderWidth)
-
-		bt6.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
-
-
-		var bt7 = svg.selectAll("rect button7").data(["analyse selection"]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 160 + ")"; })
-			.on("click", function(){d3.select(this).select("rect").style("fill","yellow"); syncGraph(getSelection(target), target)})
-			.on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-			.on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
-		
-		bt7.append("rect")
-			.attr("class", "button7")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt7.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-
-                var bt8 = svg.selectAll("rect button8").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 185 + ")"; })
-			.on("click", function(d){
-                                d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove(target);
-                        })
-			.on("mouseover", function(d){
-                                if(!move_mode){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
-                                }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
-                                }
-                                d3.select(this).select("rect").style("fill", d.colorOver);})
-			.on("mouseout", function(d){
-                                if(!move_mode){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
-                                }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
-                                }
-                                d3.select(this).select("rect").style("fill", d.colorOut);})
-		
-		bt8.append("rect")
-			.attr("class", "button8")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", highlightFillColor)	
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt8.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d.text})
-			.style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
-
-
-                var bt9 = svg.selectAll("rect button9").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
-			.attr("transform", function(d) { return "translate(" + 10 + "," + 210 + ")"; })
-			.on("click", function(d){
-                                d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove(target);   
-                        })
-			.on("mouseover", function(d){
-                                if(!select_mode){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
-                                }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
-                                }
-                                d3.select(this).select("rect").style("fill",d.colorOver);})
-			.on("mouseout", function(d){
-                                if(!select_mode){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
-                                }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
-                                }
-                                d3.select(this).select("rect").style("fill",d.colorOut);})
-		
-		bt9.append("rect")
-			.attr("class", "button9")
-			.attr("width", 120)
-			.attr("height", 20)
-			.style("fill", defaultFillColor)	
-			.style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-
-		bt9.append("text")
-			.attr("dx", 5)
-			.attr("dy", 15)
-			.text(function(d){return d.text})
-                        .style("font-family", defaultTextFont)
-			.style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
+		if (target == 'catalyst')
+		{	
+			cGraph = graph_catalyst
+			svg = svg_catalyst
+		}
 
 		var coh = svg.selectAll("rect cohesion").data(["cohesion"]).enter().append('g')
 			.attr("transform", function(d) { return "translate(" + 10 + "," + 395 + ")"; })
-			
 		
 		coh.append("rect")
 			.attr("class", "cohesionframe")
@@ -995,6 +650,37 @@ var TulipPosy = function(originalJSON)
 			.style("fill", 'blue')
                         .style("font-size", defaultTextSize)
 
+        }
+
+	var addInterfaceCatalyst = function()
+	{
+		var target = "catalyst";
+
+                addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
+                addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
+                addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
+                addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
+                addButton(target, 4, "degree metric", "button5", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 5, "btw. centrality", "button6", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 6, "analyse selection", "button7", function(){syncGraph(getSelection(target), target)});
+                addGraphInteractorButtons(target, 7);
+
+	}
+
+	var addInterfaceSubstrate = function()
+	{
+		var target = 'substrate'
+
+                addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
+                addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
+                addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
+                addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
+                addButton(target, 4, "degree metric", "button5", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 5, "btw. centrality", "button6", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 6, "analyse", "button7", function(){analyseGraph()});
+                addButton(target, 7, "analyse selection", "button8", function(){syncGraph(getSelection(target), target)});
+                addGraphInteractorButtons(target, 8);
+                addCohesionFeedback(target);
 	}
 
 	var cohesionCaught = function()
@@ -1419,16 +1105,16 @@ var TulipPosy = function(originalJSON)
 
                 if(select_mode)
                 {
-                        svg.select('rect.button8').style('fill', defaultFillColor);
-                        svg.select('rect.button9').style('fill', highlightFillColor);
+                        svg.select('rect.moveButton').style('fill', defaultFillColor);
+                        svg.select('rect.selectButton').style('fill', highlightFillColor);
                         addLasso(target);
                 }
 
                 if(move_mode)
                 {
                         svg.style("cursor", "all-scroll");
-                        svg.select('rect.button8').style('fill', highlightFillColor);
-                        svg.select('rect.button9').style('fill', defaultFillColor);                        
+                        svg.select('rect.moveButton').style('fill', highlightFillColor);
+                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
                         removeLasso(target)
                 }
         }
