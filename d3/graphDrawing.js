@@ -1,25 +1,42 @@
-//graph drawing basics
+/************************************************************************
+ * This container takes care of the actual drawing of the graph (e.g.
+ * nodes and links) and of its direct interaction
+ * @requires d3.js
+ * @authors Guy Melancon, Benjamin Renoust
+ * @created May 2012
+ ***********************************************************************/
+
+// This structure compiles the drawing functions, parameters
+// _graph, the graph object to manipulate
+// _svg, the svg object to manipulate the graph
+//
+// something to check with the currentX/currentY association that is repeated here
+// not harmful yet, but doesn't seem to be really useful either
 var graphDrawing = function(_graph, _svg)
 {
+
+        // g, the return variable
+        // cGraph, the current graph
+        // svg, the current svg
 	var g = {}
 	g.cGraph = _graph
 	g.svg = _svg
 
+
+        // this function draws the graph, first the links then the nodes
 	g.draw = function()
 	{
-		//console.log("drawing....", g.cGraph.links())
 		g.drawLinks()
 		g.drawNodes()
 		//g.addInteraction()
 	}
 
-	g.drawShape = function()
-	{
-		console.log("do something")
-	}
 
-
-
+        // this function draws the nodes using d3
+        // we associate to each graph node an svg:g (indexed by baseID)
+        // each svg:g sets the interaction for the nodes (click, mouseover, mouseout)
+        // to each group are added an svg:circle (placed according to the node property x and y)
+        // and an svg:text printing the node property label
 	g.drawNodes = function()
 	{
 	
@@ -34,11 +51,11 @@ var graphDrawing = function(_graph, _svg)
 				if (o.classed("selected"))
 				{
 					d.selected = true
-					o.classed("selected",0)
+					o.classed("selected", false)
 					o.select("circle").style("fill","steelblue");
 				}else{
 					d.selected = false
-					o.classed("selected",1)
+					o.classed("selected", true)
 					o.select("circle").style("fill","red");
 				}
 			})			
@@ -75,6 +92,10 @@ var graphDrawing = function(_graph, _svg)
 	}
 
 
+        // this function draws the links using d3
+        // we associate to each graph link an svg:g (indexed by baseID)
+        // each svg:g sets the interaction for the links (click, mouseover, mouseout)
+        // to each group are added an svg:path (placed according to the related nodes property x and y)
 	g.drawLinks = function()
 	{
 		var link = g.svg.selectAll("g.link")
@@ -112,6 +133,12 @@ var graphDrawing = function(_graph, _svg)
 
 	}
 
+
+        // this function moves the nodes and links
+        // _graph, the new graph placement
+        // dTime, the delay in ms to apply the movement
+        // we select each svg:g and its node from their identifier (baseID), and associate 
+        // the new x and y values (d3 does the transition) 
 	g.move = function(_graph, dTime)
 	{       
 		g.cGraph = _graph
@@ -119,7 +146,7 @@ var graphDrawing = function(_graph, _svg)
 		var node = g.svg.selectAll("g.node")
 			.data(g.cGraph.nodes(),function(d){d.currentX = d.x; d.currentY = d.y; return d.baseID;})
 			.transition().delay(dTime)
-                        node.select("circle")//.transition().delay(dTime)
+                        node.select("circle")
                                 .attr("cx", function(d){d.currentX = d.x; d.currentY = d.y; return d.x})
                                 .attr("cy", function(d){return d.y})
                         node.select("text")//.transition().delay(dTime)
@@ -137,6 +164,11 @@ var graphDrawing = function(_graph, _svg)
 	}
 
 
+        // this function resizes the nodes
+        // _graph, the new graph with size
+        // dTime, the delay in ms to resize
+        // we select each svg:g and its node from their identifier (baseID), and associate 
+        // the node's 'viewMetric' property to the svg:circle's 'r' attribute
 	g.resize = function(_graph, dTime)
 	{
 		g.cGraph = _graph
@@ -151,35 +183,54 @@ var graphDrawing = function(_graph, _svg)
 
 	}
 
-
+        // this function puts forward a selection of nodes
+        // _graph, the new graph selection
+        // dTime, the delay in ms to apply the selection
+        // we initialized all the nodes and then select all the nodes passed in 
+        // the given graph and change their aspect (size and color)
+        //
+        // this function name doesn't seem appropriate
+        // we assign to the nodes the new data, and reassign the original data
+        // we might want to apply persistant colors and sizes stored in the data
 	g.show = function(_graph, dTime)
 	{
 		//g.cGraph = _graph
 
+                // redraw the previous nodes to the default values
 		var node = g.svg.selectAll("g.node")
 			.select("circle.node")
 			.style('fill', 'steelblue')
 			.attr('r', 5)
 
+                // assign the new data
 		var node = g.svg.selectAll("g.node")
 			//.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.nodes(),function(d){return d.baseID})
 			.transition().delay(500)
+
+                // update the nodes
 		node.select("circle.node")
 			.attr("r", function(d){return 10})
 
-		var node2 = g.svg.selectAll("g.node")
-			.data(_graph.nodes(),function(d){return d.baseID})
-			.transition().delay(1000)
+		//var node2 = g.svg.selectAll("g.node")
+		//	.data(_graph.nodes(),function(d){return d.baseID})
+		//	.transition().delay(1000)
+
 		node.select("circle.node")
 			.style("fill", "pink")
 			//.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+
+                // reassign the original data
                 g.svg.selectAll("g.node")
 			.data(g.cGraph.nodes(),function(d){return d.baseID})			
 
 	}
 
 
+        // this function removes the nodes and links removed from the old data
+        // _graph, the new graph
+        // dTime, the delay in ms to apply the modification  
+        // we only use d3's data association then 'exit()' and 'remove()'
 	g.exit = function(_graph, dTime)
 	{
 		g.cGraph = _graph
@@ -195,6 +246,7 @@ var graphDrawing = function(_graph, _svg)
 		link.exit().remove()
 	}
 
+        // this function clears the graphs, removes all the nodes and links (similarly to previously)
 	g.clear = function()
 	{
 		var node = g.svg.selectAll("g.node").data([])

@@ -1,105 +1,92 @@
+/************************************************************************
+ * This class is the core of our visualization system. It manages both
+ * the visualization through svg objects and communication with the
+ * tulip python server. It displays 2 graphs, one corresponding to the
+ * substrate graph and the other to the catalyst graph, and manages the
+ * interactions between them. 
+ * @requires d3.js, jQuery, graph.js, lasso.js
+ * @authors Guy Melancon, Benjamin Renoust
+ * @created May 2012
+ ***********************************************************************/
 
+// This class must be called like any function passing the well formated JSON object.
+// originalJSON: a json object with an acceptable format
+//
+// We need to document the acceptable JSON format, and the communication protocol with
+// tulip. This class also might be divided into classes, at least one should deal only
+// with the communication, the other with the interaction, another for the overall
+// interface...
 var TulipPosy = function(originalJSON)
 { 
 
-        /*
-        document.onkeydown = function(){
+        // initialization of the communication address and port        
+	// an additional default json file
+	var tulip_address = "http://localhost:8085";
+	var json_address = "./cluster1.json";
 
-                if(window.event && window.event.ctrlKey == 1)
-                        { // Capture and remap F5
-                    window.event.keyCode = 505;
-                      }
-
-                if(window.event && window.event.altKey == 1)
-                        { // Capture and remap F5
-                    window.event.keyCode = 505;
-                      }
-
-                if(window.event && window.event.shiftKey == 1)
-                        { // Capture and remap F5
-                    window.event.keyCode = 505;
-                      }
-
-
-                if(window.event && window.event.keyCode == 505)
-                        { // New action for F5
-                    return false;
-                        // Must return false or the browser will refresh anyway
-                    }
-        }*/
-
-	var width = 960,
-	    height = 500;
+        // initialization of the default svg parameters
+	var width = 960;
+	var height = 500;
 	 
-	var color = d3.scale.category20();
-	 
-	 
-	var force_substrate = d3.layout.force()
-	    .charge(-240)
-	    .linkDistance(40)
-	    .size([width, height]);
-
-	
-	var force_catalyst = d3.layout.force()
-	    .charge(-240)
-	    .linkDistance(40)
-	    .size([width, height]);
-	
-	var tulip_address = "http://localhost:8085"
-	var json_address = "./cluster1.json"
-
-
+        // initialization of the svg frames
 	var svg_substrate = d3.select("body").append("svg")
 	    .attr("width", width)
 	    .attr("height", height)
-	    .attr("id", "svg_substrate")
-
-	
+	    .attr("id", "svg_substrate");
 	var svg_catalyst = d3.select("body").append("svg")
 	    .attr("width", width)
 	    .attr("height", height)
-	    .attr("id", "svg_catalyst")
+	    .attr("id", "svg_catalyst");
 	
+        // initialization of the graphs, and lasso interactors
 	var graph_substrate = new graph();
 	var graph_catalyst = new graph();
-	var cohesion_intensity = 0.0;
-	var cohesion_homogeneity = 0.0;
 	var lasso_catalyst = null;
 	var lasso_substrate = null;
-	//var drawing_substrate = graphDrawing();
-	//var drawing_catalyst = graphDrawing();
+
+        // initialization of the selection and move modes
         var select_mode = false;
         var move_mode = true;
+        
+        // initialization of the global cohesion parameters
+	var cohesion_intensity = 0.0;
+	var cohesion_homogeneity = 0.0;
 
-        var defaultFillColor = "white"
-        var highlightFillColor = "lavender"
-        var defaultTextColor = "black"
-        var defaultBorderColor = "gray"
-        var defaultBorderWidth = .5
-        var defaultTextFont = "Arial"        
-        var defaultTextSize = 14
+        // initialization of default interface visual parameters
+        var defaultFillColor = "white";
+        var highlightFillColor = "lavender";
+        var defaultTextColor = "black";
+        var defaultBorderColor = "gray";
+        var defaultBorderWidth = .5;
+        var defaultTextFont = "Arial";        
+        var defaultTextSize = 14;
+	//var color = d3.scale.category20();
         
 
-
+        
+        // This method returns the nodes that are selected in a given graph.
+        // graphName, the string value corresponding to the graph we want to select nodes in ('substrate' or 'catalyst')
+        // After selected all 'g.node' of class 'selected', the function constructs and array of nodes with only its 'baseID'
+        // and returns a string JSON version of the corresponding selection
 	var getSelection = function(graphName)
 	{
-		var cGraph = null
-		var svg = null
+		var cGraph = null;
+		var svg = null;
 
                 if (graphName == 'substrate')
 		{	
-		        cGraph = graph_substrate
-		        svg = svg_substrate
+		        cGraph = graph_substrate;
+		        svg = svg_substrate;
                 }
 
 		if (graphName == 'catalyst')
 		{	
-			cGraph = graph_catalyst
-			svg = svg_catalyst
+			cGraph = graph_catalyst;
+			svg = svg_catalyst;
 		}
 
 
-		console.log("The node selection= ", svg.selectAll("g.node.selected"));
+		//console.log("The node selection= ", svg.selectAll("g.node.selected"));
 		var u = svg.selectAll("g.node.selected").data();
 
 		var toStringify = {};
@@ -109,139 +96,144 @@ var TulipPosy = function(originalJSON)
 		{
 			var node = {};
 			node.baseID = u[i].baseID;
-			console.log(u[i]);
+			//console.log(u[i]);
 			toStringify.nodes.push(node);
 		}
-		console.log(JSON.stringify(toStringify));
-		return JSON.stringify(toStringify)
+		//console.log(JSON.stringify(toStringify));
+		return JSON.stringify(toStringify);
 	};
 
 
-
-
+        // This function send to the tulip server a selection of nodes and removes the unselected nodes
+        // json, the json string of the graph
+        // graphName, the string value corresponding to the graph
 	var sendSelection = function(json, graphName)
 	{
-		var cGraph = null
-		var svg = null
+		var cGraph = null;
+		var svg = null;
 
                 if (graphName == 'substrate')
 		{	
-		        cGraph = graph_substrate
-		        svg = svg_substrate
+		        cGraph = graph_substrate;
+		        svg = svg_substrate;
                 }
 
 		if (graphName == 'catalyst')
 		{	
-			cGraph = graph_catalyst
-			svg = svg_catalyst
+			cGraph = graph_catalyst;
+			svg = svg_catalyst;
 		}
 
 		$.post(tulip_address, { type:"update", graph:json, target:graphName }, function(data){
-			cGraph.nodes(data.nodes)
-			cGraph.links(data.links)
-			cGraph.edgeBinding()
-			graph_drawing = graphDrawing(cGraph, svg)
-			graph_drawing.exit(cGraph, 0)
-
-			
+			cGraph.nodes(data.nodes);
+			cGraph.links(data.links);
+			cGraph.edgeBinding();
+			var graph_drawing = graphDrawing(cGraph, svg);
+			graph_drawing.exit(cGraph, 0);
 		});
 
 	};
 
 
 
-
-
-
-
-
+        // This function calls a layout algorithm of a graph through tulip, and moves the given graph accordingly
+        // layoutName, the name of the tulip layout we want to call
+        // graphName, the string value corresponding to the graph
 	var callLayout = function(layoutName, graphName)
 	{
 
-		var params = {type:"layout", name:layoutName, target:graphName}
-		console.log('going to send params as: ', params)
+		var params = {type:"layout", name:layoutName, target:graphName};
+		//console.log('going to send params as: ', params)
 		
-		var cGraph = null
-		var svg = null
+		var cGraph = null;
+		var svg = null;
 
                 if (graphName == 'substrate')
 		{	
-		        cGraph = graph_substrate
-		        svg = svg_substrate
+		        cGraph = graph_substrate;
+		        svg = svg_substrate;
                 }
 
 		if (graphName == 'catalyst')
 		{	
-			cGraph = graph_catalyst
-			svg = svg_catalyst
+			cGraph = graph_catalyst;
+			svg = svg_catalyst;
 		}
 
 		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-			rescaleGraph(data)
-			cGraph.nodes(data.nodes)
-			cGraph.links(data.links)
-			cGraph.edgeBinding()
-			graph_drawing = graphDrawing(cGraph, svg)
-			graph_drawing.move(cGraph, 0)
-
+                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
+			rescaleGraph(data);
+			cGraph.nodes(data.nodes);
+			cGraph.links(data.links);
+			cGraph.edgeBinding();
+			var graph_drawing = graphDrawing(cGraph, svg);
+			graph_drawing.move(cGraph, 0);
 		});
 	};
 
 
 
-
+        // This function calls a float algorithm of a graph through tulip, and moves the given graph accordingly
+        // floatAlgorithmName, the name of the tulip algorithm we want to call
+        // graphName, the string value corresponding to the graph
 	var callFloatAlgorithm = function(floatAlgorithmName, graphName)
 	{
 
-		var params = {type:"float", name:floatAlgorithmName, target:graphName}
+		var params = {type:"float", name:floatAlgorithmName, target:graphName};
 
-		var cGraph = null
-		var svg = null
+		var cGraph = null;
+		var svg = null;
 
                 if (graphName == 'substrate')
 		{	
-		        cGraph = graph_substrate
-		        svg = svg_substrate
+		        cGraph = graph_substrate;
+		        svg = svg_substrate;
                 }
 
 		if (graphName == 'catalyst')
 		{	
-			cGraph = graph_catalyst
-			svg = svg_catalyst
+			cGraph = graph_catalyst;
+			svg = svg_catalyst;
 		}
 	
 
 		$.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
 		
-			rescaleGraph(data)
-			cGraph.nodes(data.nodes)
-			cGraph.links(data.links)
-			cGraph.edgeBinding()
-			graph_drawing = graphDrawing(cGraph, svg)
-			graph_drawing.resize(cGraph, 0)
+			rescaleGraph(data);
+			cGraph.nodes(data.nodes);
+			cGraph.links(data.links);
+			cGraph.edgeBinding();
+			var graph_drawing = graphDrawing(cGraph, svg);
+			graph_drawing.resize(cGraph, 0);
 
 		});
 	};
 
 
 
-
+        // This function adds the baseID property for data which is the basic identifier for all nodes and links
+        // data, the data to update
+        // idName, if given, the property value of 'idName' will be assigned to 'baseID'
 	var addBaseID = function(data, idName)
 	{
                 data.nodes.forEach(function(d){d.currentX = d.x; d.currentY = d.y;})
 		if (idName == "")
 		{
-			data.nodes.forEach(function(d, i){d.baseID = i})
-			data.links.forEach(function(d, i){d.baseID = i})
+			data.nodes.forEach(function(d, i){d.baseID = i});
+			data.links.forEach(function(d, i){d.baseID = i});
 		}
 		else
 		{
-			data.nodes.forEach(function(d, i){d.baseID = d[idName]})
-			data.links.forEach(function(d, i){d.baseID = d[idName]})
+			data.nodes.forEach(function(d, i){d.baseID = d[idName]});
+			data.links.forEach(function(d, i){d.baseID = d[idName]});
 		}
 	}
 
 
+        // This function loads a substrate graph from a given json
+        // data, the data to load
+        //
+        // we might want to rename this function...        
 	var loadJSON = function(data)
 	{
 		rescaleGraph(data)
@@ -254,17 +246,13 @@ var TulipPosy = function(originalJSON)
 		var graph_drawing = graphDrawing(graph_substrate, svg_substrate)
 		graph_drawing.draw()
 		
-		/*
-		jsonGraph.nodes().forEach(function(d){d.x -= 10})
-		g.move(jsonGraph, 0)
-
-		jsonGraph.nodes().forEach(function(d){d.y = 50})
-		g.move(jsonGraph, 0)
-		*/
 		return
 	}
 	
-
+        // This function calls the synchronization from a given graph through tulip, returns and applies
+        // the result on the other graph. The computed cohesion indices are also updated.
+        // selection, the JSON string of the selected subgraph
+        // graphName, the graph origin of the selection
 	var syncGraph = function(selection, graphName)
 	{
 		console.log('sending a synchronization request: ', selection)
@@ -333,20 +321,21 @@ var TulipPosy = function(originalJSON)
 	}
 
 
-
+        // This function calls through tulip the analysis of a substrate graph, stores and displays it
+        // in the catalyst view, updating the new cohesion indices computed.
 	var analyseGraph = function()
 	{
 	  	var params = {type:"analyse"}
-	        console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
+	        //console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 
 		$.post(tulip_address, {type:'analyse', target:'substrate'}, function(data){
-			console.log("received data after analysis:")
-			console.log(data);
+			//console.log("received data after analysis:")
+			//console.log(data);
 			//convertLinks(data);
 			rescaleGraph(data)
-                        console.log("right before:",graph_catalyst.nodes(), graph_substrate.nodes())
+                        //console.log("right before:",graph_catalyst.nodes(), graph_substrate.nodes())
 			graph_catalyst.nodes(data.nodes)
-                        console.log("right after:",graph_catalyst.nodes(), graph_substrate.nodes())
+                        //console.log("right after:",graph_catalyst.nodes(), graph_substrate.nodes())
 			graph_catalyst.links(data.links)
 			graph_catalyst.edgeBinding()
 			graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
@@ -354,7 +343,7 @@ var TulipPosy = function(originalJSON)
 			graph_drawing.draw()
 			cohesion_homogeneity = data['data']['cohesion homogeneity']
 			cohesion_intensity = data['data']['cohesion intensity']
-                        console.log("after analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
+                        //console.log("after analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 			cohesionCaught();
 		});
 
@@ -362,7 +351,8 @@ var TulipPosy = function(originalJSON)
 
 
 
-
+        // This function creates a new substrate graph in tulip, initializes, returns and displays it.
+        // json, the initial json string corresponding to the graph.
 	var createTulipGraph = function(json)
 	{
 		$.post(tulip_address, { type:"creation", graph:json }, function(data){
@@ -377,6 +367,9 @@ var TulipPosy = function(originalJSON)
 	}
 
 
+        // This function calls a special case of creation of a graph, instead of passing a json graph
+        // object, it passes a query that goes through a search engine to build then a substrate graph.
+        // query, the query to pass to the search engine
 	var callSearchQuery = function(query)
 	{
 		var recieved_data;
@@ -395,8 +388,12 @@ var TulipPosy = function(originalJSON)
 		});*/
 	}
 
+
+        // This function rescales the graph data in order to fit the svg window
+        // data, the graph data (modified during the function)
 	var rescaleGraph = function(data)
 	{
+                // these should be set as globale variables
 		var buttonWidth = 130.0
 		var frame = 10.0
 		var w = width-(buttonWidth+2*frame)
@@ -420,7 +417,12 @@ var TulipPosy = function(originalJSON)
 	}
 
 
-                
+        // Adds a button to a specific interface with its callback
+        // target, the string of the svg interface to draw the button in
+        // positionNumber, the position at which we want to place the button
+        // buttonLabel, the label of the button
+        // className, the name of the class assigned to the button
+        // callback, the callback function associated to the button click        
         var addButton = function(target, positionNumber, buttonLabel, className, callback)
         {
                 var cGraph = null
@@ -465,6 +467,10 @@ var TulipPosy = function(originalJSON)
         }
 
 
+        // This function adds the graph interactor buttons (move and select) to a target interface.
+        // target, the string of the svg interface to draw the buttons in
+        // positionNumber, the position at which we want to place the buttons
+        // One button triggers the other one on or off, and refers to the global mode variable 'move_mode' or 'select_mode'
         var addGraphInteractorButtons = function(target, positionNumber)
         {
                 var cGraph = null
@@ -574,6 +580,8 @@ var TulipPosy = function(originalJSON)
                         .style("font-size", defaultTextSize)
         }
 
+        // This function adds a small frame that displays the cohesion informations while they are updated
+        // target, the string of the svg interface to draw the frame in
         var addCohesionFeedback = function(target)
         {
                 var cGraph = null
@@ -652,6 +660,7 @@ var TulipPosy = function(originalJSON)
 
         }
 
+        // This function add all the interface elements for the catalyst view
 	var addInterfaceCatalyst = function()
 	{
 		var target = "catalyst";
@@ -667,6 +676,7 @@ var TulipPosy = function(originalJSON)
 
 	}
 
+        // This function add all the interface elements for the substrate view
 	var addInterfaceSubstrate = function()
 	{
 		var target = 'substrate'
@@ -683,6 +693,8 @@ var TulipPosy = function(originalJSON)
                 addCohesionFeedback(target);
 	}
 
+        // This function updates the cohesion values displayed in the cohesion frame of the substrate view
+        // The cohesion intensity drives the color of the frame following a Brewer's scale (www.colorbrewer2.org).
 	var cohesionCaught = function()
 	{
 		var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
@@ -693,15 +705,60 @@ var TulipPosy = function(originalJSON)
 			.style("fill", brewerSeq[index])
 		if(lasso_catalyst) lasso_catalyst.fillColor = brewerSeq[index]
 		if(lasso_substrate) lasso_substrate.fillColor = brewerSeq[index]
-
 	}
 
+        // This is a handy function to round numbers
 	var round = function(number, digits)
 	{
 		var factor = Math.pow(10, digits);
 		return Math.round(number*factor)/factor;
 	}
 
+
+        // This function toggles the 'select' and 'move' modes for the interactors
+        // target, the string value of the target svg view
+        var toggleSelectMove = function(target)
+        {
+
+                if (!target)
+			return
+
+		var svg = null
+
+		if (target == "catalyst")
+		{
+			svg = svg_catalyst
+		}
+	
+		if (target == "substrate")
+		{
+			svg = svg_substrate
+		}
+
+                select_mode = ! select_mode;
+                move_mode = ! move_mode;
+
+                if(select_mode)
+                {
+                        svg.select('rect.moveButton').style('fill', defaultFillColor);
+                        svg.select('rect.selectButton').style('fill', highlightFillColor);
+                        addLasso(target);
+                }
+
+                if(move_mode)
+                {
+                        svg.style("cursor", "all-scroll");
+                        svg.select('rect.moveButton').style('fill', highlightFillColor);
+                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
+                        removeLasso(target)
+                }
+        }
+
+
+
+        // This function associate a d3.svg.brush element to select nodes in a view
+        // target, the string value of the target svg view 
+        // This function is unused and a bit deprecated but one can activate it anytime
 	var addBrush = function(target)
 	{
 		var svg = null
@@ -751,6 +808,7 @@ var TulipPosy = function(originalJSON)
 
 		var prevSelList = [];
 
+                // This function will check the nodes intersections and synchronize accordingly
 		function brushmove() {
 		          var e = d3.event.target.extent();
 		          var node = svg.selectAll("g.node")
@@ -806,6 +864,9 @@ var TulipPosy = function(originalJSON)
 
 	}
 
+        // This function creates a lasso brush interactor for a specific target, it also redefined
+        // the brush intersection function, and applies actions to the selected target.
+        // target, the string value of the target svg view         
 	var createLasso = function(target)
 	{
 		if (!target)
@@ -831,9 +892,12 @@ var TulipPosy = function(originalJSON)
 			myL = lasso_substrate
 		}
 		
-		//myL = lasso(svg);
 		var prevSelList = [];
 
+                // redefines the intersection function
+                // applies keyboard modifiers, control extends the selection, shift removes from the currect selection
+                // once the selection is made, it applies the synchronization function syncGraph() to the selected nodes
+                // selection colors are hardcoded but this should be changed
 		myL.checkIntersect = function()
 		{
 			var __g = this
@@ -854,14 +918,14 @@ var TulipPosy = function(originalJSON)
 					        x = d.currentX;
 					        y = d.currentY;
                                         }
-					var pointArray = []
+					var pointArray = [];
 					if (__g.isLasso())
 					{
-						pointArray = __g.pointList
+						pointArray = __g.pointList;
 					}else{
-						var p0 = __g.pointList[0]
-						var p1 = __g.pointList[__g.pointList.length-1]			
-						pointArray = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]]
+						var p0 = __g.pointList[0];
+						var p1 = __g.pointList[__g.pointList.length-1];			
+						pointArray = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]];
 					}
                                         //console.log("before")
                                         
@@ -906,7 +970,7 @@ var TulipPosy = function(originalJSON)
 
 			
 			selList.sort()
-                        console.log("secltion list: ",selList)
+                        console.log("selection list: ",selList)
                         
 			if(selList.length>0)// && target == "substrate")
 			{	
@@ -931,15 +995,11 @@ var TulipPosy = function(originalJSON)
 			}
 
 		}	
-
-
-		//svg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
-		//svg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
-		//svg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});
-
 		
 	}
 
+        // Applies the lasso interactor to a specific svg target as callback to the mouse events.
+        // target, the string value of the target svg view         
         var addLasso = function(target)
 	{
 		if (!target)
@@ -966,6 +1026,8 @@ var TulipPosy = function(originalJSON)
 	}
 
 
+        // Removes the lasso interactor from a specific svg target's callbacks to its mouse events.
+        // target, the string value of the target svg view         
         var removeLasso = function(target)
 	{
 		if (!target)
@@ -988,13 +1050,18 @@ var TulipPosy = function(originalJSON)
 		svg.on("mousemove", null);
 	}
 
-        //permet d'appeler une fonction lors d'un appel d'une touche
+        // This function allows to map a callback to a keyboard touch event
+        // It is not currently used.
+        // callback, the callback function
         var registerKeyboardHandler = function(callback) 
         {
                 var callback = callback;
                 d3.select(window).on("keydown", callback);  
         };
 
+        
+        // Adds a zoom interactor to a specific svg target as callbacks to its mouse events.
+        // target, the string value of the target svg view         
         var addZoom = function(target)
         {
 
@@ -1013,6 +1080,7 @@ var TulipPosy = function(originalJSON)
 			svg = svg_substrate
 		}
 
+                // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
                 svg.call (d3.behavior.zoom()
                             .translate ([0, 0])
                             .scale (1.0)
@@ -1025,6 +1093,7 @@ var TulipPosy = function(originalJSON)
                                 }
 
                                 nodeDatum = svg.selectAll("g.node").data()
+                                // strangely the matrix that should be applied by transform is squared?! so we adapt the nodes values
                                 nodeDatum.forEach(function(d){d.currentX = (d.x*Math.pow(d3.event.scale,2)+d3.event.translate[0]*(1+d3.event.scale));
                                                               d.currentY = (d.y*Math.pow(d3.event.scale,2)+d3.event.translate[1]*(1+d3.event.scale));
                                                                 });
@@ -1037,7 +1106,10 @@ var TulipPosy = function(originalJSON)
         }
 
 
-
+        // Loads the data from a json file, if no JSON is passed, then we load the default JSON stored in
+        // 'json_address', otherwise it loads the given json file.
+        // It is first formatted correctly, locally, then sent to tulip to be initialized (so it is modified
+        // again), and analyzed.
 	var loadData = function(json)
 	{
 		//d3.json(tulip_address+"?n=50", function(json) {
@@ -1056,7 +1128,6 @@ var TulipPosy = function(originalJSON)
 				//console.log('json loaded')
 				//console.log(data)
 				addBaseID(data, "id")
-				//convertLinks(data)
 				jsonData = JSON.stringify(data)
 				loadJSON(data)
 				//console.log('sending to tulip... :')
@@ -1082,65 +1153,16 @@ var TulipPosy = function(originalJSON)
 	}
 
 
-        var toggleSelectMove = function(target)
-        {
-
-                if (!target)
-			return
-
-		var svg = null
-
-		if (target == "catalyst")
-		{
-			svg = svg_catalyst
-		}
-	
-		if (target == "substrate")
-		{
-			svg = svg_substrate
-		}
-
-                select_mode = ! select_mode;
-                move_mode = ! move_mode;
-
-                if(select_mode)
-                {
-                        svg.select('rect.moveButton').style('fill', defaultFillColor);
-                        svg.select('rect.selectButton').style('fill', highlightFillColor);
-                        addLasso(target);
-                }
-
-                if(move_mode)
-                {
-                        svg.style("cursor", "all-scroll");
-                        svg.select('rect.moveButton').style('fill', highlightFillColor);
-                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
-                        removeLasso(target)
-                }
-        }
-
-
-        /*
-        var move = function()
-        {
-                move_mode = ! move_mode;
-                select_mode = ! select_mode;
-
-                if(move_mode)
-                {
-                        svg_substrate.select('rect.button8').style('fill', defaultFillColor);
-                }
-                if(select_mode)
-                {
-                        svg_substrate.select('rect.button9').style('fill', defaultFillColor);                        
-                }
-        }*/
-
+        // We create the interfaces for each svg
 	addInterfaceSubstrate();
 	addInterfaceCatalyst();
 	
-        console.log("beginning of the generation", graph_substrate.nodes(), graph_catalyst.nodes());
+        //console.log("beginning of the generation", graph_substrate.nodes(), graph_catalyst.nodes());
 
+        // This is the tricky part, because the json given to the function can be of many shapes.
+        // If it is a query, we call tulip to perform the search
+        // if it is a given file we load it normally
+        // other wise we load the default function
 	if (originalJSON != null && originalJSON != "" )
 	{
 		console.log('orginialJSON not null', originalJSON)
@@ -1158,6 +1180,7 @@ var TulipPosy = function(originalJSON)
 		else loadData();
 	}
 
+        // we create then the basic interactors
 	createLasso("substrate");
         createLasso("catalyst");
         addZoom("substrate");
