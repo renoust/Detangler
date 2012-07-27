@@ -33,11 +33,6 @@ svg {
  
 <h1>Proof of concept: D3 and tulip-python</h1> 
 
-<!--
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
-<script src="http://malsup.github.com/jquery.form.js"></script> 
--->
 <script src="local/jquery.js" type="text/javascript"></script>
 <script src="local/d3.v2.js" type="text/javascript"></script> 
 <script src="graph.js" type="text/javascript"></script> 
@@ -45,22 +40,23 @@ svg {
 <script src="tulipPosyVast.js" type="text/javascript"></script>
 <script src="lasso.js" type="text/javascript"></script> 
 
- 
-<p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
- 
-<p>We're just trying</p>
- 
 
-<p> Type your query:
+<p>This is a prototype of graph exploration.</p> 
+ 
+<p> Type your query and press send:
 <input id=query type=text>
 <input id=send value="send" type=button><br>
 </p>
 <p>
-or choose a file to upload:
+or just choose a file to upload:
 <input id=files type=file>
 </p>
+
+<p><aside>Selection can be rectangle or lasso, ctrl or shift extends or restrains the selection, move zooms too.</aside> </p>
+
 <script>
 
+// This function removes an element of the page by its id
 function remove(id)
 {
     elem = document.getElementById(id);
@@ -72,15 +68,17 @@ function remove(id)
 
 var url = 'http://localhost:8085'
 var xhr = new XMLHttpRequest();
+
+// uploads the file and send it to TulipPosy
 var file_object;
 document.getElementById('files').addEventListener('change', function(e) {
      var file = this.files[0];
      console.log('logging file before sending: ', this.files[0])
-    xhr.file = file; // not necessary if you create scopes like this
-    xhr.addEventListener('progress', function(e) {
-        var done = e.position || e.loaded, total = e.totalSize || e.total;
-        console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
-    }, false);
+     xhr.file = file; // not necessary if you create scopes like this
+     xhr.addEventListener('progress', function(e) {
+         var done = e.position || e.loaded, total = e.totalSize || e.total;
+         console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
+     }, false);
     if ( xhr.upload ) {
         xhr.upload.onprogress = function(e) {
             var done = e.position || e.loaded, total = e.totalSize || e.total;
@@ -96,9 +94,7 @@ document.getElementById('files').addEventListener('change', function(e) {
 	    TulipPosy({file:xhr.responseText})
         }
     };
-
-
-
+        
     xhr.open('post', url, true);
 	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-File-Name", encodeURIComponent(this.files[0].name));
@@ -107,35 +103,14 @@ document.getElementById('files').addEventListener('change', function(e) {
 }, false);
 
 
+
+// sends a query request to TulipPosy
 document.getElementById('send').addEventListener('click', function(e) {
 	query = document.getElementById('query').value
 	//console.log('logging file: ', query)
 	remove("svg_substrate");
 	remove("svg_catalyst");
 	TulipPosy({'query':query})
-/*
-    var file = this.files[0];
-     console.log('logging filebefore sending: ', this.files[0])
-    xhr.file = file; // not necessary if you create scopes like this
-    xhr.addEventListener('progress', function(e) {
-        var done = e.position || e.loaded, total = e.totalSize || e.total;
-        console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
-    }, false);
-    if ( xhr.upload ) {
-        xhr.upload.onprogress = function(e) {
-            var done = e.position || e.loaded, total = e.totalSize || e.total;
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
-        };
-    }
-    xhr.onreadystatechange = function(e) {
-        if ( 4 == this.readyState ) {
-            console.log(['xhr upload complete', e]);
-        }
-    };
-    xhr.open('post', url, true);
-    xhr.send(xhr.file)*/
-
-
 
 }, false);
 
@@ -144,25 +119,6 @@ document.getElementById('send').addEventListener('click', function(e) {
 <p>
 <div>
 
-<script> 
-
-        
-//	var t = 0;
-   
-      //$(".button").click(function() { 
-//	if (t == 0){ 
-//	        t = TulipPosy();
-//	}
-     // });  
-   
-//        }); 
- 
-   
-        
-	
-	
-
-</script> 
 </div>
 </p>
 <footer> 
