@@ -1,19 +1,31 @@
 #!/usr/bin/env python
 
-import SimpleHTTPServer
-import SocketServer
-import cgi
-import json
+'''
+ **************************************************************************
+ * This class performs most of the graph manipulations.
+ * @authors Guy Melancon, Benjamin Renoust
+ * @created May 2012
+ **************************************************************************
+'''
 
+import json
 import sys
-sys.path.append("/work/tulip-dev/tulip_3_6_maint-build/release/install/lib")
+
+# path to the tulip library
+libtulip_dir = "/work/tulip-dev/tulip_3_6_maint-build/release/install/lib"
+sys.path.append(libtulip_dir)
 from tulip import *
 
-sys.path.append("/home/brenoust/Dropbox/OTMedia/lighterPython")
+# path to custom scripts that perform the analysis
+lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+sys.path.append(lgtPython_dir)
 import clusterAnalysisLgt
 
 
-
+'''
+This class stores the graphs, and performs the manipulations on it.
+I guess we want in the future to propose only one graph per session, and maybe store different graphs.
+'''
 class graphManager():
 
     root_deprecated = 0
@@ -21,7 +33,18 @@ class graphManager():
     substrate = 0
     catalyst = 0
 
+    '''
+    This method converts a graph to a JSON string, given some parameters:
+    graph, the graph to convert (if null, substrate is considered)
+    properties, a map of the properties that should be included in the JSON {nodes|links:[{name:xxx,type:yyy}]}
+    nodeList, a selection of nodes (array)
+    edgeList, a selection of edges (array)
+    Returns the new JSON string.
 
+    The method can then restrict the amount of information dumped in the JSON to only what it is passed beforehand.
+    Default is 'baseID', 'x', 'y', 'source', 'target'.
+    Extra data can be passed through the 'data' member of properties
+    '''
     def graphToJSON(self, graph=0, properties={}, nodeList=0, edgeList=0):
 
         if not graph:
@@ -44,15 +67,13 @@ class graphManager():
                     #nToI = {nList["nodes"][i]["baseID"]:i for i in range(len(nList["nodes"]))}
                     eList = {"links":[{"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]} for e in edgeList]}
                     nList.update(eList)
-                    if 'data' in properties.keys():
-                          nList.update({'data':properties['data']})
-                    print "dumping: ", json.dumps(nList)
+                    #print "dumping: ", json.dumps(nList)
                     return json.dumps(nList)
         else:
                 if 'nodes' in properties:
                         nodesProp = properties['nodes']
                         propInterface = {}
-                        print nodesProp
+                         "print nodesProp
                         for k in nodesProp:
                                 if 'type' in k and 'name' in k:
                                         if k['type'] == 'bool':
@@ -63,7 +84,7 @@ class graphManager():
                                                 propInterface[k['name']] = graph.getStringProperty(k['name'])
                         
                         vLayout = graph.getLayoutProperty("viewLayout")
-                        print propInterface
+                        #print propInterface
                         #getValue = lambda n, propInterface: {prop:propInterface[prop][n] for prop in propInterface }
                         getValue = lambda x: {prop:propInterface[prop][x] for prop in propInterface }
                         nList = []
@@ -73,7 +94,7 @@ class graphManager():
                                 v.update(getValue(n))
                                 nList.append(v)                        
                         nList = {"nodes":nList}
-                        print nList
+                        #print nList
                 else:
                         #nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1], "baseID":bID[n]} for n in graph.getNodes()]}
                         nList = {"nodes":[{"x":vLayout[n][0],"y":vLayout[n][1], "baseID":bID[n]} for n in nodeList]}
@@ -85,7 +106,7 @@ class graphManager():
                 if 'edges' in properties:
                         edgesProp = properties['edges']
                         propInterface = {}
-                        print edgesProp
+                        #print edgesProp
                         for k in edgesProp:
                                 if 'type' in k and 'name' in k:
                                         if k['type'] == 'bool':
@@ -96,34 +117,40 @@ class graphManager():
                                                 propInterface[k['name']] = graph.getStringProperty(k['name'])                                                
                         
                         vLayout = graph.getLayoutProperty("viewLayout")
-                        print propInterface
+                        #print propInterface
                         #getValue = lambda n, propInterface: {prop:propInterface[prop][n] for prop in propInterface }
                         getValue = lambda x: {prop:propInterface[prop][x] for prop in propInterface }
                         eList = []
                         for e in edgeList:
                                 v = {"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]}
                                 v.update(getValue(e))
-                                print v
-                                print json.dumps(v)#str(v).decode().encode('utf-8', 'backslashreplace'))
+                                #print v
+                                #print json.dumps(v)#str(v).decode().encode('utf-8', 'backslashreplace'))
                                 eList.append(v)                        
                         eList = {"links":eList}
-                        print eList
+                        #print eList
                 
                 else:
                             eList = {"links":[{"source":bID[graph.source(e)], "target":bID[graph.target(e)], "value":1, "baseID":bID[e]} for e in edgeList]}
                             #nList = {"nodes":[{"name":n.id,"x":vLayout[n][0],"y":vLayout[n][1]}.update(getValue(n)) for n in graph.getNodes()]}
                 
-                print 'this is nList before appending: ',json.dumps(nList)        
-                print 'this is eList before appending: ',str(eList)        
+                #print 'this is nList before appending: ',json.dumps(nList)        
+                #print 'this is eList before appending: ',str(eList)        
 
                 nList.update(eList)
                 if 'data' in properties.keys():
                     nList.update({'data':properties['data']})
-                print "dumping: ", nList
+                #print "dumping: ", nList
                 #return json.dumps(nList) #json.loads(str(nList))) #.decode().encode('utf-8', 'backslashreplace'))
                 return json.dumps(nList)
 
 
+    '''
+    This method applies an inducedSubGraph algorithm to a selection of nodes of a given graph.
+    jsonGraph, the JSON graph object of the selection
+    target, the graph to target ('substrate' or 'catalyst')
+    Returns the induced subgraph
+    '''
     def inducedSubGraph(self, jsonGraph, target):        
         nodeList = []
         graphNList = []
@@ -134,7 +161,7 @@ class graphManager():
         if target == 'catalyst':
                 graph = self.catalyst
 
-        print target,' graph: ', [n for n in graph.getNodes()],' ', [e for e in graph.getEdges()]," with ", nodeList
+        #print target,' graph: ', [n for n in graph.getNodes()],' ', [e for e in graph.getEdges()]," with ", nodeList
 
         baseIDP = graph.getDoubleProperty("baseID")
         for n in graph.getNodes():
@@ -163,6 +190,10 @@ class graphManager():
         return graph
 
 
+    '''
+    Returns a graph with a randomized layout
+    graph, the graph to apply the random layout algorithm to (default is substrate)
+    '''
     def randomizeGraph(self, graph=0):
         if not graph:
                 graph = self.substrate
@@ -176,7 +207,12 @@ class graphManager():
 
 
 
-    ''' here we should add protection for properties automatic load (warning will crash when diff type w/ same name)
+    ''' 
+    Adds a new graph (copied to substrate) and returns it
+    It iterates over the properties that are passed in the JSON file and accordingly sets the tulip
+    property interface and values that correspond.
+    json, the JSON of the graph to add
+    Returns the new graph
     '''
     def addGraph(self, json):
         g = tlp.newGraph()
@@ -189,6 +225,7 @@ class graphManager():
                 u = g.addNode()
                 idToNode[n[u'baseID']] = u
 
+                # here we should add protection for properties automatic load (warning will crash when diff type w/ same name)
                 for k in n.keys():
                         prop = 0
                         kType = type(n[k])
@@ -241,7 +278,13 @@ class graphManager():
         return g
 
 
-        
+
+    '''
+    Analyse a graph (or a selection of a graph) copies it to 'catalyst' and send it
+    back together with the corresponding cohesion values.
+    jsonGraph, a JSON graph object of a selection of nodes to analyse
+    return an array containing [the catalyst graph, cohesion intensity, cohesion homogeneity]
+    '''        
     def analyseGraph(self, jsonGraph = 0):
 
         graph = self.substrate
@@ -287,6 +330,7 @@ class graphManager():
         label = c.typeGraph.getStringProperty("label")
         baseID = c.typeGraph.getDoubleProperty("baseID")
 
+        # sets the baseID for persistence
         for n in c.typeGraph.getNodes():
                 label[n] = tName[n]
                 baseID[n] = n.id
@@ -310,6 +354,11 @@ class graphManager():
 
 
 
+    '''
+    Returns a selection of corresponding substrate nodes from a selection of catalyst nodes.
+    jsonGraph, a JSON graph object of a selection of nodes to analyse
+    In the future we should include the cohesion calculation and send it back too.
+    '''
     def synchronizeFromCatalyst(self, jsonGraph):
 
         nodeList = []
@@ -347,6 +396,12 @@ class graphManager():
 
         return self.graphToJSON(self.substrate, {'nodes':[{'type':'string', 'name':'label'}]}, nList, eList)
 
+
+    '''
+    Applies a layout algorithm on a graph and returns it.
+    layoutName, the name of the layout algorithm to call
+    graphTarget, the string value of the graph onto apply the algorithm (substrate or catalyst)
+    '''
     def callLayoutAlgorithm(self, layoutName, graphTarget):
         g = self.substrate
         if graphTarget == 'catalyst':
@@ -357,6 +412,11 @@ class graphManager():
         return g
 
 
+    '''
+    Applies a double (metric) algorithm on a graph and returns it.
+    doubleName, the name of the double algorithm to call
+    graphTarget, the string value of the graph onto apply the algorithm (substrate or catalyst)
+    '''
     def callDoubleAlgorithm(self, doubleName, graphTarget):
         g = self.substrate
         if graphTarget == 'catalyst':
