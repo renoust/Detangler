@@ -14,6 +14,9 @@ import sys
 # path to the tulip library
 libtulip_dir = "/work/tulip-dev/tulip_3_6_maint-build/release/install/lib"
 sys.path.append(libtulip_dir)
+libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+sys.path.append(libtulip_dir)
+
 from tulip import *
 
 # path to custom scripts that perform the analysis
@@ -73,7 +76,7 @@ class graphManager():
                 if 'nodes' in properties:
                         nodesProp = properties['nodes']
                         propInterface = {}
-                         "print nodesProp
+                        #print nodesProp
                         for k in nodesProp:
                                 if 'type' in k and 'name' in k:
                                         if k['type'] == 'bool':

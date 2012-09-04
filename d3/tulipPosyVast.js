@@ -206,6 +206,10 @@ var TulipPosy = function(originalJSON)
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.resize(cGraph, 0);
 
+			addInterfaceSubstrate();
+			addInterfaceCatalyst();
+
+
                 });
         };
 
@@ -216,7 +220,10 @@ var TulipPosy = function(originalJSON)
         // idName, if given, the property value of 'idName' will be assigned to 'baseID'
         var addBaseID = function(data, idName)
         {
-                data.nodes.forEach(function(d){d.currentX = d.x; d.currentY = d.y;})
+		console.log(data)
+                data.nodes.forEach(function(d){//d.currentX = d.x; d.currentY = d.y;})
+					       if ("x" in d){d.currentX = d.x;}else{d.x = 0; d.currentX = 0;};
+					       if ("y" in d){d.currentY = d.y;}else{d.y = 0; d.currentY = 0;};})
                 if (idName == "")
                 {
                         data.nodes.forEach(function(d, i){d.baseID = i});
@@ -442,6 +449,7 @@ var TulipPosy = function(originalJSON)
 
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
                         .attr("class", className)
+			.classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
                         .on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callback();})
                         .on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
@@ -449,6 +457,7 @@ var TulipPosy = function(originalJSON)
 
                 bt.append("rect")
                         .attr("class", className)
+ 			.classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
                         .style("fill", defaultFillColor)
@@ -458,6 +467,7 @@ var TulipPosy = function(originalJSON)
 
                 bt.append("text")
                         .attr("class", className)
+ 			.classed("interfaceButton", 1)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d})
@@ -490,6 +500,7 @@ var TulipPosy = function(originalJSON)
 
                 var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
                         .attr("class", "moveButton")
+			.classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
                         .on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
@@ -516,6 +527,7 @@ var TulipPosy = function(originalJSON)
                 
                 btMove.append("rect")
                         .attr("class", "moveButton")
+			.classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
                         .style("fill", highlightFillColor)        
@@ -526,6 +538,7 @@ var TulipPosy = function(originalJSON)
 
                 btMove.append("text")
                         .attr("class", "moveButton")
+			.classed("interfaceButton", 1)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d.text})
@@ -536,6 +549,7 @@ var TulipPosy = function(originalJSON)
 
                 var btSelect = svg.selectAll("rect.selectButton").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
                         .attr("class", "selectButton")
+			.classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*(positionNumber+1)) + ")"; })
                         .on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
@@ -562,6 +576,7 @@ var TulipPosy = function(originalJSON)
                 
                 btSelect.append("rect")
                         .attr("class", "selectButton")
+			.classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
                         .style("fill", defaultFillColor)        
@@ -572,6 +587,7 @@ var TulipPosy = function(originalJSON)
 
                 btSelect.append("text")
                         .attr("class", "selectButton")
+			.classed("interfaceButton", 1)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d.text})
@@ -604,6 +620,7 @@ var TulipPosy = function(originalJSON)
                 
                 coh.append("rect")
                         .attr("class", "cohesionframe")
+			.classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 90)
                         .style("fill-opacity", 0)
@@ -612,6 +629,7 @@ var TulipPosy = function(originalJSON)
 
                 coh.append("text")
                         .attr('class', 'cohesionlabel')
+			.classed("interfaceButton", 1)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text("Cohesion")
@@ -621,6 +639,7 @@ var TulipPosy = function(originalJSON)
 
                 coh.append("text")
                         .attr('class', 'intensitylabel')
+			.classed("interfaceButton", 1)
                         .attr("dx", 10)
                         .attr("dy", 35)
                         .text("intensity:")
@@ -630,6 +649,7 @@ var TulipPosy = function(originalJSON)
 
                 coh.append("text")
                         .attr('class', 'intensity')
+			.classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 50)
                         .text(function(d){return ""+cohesion_intensity})
@@ -640,6 +660,7 @@ var TulipPosy = function(originalJSON)
 
                 coh.append("text")
                         .attr('class', 'homogeneitylabel')
+			.classed("interfaceButton", 1)
                         .attr("dx", 10)
                         .attr("dy", 70)
                         .attr("width", 120)
@@ -650,6 +671,7 @@ var TulipPosy = function(originalJSON)
 
                 coh.append("text")
                         .attr('class', 'homogeneity')
+			.classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 85)
                         .text(function(d){return ""+cohesion_homogeneity})
@@ -660,19 +682,96 @@ var TulipPosy = function(originalJSON)
 
         }
 
+	var eraseAllInterface = function(target)
+	{
+                var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate
+                        svg = svg_substrate
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst
+                        svg = svg_catalyst
+                }
+
+                var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
+		
+
+	}
+
+	var resetView = function(target)
+	{
+		var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate
+                        svg = svg_substrate
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst
+                        svg = svg_catalyst
+                }
+
+                nodeDatum = svg.selectAll("g.node").data()
+                // strangely the matrix that should be applied by transform is squared?! so we adapt the nodes values
+                nodeDatum.forEach(function(d){d.currentX = d.x;
+                                              d.currentY = d.y;});
+                
+                svg.selectAll(".node,.link").attr("transform","translate(" + 0 + "," +  0 + ") scale(" +  1 + ")")
+                svg.selectAll("text.node").style("font-size", function(){ return 12;});
+		addInterfaceSubstrate();
+		addInterfaceCatalyst();
+	}
+
+	var resetSize = function(target)
+	{
+		var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate
+                        svg = svg_substrate
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst
+                        svg = svg_catalyst
+                }
+		
+		cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
+		graph_drawing = graphDrawing(cGraph, svg)
+                graph_drawing.resize(cGraph, 0)
+	}
+
+
         // This function add all the interface elements for the catalyst view
         var addInterfaceCatalyst = function()
         {
                 var target = "catalyst";
+		
+		eraseAllInterface(target);
 
                 addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
                 addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
                 addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
                 addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
-                addButton(target, 4, "degree metric", "button5", function(){callFloatAlgorithm("Degree", target)});
-                addButton(target, 5, "btw. centrality", "button6", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 6, "analyse selection", "button7", function(){syncGraph(getSelection(target), target)});
-                addGraphInteractorButtons(target, 7);
+		addButton(target, 4, "reset view", "button5", function(){resetView(target)});
+                addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 7, "reset size", "button8", function(){resetSize(target)});		
+                addButton(target, 8, "analyse selection", "button9", function(){syncGraph(getSelection(target), target)});
+                addGraphInteractorButtons(target, 9);
 
         }
 
@@ -681,15 +780,19 @@ var TulipPosy = function(originalJSON)
         {
                 var target = 'substrate'
 
+		eraseAllInterface(target);
+
                 addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
                 addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
                 addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
                 addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
-                addButton(target, 4, "degree metric", "button5", function(){callFloatAlgorithm("Degree", target)});
-                addButton(target, 5, "btw. centrality", "button6", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 6, "analyse", "button7", function(){analyseGraph()});
-                addButton(target, 7, "analyse selection", "button8", function(){syncGraph(getSelection(target), target)});
-                addGraphInteractorButtons(target, 8);
+		addButton(target, 4, "reset view", "button5", function(){resetView(target)});
+                addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 7, "analyse", "button8", function(){analyseGraph()});
+                addButton(target, 8, "analyse selection", "button9", function(){syncGraph(getSelection(target), target)});
+                addButton(target, 9, "reset size", "button10", function(){resetSize(target)});		
+                addGraphInteractorButtons(target, 10);
                 addCohesionFeedback(target);
         }
 
@@ -1101,6 +1204,9 @@ var TulipPosy = function(originalJSON)
 
                                 svg.selectAll(".node,.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
                                 svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/(d3.event.scale*d3.event.scale));});
+				addInterfaceSubstrate();
+				addInterfaceCatalyst();
+        
                             })
                         );
         }

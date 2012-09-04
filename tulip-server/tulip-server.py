@@ -18,6 +18,8 @@ import sys
 # this should point to your tulip directory
 libtulip_dir = "/work/tulip-dev/tulip_3_6_maint-build/release/install/lib"
 sys.path.append(libtulip_dir)
+libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+sys.path.append(libtulip_dir)
 from tulip import *
 
 # custom python scripts for graph and query analysis, might be released soon

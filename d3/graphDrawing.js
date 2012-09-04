@@ -46,7 +46,7 @@ var graphDrawing = function(_graph, _svg)
 			.attr("class", "node")
 			.attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
 
-			.on("click", function(d){
+			/*.on("click", function(d){
 				var o = d3.select(this); 
 				if (o.classed("selected"))
 				{
@@ -68,7 +68,7 @@ var graphDrawing = function(_graph, _svg)
 				}else{
 					o.select("circle").style("fill","steelblue");
 				}
-		       });
+		       });*/
 
 		
 		node.append("circle").attr("class", "node").classed("circle", 1)
@@ -102,7 +102,7 @@ var graphDrawing = function(_graph, _svg)
 			.data(g.cGraph.links(),function(d){return d.baseID}).enter().append("g")
 			.attr("class", "link")
 			//.attr("transform", function(d) { return "translate(" + d.source.x + "," + d.source.y + ")"; })
-			.on("click", function(){
+			/*.on("click", function(){
 				var o = d3.select(this); 
 				if (o.classed("selected"))
 				{
@@ -122,7 +122,7 @@ var graphDrawing = function(_graph, _svg)
 				}else{
 					o.select("path").style("stroke","gray");
 				}
-			});
+			});*/
 			
 
 		link.append("path").attr("class", "link").classed("path", 1)
