@@ -1107,7 +1107,7 @@ var TulipPosy = function(originalJSON)
                                 resetSize("substrate");
                             if (target == "substrate")
                                 resetSize("catalyst");
-                            
+                            prevSelList = selList.slice(0);
                             console.log("warning: the selection list is empty");
                             
                         }
