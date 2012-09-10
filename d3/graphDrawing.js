@@ -70,7 +70,7 @@ var graphDrawing = function(_graph, _svg)
                     //dragTarget.attr("transform", function(d){d.x += posX; d.y+= posY; d.currentX += posX; d.currentY += posY;});
 
                     //g.drawLinks();
-                    var links = d3.selectAll("g.link")
+                    var links = g.svg.selectAll("g.link")
                             .data(g.cGraph.links(),function(d){return d.baseID})
                             .select("path.link")
                             .attr("d", function(d) { return "M"+d.source.x+" "+d.source.y +" L"+d.target.x+" "+d.target.y; })
