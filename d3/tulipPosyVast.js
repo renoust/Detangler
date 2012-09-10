@@ -1077,7 +1077,7 @@ var TulipPosy = function(originalJSON)
 
                         
                         selList.sort()
-                        console.log("selection list: ",selList)
+                        console.log("selection list: ",selList, " with length ", selList.length)
                         
                         if(selList.length>0)// && target == "substrate")
                         {        
@@ -1101,8 +1101,16 @@ var TulipPosy = function(originalJSON)
                                 }
                         }
                         else
+                        {   
+                            svg.selectAll("g.node").select("circle.node").style('fill', 'steelblue');
+                            if (target == "catalyst")
+                                resetSize("substrate");
+                            if (target == "substrate")
+                                resetSize("catalyst");
+                            
                             console.log("warning: the selection list is empty");
-
+                            
+                        }
                 }        
                 
         }

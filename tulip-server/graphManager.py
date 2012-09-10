@@ -294,7 +294,7 @@ class graphManager():
         cohesionIntensity = 0
         cohesionHomogeneity = 0
         onlyOneNode = False
-
+        onlySingleEdges = False
 
         if jsonGraph:
                 nodeList = []
@@ -330,69 +330,86 @@ class graphManager():
 
         if not onlyOneNode:                                        
             c = clusterAnalysisLgt.clusterAnalysisLgt(graph)
-            cohesionIntensity = float(c.globalCoherence)
-            cohesionHomogeneity = float(c.globalCosine)
 
-            vL = c.typeGraph.getLayoutProperty("viewLayout")
-            c.typeGraph.computeLayoutProperty("GEM (Frick)", vL)
+            if c.typeGraph.numberOfNodes() > 0:
 
-            tName = c.typeGraph.getStringProperty("typeName")
-            label = c.typeGraph.getStringProperty("label")
-            baseID = c.typeGraph.getDoubleProperty("baseID")
+                cohesionIntensity = float(c.globalCoherence)
+                cohesionHomogeneity = float(c.globalCosine)
 
-            labelToTypeGraphNode = {}
-            # sets the baseID for persistence
-            for n in c.typeGraph.getNodes():
-                    label[n] = tName[n]
-                    baseID[n] = n.id
-                    labelToTypeGraphNode[tName[n]] = n
+                vL = c.typeGraph.getLayoutProperty("viewLayout")
+                c.typeGraph.computeLayoutProperty("GEM (Frick)", vL)
 
-            for e in c.typeGraph.getEdges():
-                    baseID[e] = e.id
+                tName = c.typeGraph.getStringProperty("typeName")
+                label = c.typeGraph.getStringProperty("label")
+                baseID = c.typeGraph.getDoubleProperty("baseID")
 
-            for n in c.typeGraph.getNodes():
-                print "baseID:", baseID[n], " label:",label[n]
-        
-            labelList = [label[n] for n in c.typeGraph.getNodes()]
+                labelToTypeGraphNode = {}
+                # sets the baseID for persistence
+                for n in c.typeGraph.getNodes():
+                        label[n] = tName[n]
+                        baseID[n] = n.id
+                        labelToTypeGraphNode[tName[n]] = n
 
-                
-    
-            # associates the right baseIDs
-            if self.catalyst:
-                labelCatalystP = self.catalyst.getStringProperty("label")
-                baseIDCatalystP = self.catalyst.getDoubleProperty("baseID")
-                
-                nbAssign = 0
-                for n in self.catalyst.getNodes():
-                    if labelCatalystP[n] in labelList:
-                        baseID[labelToTypeGraphNode[labelCatalystP[n]]] = baseIDCatalystP[n]
-                        nbAssign += 1
-                    if nbAssign == len(labelList):
-                        break          
+                for e in c.typeGraph.getEdges():
+                        baseID[e] = e.id
 
-                #baseIDcopy = lambda n: baseID[labelToTypeGraphNode[labelCatalyst[n]]] = baseIDCatalystP[n] 
-                #[baseIDcopy(n) for n in self.catalyst.getNodes() if labelCatalyst[n] in labelList]        
+                for n in c.typeGraph.getNodes():
+                    print "baseID:", baseID[n], " label:",label[n]
+            
+                labelList = [label[n] for n in c.typeGraph.getNodes()]
 
-            #returnGraph = c.typeGraph
 
-            if jsonGraph:
-                    return [c.typeGraph, cohesionIntensity, cohesionHomogeneity]
+                # associates the right baseIDs
+                if self.catalyst:
+                    labelCatalystP = self.catalyst.getStringProperty("label")
+                    baseIDCatalystP = self.catalyst.getDoubleProperty("baseID")
+                    
+                    nbAssign = 0
+                    for n in self.catalyst.getNodes():
+                        if labelCatalystP[n] in labelList:
+                            baseID[labelToTypeGraphNode[labelCatalystP[n]]] = baseIDCatalystP[n]
+                            nbAssign += 1
+                        if nbAssign == len(labelList):
+                            break          
 
-            if not self.catalyst:
-                    self.catalyst = tlp.newGraph()
+                    #baseIDcopy = lambda n: baseID[labelToTypeGraphNode[labelCatalyst[n]]] = baseIDCatalystP[n] 
+                    #[baseIDcopy(n) for n in self.catalyst.getNodes() if labelCatalyst[n] in labelList]        
+
+                #returnGraph = c.typeGraph
+
+
+                if jsonGraph:
+                        return [c.typeGraph, cohesionIntensity, cohesionHomogeneity]
+
+                if not self.catalyst:
+                        self.catalyst = tlp.newGraph()
+                else:
+                        self.catalyst.clear()
+
+                tlp.copyToGraph(self.catalyst, c.typeGraph)
+               
+
+                return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
+
+
+
             else:
-                    self.catalyst.clear()
-
-            tlp.copyToGraph(self.catalyst, c.typeGraph)
-           
-
-            return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
+                onlySingleEdges = True
 
 
-        if onlyOneNode:
+
+        if onlyOneNode or onlySingleEdges:
             descP = graph.getStringProperty("descripteurs")
-            labelList = descP[graphNList[0]].split(';')
             returnGraph = tlp.newGraph()
+            labelList = []
+            if onlyOneNode:
+                labelList = descP[graphNList[0]].split(';')
+            if onlySingleEdges:
+                descP = graph.getStringProperty("descripteurs")
+                for e in graph.getEdges():
+                    labelList.extend(descP[e].split(';'))
+                labelList = list(set(labelList))
+
             if self.catalyst:
                 labelCatalystP = self.catalyst.getStringProperty("label")
                 baseIDCatalystP = self.catalyst.getDoubleProperty("baseID")
