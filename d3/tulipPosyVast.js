@@ -1037,7 +1037,7 @@ var TulipPosy = function(originalJSON)
                                         //console.log("before")
                                         
 
-                                        if (e.ctrlKey && d.selected == true)
+                                        if ((e.ctrlKey || e.metaKey) && d.selected == true)
                                                 return true;
 
                                         var intersects = __g.intersect(pointArray, x, y)
