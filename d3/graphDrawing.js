@@ -176,6 +176,7 @@ var graphDrawing = function(_graph, _svg)
                                 }
                         });*/
                         
+                console.log("Before the problem occures: ", g.cGraph.links());
 
                 link.append("path").attr("class", "link").classed("path", 1)
                         //.attr("d", function(d) { return "M"+0+" "+0 +" L"+(d.target.x - d.source.x)+" "+(d.target.y - d.source.y); })

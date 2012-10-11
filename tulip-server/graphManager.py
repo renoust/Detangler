@@ -20,9 +20,9 @@ sys.path.append(libtulip_dir)
 from tulip import *
 
 # path to custom scripts that perform the analysis
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement" 
 sys.path.append(lgtPython_dir)
-import clusterAnalysisLgt
+import entanglementAnalysisLgt
 
 
 '''
@@ -329,34 +329,37 @@ class graphManager():
         labelList = []
 
         if not onlyOneNode:                                        
-            c = clusterAnalysisLgt.clusterAnalysisLgt(graph)
+            c = entanglementAnalysisLgt.EntanglementAnalysis(graph, "descripteurs")
 
-            if c.typeGraph.numberOfNodes() > 0:
+            if c.catalystGraph.numberOfNodes() > 0:
+                resLen = [len(k) for k in c.catalystToEntIndex]
+                mainComponent = resLen.index(max(resLen))
+                
 
-                cohesionIntensity = float(c.globalCoherence)
-                cohesionHomogeneity = float(c.globalCosine)
+                cohesionIntensity = float(c.entanglementIntensity[mainComponent])
+                cohesionHomogeneity = float(c.entanglementHomogeneity[mainComponent])
 
-                vL = c.typeGraph.getLayoutProperty("viewLayout")
-                c.typeGraph.computeLayoutProperty("GEM (Frick)", vL)
+                vL = c.catalystGraph.getLayoutProperty("viewLayout")
+                c.catalystGraph.computeLayoutProperty("GEM (Frick)", vL)
 
-                tName = c.typeGraph.getStringProperty("typeName")
-                label = c.typeGraph.getStringProperty("label")
-                baseID = c.typeGraph.getDoubleProperty("baseID")
+                tName = c.catalystGraph.getStringProperty("catalystName")
+                label = c.catalystGraph.getStringProperty("label")
+                baseID = c.catalystGraph.getDoubleProperty("baseID")
 
                 labelToTypeGraphNode = {}
                 # sets the baseID for persistence
-                for n in c.typeGraph.getNodes():
+                for n in c.catalystGraph.getNodes():
                         label[n] = tName[n]
                         baseID[n] = n.id
                         labelToTypeGraphNode[tName[n]] = n
 
-                for e in c.typeGraph.getEdges():
+                for e in c.catalystGraph.getEdges():
                         baseID[e] = e.id
 
-                for n in c.typeGraph.getNodes():
+                for n in c.catalystGraph.getNodes():
                     print "baseID:", baseID[n], " label:",label[n]
             
-                labelList = [label[n] for n in c.typeGraph.getNodes()]
+                labelList = [label[n] for n in c.catalystGraph.getNodes()]
 
 
                 # associates the right baseIDs
@@ -379,14 +382,14 @@ class graphManager():
 
 
                 if jsonGraph:
-                        return [c.typeGraph, cohesionIntensity, cohesionHomogeneity]
+                        return [c.catalystGraph, cohesionIntensity, cohesionHomogeneity]
 
                 if not self.catalyst:
                         self.catalyst = tlp.newGraph()
                 else:
                         self.catalyst.clear()
 
-                tlp.copyToGraph(self.catalyst, c.typeGraph)
+                tlp.copyToGraph(self.catalyst, c.catalystGraph)
                
 
                 return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
