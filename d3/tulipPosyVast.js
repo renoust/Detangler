@@ -47,10 +47,11 @@ var TulipPosy = function(originalJSON)
         // initialization of the selection and move modes
         var select_mode = false;
         var move_mode = true;
+        var mouse_over_button = false;
         
-        // initialization of the global cohesion parameters
-        var cohesion_intensity = 0.0;
-        var cohesion_homogeneity = 0.0;
+        // initialization of the global entanglement parameters
+        var entanglement_intensity = 0.0;
+        var entanglement_homogeneity = 0.0;
 
         // initialization of default interface visual parameters
         var defaultFillColor = "white";
@@ -86,7 +87,7 @@ var TulipPosy = function(originalJSON)
                 }
 
 
-                //console.log("The node selection= ", svg.selectAll("g.node.selected"));
+                console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
                 var u = svg.selectAll("g.node.selected").data();
 
                 var toStringify = {};
@@ -109,6 +110,7 @@ var TulipPosy = function(originalJSON)
         // graphName, the string value corresponding to the graph
         var sendSelection = function(json, graphName)
         {
+                console.log("calling sendselection: ",graphName," ",json);
                 var cGraph = null;
                 var svg = null;
 
@@ -125,6 +127,7 @@ var TulipPosy = function(originalJSON)
                 }
 
                 $.post(tulip_address, { type:"update", graph:json, target:graphName }, function(data){
+                        console.log("querying an induced subgraph:",graphName," ",json);
                         cGraph.nodes(data.nodes);
                         cGraph.links(data.links);
                         cGraph.edgeBinding();
@@ -208,7 +211,7 @@ var TulipPosy = function(originalJSON)
 
                         addInterfaceSubstrate();
                         addInterfaceCatalyst();
-                        cohesionCaught();
+                        entanglementCaught();
 
 
                 });
@@ -258,7 +261,7 @@ var TulipPosy = function(originalJSON)
         }
         
         // This function calls the synchronization from a given graph through tulip, returns and applies
-        // the result on the other graph. The computed cohesion indices are also updated.
+        // the result on the other graph. The computed entanglement indices are also updated.
         // selection, the JSON string of the selected subgraph
         // graphName, the graph origin of the selection
         var syncGraph = function(selection, graphName)
@@ -320,9 +323,9 @@ var TulipPosy = function(originalJSON)
                         graph_drawing.show(tempGraph)
                         if ('data' in data)
                         {
-                                cohesion_homogeneity = data['data']['cohesion homogeneity'];
-                                cohesion_intensity = data['data']['cohesion intensity'];
-                                cohesionCaught();
+                                entanglement_homogeneity = data['data']['entanglement homogeneity'];
+                                entanglement_intensity = data['data']['entanglement intensity'];
+                                entanglementCaught();
                         }
                 });
 
@@ -330,7 +333,7 @@ var TulipPosy = function(originalJSON)
 
 
         // This function calls through tulip the analysis of a substrate graph, stores and displays it
-        // in the catalyst view, updating the new cohesion indices computed.
+        // in the catalyst view, updating the new entanglement indices computed.
         var analyseGraph = function()
         {
                   var params = {type:"analyse"}
@@ -351,10 +354,10 @@ var TulipPosy = function(originalJSON)
                         graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
                         graph_drawing.clear()
                         graph_drawing.draw()
-                        cohesion_homogeneity = data['data']['cohesion homogeneity']
-                        cohesion_intensity = data['data']['cohesion intensity']
+                        entanglement_homogeneity = data['data']['entanglement homogeneity']
+                        entanglement_intensity = data['data']['entanglement intensity']
                         //console.log("after analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
-                        cohesionCaught();
+                        entanglementCaught();
                 });
 
         }
@@ -455,8 +458,8 @@ var TulipPosy = function(originalJSON)
                         .classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
                         .on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callback();})
-                        .on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor);})
-                        .on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor);})
+                        .on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor); mouse_over_button = true;})
+                        .on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor); mouse_over_button = false;})
 
                 bt.append("rect")
                         .attr("class", className)
@@ -510,6 +513,7 @@ var TulipPosy = function(originalJSON)
                                 toggleSelectMove(target);
                         })
                         .on("mouseover", function(d){
+                                mouse_over_button = true;
                                 if(!move_mode){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
@@ -519,6 +523,7 @@ var TulipPosy = function(originalJSON)
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOver);})
                         .on("mouseout", function(d){
+                                mouse_over_button = false;
                                 if(!move_mode){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
@@ -559,6 +564,7 @@ var TulipPosy = function(originalJSON)
                                 toggleSelectMove(target);   
                         })
                         .on("mouseover", function(d){
+                                mouse_over_button = true;
                                 if(!select_mode){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
@@ -568,6 +574,7 @@ var TulipPosy = function(originalJSON)
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOver);})
                         .on("mouseout", function(d){
+                                mouse_over_button = false;
                                 if(!select_mode){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
@@ -599,9 +606,9 @@ var TulipPosy = function(originalJSON)
                         .style("font-size", defaultTextSize)
         }
 
-        // This function adds a small frame that displays the cohesion informations while they are updated
+        // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
-        var addCohesionFeedback = function(target)
+        var addEntanglementFeedback = function(target)
         {
                 var cGraph = null
                 var svg = null
@@ -618,11 +625,11 @@ var TulipPosy = function(originalJSON)
                         svg = svg_catalyst
                 }
 
-                var coh = svg.selectAll("rect cohesion").data(["cohesion"]).enter().append('g')
+                var coh = svg.selectAll("rect entanglement").data(["entanglement"]).enter().append('g')
                         .attr("transform", function(d) { return "translate(" + 10 + "," + 395 + ")"; })
                 
                 coh.append("rect")
-                        .attr("class", "cohesionframe")
+                        .attr("class", "entanglementframe")
                         .classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 90)
@@ -631,11 +638,11 @@ var TulipPosy = function(originalJSON)
                         .style("stroke", 'black')        
 
                 coh.append("text")
-                        .attr('class', 'cohesionlabel')
+                        .attr('class', 'entanglementlabel')
                         .classed("interfaceButton", 1)
                         .attr("dx", 5)
                         .attr("dy", 15)
-                        .text("Cohesion")
+                        .text("Entanglement")
                         .style("fill", 'black')
                         .style("font-family", defaultTextFont)
                         .style("font-size", defaultTextSize)
@@ -655,7 +662,7 @@ var TulipPosy = function(originalJSON)
                         .classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 50)
-                        .text(function(d){return ""+cohesion_intensity})
+                        .text(function(d){return ""+entanglement_intensity})
                         .style("fill", 'blue')
                         .style("font-family", defaultTextFont)
                         .style("font-size", defaultTextSize)
@@ -677,7 +684,7 @@ var TulipPosy = function(originalJSON)
                         .classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 85)
-                        .text(function(d){return ""+cohesion_homogeneity})
+                        .text(function(d){return ""+entanglement_homogeneity})
                         .style('text-anchor', 'end')
                         .style("font-family", defaultTextFont)
                         .style("fill", 'blue')
@@ -733,7 +740,7 @@ var TulipPosy = function(originalJSON)
                 svg.selectAll("text.node").style("font-size", function(){ return 12;});
                 addInterfaceSubstrate();
                 addInterfaceCatalyst();
-                cohesionCaught();
+                entanglementCaught();
         }
 
         var resetSize = function(target)
@@ -774,8 +781,7 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
                 addButton(target, 7, "reset size", "button8", function(){resetSize(target)});                
-                addButton(target, 8, "analyse selection", "button9", function(){syncGraph(getSelection(target), target)});
-                addGraphInteractorButtons(target, 9);
+                addGraphInteractorButtons(target, 8);
 
         }
 
@@ -794,21 +800,20 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
                 addButton(target, 7, "analyse", "button8", function(){analyseGraph()});
-                addButton(target, 8, "analyse selection", "button9", function(){syncGraph(getSelection(target), target)});
-                addButton(target, 9, "reset size", "button10", function(){resetSize(target)});                
-                addGraphInteractorButtons(target, 10);
-                addCohesionFeedback(target);
+                addButton(target, 8, "reset size", "button10", function(){resetSize(target)});                
+                addGraphInteractorButtons(target, 9);
+                addEntanglementFeedback(target);
         }
 
-        // This function updates the cohesion values displayed in the cohesion frame of the substrate view
-        // The cohesion intensity drives the color of the frame following a Brewer's scale (www.colorbrewer2.org).
-        var cohesionCaught = function()
+        // This function updates the entanglement values displayed in the entanglement frame of the substrate view
+        // The entanglement intensity drives the color of the frame following a Brewer's scale (www.colorbrewer2.org).
+        var entanglementCaught = function()
         {
                 var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
-                svg_substrate.selectAll("text.homogeneity").text(function(d){return ""+round(cohesion_homogeneity,5)});
-                svg_substrate.selectAll("text.intensity").text(function(d){return ""+round(cohesion_intensity,5)});
-                var index = Math.round(cohesion_intensity*5)%6
-                svg_substrate.selectAll("rect.cohesionframe").transition().style('fill-opacity', 1)
+                svg_substrate.selectAll("text.homogeneity").text(function(d){return ""+round(entanglement_homogeneity,5)});
+                svg_substrate.selectAll("text.intensity").text(function(d){return ""+round(entanglement_intensity,5)});
+                var index = Math.round(entanglement_intensity*5)%6
+                svg_substrate.selectAll("rect.entanglementframe").transition().style('fill-opacity', 1)
                         .style("fill", brewerSeq[index])
                 if(lasso_catalyst) lasso_catalyst.fillColor = brewerSeq[index]
                 if(lasso_substrate) lasso_substrate.fillColor = brewerSeq[index]
@@ -1001,6 +1006,24 @@ var TulipPosy = function(originalJSON)
                 
                 var prevSelList = [];
 
+                myL.canMouseUp = function(e)
+                {
+                    if (!mouse_over_button)
+                        this.mouseUp(e)
+                }
+            
+                myL.canMouseMove = function(e)
+                {
+                    if (!mouse_over_button)
+                        this.mouseMove(e)
+                }
+                
+                myL.canMouseDown = function(e)
+                {
+                    if (!mouse_over_button)
+                        this.mouseDown(e)
+                }
+
                 // redefines the intersection function
                 // applies keyboard modifiers, control extends the selection, shift removes from the currect selection
                 // once the selection is made, it applies the synchronization function syncGraph() to the selected nodes
@@ -1137,9 +1160,9 @@ var TulipPosy = function(originalJSON)
                         myL = lasso_substrate
                 }
 
-                mySvg.on("mouseup", function(d){myL.mouseUp(d3.mouse(this))});
-                mySvg.on("mousedown", function(d){myL.mouseDown(d3.mouse(this))});
-                mySvg.on("mousemove", function(d){myL.mouseMove(d3.mouse(this))});        
+                mySvg.on("mouseup", function(d){myL.canMouseUp(d3.mouse(this))});
+                mySvg.on("mousedown", function(d){myL.canMouseDown(d3.mouse(this))});
+                mySvg.on("mousemove", function(d){myL.canMouseMove(d3.mouse(this))});        
         }
 
 
@@ -1224,7 +1247,7 @@ var TulipPosy = function(originalJSON)
                                 svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/d3.event.scale);});
                                 addInterfaceSubstrate();
                                 addInterfaceCatalyst();
-                                cohesionCaught();
+                                entanglementCaught();
         
                             })
                         );

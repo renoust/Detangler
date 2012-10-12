@@ -284,15 +284,15 @@ class graphManager():
 
     '''
     Analyse a graph (or a selection of a graph) copies it to 'catalyst' and send it
-    back together with the corresponding cohesion values.
+    back together with the corresponding entanglement values.
     jsonGraph, a JSON graph object of a selection of nodes to analyse
-    return an array containing [the catalyst graph, cohesion intensity, cohesion homogeneity]
+    return an array containing [the catalyst graph, entanglement intensity, entanglement homogeneity]
     '''        
     def analyseGraph(self, jsonGraph = 0):
 
         graph = self.substrate
-        cohesionIntensity = 0
-        cohesionHomogeneity = 0
+        entanglementIntensity = 0
+        entanglementHomogeneity = 0
         onlyOneNode = False
         onlySingleEdges = False
 
@@ -336,8 +336,8 @@ class graphManager():
                 mainComponent = resLen.index(max(resLen))
                 
 
-                cohesionIntensity = float(c.entanglementIntensity[mainComponent])
-                cohesionHomogeneity = float(c.entanglementHomogeneity[mainComponent])
+                entanglementIntensity = float(c.entanglementIntensity[mainComponent])
+                entanglementHomogeneity = float(c.entanglementHomogeneity[mainComponent])
 
                 vL = c.catalystGraph.getLayoutProperty("viewLayout")
                 c.catalystGraph.computeLayoutProperty("GEM (Frick)", vL)
@@ -382,7 +382,7 @@ class graphManager():
 
 
                 if jsonGraph:
-                        return [c.catalystGraph, cohesionIntensity, cohesionHomogeneity]
+                        return [c.catalystGraph, entanglementIntensity, entanglementHomogeneity]
 
                 if not self.catalyst:
                         self.catalyst = tlp.newGraph()
@@ -392,7 +392,7 @@ class graphManager():
                 tlp.copyToGraph(self.catalyst, c.catalystGraph)
                
 
-                return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
+                return [self.catalyst, entanglementIntensity, entanglementHomogeneity]
 
 
 
@@ -430,14 +430,14 @@ class graphManager():
                         break
 
             if jsonGraph:
-                    return [returnGraph, cohesionIntensity, cohesionHomogeneity]
+                    return [returnGraph, entanglementIntensity, entanglementHomogeneity]
 
             if not self.catalyst:
                     self.catalyst = tlp.newGraph()
             else:
                     self.catalyst.clear()
 
-            return [self.catalyst, cohesionIntensity, cohesionHomogeneity]
+            return [self.catalyst, entanglementIntensity, entanglementHomogeneity]
 
 
 
@@ -445,7 +445,7 @@ class graphManager():
     '''
     Returns a selection of corresponding substrate nodes from a selection of catalyst nodes.
     jsonGraph, a JSON graph object of a selection of nodes to analyse
-    In the future we should include the cohesion calculation and send it back too.
+    In the future we should include the entanglement calculation and send it back too.
     '''
     def synchronizeFromCatalyst(self, jsonGraph):
 

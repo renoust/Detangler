@@ -261,7 +261,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         # request the analysis for the given substrate selection 
         if request['target'][0] == 'substrate':
                 result = self.graphMan.analyseGraph(selection)
-                graphJSON = self.graphMan.graphToJSON(result[0], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'cohesion intensity':result[1], 'cohesion homogeneity':result[2]}})
+                graphJSON = self.graphMan.graphToJSON(result[0], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
                 #print "Analysis return: "                                        
 
         # request the synchronization for the given catalyst selection
