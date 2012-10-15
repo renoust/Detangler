@@ -175,12 +175,12 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 if 'type' in params and 'name' in params:
                         if params['type'] == 'layout':
                                 g = self.graphMan.callLayoutAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
-                                graphJSON = self.graphMan.graphToJSON(g)
+                                graphJSON = self.graphMan.graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})
                                 self.sendJSON(graphJSON)
 
                         if params['type'] == 'float':
                                 g = self.graphMan.callDoubleAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
-                                graphJSON = self.graphMan.graphToJSON(g, {'nodes':[{'type':'float', 'name':'viewMetric'}]})                                        
+                                graphJSON = self.graphMan.graphToJSON(g, {'nodes':[{'type':'float', 'name':'viewMetric'}, {'type':'string', 'name':'label'}]})                                        
                                 self.sendJSON(graphJSON)
 
 
@@ -238,7 +238,7 @@ class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 g = self.graphMan.addGraph(graphJSON)
                 self.graphMan.substrate = g
                 g = self.graphMan.randomizeGraph(g)
-                graphJSON = self.graphMan.graphToJSON(g)                                        
+                graphJSON = self.graphMan.graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})                                        
                 self.sendJSON(graphJSON)
 
     '''

@@ -45,8 +45,12 @@ var TulipPosy = function(originalJSON)
         var lasso_substrate = null;
 
         // initialization of the selection and move modes
-        var select_mode = false;
-        var move_mode = true;
+        var select_mode_substrate = false;
+        var move_mode_substrate = true;
+        var show_labels_substrate = true;
+        var select_mode_catalyst = false;
+        var move_mode_catalyst = true;
+        var show_labels_catalyst = true;
         var mouse_over_button = false;
         
         // initialization of the global entanglement parameters
@@ -514,7 +518,7 @@ var TulipPosy = function(originalJSON)
                         })
                         .on("mouseover", function(d){
                                 mouse_over_button = true;
-                                if(!move_mode){
+                                if(!eval("move_mode_"+target)){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
                                 }else{
@@ -524,7 +528,7 @@ var TulipPosy = function(originalJSON)
                                 d3.select(this).select("rect").style("fill", d.colorOver);})
                         .on("mouseout", function(d){
                                 mouse_over_button = false;
-                                if(!move_mode){
+                                if(!eval("move_mode_"+target)){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
                                 }else{
@@ -565,7 +569,7 @@ var TulipPosy = function(originalJSON)
                         })
                         .on("mouseover", function(d){
                                 mouse_over_button = true;
-                                if(!select_mode){
+                                if(!eval("select_mode_"+target)){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
                                 }else{
@@ -575,7 +579,7 @@ var TulipPosy = function(originalJSON)
                                 d3.select(this).select("rect").style("fill",d.colorOver);})
                         .on("mouseout", function(d){
                                 mouse_over_button = false;
-                                if(!select_mode){
+                                if(!eval("select_mode_"+target)){
                                         d.colorOver = highlightFillColor; 
                                         d.colorOut = defaultFillColor;
                                 }else{
@@ -780,8 +784,9 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 4, "reset view", "button5", function(){resetView(target)});
                 addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 7, "reset size", "button8", function(){resetSize(target)});                
-                addGraphInteractorButtons(target, 8);
+                addButton(target, 7, "reset size", "button8", function(){resetSize(target)});  
+                addButton(target, 8, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
+                addGraphInteractorButtons(target, 9);
 
         }
 
@@ -800,8 +805,10 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
                 addButton(target, 7, "analyse", "button8", function(){analyseGraph()});
-                addButton(target, 8, "reset size", "button10", function(){resetSize(target)});                
-                addGraphInteractorButtons(target, 9);
+                addButton(target, 8, "reset size", "button9", function(){resetSize(target)});
+                addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
+                
+                addGraphInteractorButtons(target, 10);
                 addEntanglementFeedback(target);
         }
 
@@ -840,6 +847,48 @@ var TulipPosy = function(originalJSON)
                 if (target == "catalyst")
                 {
                         svg = svg_catalyst
+                        //select_mode = select_mode_catalyst
+                        //move_mode = move_mode_catalyst
+                }
+        
+                if (target == "substrate")
+                {
+                        svg = svg_substrate
+                        //select_mode = select_mode_substrate
+                        //move_mode = move_mode_substrate
+                }
+
+                eval("select_mode_"+target+" = ! select_mode_"+target);
+                eval("move_mode_"+target+" = ! move_mode_"+target);
+
+                if(eval("select_mode_"+target))
+                {
+                        svg.select('rect.moveButton').style('fill', defaultFillColor);
+                        svg.select('rect.selectButton').style('fill', highlightFillColor);
+                        addLasso(target);
+                }
+
+                if(eval("move_mode_"+target))
+                {
+                        svg.style("cursor", "all-scroll");
+                        svg.select('rect.moveButton').style('fill', highlightFillColor);
+                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
+                        removeLasso(target)
+                }
+        }
+
+        // 
+        var showhideLabels = function(target)
+        {
+
+                if (!target)
+                        return
+
+                var svg = null
+
+                if (target == "catalyst")
+                {
+                        svg = svg_catalyst
                 }
         
                 if (target == "substrate")
@@ -847,22 +896,19 @@ var TulipPosy = function(originalJSON)
                         svg = svg_substrate
                 }
 
-                select_mode = ! select_mode;
-                move_mode = ! move_mode;
+                eval("show_labels_"+target+" = ! show_labels_"+target);
 
-                if(select_mode)
+                if(eval("show_labels_"+target))
                 {
-                        svg.select('rect.moveButton').style('fill', defaultFillColor);
-                        svg.select('rect.selectButton').style('fill', highlightFillColor);
-                        addLasso(target);
-                }
-
-                if(move_mode)
-                {
-                        svg.style("cursor", "all-scroll");
-                        svg.select('rect.moveButton').style('fill', highlightFillColor);
-                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
-                        removeLasso(target)
+                    svg.selectAll('text.node').text(function(d) { return d.label; });
+                    svg.select('text.showHideLabels').text('hide labels');
+                    svg.selectAll('g.node').on("mouseover", null)
+                                           .on("mouseout", null);
+                }else{
+                    svg.selectAll('text.node').text("");
+                    svg.select('text.showhideLabels').text('show labels');
+                    svg.selectAll('g.node').on("mouseover", function(d){d3.select(this).select("text.node").text(d.label);})
+                                           .on("mouseout", function(d){d3.select(this).select("text.node").text("")});
                 }
         }
 
@@ -1227,7 +1273,7 @@ var TulipPosy = function(originalJSON)
                             .scaleExtent([0.5, 2.0])
                             .on("zoom", function() {
                                 
-                                if (!move_mode)
+                                if (!eval("move_mode_"+target))
                                 {
                                          return;
                                 }
