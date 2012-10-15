@@ -48,9 +48,11 @@ var TulipPosy = function(originalJSON)
         var select_mode_substrate = false;
         var move_mode_substrate = true;
         var show_labels_substrate = true;
+        var show_links_substrate = true;
         var select_mode_catalyst = false;
         var move_mode_catalyst = true;
         var show_labels_catalyst = true;
+        var show_links_catalyst = true;
         var mouse_over_button = false;
         
         // initialization of the global entanglement parameters
@@ -786,7 +788,8 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
                 addButton(target, 7, "reset size", "button8", function(){resetSize(target)});  
                 addButton(target, 8, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
-                addGraphInteractorButtons(target, 9);
+                addButton(target, 9, "hide links", "showHideLinks", function(){showhideLinks(target)});
+                addGraphInteractorButtons(target, 10);
 
         }
 
@@ -807,8 +810,9 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 7, "analyse", "button8", function(){analyseGraph()});
                 addButton(target, 8, "reset size", "button9", function(){resetSize(target)});
                 addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
+                addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
                 
-                addGraphInteractorButtons(target, 10);
+                addGraphInteractorButtons(target, 11);
                 addEntanglementFeedback(target);
         }
 
@@ -905,10 +909,41 @@ var TulipPosy = function(originalJSON)
                     svg.selectAll('g.node').on("mouseover", null)
                                            .on("mouseout", null);
                 }else{
-                    svg.selectAll('text.node').text("");
+                    svg.selectAll('text.node').text(function(d) {if (d.selected){return d.label;} else {return "";}});
                     svg.select('text.showhideLabels').text('show labels');
                     svg.selectAll('g.node').on("mouseover", function(d){d3.select(this).select("text.node").text(d.label);})
                                            .on("mouseout", function(d){d3.select(this).select("text.node").text("")});
+                }
+        }
+
+
+        var showhideLinks = function(target)
+        {
+
+                if (!target)
+                        return
+
+                var svg = null
+
+                if (target == "catalyst")
+                {
+                        svg = svg_catalyst
+                }
+        
+                if (target == "substrate")
+                {
+                        svg = svg_substrate
+                }
+
+                eval("show_links_"+target+" = ! show_links_"+target);
+
+                if(eval("show_links_"+target))
+                {
+                    svg.selectAll('g.link').attr("visibility","visible");
+                    svg.select('text.showHideLinks').text('hide links');
+                }else{
+                    svg.selectAll('g.link').attr("visibility","hidden");
+                    svg.select('text.showhideLinks').text('show links');
                 }
         }
 
