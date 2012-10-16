@@ -233,6 +233,13 @@ var graphDrawing = function(_graph, _svg)
                 node.select("circle.node")
                         .attr("r", function(d){return d.viewMetric*2})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+
+                var link = g.svg.selectAll("g.link")
+                        .data(g.cGraph.links(),function(d){return d.baseID})
+                        .transition().delay(dTime)
+                link.select("path.link")
+                        .style("stroke-width", function(d) { return 1;})
+                        
                         
 
         }
@@ -256,15 +263,28 @@ var graphDrawing = function(_graph, _svg)
                         .style('fill', 'steelblue')
                         .attr('r', 5)
 
+                var link = g.svg.selectAll("g.link")
+                        .select("path.link")
+                        .style("stroke", "gray")
+                        .style("stroke-width", function(d) { return 1;})
+
                 // assign the new data
                 var node = g.svg.selectAll("g.node")
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.nodes(),function(d){return d.baseID})
                         .transition().delay(500)
 
+                var link = g.svg.selectAll("g.link")
+                        //.data(g.cGraph.nodes(),function(d){return d.baseID})
+                        .data(_graph.links(),function(d){return d.baseID})
+                        .transition().delay(500)
+
                 // update the nodes
                 node.select("circle.node")
                         .attr("r", function(d){return 10})
+
+                link.select("path.link")
+                        .style("stroke-width", function(d) { return 2;})
 
                 //var node2 = g.svg.selectAll("g.node")
                 //        .data(_graph.nodes(),function(d){return d.baseID})
@@ -274,9 +294,16 @@ var graphDrawing = function(_graph, _svg)
                         .style("fill", "pink")
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
+                link.select("path.link")
+                        .style("stroke", "pink")
+
                 // reassign the original data
                 g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID})                        
+
+                g.svg.selectAll("g.link")
+                        .data(g.cGraph.links(),function(d){return d.baseID})                        
+
 
         }
 

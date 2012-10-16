@@ -1207,6 +1207,7 @@ var TulipPosy = function(originalJSON)
                         else
                         {   
                             svg.selectAll("g.node").select("circle.node").style('fill', 'steelblue');
+                            svg.selectAll("g.link").select("path.link").style('stroke', 'gray');
                             if (target == "catalyst")
                                 resetSize("substrate");
                             if (target == "substrate")

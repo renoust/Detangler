@@ -346,20 +346,31 @@ class graphManager():
                 label = c.catalystGraph.getStringProperty("label")
                 baseID = c.catalystGraph.getDoubleProperty("baseID")
 
-                labelToTypeGraphNode = {}
+                labelToCatalystGraphNode = {}
+                labelToCatalystGraphEdge = {}
                 # sets the baseID for persistence
+                # this should be changed at some point because it is computationnally heavy
                 for n in c.catalystGraph.getNodes():
                         label[n] = tName[n]
                         baseID[n] = n.id
-                        labelToTypeGraphNode[tName[n]] = n
+                        labelToCatalystGraphNode[tName[n]] = n
 
                 for e in c.catalystGraph.getEdges():
                         baseID[e] = e.id
+                        sL = label[c.catalystGraph.source(e)]
+                        tL = label[c.catalystGraph.target(e)]
+                        edgeLabel = sL+';'+tL
+                        if sL > tL:
+                            edgeLabel = tL+';'+sL
+                        label[e] = edgeLabel
+                        labelToCatalystGraphEdge[edgeLabel] = e
 
-                for n in c.catalystGraph.getNodes():
+                #for n in c.catalystGraph.getNodes():
+                for n in c.catalystGraph.getEdges():
                     print "baseID:", baseID[n], " label:",label[n]
             
                 labelList = [label[n] for n in c.catalystGraph.getNodes()]
+                labelEList = [label[e] for e in c.catalystGraph.getEdges()]
 
 
                 # associates the right baseIDs
@@ -370,12 +381,21 @@ class graphManager():
                     nbAssign = 0
                     for n in self.catalyst.getNodes():
                         if labelCatalystP[n] in labelList:
-                            baseID[labelToTypeGraphNode[labelCatalystP[n]]] = baseIDCatalystP[n]
+                            baseID[labelToCatalystGraphNode[labelCatalystP[n]]] = baseIDCatalystP[n]
                             nbAssign += 1
                         if nbAssign == len(labelList):
-                            break          
+                            break
 
-                    #baseIDcopy = lambda n: baseID[labelToTypeGraphNode[labelCatalyst[n]]] = baseIDCatalystP[n] 
+                    nbAssign = 0
+                    for e in self.catalyst.getEdges():
+                        edgeLabel = labelCatalystP[e]
+                        if edgeLabel in labelEList:
+                            baseID[labelToCatalystGraphEdge[edgeLabel]] = baseIDCatalystP[e] 
+                            nbAssign += 1
+                        if nbAssign == len(labelEList):
+                            break       
+
+                    #baseIDcopy = lambda n: baseID[labelToCatalystGraphNode[labelCatalyst[n]]] = baseIDCatalystP[n] 
                     #[baseIDcopy(n) for n in self.catalyst.getNodes() if labelCatalyst[n] in labelList]        
 
                 #returnGraph = c.typeGraph
