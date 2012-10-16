@@ -23,7 +23,7 @@ from tulip import *
 lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement" 
 sys.path.append(lgtPython_dir)
 import entanglementAnalysisLgt
-
+import entanglementSynchronization
 
 '''
 This class stores the graphs, and performs the manipulations on it.
@@ -457,17 +457,32 @@ class graphManager():
                 nodeList.append(n[u'baseID'])
 
         baseIDP = self.catalyst.getDoubleProperty("baseID")
-        typeName = self.catalyst.getStringProperty("typeName")
+        label = self.catalyst.getStringProperty("label")
 
         for n in self.catalyst.getNodes():
                 if baseIDP[n] in nodeList:
                         graphNList.append(n)
-                        cataList.append(typeName[n])
+                        cataList.append(label[n])
 
+        print "The retrieved nodes: "
+        print graphNList
+        print cataList
+        print [n for n in self.catalyst.getProperties()]
         nList = []
         eList = []
 
         descP = self.substrate.getStringProperty("descripteurs")
+        
+        sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs")
+        syncRes = sync.synchronizeFromCatalyst(cataList)
+        
+        resLen = [len(k) for k in syncRes['catalystAnalysis'].catalystToEntIndex]
+        mainComponent = resLen.index(max(resLen))
+        entanglementIntensity = float(syncRes['catalystAnalysis'].entanglementIntensity[mainComponent])
+        entanglementHomogeneity = float(syncRes['catalystAnalysis'].entanglementHomogeneity[mainComponent])
+        
+        return self.graphToJSON(syncRes['substrate'], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':entanglementIntensity, 'entanglement homogeneity':entanglementHomogeneity}})
+       
         for n in self.substrate.getNodes():
                 dList = descP[n].split(';')
                 for d in cataList:

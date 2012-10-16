@@ -287,7 +287,7 @@ var TulipPosy = function(originalJSON)
                 {        
                         console.log('target is catalyst');
                         cGraph = graph_substrate
-                        console.log(graph_catalyst.nodes())
+                        console.log(selection)
                         svg = svg_substrate
                 }
 
