@@ -41,6 +41,8 @@ var graphDrawing = function(_graph, _svg)
         {
         
                 function move(){
+                    //var e = window.event;
+                    //if (e.ctrlKey || e.metaKey) return;
                     this.parentNode.appendChild(this);
                     var dragTarget = d3.select(this);
                     var nodeTarget = dragTarget.select("circle.node");
@@ -79,12 +81,38 @@ var graphDrawing = function(_graph, _svg)
                                         
             
                 };
+
+                function showHideLabel(){
+                    //var e = window.event;
+                    //if (!e.ctrlKey && !e.metaKey) return; 
+                    this.parentNode.appendChild(this);
+                    var dragTarget = d3.select(this);
+                    var labelTarget = dragTarget.select("text.node");
+                    var nodeTarget = dragTarget.select("circle.node");
+                    var hidden = labelTarget.attr("visibility") == 'hidden';
+
+                    labelTarget.attr("visibility", function(d)
+                            {
+                                if (!hidden && !d.mouseOver || d.labelVisibility)
+                                {
+                                    d.labelVisibility = false; 
+                                    nodeTarget.style("stroke", "white");
+                                    return "hidden";
+                                }else {
+                                    d.labelVisibility = true; 
+                                    nodeTarget.style("stroke", "lightpink");
+                                    return "visible"; 
+                                }
+                            });
+                };
+
                
                 var node = g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
                         .attr("class", "node")
                         .attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
-                        .call(d3.behavior.drag().on("drag", move));
+                        .call(d3.behavior.drag().on("drag", move))
+                        .on("click", showHideLabel);
 
                         /*.on("click", function(d){
                                 var o = d3.select(this); 

@@ -904,15 +904,19 @@ var TulipPosy = function(originalJSON)
 
                 if(eval("show_labels_"+target))
                 {
-                    svg.selectAll('text.node').text(function(d) { return d.label; });
+                    //svg.selectAll('text.node').text(function(d) { return d.label; });
+                    svg.selectAll('text.node').attr("visibility", function(d) { return "visible";});
                     svg.select('text.showHideLabels').text('hide labels');
-                    svg.selectAll('g.node').on("mouseover", null)
+                    svg.selectAll('g.node').on("mouseover", function(d){d.mouseOver = false; return null;})
                                            .on("mouseout", null);
                 }else{
-                    svg.selectAll('text.node').text(function(d) {if (d.selected){return d.label;} else {return "";}});
+                    //svg.selectAll('text.node').text(function(d) {if (d.selected){return d.label;} else {return "";}});
+                    svg.selectAll('text.node').attr("visibility", function(d) {if (d.selected || d.labelVisibility){d.labelVisibility = true; return "visible";} else {d.labelVisibility = false; return "hidden";}});
                     svg.select('text.showhideLabels').text('show labels');
-                    svg.selectAll('g.node').on("mouseover", function(d){d3.select(this).select("text.node").text(d.label);})
-                                           .on("mouseout", function(d){d3.select(this).select("text.node").text("")});
+                    //svg.selectAll('g.node').on("mouseover", function(d){d3.select(this).select("text.node").text(d.label);})
+                    //                       .on("mouseout", function(d){d3.select(this).select("text.node").text("")});
+                    svg.selectAll('g.node').on("mouseover", function(d){d.mouseOver = true; d3.select(this).select("text.node").attr("visibility", "visible");})
+                                           .on("mouseout", function(d){if (!d.labelVisibility) { d.mouseOver = false; d3.select(this).select("text.node").attr("visibility", "hidden");}});
                 }
         }
 
