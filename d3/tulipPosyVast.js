@@ -5,7 +5,7 @@
  * substrate graph and the other to the catalyst graph, and manages the
  * interactions between them. 
  * @requires d3.js, jQuery, graph.js, lasso.js
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -349,12 +349,8 @@ var TulipPosy = function(originalJSON)
                   var params = {type:"analyse"}
                 //console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 
-                console.log("before launching analysis, SID supposed to be: ",sessionSid);
                 var truc = 15;
                 truc = sessionSid;
-                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
-                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
-                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
 
                 $.post(tulip_address, {sid:truc, type:'analyse', target:'substrate'}, function(data){
                         data = JSON.parse(data)
@@ -453,6 +449,119 @@ var TulipPosy = function(originalJSON)
                 scale = Math.min.apply(null, [w/(maxX-minX+delta), h/(maxY-minY+delta)])
         
                 data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame; d.currentX = d.x; d.currentY = d.y;})
+        }
+
+        var addInfoBox = function(target, node)
+        {
+                var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate
+                        svg = svg_substrate
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst
+                        svg = svg_catalyst
+                }
+                
+                function move(){
+                    //var e = window.event;
+                    //if (e.ctrlKey || e.metaKey) return;
+                    this.parentNode.appendChild(this);
+                    var dragTarget = d3.select(this);
+                    var currentPanel = dragTarget.data()[0]
+                    var posX = d3.event.dx
+                    var posY = d3.event.dy
+
+                    var newX = 0
+                    var newY = 0
+
+                    if (currentPanel.panelPosX || currentPanel.panelPosY)
+                    {
+                        newX = currentPanel.panelPosX + posX
+                        newY = currentPanel.panelPosY + posY
+                    }else{
+                        newX = currentPanel.x + posX
+                        newY = currentPanel.y + posY                        
+                    }
+
+                    dragTarget.attr("transform", function(d){d.panelPosX = newX; d.panelPosY = newY; return "translate(" + newX + "," + newY + ")"});            
+                };
+
+                console.log("the current node", node)
+                
+                ib = svg.selectAll("g.nodeInfo").data([node]).enter().append("g")
+                        .attr("class", function(d){return "nodeInfo"+d.baseID})
+                        .attr("transform", function(d){ return "translate(" + d.currentX + "," + d.currentY + ")";})
+                        .call(d3.behavior.drag().on("drag", move))
+                        .on("click", function(d) {svg.selectAll("g.nodeInfo"+d.baseID).data([]).exit().remove();})
+
+                ib.append("rect")
+                    .classed("nodeInfo", true)
+                    .attr("width", 200)
+                    .attr("height", 200)
+                    //.attr("x", function (d){return d.x;})
+                    //.attr("y", function (d){return d.y;})
+                    .style("fill", defaultFillColor)
+                    .style("stroke-width", defaultBorderWidth)
+                    .style("stroke", defaultBorderColor)
+
+                ib.append("text")
+                    .classed("nodeInfo", true)
+                    .text("node information")
+                    .attr("dx", 5)
+                    .attr("dy", 15)
+                    .style("fill", defaultTextColor)
+                    .style("font-family", defaultTextFont)
+                    .style("font-size", defaultTextSize)
+
+                ib.append("text")
+                    .classed("nodeInfo", true)
+                    .text(function(d){return ("ID "+d.baseID)})
+                    .attr("dx", 5)
+                    .attr("dy", 30)
+                    .style("fill", defaultTextColor)
+                    .style("font-family", defaultTextFont)
+                    .style("font-size", defaultTextSize)
+
+
+                ib.append("text")
+                    .classed("nodeInfo", true)
+                    .text(function(d){return d.label})
+                    .attr("dx", 5)
+                    .attr("dy", 42)
+                    .style("fill", defaultTextColor)
+                    .style("font-family", defaultTextFont)
+                    .style("font-size", defaultTextSize)
+
+                //request catalysts
+                //editable label
+                console.log("node info appended", ib)
+        }
+
+        var attachInfoBox = function(target)
+        {
+                var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate
+                        svg = svg_substrate
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst
+                        svg = svg_catalyst
+                }
+                
+                svg.selectAll("g.node").on("mouseover", function(d){addInfoBox(target, d)});
+        
         }
 
 
@@ -809,7 +918,8 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 7, "reset size", "button8", function(){resetSize(target)});  
                 addButton(target, 8, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
                 addButton(target, 9, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addGraphInteractorButtons(target, 10);
+                addButton(target, 10, "infoBox", "infoBox", function(){attachInfoBox(target)});
+                addGraphInteractorButtons(target, 11);
 
         }
 
@@ -831,8 +941,9 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 8, "reset size", "button9", function(){resetSize(target)});
                 addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
                 addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
+                addButton(target, 11, "infoBox", "infoBox", function(){attachInfoBox(target)});
                 
-                addGraphInteractorButtons(target, 11);
+                addGraphInteractorButtons(target, 12);
                 addEntanglementFeedback(target);
         }
 
