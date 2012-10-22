@@ -68,6 +68,8 @@ var TulipPosy = function(originalJSON)
         var defaultTextFont = "Arial";        
         var defaultTextSize = 14;
         //var color = d3.scale.category20();
+
+        var sessionSid = 0;
         
 
         
@@ -93,7 +95,7 @@ var TulipPosy = function(originalJSON)
                 }
 
 
-                console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
+                //console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
                 var u = svg.selectAll("g.node.selected").data();
 
                 var toStringify = {};
@@ -132,7 +134,8 @@ var TulipPosy = function(originalJSON)
                         svg = svg_catalyst;
                 }
 
-                $.post(tulip_address, { type:"update", graph:json, target:graphName }, function(data){
+                $.post(tulip_address, { sid:sessionSid, type:"update", graph:json, target:graphName }, function(data){
+                        data = JSON.parse(data)
                         console.log("querying an induced subgraph:",graphName," ",json);
                         cGraph.nodes(data.nodes);
                         cGraph.links(data.links);
@@ -169,8 +172,9 @@ var TulipPosy = function(originalJSON)
                         svg = svg_catalyst;
                 }
 
-                $.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
+                        data = JSON.parse(data)
                         rescaleGraph(data);
                         cGraph.nodes(data.nodes);
                         cGraph.links(data.links);
@@ -206,8 +210,8 @@ var TulipPosy = function(originalJSON)
                 }
         
 
-                $.post(tulip_address, {type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                
+                $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                        data = JSON.parse(data)
                         rescaleGraph(data);
                         cGraph.nodes(data.nodes);
                         cGraph.links(data.links);
@@ -293,9 +297,9 @@ var TulipPosy = function(originalJSON)
 
         
 
-                $.post(tulip_address, {type:'analyse', graph:selection, target:graphName}, function(data){
+                $.post(tulip_address, {sid:sessionSid, type:'analyse', graph:selection, target:graphName}, function(data){
                         
-
+                        data = JSON.parse(data)
                         //var oldData = cGraph.nodes();
                         //var selectedID = [];
                         //var selectedNodes = [];
@@ -345,7 +349,15 @@ var TulipPosy = function(originalJSON)
                   var params = {type:"analyse"}
                 //console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
 
-                $.post(tulip_address, {type:'analyse', target:'substrate'}, function(data){
+                console.log("before launching analysis, SID supposed to be: ",sessionSid);
+                var truc = 15;
+                truc = sessionSid;
+                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
+                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
+                console.log("truc:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",truc);
+
+                $.post(tulip_address, {sid:truc, type:'analyse', target:'substrate'}, function(data){
+                        data = JSON.parse(data)
                         console.log("received data after analysis:")
                         console.log(data);
                         //convertLinks(data);
@@ -374,15 +386,19 @@ var TulipPosy = function(originalJSON)
         // json, the initial json string corresponding to the graph.
         var createTulipGraph = function(json)
         {
-                $.post(tulip_address, { type:"creation", graph:json }, function(data){
+                $.ajax({url:tulip_address, data:{type:"creation", graph:json}, type:'POST', async:false, success:function(data){
                         console.log('creating in tulip, and recieved data: ',data)
+                        data = JSON.parse(data)
+                        console.log("here should be sid: ", data.data.sid)
+                        sessionSid = data.data.sid
+                        console.log("the session sid has just been affected: ",sessionSid);
                         rescaleGraph(data)
                         graph_substrate.nodes(data.nodes)
                         graph_substrate.links(data.links)
                         graph_substrate.edgeBinding()
                         graph_drawing = graphDrawing(graph_substrate, svg_substrate)
                         graph_drawing.move(graph_substrate, 0)
-                });
+                }});
         }
 
 
@@ -396,6 +412,7 @@ var TulipPosy = function(originalJSON)
                 $.ajax({url:tulip_address, async:false, data:{ type:"creation", 'search':query['query'] }, type:'POST', 
                         success:function(data){
                                 console.log('sending search request in tulip, and recieved data: ',data)
+                                data = JSON.parse(data)
                                 recieved_data = data
                         }
                 });
@@ -412,6 +429,9 @@ var TulipPosy = function(originalJSON)
         // data, the graph data (modified during the function)
         var rescaleGraph = function(data)
         {
+
+                console.log("should be rescaling graphe, here is the data: ", data);
+
                 // these should be set as globale variables
                 var buttonWidth = 130.0
                 var frame = 10.0
@@ -870,6 +890,7 @@ var TulipPosy = function(originalJSON)
                         svg.select('rect.moveButton').style('fill', defaultFillColor);
                         svg.select('rect.selectButton').style('fill', highlightFillColor);
                         addLasso(target);
+                        removeZoom(target);
                 }
 
                 if(eval("move_mode_"+target))
@@ -877,7 +898,8 @@ var TulipPosy = function(originalJSON)
                         svg.style("cursor", "all-scroll");
                         svg.select('rect.moveButton').style('fill', highlightFillColor);
                         svg.select('rect.selectButton').style('fill', defaultFillColor);                        
-                        removeLasso(target)
+                        removeLasso(target);
+                        addZoom(target);
                 }
         }
 
@@ -900,7 +922,7 @@ var TulipPosy = function(originalJSON)
                         svg = svg_substrate
                 }
 
-                eval("show_labels_"+target+" = ! show_labels_"+target);
+                eval("show_labels_"+target+" = ! show_labels_"+target); 
 
                 if(eval("show_labels_"+target))
                 {
@@ -951,7 +973,29 @@ var TulipPosy = function(originalJSON)
                 }
         }
 
-
+        var includeFormParam = function (target)
+        {
+                myinput =  svg.append("foreignObject")
+                        .attr("width", 100)
+                        .attr("height", 100)
+                        .append("xhtml:body")
+                        .html("<form><input type=checkbox id=check /></form>")
+                        .on("click", function(d, i){
+                            console.log(svg.select("#check").node().checked);
+                        });
+                myinput =  svg.append("foreignObject")
+                        .attr("width", 300)
+                        .attr("height", 100)
+                        .attr("x", 200)
+                        .attr("y", 200)
+                        .append("xhtml:body")
+                        .html("<form><input type=input id=input /></form>")
+                        //.on("click", function(d, i){
+                        //    console.log(svg.select("#input").node().value);
+                        //});
+                
+                console.log("input created", myinput);    
+        }
 
         // This function associate a d3.svg.brush element to select nodes in a view
         // target, the string value of the target svg view 
@@ -1276,6 +1320,38 @@ var TulipPosy = function(originalJSON)
                 svg.on("mousemove", null);
         }
 
+
+        // Removes the lasso interactor from a specific svg target's callbacks to its mouse events.
+        // target, the string value of the target svg view         
+        var removeZoom = function(target)
+        {
+                if (!target)
+                        return
+
+                var svg = null
+
+                if (target == "catalyst")
+                {
+                        svg = svg_catalyst
+                }
+        
+                if (target == "substrate")
+                {
+                        svg = svg_substrate
+                }
+        svg.on("mousedown.zoom", null)
+            .on("mousewheel.zoom", null)
+            .on("mousemove.zoom", null)
+            .on("DOMMouseScroll.zoom", null)
+            .on("dblclick.zoom", null)
+            .on("touchstart.zoom", null)
+            .on("touchmove.zoom", null)
+            .on("touchend.zoom", null);
+               // svg.on("mouseup", null);
+               // svg.on("mousedown", null);
+               // svg.on("mousemove", null);
+        }
+
         // This function allows to map a callback to a keyboard touch event
         // It is not currently used.
         // callback, the callback function
@@ -1307,6 +1383,7 @@ var TulipPosy = function(originalJSON)
                 }
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
+                console.log("preparing to add zoom in view",target);
                 svg.call (d3.behavior.zoom()
                             .translate ([0, 0])
                             .scale (1.0)
@@ -1381,8 +1458,12 @@ var TulipPosy = function(originalJSON)
                         addBaseID(data, "id")
                         json = JSON.stringify(data)
                         loadJSON(data)
+                        console.log("I am creating the graph in Tulip")
                         createTulipGraph(json)
+                        console.log("I should now analyse the graph", sessionSid)
                         analyseGraph()
+                        console.log("graph analysed",sessionSid)
+                        
                 }
         }
 
