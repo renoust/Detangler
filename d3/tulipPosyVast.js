@@ -548,10 +548,13 @@ var TulipPosy = function(originalJSON)
                     .text("X")
                     .attr("dx", 186)
                     .attr("dy", 18)
-                    .style("fill", defaultTextColor)
+                    .style("fill", "lightgray")
                     .style("font-family", "EntypoRegular")
                     .style("font-size", 30)
                     .on("click", function(d) {svg.selectAll("g.nodeInfo"+node.baseID).data([]).exit().remove();})
+                    .on("mouseover", function(){d3.select(this).style("fill", "black")})
+                    .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
+
 
                 //request catalysts
                 //editable label
@@ -666,11 +669,15 @@ var TulipPosy = function(originalJSON)
                 .attr("class", "settings")
                 .classed("interfaceButton", 1)
                 .attr("transform", function(){return "translate("+posSettings_x+","+posSettings_y+")";})
+                
+
             btSettings.append("text")
                 .text(function(d){return "@"})
             	.style("fill", "lightgray")
                 .style("font-family", "EntypoRegular")
                 .style("font-size", 50)
+                .on("mouseover", function(){d3.select(this).style("fill", "black")})
+                .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
         
             btSettings.on("click", function(){
                 sGroup = svg.selectAll("settingsWindow").data(['WX']).enter().append("g")
@@ -700,9 +707,11 @@ var TulipPosy = function(originalJSON)
                     .attr("dy", 115)
                     .text(function(){return "WX"})
                     .style("font-family", "EntypoRegular")
-                    .style("fill", defaultTextColor)
+                    .style("fill", "lightgray")
                     .style("font-size", 30)
                     .on("click", function(){svg.selectAll(".settingsWindow").data([]).exit().remove();})
+                    .on("mouseover", function(){d3.select(this).style("fill", "black")})
+                    .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
 
             })     
         }
