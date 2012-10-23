@@ -632,6 +632,58 @@ var TulipPosy = function(originalJSON)
                         .style("font-size", defaultTextSize)
         }
 
+        var addSettingsButton = function()
+        {
+            svg = svg_substrate
+            posSettings_x = width-30
+            posSettings_y = 30
+
+            //var width
+            var btSettings = svg.selectAll("g.settings").data(["@"]).enter().append('g')
+                .attr("class", "settings")
+                .classed("interfaceButton", 1)
+                .attr("transform", function(){return "translate("+posSettings_x+","+posSettings_y+")";})
+            btSettings.append("text")
+                .text(function(d){return "@"})
+            	.style("fill", "lightgray")
+                .style("font-family", "EntypoRegular")
+                .style("font-size", 50)
+        
+            btSettings.on("click", function(){
+                sGroup = svg.selectAll("settingsWindow").data(['WX']).enter().append("g")
+                    .attr("class","settingsWindow")
+                    .attr("transform", function(){return "translate("+ (posSettings_x-120)+","+posSettings_y+")";})
+
+                sRect = sGroup.append("rect")
+                    .attr("class","settingsWindow")
+                    .attr("width", 120)
+                    .attr("height", 120)
+                    .style("fill", defaultFillColor)        
+                    .style("stroke-width", defaultBorderWidth)
+                    .style("stroke", defaultBorderColor)
+                
+                sGroup.append("text")
+                    .attr("class","settingsWindow")
+                    .attr("dx", 5)
+                    .attr("dy", 15)
+                    .text(function(){return "Settings"})
+                    .style("font-family", defaultTextFont)
+                    .style("fill", defaultTextColor)
+                    .style("font-size", defaultTextSize)
+
+                sGroup.append("text")
+                    .attr("class","settingsWindow")
+                    .attr("dx", 50)
+                    .attr("dy", 115)
+                    .text(function(){return "WX"})
+                    .style("font-family", "EntypoRegular")
+                    .style("fill", defaultTextColor)
+                    .style("font-size", 30)
+                    .on("click", function(){svg.selectAll(".settingsWindow").data([]).exit().remove();})
+
+            })     
+        }
+
 
         // This function adds the graph interactor buttons (move and select) to a target interface.
         // target, the string of the svg interface to draw the buttons in
@@ -937,6 +989,8 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 11, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
 
                 addGraphInteractorButtons(target, 12);
+        
+                addSettingsButton();
 
         }
 
