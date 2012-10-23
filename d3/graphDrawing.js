@@ -288,8 +288,11 @@ var graphDrawing = function(_graph, _svg)
                 // redraw the previous nodes to the default values
                 var node = g.svg.selectAll("g.node")
                         .select("circle.node")
-                        .style('fill', 'steelblue')
-                        .attr('r', 5)
+                            .style('fill', 'steelblue')
+                            .attr('r', 5)
+                var node = g.svg.selectAll("g.node")
+                        .select("text.node")
+                            .attr("visibility", "hidden")
 
                 var link = g.svg.selectAll("g.link")
                         .select("path.link")
@@ -310,6 +313,8 @@ var graphDrawing = function(_graph, _svg)
                 // update the nodes
                 node.select("circle.node")
                         .attr("r", function(d){return 10})
+                node.select("text.node")
+                        .attr("visibility", "visible")
 
                 link.select("path.link")
                         .style("stroke-width", function(d) { return 2;})

@@ -327,7 +327,6 @@ var TulipPosy = function(originalJSON)
                         
                         var graph_drawing = graphDrawing(cGraph, svg)
                         
-
                         //g.clear()
                         //g.draw()
                         graph_drawing.show(tempGraph)
@@ -492,14 +491,17 @@ var TulipPosy = function(originalJSON)
                     dragTarget.attr("transform", function(d){d.panelPosX = newX; d.panelPosY = newY; return "translate(" + newX + "," + newY + ")"});            
                 };
 
-                console.log("the current node", node)
                 
-                ib = svg.selectAll("g.nodeInfo").data([node]).enter().append("g")
+                
+                nbInfoBox = svg.selectAll("g.nodeInfo")[0].length
+                console.log("the current node", node);//, selection, selection.length)
+                
+                ib = svg.selectAll("g.nodeInfo"+node.baseID).data([node]).enter().append("g")
                         .attr("class", function(d){return "nodeInfo"+d.baseID})
                         .attr("transform", function(d){ return "translate(" + d.currentX + "," + d.currentY + ")";})
                         .call(d3.behavior.drag().on("drag", move))
-                        .on("click", function(d) {svg.selectAll("g.nodeInfo"+d.baseID).data([]).exit().remove();})
-
+                        .on("click", function(d) {svg.selectAll("g.nodeInfo"+node.baseID).data([]).exit().remove();})
+            
                 ib.append("rect")
                     .classed("nodeInfo", true)
                     .attr("width", 200)
@@ -527,7 +529,6 @@ var TulipPosy = function(originalJSON)
                     .style("fill", defaultTextColor)
                     .style("font-family", defaultTextFont)
                     .style("font-size", defaultTextSize)
-
 
                 ib.append("text")
                     .classed("nodeInfo", true)
