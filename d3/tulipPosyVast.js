@@ -49,10 +49,12 @@ var TulipPosy = function(originalJSON)
         var move_mode_substrate = true;
         var show_labels_substrate = true;
         var show_links_substrate = true;
+        var node_information_substrate = false;
         var select_mode_catalyst = false;
         var move_mode_catalyst = true;
         var show_labels_catalyst = true;
         var show_links_catalyst = true;
+        var node_information_catalyst = false;
         var mouse_over_button = false;
         
         // initialization of the global entanglement parameters
@@ -467,6 +469,7 @@ var TulipPosy = function(originalJSON)
                         cGraph = graph_catalyst
                         svg = svg_catalyst
                 }
+
                 
                 function move(){
                     //var e = window.event;
@@ -501,7 +504,7 @@ var TulipPosy = function(originalJSON)
                         .attr("class", function(d){return "nodeInfo"+d.baseID})
                         .attr("transform", function(d){ return "translate(" + d.currentX + "," + d.currentY + ")";})
                         .call(d3.behavior.drag().on("drag", move))
-                        .on("click", function(d) {svg.selectAll("g.nodeInfo"+node.baseID).data([]).exit().remove();})
+                        
             
                 ib.append("rect")
                     .classed("nodeInfo", true)
@@ -540,6 +543,16 @@ var TulipPosy = function(originalJSON)
                     .style("font-family", defaultTextFont)
                     .style("font-size", defaultTextSize)
 
+                ib.append("text")
+                    .classed("nodeInfo", true)
+                    .text("X")
+                    .attr("dx", 186)
+                    .attr("dy", 18)
+                    .style("fill", defaultTextColor)
+                    .style("font-family", "EntypoRegular")
+                    .style("font-size", 30)
+                    .on("click", function(d) {svg.selectAll("g.nodeInfo"+node.baseID).data([]).exit().remove();})
+
                 //request catalysts
                 //editable label
                 console.log("node info appended", ib)
@@ -562,6 +575,16 @@ var TulipPosy = function(originalJSON)
                         svg = svg_catalyst
                 }
                 
+                eval("node_information_"+target+" = !node_information_"+target);
+
+                if (!eval("node_information_"+target))
+                {
+                    svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",defaultFillColor); mouse_over_button = false;});
+                    svg.selectAll("g.node").on("mouseover", null);
+                    return
+                }
+
+                svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",highlightFillColor); mouse_over_button = false;});
                 svg.selectAll("g.node").on("mouseover", function(d){addInfoBox(target, d)});
         
         }
