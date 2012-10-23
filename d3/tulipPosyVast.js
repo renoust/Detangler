@@ -717,6 +717,76 @@ var TulipPosy = function(originalJSON)
         }
 
 
+        var addInfoButton = function(target)
+        {
+            var cGraph = null
+            var svg = null
+
+            if (target == 'substrate')
+            {        
+                    cGraph = graph_substrate
+                    svg = svg_substrate
+            }
+
+            if (target == 'catalyst')
+            {        
+                    cGraph = graph_catalyst
+                    svg = svg_catalyst
+            }
+
+            posInfo_x = width-30
+            posInfo_y = height-5
+
+            //var width
+            var btInfo = svg.selectAll("g.info").data(["`"]).enter().append('g')
+                .attr("class", "info")
+                .classed("interfaceButton", 1)
+                .attr("transform", function(){return "translate("+posInfo_x+","+posInfo_y+")";})
+                
+
+            btInfo.append("text")
+                .text(function(d){return "`"})
+            	.style("fill", "lightgray")
+                .style("font-family", "EntypoRegular")
+                .style("font-size", 50)
+                .on("mouseover", function(){d3.select(this).style("fill", "black")})
+                .on("mouseout", function(){d3.select(this).style("fill", "lightgray"); svg.selectAll(".infoWindow").data([]).exit().remove();})
+                
+        
+            btInfo.on("click", function(){
+                sGroup = svg.selectAll("infoWindow").data(['WX']).enter().append("g")
+                    .attr("class","infoWindow")
+                    .attr("transform", function(){return "translate("+ (posInfo_x-120)+","+(posInfo_y-40)+")";})
+
+                sRect = sGroup.append("rect")
+                    .attr("class","infoWindow")
+                    .attr("width", 120)
+                    .attr("height", 35)
+                    .style("fill", defaultFillColor)        
+                    .style("stroke-width", defaultBorderWidth)
+                    .style("stroke", defaultBorderColor)
+                
+                sGroup.append("text")
+                    .attr("class","infoWindow")
+                    .attr("dx", 5)
+                    .attr("dy", 15)
+                    .text(function(){return ""+cGraph.nodes().length+" nodes"})
+                    .style("font-family", defaultTextFont)
+                    .style("fill", defaultTextColor)
+                    .style("font-size", defaultTextSize)
+
+                sGroup.append("text")
+                    .attr("class","infoWindow")
+                    .attr("dx", 5)
+                    .attr("dy", 28)
+                    .text(function(){return ""+cGraph.links().length+" links"})
+                    .style("font-family", defaultTextFont)
+                    .style("fill", defaultTextColor)
+                    .style("font-size", defaultTextSize)
+
+            })     
+        }
+
         // This function adds the graph interactor buttons (move and select) to a target interface.
         // target, the string of the svg interface to draw the buttons in
         // positionNumber, the position at which we want to place the buttons
@@ -1022,7 +1092,7 @@ var TulipPosy = function(originalJSON)
 
                 addGraphInteractorButtons(target, 12);
         
-                addSettingsButton();
+                addInfoButton(target);
 
         }
 
@@ -1048,6 +1118,8 @@ var TulipPosy = function(originalJSON)
                 
                 addGraphInteractorButtons(target, 12);
                 addEntanglementFeedback(target);
+                addInfoButton(target);
+                addSettingsButton();
         }
 
         // This function updates the entanglement values displayed in the entanglement frame of the substrate view
