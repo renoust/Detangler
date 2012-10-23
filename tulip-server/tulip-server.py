@@ -299,6 +299,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         # get the selection
         if 'graph' in request:
                 selection = json.loads(request['graph'][0])
+                operator = request['operator'][0]
 
         # request the analysis for the given substrate selection 
         if request['target'][0] == 'substrate':
@@ -308,7 +309,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
         # request the synchronization for the given catalyst selection
         if request['target'][0] == 'catalyst':
-                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection)
+                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection, operator)
          
         # send back the resulting graph
         self.sendJSON(graphJSON)

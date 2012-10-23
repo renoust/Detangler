@@ -56,6 +56,7 @@ var TulipPosy = function(originalJSON)
         var mouse_over_button = false;
         
         // initialization of the global entanglement parameters
+        var catalyst_sync_operator = "AND";
         var entanglement_intensity = 0.0;
         var entanglement_homogeneity = 0.0;
 
@@ -297,7 +298,7 @@ var TulipPosy = function(originalJSON)
 
         
 
-                $.post(tulip_address, {sid:sessionSid, type:'analyse', graph:selection, target:graphName}, function(data){
+                $.post(tulip_address, {sid:sessionSid, type:'analyse', graph:selection, target:graphName, operator:catalyst_sync_operator}, function(data){
                         
                         data = JSON.parse(data)
                         //var oldData = cGraph.nodes();
@@ -565,6 +566,19 @@ var TulipPosy = function(originalJSON)
         
         }
 
+        var toggleCatalystSyncOperator = function()
+        {
+            if (catalyst_sync_operator == "OR")
+            {
+                catalyst_sync_operator = "AND";
+            }else{
+                catalyst_sync_operator = "OR"
+            }
+            svg_catalyst.selectAll("g.toggleCatalystOp")
+                .select("text")
+                .text("operator "+catalyst_sync_operator)
+
+        }
 
         // Adds a button to a specific interface with its callback
         // target, the string of the svg interface to draw the button in
@@ -919,8 +933,10 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 7, "reset size", "button8", function(){resetSize(target)});  
                 addButton(target, 8, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
                 addButton(target, 9, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addButton(target, 10, "infoBox", "infoBox", function(){attachInfoBox(target)});
-                addGraphInteractorButtons(target, 11);
+                addButton(target, 10, "node information", "infoBox", function(){attachInfoBox(target)});
+                addButton(target, 11, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
+
+                addGraphInteractorButtons(target, 12);
 
         }
 
@@ -942,7 +958,7 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 8, "reset size", "button9", function(){resetSize(target)});
                 addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
                 addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addButton(target, 11, "infoBox", "infoBox", function(){attachInfoBox(target)});
+                addButton(target, 11, "node information", "infoBox", function(){attachInfoBox(target)});
                 
                 addGraphInteractorButtons(target, 12);
                 addEntanglementFeedback(target);

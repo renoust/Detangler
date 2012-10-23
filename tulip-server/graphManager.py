@@ -467,12 +467,12 @@ class graphManager():
     jsonGraph, a JSON graph object of a selection of nodes to analyse
     In the future we should include the entanglement calculation and send it back too.
     '''
-    def synchronizeFromCatalyst(self, jsonGraph):
+    def synchronizeFromCatalyst(self, jsonGraph, operator):
 
         nodeList = []
         graphNList = []
         cataList = []
-        print 'the selection: ',jsonGraph
+
         for n in jsonGraph[u'nodes']:
                 nodeList.append(n[u'baseID'])
 
@@ -484,18 +484,14 @@ class graphManager():
                         graphNList.append(n)
                         cataList.append(label[n])
 
-        print "The retrieved nodes: "
-        print graphNList
-        print cataList
-        print [n for n in self.catalyst.getProperties()]
         nList = []
         eList = []
 
         descP = self.substrate.getStringProperty("descripteurs")
         
         sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs")
-        syncRes = sync.synchronizeFromCatalyst(cataList)
-        
+        syncRes = sync.synchronizeFromCatalyst(cataList, _operator=operator)
+        toPrint = [n for n in syncRes['substrate'].getNodes()]
         resLen = [len(k) for k in syncRes['catalystAnalysis'].catalystToEntIndex]
         mainComponent = resLen.index(max(resLen))
         entanglementIntensity = float(syncRes['catalystAnalysis'].entanglementIntensity[mainComponent])
@@ -503,22 +499,6 @@ class graphManager():
         
         return self.graphToJSON(syncRes['substrate'], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':entanglementIntensity, 'entanglement homogeneity':entanglementHomogeneity}})
        
-        for n in self.substrate.getNodes():
-                dList = descP[n].split(';')
-                for d in cataList:
-                        if d in dList:
-                                nList.append(n)
-                                break
-
-        for e in self.substrate.getEdges():
-                dList = descP[n].split(';')
-                for d in cataList:
-                        if d in dList:
-                                eList.append(e)
-                                break
-
-        return self.graphToJSON(self.substrate, {'nodes':[{'type':'string', 'name':'label'}]}, nList, eList)
-
 
     '''
     Applies a layout algorithm on a graph and returns it.
