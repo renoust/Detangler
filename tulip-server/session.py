@@ -18,7 +18,7 @@ class TPSession():#threading.Thread):
         self.sidToGraphManager = {}
 
     def update_session(self, sid):
-        print "updating one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "updating one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         if sid in self.timeTrack:
             self.timeTrack[sid] = int(round(time.time() * 1000))
         self.check_all()
@@ -31,7 +31,7 @@ class TPSession():#threading.Thread):
 
     def get_session(self, sid):
         graphMan = None
-        print "getting one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "getting one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         if str(sid) in self.sidList:
             graphMan = self.sidToGraphManager[sid]
             self.update_session(sid)
@@ -42,15 +42,15 @@ class TPSession():#threading.Thread):
         self.sidList.append(sid)
         self.timeTrack[sid] = int(round(time.time() * 1000))
         self.sidToGraphManager[sid] = graphManager()
-        print "creating one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "creating one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         return sid
         
     def is_registered(self, sid):
-        print "is resgistered:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "is resgistered:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         return str(sid) in self.sidList
 
     def delete_session(self, sid):
-        print "deleting one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "deleting one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         if sid in timeTrack:
             sidTime = self.timeTrack.pop(sid)
             del(sidTime)
@@ -60,20 +60,20 @@ class TPSession():#threading.Thread):
             del(sidinList)
 
     def check_expired(self, sid):
-        print "cheking one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "cheking one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         now = int(round(time.time() * 1000))
         if now - self.timeTrack[sid] > self.expire:
             self.delete_session(sid)
 
     def check_all(self):
-        print "checking all:", " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
+        #print "checking all:", " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         for sid in self.sidList:
             self.check_expired(sid)
 
     def run(self):
         self.check_all()
         sleep(3)
-        print 'checking the map'
+        #print 'checking the map'
     
 
 

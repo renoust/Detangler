@@ -56,7 +56,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
     
 
     def getGraphMan(self, data):
-        print "SESSION MANAGER: ", self.sessionMan.sidList
+        #print "SESSION MANAGER: ", self.sessionMan.sidList
 
         if 'sid' in data.keys():
             sid = data['sid'][0]
@@ -112,7 +112,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
     file containing instructions or a file to upload to the server.
     '''
     def post(self):
-        print "SESSION MANAGER: ", self.sessionMan.sidList, self.sessionMan
+        #print "SESSION MANAGER: ", self.sessionMan.sidList, self.sessionMan
         #print "These are the headers: ",self.headers
         ctype, pdict = cgi.parse_header(self.request.headers.get('content-type'))
         #print ctype
@@ -121,7 +121,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         # handles a graph manipulation request
         if ctype == 'application/x-www-form-urlencoded':
                 length = int(self.request.headers.get('content-length'))
-                print "pure reception :", self.request.body
+                #print "pure reception :", self.request.body
                 postvars = cgi.parse_qs(self.request.body, keep_blank_values=1)
                 #print postvars.keys()
                 graphJSON = ""
@@ -155,7 +155,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
     request, the JSON object of the request
     '''
     def handleRequest(self, request):
-        print "The request:",request
+        #print "The request:",request
         if 'type' in request.keys():
                 if request['type'][0] == 'creation':
                         self.creationRequest(request)
@@ -194,7 +194,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         #self.send_response(200)
         #self.send_header("Content-type", "application/json")
         #self.end_headers()
-        print "Sending back the JSON : ",jsonF
+        #print "Sending back the JSON : ",jsonF
         #self.wfile.write(jsonF)
         self.set_status(200)
         self.set_header("Content-type", "application/json")
@@ -280,7 +280,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 self.getGraphMan(sidMap).substrate = g
                 g = self.getGraphMan(sidMap).randomizeGraph(g)
                 graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
-                print "Sending SID right here: ", sidMap
+                #print "Sending SID right here: ", sidMap
                 self.sendJSON(graphJSON)
 
     '''
@@ -293,17 +293,23 @@ class MyRequestHandler(tornado.web.RequestHandler):
     def analysisRequest(self, request):
         selection = 0
         result = 0
+        weightProperty = ""
+        operator = "OR"
 
         print 'the analysis request : ',request
 
         # get the selection
         if 'graph' in request:
                 selection = json.loads(request['graph'][0])
+        if 'weight' in request:
+                weightProperty = request['weight'][0]
+        if 'operator' in request:
                 operator = request['operator'][0]
 
         # request the analysis for the given substrate selection 
         if request['target'][0] == 'substrate':
-                result = self.getGraphMan(request).analyseGraph(selection)
+                print "the weight property: ",weightProperty
+                result = self.getGraphMan(request).analyseGraph(selection, weightProperty)
                 graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
                 #print "Analysis return: "                                        
 

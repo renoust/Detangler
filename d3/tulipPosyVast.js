@@ -16,6 +16,22 @@
 // tulip. This class also might be divided into classes, at least one should deal only
 // with the communication, the other with the interaction, another for the overall
 // interface...
+
+if (typeof Object.keys !== "function") {
+    (function() {
+        Object.keys = Object_keys;
+        function Object_keys(obj) {
+            var keys = [], name;
+            for (name in obj) {
+                if (obj.hasOwnProperty(name)) {
+                    keys.push(name);
+                }
+            }
+            return keys;
+        }
+    })();
+}
+
 var TulipPosy = function(originalJSON)
 { 
 
@@ -74,6 +90,8 @@ var TulipPosy = function(originalJSON)
 
         var sessionSid = 0;
         
+        var substrateProperties = {};
+        var substrateWeightProperty = null;
 
         
         // This method returns the nodes that are selected in a given graph.
@@ -254,21 +272,42 @@ var TulipPosy = function(originalJSON)
         }
 
 
+        var grabDataProperties = function(data)
+        {
+            
+            function getProps(n)
+            {               
+                Object.keys(n).forEach(function(p)
+                {
+                    if (!(p in substrateProperties))
+                    {
+                        substrateProperties[p] = typeof(n[p])
+                    }
+                })
+            }
+
+            data.nodes.forEach(getProps)
+            data.links.forEach(getProps)
+
+            console.log("The properties: ",substrateProperties);
+        }
+
         // This function loads a substrate graph from a given json
         // data, the data to load
         //
         // we might want to rename this function...        
         var loadJSON = function(data)
         {
-                rescaleGraph(data)
+                rescaleGraph(data);
                 console.log("the data to store:", data);
-                graph_substrate.nodes(data.nodes)
-                graph_substrate.links(data.links)
-                graph_substrate.edgeBinding()
-                console.log("loading JSON", graph_substrate.nodes(), graph_catalyst.nodes())
+                grabDataProperties(data);
+                graph_substrate.nodes(data.nodes);
+                graph_substrate.links(data.links);
+                graph_substrate.edgeBinding();
+                console.log("loading JSON", graph_substrate.nodes(), graph_catalyst.nodes());
 
-                var graph_drawing = graphDrawing(graph_substrate, svg_substrate)
-                graph_drawing.draw()
+                var graph_drawing = graphDrawing(graph_substrate, svg_substrate);
+                graph_drawing.draw();
                 
                 return
         }
@@ -354,7 +393,7 @@ var TulipPosy = function(originalJSON)
                 var truc = 15;
                 truc = sessionSid;
 
-                $.post(tulip_address, {sid:truc, type:'analyse', target:'substrate'}, function(data){
+                $.post(tulip_address, {sid:truc, type:'analyse', target:'substrate', weight:substrateWeightProperty}, function(data){
                         data = JSON.parse(data)
                         console.log("received data after analysis:")
                         console.log(data);
@@ -660,6 +699,8 @@ var TulipPosy = function(originalJSON)
 
         var addSettingsButton = function()
         {
+            holdSVGInteraction("substrate")
+
             svg = svg_substrate
             posSettings_x = width-30
             posSettings_y = 30
@@ -696,10 +737,12 @@ var TulipPosy = function(originalJSON)
                     .attr("class","settingsWindow")
                     .attr("dx", 5)
                     .attr("dy", 15)
-                    .text(function(){return "Settings"})
+                    .text(function(){return "Weight property"})
                     .style("font-family", defaultTextFont)
                     .style("fill", defaultTextColor)
                     .style("font-size", defaultTextSize)
+
+                selectWeightProperty(sGroup);
 
                 sGroup.append("text")
                     .attr("class","settingsWindow")
@@ -709,11 +752,65 @@ var TulipPosy = function(originalJSON)
                     .style("font-family", "EntypoRegular")
                     .style("fill", "lightgray")
                     .style("font-size", 30)
-                    .on("click", function(){svg.selectAll(".settingsWindow").data([]).exit().remove();})
+                    .on("click", function(){substrateWeightProperty = svg.select("#weightPropSel").node().value;svg.selectAll(".settingsWindow").data([]).exit().remove();})
                     .on("mouseover", function(){d3.select(this).style("fill", "black")})
                     .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
 
+
             })     
+        }
+
+        var selectWeightProperty = function(group)
+        {
+            /*
+            <select>
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="mercedes">Mercedes</option>
+              <option value="audi">Audi</option>
+            </select> 
+            */
+             group.append("foreignObject")
+                .attr("x", 10)
+                .attr("y", 20)
+                .attr("width", 200)
+                .attr("height", 200)
+                .append("xhtml:body")
+                .html(function(d)
+                {
+                    selectHTMLString = "<form><select id=weightPropSel>"
+                    selectHTMLString += " <option value=\"\"><i>--</i></option>"
+
+                    nbElements = Object.keys(substrateProperties).length
+                    Object.keys(substrateProperties).forEach(function(k, i)
+                    {
+                        console.log("props: ",k)
+                        if(substrateProperties[k] == "number")
+                        {
+                            selectHTMLString += " <option value=\""+k+"\">"+k+"</option>"
+                        }
+                    });
+
+                    
+                    selectHTMLString += "</select></form>"
+
+                    return selectHTMLString
+                })
+                /*.on("change", function(d, i)
+                    {
+                        console.log("value has changed: ", d3.select(this));
+                    })*/
+                /*group.append("foreignObject")
+                                .attr("x", 10)
+                                .attr("y", 10*nbElements+1)
+                                .attr("width", 200)
+                                .attr("height", 200)
+                                .append("xhtml:body")
+                                .html("<form><input type=radio name=weight value=null /></form>")
+                                .on("click", function(d){
+                                    substrateWeightProperty=null
+                                });*/
+
         }
 
 
@@ -1582,6 +1679,12 @@ var TulipPosy = function(originalJSON)
         }
 
 
+        var holdSVGInteraction = function(target)
+        {
+            removeZoom(target);
+            removeLasso(target);
+        }
+
         // Removes the lasso interactor from a specific svg target's callbacks to its mouse events.
         // target, the string value of the target svg view         
         var removeLasso = function(target)
@@ -1632,7 +1735,8 @@ var TulipPosy = function(originalJSON)
             .on("dblclick.zoom", null)
             .on("touchstart.zoom", null)
             .on("touchmove.zoom", null)
-            .on("touchend.zoom", null);
+            .on("touchend.zoom", null)
+            //.on("click",null);
                // svg.on("mouseup", null);
                // svg.on("mousedown", null);
                // svg.on("mousemove", null);
@@ -1766,7 +1870,7 @@ var TulipPosy = function(originalJSON)
         // other wise we load the default function
         if (originalJSON != null && originalJSON != "" )
         {
-                console.log('orginialJSON not null', originalJSON)
+                console.log('originalJSON not null', originalJSON)
                 if ('query' in originalJSON)
                 {
                         console.log('query is in json', originalJSON)

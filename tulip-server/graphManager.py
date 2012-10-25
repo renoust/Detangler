@@ -288,18 +288,19 @@ class graphManager():
     jsonGraph, a JSON graph object of a selection of nodes to analyse
     return an array containing [the catalyst graph, entanglement intensity, entanglement homogeneity]
     '''        
-    def analyseGraph(self, jsonGraph = 0):
+    def analyseGraph(self, jsonGraph = 0, weightProperty = ""):
 
         graph = self.substrate
         entanglementIntensity = 0
         entanglementHomogeneity = 0
         onlyOneNode = False
         onlySingleEdges = False
+        print "in graphManager, the weight property: ",weightProperty
 
         if jsonGraph:
                 nodeList = []
                 graphNList = []
-                print 'the selection: ',jsonGraph
+                #print 'the selection: ',jsonGraph
                 for n in jsonGraph[u'nodes']:
                         nodeList.append(n[u'baseID'])
 
@@ -329,7 +330,7 @@ class graphManager():
         labelList = []
 
         if not onlyOneNode:                                        
-            c = entanglementAnalysisLgt.EntanglementAnalysis(graph, "descripteurs")
+            c = entanglementAnalysisLgt.EntanglementAnalysis(graph, "descripteurs", _weightProperty = weightProperty)
 
             if c.catalystGraph.numberOfNodes() > 0:
                 resLen = [len(k) for k in c.catalystToEntIndex]
@@ -366,8 +367,8 @@ class graphManager():
                         labelToCatalystGraphEdge[edgeLabel] = e
 
                 #for n in c.catalystGraph.getNodes():
-                for n in c.catalystGraph.getEdges():
-                    print "baseID:", baseID[n], " label:",label[n]
+                #for n in c.catalystGraph.getEdges():
+                #    print "baseID:", baseID[n], " label:",label[n]
             
                 labelList = [label[n] for n in c.catalystGraph.getNodes()]
                 labelEList = [label[e] for e in c.catalystGraph.getEdges()]
