@@ -339,7 +339,13 @@ var TulipPosy = function(originalJSON)
 
         
 
-                $.post(tulip_address, {sid:sessionSid, type:'analyse', graph:selection, target:graphName, operator:catalyst_sync_operator}, function(data){
+                $.post(tulip_address, {sid:sessionSid, 
+                                       type:'analyse', 
+                                       graph:selection, 
+                                       target:graphName, 
+                                       operator:catalyst_sync_operator, 
+                                       weight:substrateWeightProperty}, 
+                        function(data){
                         
                         data = JSON.parse(data)
                         //var oldData = cGraph.nodes();
