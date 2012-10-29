@@ -100,6 +100,7 @@ var lasso = function(svg)
         __g.totalDistanceAlongDrag = 0;
         __g.distanceFromStartToEnd = 0;
         __g.cSvg.selectAll(".brush").data(this.pointList).exit().remove();
+        __g.cSvg.selectAll(".resize").data(this.pointList).exit().remove();
         __g.pointList.push( [e[0], e[1]]);
 
         // appends the group, attach it to the pointList
@@ -326,6 +327,7 @@ var lasso = function(svg)
                 .style("stroke", "gray")
                 .style("stroke-width", function(d) { return 1;}) //Math.sqrt(d.value); })
             __g.pointList.push([prevPoint[0], prevPoint[1]]);
+
             var strPointList = ""
             for (i=0; i<this.pointList.length; i++)
             {
@@ -373,6 +375,21 @@ var lasso = function(svg)
                         __g.cSvg.selectAll("g.resize").data([]).exit().remove()
                         __g.drawResizeRectangles(p0, p1);
                         
+
+        }
+        
+        var surfaceApproximation = (__g.distanceFromStartToEnd*__g.distanceFromStartToEnd 
+                                  + __g.totalDistanceAlongDrag*__g.totalDistanceAlongDrag)/2;
+
+        console.log("the surface approximation", surfaceApproximation);
+        if(surfaceApproximation < 100)
+        {
+            console.log("The surface is too small!")
+            __g.pointList= [];
+            __g.totalDistanceAlongDrag = 0;
+            __g.distanceFromStartToEnd = 0;
+            __g.cSvg.selectAll(".brush").data(this.pointList).exit().remove();
+            __g.cSvg.selectAll(".resize").data(this.pointList).exit().remove();
 
         }
 

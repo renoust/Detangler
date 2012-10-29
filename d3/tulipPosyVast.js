@@ -1180,20 +1180,19 @@ var TulipPosy = function(originalJSON)
                 
                 eraseAllInterface(target);
 
-                addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
-                addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
-                addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
-                addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
-                addButton(target, 4, "reset view", "button5", function(){resetView(target)});
-                addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
-                addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 7, "reset size", "button8", function(){resetSize(target)});  
-                addButton(target, 8, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
-                addButton(target, 9, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addButton(target, 10, "node information", "infoBox", function(){attachInfoBox(target)});
-                addButton(target, 11, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
+                addButton(target, 0, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
+                addButton(target, 1, "circular layout", "button3", function(){callLayout("Circular", target)});
+                addButton(target, 2, "random layout", "button4", function(){callLayout("Random", target)});
+                addButton(target, 3, "reset view", "button5", function(){resetView(target)});
+                addButton(target, 4, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 5, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 6, "reset size", "button8", function(){resetSize(target)});  
+                addButton(target, 7, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
+                addButton(target, 8, "hide links", "showHideLinks", function(){showhideLinks(target)});
+                addButton(target, 9, "node information", "infoBox", function(){attachInfoBox(target)});
+                addButton(target, 10, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
 
-                addGraphInteractorButtons(target, 12);
+                addGraphInteractorButtons(target, 11);
         
                 addInfoButton(target);
 
@@ -1571,9 +1570,14 @@ var TulipPosy = function(originalJSON)
                                         {
                                                 pointArray = __g.pointList;
                                         }else{
+                                            if (__g.pointList.length>0)
+                                            {
                                                 var p0 = __g.pointList[0];
                                                 var p1 = __g.pointList[__g.pointList.length-1];                        
                                                 pointArray = [[p0[0], p0[1]],[p0[0], p1[1]], [p1[0], p1[1]], [p1[0], p0[1]]];
+                                            }else{
+                                                pointArray = []
+                                            }
                                         }
                                         //console.log("before")
                                         
