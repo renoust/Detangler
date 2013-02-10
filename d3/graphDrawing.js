@@ -261,7 +261,7 @@ var graphDrawing = function(_graph, _svg)
         // the node's 'viewMetric' property to the svg:circle's 'r' attribute
         g.resize = function(_graph, dTime)
         {
-                //For retrocompatibility only
+                //For backward compatibility only
                 g.nodeSizeMap(_graph, dTime, "viewMetric")
                 /*
                 g.cGraph = _graph
@@ -307,9 +307,9 @@ var graphDrawing = function(_graph, _svg)
                     });
             
                 //linear
-                factor = (scaleMax-scaleMin)/2
-                if (valMax == valMin)
-                    factor = factor/valMax
+                factor = scaleMin
+                if (valMax == valMin || valMax-valMin < 0.00001)
+                    factor = factor/valMin
                 else
                     factor =  (scaleMax-scaleMin) / (valMax-valMin)
                     
@@ -318,7 +318,7 @@ var graphDrawing = function(_graph, _svg)
                         .data(g.cGraph.nodes(),function(d){return d.baseID})
                         .transition().delay(dTime)
                 node.select("circle.node")
-                        .attr("r", function(d){return eval("d."+parameter+"*factor+scaleMin");})
+                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(r == NaN){r = scaleMin;} return r;})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
                 var link = g.svg.selectAll("g.link")
@@ -358,6 +358,34 @@ var graphDrawing = function(_graph, _svg)
                         .style("stroke", "gray")
                         .style("stroke-width", function(d) { return 1;})
 
+               //we would like it better as a parameter
+                scaleMin = 3.0
+                scaleMax = 12.0
+                parameter = "entanglementIndice"
+
+                valMin = null
+                valMax = null
+
+                _graph.nodes().forEach(
+                    function(n)
+                    {
+                        val = eval("n."+parameter);
+                        if(valMin == null | val < valMin)
+                            valMin = val;
+
+                        if(valMax == null | val > valMax)
+                            valMax = val;
+                    });
+            
+                //linear
+                factor = scaleMin
+                if (valMax == valMin || valMax-valMin < 0.00001)
+                    factor = factor/valMin
+                else
+                    factor =  (scaleMax-scaleMin) / (valMax-valMin)
+
+
+
                 // assign the new data
                 var node = g.svg.selectAll("g.node")
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
@@ -369,9 +397,12 @@ var graphDrawing = function(_graph, _svg)
                         .data(_graph.links(),function(d){return d.baseID})
                         .transition().delay(500)
 
+           
+
                 // update the nodes
                 node.select("circle.node")
-                        .attr("r", function(d){return 10})
+                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(r == NaN){r = scaleMin;} return r;})
+
                 node.select("text.node")
                         .attr("visibility", "visible")
 
