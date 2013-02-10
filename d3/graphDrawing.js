@@ -261,6 +261,9 @@ var graphDrawing = function(_graph, _svg)
         // the node's 'viewMetric' property to the svg:circle's 'r' attribute
         g.resize = function(_graph, dTime)
         {
+                //For retrocompatibility only
+                g.nodeSizeMap(_graph, dTime, "viewMetric")
+                /*
                 g.cGraph = _graph
 
                 var node = g.svg.selectAll("g.node")
@@ -268,6 +271,54 @@ var graphDrawing = function(_graph, _svg)
                         .transition().delay(dTime)
                 node.select("circle.node")
                         .attr("r", function(d){return d.viewMetric*2})
+                        //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+
+                var link = g.svg.selectAll("g.link")
+                        .data(g.cGraph.links(),function(d){return d.baseID})
+                        .transition().delay(dTime)
+                link.select("path.link")
+                        .style("stroke-width", function(d) { return 1;})
+                */        
+                        
+
+        }
+
+
+        g.nodeSizeMap = function(_graph, dTime, parameter)
+        {
+                g.cGraph = _graph
+
+                //we would like it better as a parameter
+                scaleMin = 3.0
+                scaleMax = 12.0
+
+                valMin = null
+                valMax = null
+
+                g.cGraph.nodes().forEach(
+                    function(n)
+                    {
+                        val = eval("n."+parameter);
+                        if(valMin == null | val < valMin)
+                            valMin = val;
+
+                        if(valMax == null | val > valMax)
+                            valMax = val;
+                    });
+            
+                //linear
+                factor = (scaleMax-scaleMin)/2
+                if (valMax == valMin)
+                    factor = factor/valMax
+                else
+                    factor =  (scaleMax-scaleMin) / (valMax-valMin)
+                    
+
+                var node = g.svg.selectAll("g.node")
+                        .data(g.cGraph.nodes(),function(d){return d.baseID})
+                        .transition().delay(dTime)
+                node.select("circle.node")
+                        .attr("r", function(d){return eval("d."+parameter+"*factor+scaleMin");})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
                 var link = g.svg.selectAll("g.link")

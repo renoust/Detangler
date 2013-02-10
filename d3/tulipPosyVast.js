@@ -272,6 +272,32 @@ var TulipPosy = function(originalJSON)
                 });
         };
 
+        var sizeMapping = function(parameter, graphName)
+        {
+
+                var cGraph = null;
+                var svg = null;
+
+                if (graphName == 'substrate')
+                {        
+                        cGraph = graph_substrate;
+                        svg = svg_substrate;
+                }
+
+                if (graphName == 'catalyst')
+                {        
+                        cGraph = graph_catalyst;
+                        svg = svg_catalyst;
+                }
+        
+                var graph_drawing = graphDrawing(cGraph, svg);
+                graph_drawing.nodeSizeMap(cGraph, 0, parameter);
+
+                addInterfaceSubstrate();
+                addInterfaceCatalyst();
+                entanglementCaught();
+
+        };
 
 
         // This function adds the baseID property for data which is the basic identifier for all nodes and links
@@ -1215,8 +1241,10 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 8, "hide links", "showHideLinks", function(){showhideLinks(target)});
                 addButton(target, 9, "node information", "infoBox", function(){attachInfoBox(target)});
                 addButton(target, 10, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
+                addButton(target, 11, "weight mapping", "button9", function(){sizeMapping("weight", target)});
+                addButton(target, 12, "ent. mapping", "button10", function(){sizeMapping("entanglementIndice", target)});
 
-                addGraphInteractorButtons(target, 11);
+                addGraphInteractorButtons(target, 13);
         
                 addInfoButton(target);
 

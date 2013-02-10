@@ -315,7 +315,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         if request['target'][0] == 'substrate':
                 print "the weight property: ",weightProperty
                 result = self.getGraphMan(request).analyseGraph(selection, weightProperty)
-                graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
+                graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
                 #print "Analysis return: "                                        
 
         # request the synchronization for the given catalyst selection

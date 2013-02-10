@@ -510,7 +510,7 @@ class graphManager():
     def synchronizeLayouts(self):
         bipartiteLayout.draw(self.substrate, self.catalyst)
         print "layout synchronized"
-        return self.graphToJSON(self.substrate, {'nodes':[{'type':'string', 'name':'label'}]})
+        return self.graphToJSON(self.substrate, {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'}]})
         
 
     '''
