@@ -300,6 +300,34 @@ var TulipPosy = function(originalJSON)
         };
 
 
+        var colorMapping = function(parameter, graphName)
+        {
+
+                var cGraph = null;
+                var svg = null;
+
+                if (graphName == 'substrate')
+                {        
+                        cGraph = graph_substrate;
+                        svg = svg_substrate;
+                }
+
+                if (graphName == 'catalyst')
+                {        
+                        cGraph = graph_catalyst;
+                        svg = svg_catalyst;
+                }
+        
+                var graph_drawing = graphDrawing(cGraph, svg);
+                graph_drawing.nodeColorMap(cGraph, 0, parameter);
+
+                addInterfaceSubstrate();
+                addInterfaceCatalyst();
+                entanglementCaught();
+
+        };
+
+
         // This function adds the baseID property for data which is the basic identifier for all nodes and links
         // data, the data to update
         // idName, if given, the property value of 'idName' will be assigned to 'baseID'
@@ -1243,8 +1271,9 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 10, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
                 addButton(target, 11, "weight mapping", "button9", function(){sizeMapping("weight", target)});
                 addButton(target, 12, "ent. mapping", "button10", function(){sizeMapping("entanglementIndice", target)});
+                addButton(target, 13, "ent. color", "button11", function(){colorMapping("entanglementIndice", target)});
 
-                addGraphInteractorButtons(target, 13);
+                addGraphInteractorButtons(target, 14);
         
                 addInfoButton(target);
 

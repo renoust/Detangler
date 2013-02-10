@@ -286,6 +286,9 @@ var graphDrawing = function(_graph, _svg)
 
         g.nodeSizeMap = function(_graph, dTime, parameter)
         {
+                // TODO: USE D3 ARRAY OPERATIONS!
+                // TODO: USE D3 SCALES!
+
                 g.cGraph = _graph
 
                 //we would like it better as a parameter
@@ -319,6 +322,53 @@ var graphDrawing = function(_graph, _svg)
                         .transition().delay(dTime)
                 node.select("circle.node")
                         .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(r == NaN){r = scaleMin;} return r;})
+                        //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+
+                var link = g.svg.selectAll("g.link")
+                        .data(g.cGraph.links(),function(d){return d.baseID})
+                        .transition().delay(dTime)
+                link.select("path.link")
+                        .style("stroke-width", function(d) { return 1;})
+                        
+                        
+
+        }
+
+
+        g.nodeColorMap = function(_graph, dTime, parameter)
+        {
+                g.cGraph = _graph
+
+                //we would like it better as a parameter
+                scaleMin = 3.0
+                scaleMax = 12.0
+
+                valMin = null
+                valMax = null
+
+                g.cGraph.nodes().forEach(
+                    function(n)
+                    {
+                        val = eval("n."+parameter);
+                        if(valMin == null | val < valMin)
+                            valMin = val;
+
+                        if(valMax == null | val > valMax)
+                            valMax = val;
+                    });
+
+
+                var color = d3.scale.quantize()
+                    .domain([valMin, valMax])
+                    .range(colorbrewer.GnBu[9]);
+                                
+
+                var node = g.svg.selectAll("g.node")
+                        .data(g.cGraph.nodes(),function(d){return d.baseID})
+                        .transition().delay(dTime)
+
+                node.select("circle.node")
+                        .style("fill", function(d){c = color(eval("d."+parameter)); console.log("the color: "+c); return d3.rgb(c);})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
                 var link = g.svg.selectAll("g.link")
