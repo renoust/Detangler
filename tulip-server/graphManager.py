@@ -12,7 +12,7 @@ import json
 import sys
 
 # path to the tulip library
-libtulip_dir = "/work/tulip-dev/tulip_3_6_maint-build/release/install/lib"
+libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
 sys.path.append(libtulip_dir)
 libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
 sys.path.append(libtulip_dir)
@@ -24,6 +24,10 @@ lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement"
 sys.path.append(lgtPython_dir)
 import entanglementAnalysisLgt
 import entanglementSynchronization
+
+lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+sys.path.append(lgtPython_dir)
+import bipartiteLayout
 
 '''
 This class stores the graphs, and performs the manipulations on it.
@@ -346,6 +350,8 @@ class graphManager():
                 tName = c.catalystGraph.getStringProperty("catalystName")
                 label = c.catalystGraph.getStringProperty("label")
                 baseID = c.catalystGraph.getDoubleProperty("baseID")
+                #occ = c.catalystGraph.getStringProperty("occurence")
+
 
                 labelToCatalystGraphNode = {}
                 labelToCatalystGraphEdge = {}
@@ -499,7 +505,13 @@ class graphManager():
         entanglementHomogeneity = float(syncRes['catalystAnalysis'].entanglementHomogeneity[mainComponent])
         
         return self.graphToJSON(syncRes['substrate'], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':entanglementIntensity, 'entanglement homogeneity':entanglementHomogeneity}})
-       
+    
+   
+    def synchronizeLayouts(self):
+        bipartiteLayout.draw(self.substrate, self.catalyst)
+        print "layout synchronized"
+        return self.graphToJSON(self.substrate, {'nodes':[{'type':'string', 'name':'label'}]})
+        
 
     '''
     Applies a layout algorithm on a graph and returns it.

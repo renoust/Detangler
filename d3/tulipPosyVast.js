@@ -205,6 +205,30 @@ var TulipPosy = function(originalJSON)
                 });
         };
 
+        var syncLayouts = function()
+        {
+
+                var params = {type:"synchronize layouts", name:"synchronize layouts"};
+                //console.log('going to send params as: ', params)
+                
+                var cGraph = null;
+                var svg = null;
+
+                cGraph = graph_substrate;
+                svg = svg_substrate;
+
+                $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
+                        data = JSON.parse(data)
+                        rescaleGraph(data);
+                        cGraph.nodes(data.nodes);
+                        cGraph.links(data.links);
+                        cGraph.edgeBinding();
+                        var graph_drawing = graphDrawing(cGraph, svg);
+                        graph_drawing.move(cGraph, 0);
+                });
+        };
+
 
 
         // This function calls a float algorithm of a graph through tulip, and moves the given graph accordingly
@@ -1217,8 +1241,10 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
                 addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
                 addButton(target, 11, "node information", "infoBox", function(){attachInfoBox(target)});
+                addButton(target, 12, "sync layouts", "button10", function(){syncLayouts()});
+
                 
-                addGraphInteractorButtons(target, 12);
+                addGraphInteractorButtons(target, 13);
                 addEntanglementFeedback(target);
                 addInfoButton(target);
                 addSettingsButton();

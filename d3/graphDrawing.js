@@ -26,7 +26,10 @@ var graphDrawing = function(_graph, _svg)
         // this function draws the graph, first the links then the nodes
         g.draw = function()
         {
-                g.drawLinks()
+                if (g.cGraph.links().length < 1000)
+                {
+                    g.drawLinks()
+                }
                 g.drawNodes()
                 //g.addInteraction()
         }
@@ -158,6 +161,11 @@ var graphDrawing = function(_graph, _svg)
                         .style("font-family", "Arial")
                         .style("font-size", 12)
                         .text(function(d) { return d.label; });                
+        }
+
+        g.delLinks = function()
+        {
+            var links = g.svg.selectAll("g.link").data([]).exit().remove();
         }
 
 

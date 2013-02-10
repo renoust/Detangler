@@ -16,7 +16,7 @@ import json
 import sys
 
 # this should point to your tulip directory
-libtulip_dir = "/work/tulip-dev/tulip_3_6_maint-build/release/install/lib"
+libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
 sys.path.append(libtulip_dir)
 libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
 sys.path.append(libtulip_dir)
@@ -212,7 +212,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         if 'parameters' in request.keys():
                 params = request['parameters'][0]
                 params = json.loads(params)
-                print 'parameters:', params
+                print 'parameters:', params, ' type:', params['type']
                 if 'type' in params and 'name' in params:
                         if params['type'] == 'layout':
                                 g = self.getGraphMan(request).callLayoutAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
@@ -222,6 +222,11 @@ class MyRequestHandler(tornado.web.RequestHandler):
                         if params['type'] == 'float':
                                 g = self.getGraphMan(request).callDoubleAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
                                 graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'float', 'name':'viewMetric'}, {'type':'string', 'name':'label'}]})                                        
+                                self.sendJSON(graphJSON)
+
+                        if params['type'] == 'synchronize layouts':
+                                print "calling layout sync"
+                                graphJSON = self.getGraphMan(request).synchronizeLayouts()
                                 self.sendJSON(graphJSON)
 
 
