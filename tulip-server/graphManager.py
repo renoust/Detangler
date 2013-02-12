@@ -110,8 +110,12 @@ class graphManager():
 
                 #nToI = {nList["nodes"][i]["baseID"]:i for i in range(len(nList["nodes"]))}
 
+                edgesProp = None
                 if 'edges' in properties:
                         edgesProp = properties['edges']
+                if 'links' in properties:
+                        edgesProp = properties['links']
+                if edgesProp:
                         propInterface = {}
                         #print edgesProp
                         for k in edgesProp:

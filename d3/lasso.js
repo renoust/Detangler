@@ -163,7 +163,7 @@ var lasso = function(svg)
                             
                             __g.cSvg.select("polygon.brush").data(__g.pointList)
                                 .attr("points", strPointList)
-                                .attr("style",function(){ return "fill:"+__g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125";})
+                                .attr("style",function(){ return "fill:"+__g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.5";})
                         }else{
                             var p0 = __g.pointList[0]
                             var p1 = __g.pointList[__g.pointList.length-1]
@@ -338,7 +338,7 @@ var lasso = function(svg)
             __g.group.append("polygon").data(__g.pointList)
                 .attr("class", "brush")
                 .attr("points", strPointList)
-                .attr("style",function(d){return "fill:"+__g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.125";})
+                .attr("style",function(d){return "fill:"+__g.fillColor+";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.5";})
                                 .style("cursor", "move")
         }else{
             var p0 = __g.pointList[0]
