@@ -22,6 +22,8 @@
 var TulipPosy = function(originalJSON)
 { 
 
+        var __g__ = this;
+
         // initialization of the communication address and port        
         // an additional default json file
         var tulip_address = "http://localhost:8085";
@@ -83,14 +85,15 @@ var TulipPosy = function(originalJSON)
         
         
 
-        tulipPosyClient = new TulipPosyClient();
-        tulipPosyInteraction = new TulipPosyInteraction();
-        tulipPosyInterface = new TulipPosyInterface();
-        tulipPosyVisualization = new TulipPosyVisualization();
+        tulipPosyClient = new TulipPosyClient(this);
+        tulipPosyInterface = new TulipPosyInterface(this);
+        tulipPosyInteraction = new TulipPosyInteraction(this);
+        tulipPosyVisualization = new TulipPosyVisualization(this);
+
 
         // We create the interfaces for each svg
-        addInterfaceSubstrate();
-        addInterfaceCatalyst();
+        tulipPosyInterface.addInterfaceSubstrate();
+        tulipPosyInterface.addInterfaceCatalyst();
         
         //console.log("beginning of the generation", graph_substrate.nodes(), graph_catalyst.nodes());
 
@@ -120,5 +123,7 @@ var TulipPosy = function(originalJSON)
         createLasso("catalyst");
         addZoom("substrate");
         addZoom("catalyst");
+
+        return __g__;
 };
 

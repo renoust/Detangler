@@ -1,8 +1,9 @@
-var TulipPosyInterface = function()
+var TulipPosyInterface = function(_context)
 {
     var __g__ = this;
+    var __context = _context;
 
-        var includeFormParam = function (target)
+        this.includeFormParam = function (target)
         {
                 myinput =  svg.append("foreignObject")
                         .attr("width", 100)
@@ -28,7 +29,7 @@ var TulipPosyInterface = function()
 
 
         // This function add all the interface elements for the catalyst view
-        var addInterfaceCatalyst = function()
+        this.addInterfaceCatalyst = function()
         {
                 var target = "catalyst";
                 
@@ -57,7 +58,7 @@ var TulipPosyInterface = function()
         }
 
         // This function add all the interface elements for the substrate view
-        var addInterfaceSubstrate = function()
+        this.addInterfaceSubstrate = function()
         {
                 var target = 'substrate'
 
@@ -84,21 +85,21 @@ var TulipPosyInterface = function()
                 addSettingsButton();
         }
 
-        var eraseAllInterface = function(target)
+        this.eraseAllInterface = function(target)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
 
                 var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
@@ -108,21 +109,21 @@ var TulipPosyInterface = function()
 
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
-        var addEntanglementFeedback = function(target)
+        this.addEntanglementFeedback = function(target)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
 
                 var coh = svg.selectAll("rect entanglement").data(["entanglement"]).enter().append('g')
@@ -198,21 +199,21 @@ var TulipPosyInterface = function()
         // target, the string of the svg interface to draw the buttons in
         // positionNumber, the position at which we want to place the buttons
         // One button triggers the other one on or off, and refers to the global mode variable 'move_mode' or 'select_mode'
-        var addGraphInteractorButtons = function(target, positionNumber)
+        this.addGraphInteractorButtons = function(target, positionNumber)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
 
                 var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
@@ -319,21 +320,21 @@ var TulipPosyInterface = function()
 
 
 
-        var addInfoButton = function(target)
+        this.addInfoButton = function(target)
         {
             var cGraph = null
             var svg = null
 
             if (target == 'substrate')
             {        
-                    cGraph = graph_substrate
-                    svg = svg_substrate
+                    cGraph = _context.graph_substrate
+                    svg = _context.svg_substrate
             }
 
             if (target == 'catalyst')
             {        
-                    cGraph = graph_catalyst
-                    svg = svg_catalyst
+                    cGraph = _context.graph_catalyst
+                    svg = _context.svg_catalyst
             }
 
             posInfo_x = width-30
@@ -390,7 +391,7 @@ var TulipPosyInterface = function()
         }
 
 
-        var selectWeightProperty = function(group)
+        this.selectWeightProperty = function(group)
         {
             /*
             <select>
@@ -443,7 +444,7 @@ var TulipPosyInterface = function()
 
         }
 
-        var holdSVGInteraction = function(target)
+        this.holdSVGInteraction = function(target)
         {
             removeZoom(target);
             removeLasso(target);
@@ -452,7 +453,7 @@ var TulipPosyInterface = function()
 
        // This function toggles the 'select' and 'move' modes for the interactors
         // target, the string value of the target svg view
-        var toggleSelectMove = function(target)
+        this.toggleSelectMove = function(target)
         {
 
                 if (!target)
@@ -462,14 +463,14 @@ var TulipPosyInterface = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
+                        svg = _context.svg_catalyst
                         //select_mode = select_mode_catalyst
                         //move_mode = move_mode_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                         //select_mode = select_mode_substrate
                         //move_mode = move_mode_substrate
                 }
@@ -495,7 +496,7 @@ var TulipPosyInterface = function()
                 }
         }
 
-        var selectWeightProperty = function(group)
+        this.selectWeightProperty = function(group)
         {
             /*
             <select>
@@ -548,11 +549,11 @@ var TulipPosyInterface = function()
         }
 
 
-       var addSettingsButton = function()
+       this.addSettingsButton = function()
         {
             holdSVGInteraction("substrate")
 
-            svg = svg_substrate
+            svg = _context.svg_substrate
             posSettings_x = width-30
             posSettings_y = 30
 
@@ -618,21 +619,21 @@ var TulipPosyInterface = function()
         // buttonLabel, the label of the button
         // className, the name of the class assigned to the button
         // callback, the callback function associated to the button click        
-        var addButton = function(target, positionNumber, buttonLabel, className, callback)
+        this.addButton = function(target, positionNumber, buttonLabel, className, callback)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
 
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
@@ -667,21 +668,21 @@ var TulipPosyInterface = function()
 
 
 
-        var attachInfoBox = function(target)
+        this.attachInfoBox = function(target)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
                 
                 eval("node_information_"+target+" = !node_information_"+target);
@@ -699,21 +700,21 @@ var TulipPosyInterface = function()
         }
 
 
-        var addInfoBox = function(target, node)
+        this.addInfoBox = function(target, node)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = svg_substrate
+                        cGraph = _context.graph_substrate
+                        svg = _context.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
                              
           function move(){

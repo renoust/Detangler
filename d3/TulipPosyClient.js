@@ -1,6 +1,7 @@
-var TulipPosyClient = function()
+var TulipPosyClient = function(_context)
 {
     var __g__ = this;
+    var __context = _context;
 
         // Loads the data from a json file, if no JSON is passed, then we load the default JSON stored in
         // 'json_address', otherwise it loads the given json file.
@@ -88,7 +89,7 @@ var TulipPosyClient = function()
                         graph_substrate.nodes(data.nodes)
                         graph_substrate.links(data.links)
                         graph_substrate.edgeBinding()
-                        graph_drawing = graphDrawing(graph_substrate, svg_substrate)
+                        graph_drawing = graphDrawing(graph_substrate, _context.svg_substrate)
                         graph_drawing.move(graph_substrate, 0)
                 }});
         }
@@ -100,7 +101,7 @@ var TulipPosyClient = function()
         var analyseGraph = function()
         {
                   var params = {type:"analyse"}
-                //console.log("starting analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
+                //console.log("starting analysis:",_context.graph_catalyst.nodes(), graph_substrate.nodes())
 
                 var truc = 15;
                 truc = sessionSid;
@@ -111,19 +112,19 @@ var TulipPosyClient = function()
                         console.log(data);
                         //convertLinks(data);
                         rescaleGraph(data)
-                        //console.log("right before:",graph_catalyst.nodes(), graph_substrate.nodes())
-                        graph_catalyst.nodes(data.nodes)
+                        //console.log("right before:",_context.graph_catalyst.nodes(), graph_substrate.nodes())
+                        _context.graph_catalyst.nodes(data.nodes)
 
-                        //console.log("loaded graph:",graph_catalyst.nodes(), graph_substrate.nodes())
+                        //console.log("loaded graph:",_context.graph_catalyst.nodes(), graph_substrate.nodes())
 
-                        graph_catalyst.links(data.links)
-                        graph_catalyst.edgeBinding()
-                        graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
+                        _context.graph_catalyst.links(data.links)
+                        _context.graph_catalyst.edgeBinding()
+                        graph_drawing = graphDrawing(_context.graph_catalyst, _context.svg_catalyst)
                         graph_drawing.clear()
                         graph_drawing.draw()
                         entanglement_homogeneity = data['data']['entanglement homogeneity']
                         entanglement_intensity = data['data']['entanglement intensity']
-                        //console.log("after analysis:",graph_catalyst.nodes(), graph_substrate.nodes())
+                        //console.log("after analysis:",_context.graph_catalyst.nodes(), graph_substrate.nodes())
                         entanglementCaught();
                 });
 
@@ -143,13 +144,13 @@ var TulipPosyClient = function()
                 if (graphName == 'substrate')
                 {        
                         cGraph = graph_substrate;
-                        svg = svg_substrate;
+                        svg = _context.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = graph_catalyst;
-                        svg = svg_catalyst;
+                        cGraph = _context.graph_catalyst;
+                        svg = _context.svg_catalyst;
                 }
         
 
@@ -183,8 +184,8 @@ var TulipPosyClient = function()
 
                 if (graphName == 'substrate')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = _context.graph_catalyst
+                        svg = _context.svg_catalyst
                 }
 
                 if (graphName == 'catalyst')
@@ -192,7 +193,7 @@ var TulipPosyClient = function()
                         console.log('target is catalyst');
                         cGraph = graph_substrate
                         console.log(selection)
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                 }
 
         
@@ -257,7 +258,7 @@ var TulipPosyClient = function()
                 var svg = null;
 
                 cGraph = graph_substrate;
-                svg = svg_substrate;
+                svg = _context.svg_substrate;
 
                 $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
@@ -287,13 +288,13 @@ var TulipPosyClient = function()
                 if (graphName == 'substrate')
                 {        
                         cGraph = graph_substrate;
-                        svg = svg_substrate;
+                        svg = _context.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = graph_catalyst;
-                        svg = svg_catalyst;
+                        cGraph = _context.graph_catalyst;
+                        svg = _context.svg_catalyst;
                 }
 
                 $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
@@ -320,13 +321,13 @@ var TulipPosyClient = function()
                 if (graphName == 'substrate')
                 {        
                         cGraph = graph_substrate;
-                        svg = svg_substrate;
+                        svg = _context.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = graph_catalyst;
-                        svg = svg_catalyst;
+                        cGraph = _context.graph_catalyst;
+                        svg = _context.svg_catalyst;
                 }
 
                 $.post(tulip_address, { sid:sessionSid, type:"update", graph:json, target:graphName }, function(data){
@@ -353,13 +354,13 @@ var TulipPosyClient = function()
                 if (graphName == 'substrate')
                 {        
                         cGraph = graph_substrate;
-                        svg = svg_substrate;
+                        svg = _context.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = graph_catalyst;
-                        svg = svg_catalyst;
+                        cGraph = _context.graph_catalyst;
+                        svg = _context.svg_catalyst;
                 }
 
 
@@ -379,6 +380,27 @@ var TulipPosyClient = function()
                 //console.log(JSON.stringify(toStringify));
                 return JSON.stringify(toStringify);
         };
+
+
+        // This function loads a substrate graph from a given json
+        // data, the data to load
+        //
+        // we might want to rename this function...        
+        var loadJSON = function(data)
+        {
+                rescaleGraph(data);
+                console.log("the data to store:", data);
+                grabDataProperties(data);
+                _context.graph_substrate.nodes(data.nodes);
+                _context.graph_substrate.links(data.links);
+                _context.graph_substrate.edgeBinding();
+                console.log("loading JSON", _context.graph_substrate.nodes(), _context.graph_catalyst.nodes());
+
+                var graph_drawing = graphDrawing(_context.graph_substrate, _context.svg_substrate);
+                graph_drawing.draw();
+                
+                return
+        }
 
 
 

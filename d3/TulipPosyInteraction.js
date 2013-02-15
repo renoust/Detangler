@@ -1,6 +1,8 @@
-var TulipPosyInteraction = function()
+var TulipPosyInteraction = function(_context)
 {
     var __g__ = this;
+    var __context = _context;
+
 
        // This function creates a lasso brush interactor for a specific target, it also redefined
         // the brush intersection function, and applies actions to the selected target.
@@ -16,15 +18,15 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
-                        graph = graph_catalyst        
+                        svg = _context.svg_catalyst
+                        graph = _context.graph_catalyst        
                         lasso_catalyst = new lasso(svg);
                         myL = lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                         graph = graph_substrate
                         lasso_substrate = new lasso(svg);
                         myL = lasso_substrate
@@ -180,13 +182,13 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
-                        graph = graph_catalyst                        
+                        svg = _context.svg_catalyst
+                        graph = _context.graph_catalyst                        
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                         graph = graph_substrate
                 }
                         
@@ -290,13 +292,13 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        mySvg = svg_catalyst
+                        mySvg = _context.svg_catalyst
                         myL = lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        mySvg = svg_substrate
+                        mySvg = _context.svg_substrate
                         myL = lasso_substrate
                 }
 
@@ -317,12 +319,12 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
+                        svg = _context.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                 }
 
                 svg.on("mouseup", null);
@@ -343,12 +345,12 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
+                        svg = _context.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                 }
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
@@ -398,12 +400,12 @@ var TulipPosyInteraction = function()
 
                 if (target == "catalyst")
                 {
-                        svg = svg_catalyst
+                        svg = _context.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = svg_substrate
+                        svg = _context.svg_substrate
                 }
         svg.on("mousedown.zoom", null)
             .on("mousewheel.zoom", null)
@@ -428,7 +430,7 @@ var TulipPosyInteraction = function()
             }else{
                 catalyst_sync_operator = "OR"
             }
-            svg_catalyst.selectAll("g.toggleCatalystOp")
+            _context.svg_catalyst.selectAll("g.toggleCatalystOp")
                 .select("text")
                 .text("operator "+catalyst_sync_operator)
 
@@ -436,12 +438,12 @@ var TulipPosyInteraction = function()
 
         var highlight = function (data, i, j)
         {
-            svg_catalyst.selectAll("circle.node")
+            _context.svg_catalyst.selectAll("circle.node")
                 //.style("fill", function(d){if(i == j && d.baseID == data){return "pink"}else{ return "steelblue";}})
                 .style("opacity", function(d){if(i == j && d.baseID == data){return 1}else{ return .25;}})
                 .style("stroke", function(d){if(i == j && d.baseID == data){return "red"}else{return "gray";}})
                 .style("stroke-width", function(d){ if(i == j && d.baseID == data){return 5}else{return 0;}})
-            svg_catalyst.selectAll("path.link")
+            _context.svg_catalyst.selectAll("path.link")
                 .style("stroke", function(d){if(i != j && d.baseID == data){return "red"}else{return "gray";}})
                 .style("stroke-width", function(d){ if(i != j && d.baseID == data){return 5}else{return 1;}})
                 .style("opacity", function(d){if(i != j && d.baseID == data){return 1 }else{ return .25;}})

@@ -71,25 +71,6 @@ var addBaseID = function(data, idName)
 }
 
 
-// This function loads a substrate graph from a given json
-// data, the data to load
-//
-// we might want to rename this function...        
-var loadJSON = function(data)
-{
-        rescaleGraph(data);
-        console.log("the data to store:", data);
-        grabDataProperties(data);
-        graph_substrate.nodes(data.nodes);
-        graph_substrate.links(data.links);
-        graph_substrate.edgeBinding();
-        console.log("loading JSON", graph_substrate.nodes(), graph_catalyst.nodes());
-
-        var graph_drawing = graphDrawing(graph_substrate, svg_substrate);
-        graph_drawing.draw();
-        
-        return
-}
 
 
 
