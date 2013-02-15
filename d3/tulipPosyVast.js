@@ -84,6 +84,9 @@ var TulipPosy = function(originalJSON)
         
 
         tulipPosyClient = new TulipPosyClient();
+        tulipPosyInteraction = new TulipPosyInteraction();
+        tulipPosyInterface = new TulipPosyInterface();
+        tulipPosyVisualization = new TulipPosyVisualization();
 
         // We create the interfaces for each svg
         addInterfaceSubstrate();
