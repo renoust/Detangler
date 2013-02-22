@@ -1,3 +1,4 @@
+(function(){
 var Tools = function(contexte, objectcontext)
 {
 
@@ -104,7 +105,15 @@ this.loadJSON = function(data)
 
 return __g__;
 
-}
+};
+var Foo = function()
+{
+    this.x = 10;
+    console.log('x value', 10);
+};
+
+return {Tools:Tools, Foo:Foo};
+})()
 
 
 

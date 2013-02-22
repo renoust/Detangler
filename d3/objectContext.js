@@ -1,3 +1,5 @@
+import_class('tools.js', 'TOOL');
+
 var ObjectContext = function(contexte)
 {
 
@@ -11,7 +13,7 @@ var ObjectContext = function(contexte)
 		this.TulipPosyVisualizationObject = new TulipPosyVisualization(context, this);
 		this.TulipPosyInterfaceObject = new TulipPosyInterface(context, this);
 		this.TulipPosyInteractionObject = new TulipPosyInteraction(context, this);
-		this.ToolObject = new Tools(context, this);
+		this.ToolObject = new TOOL.Tools(context, this);
 		
 		return __g__;
 		
