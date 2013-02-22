@@ -1,13 +1,14 @@
-var TulipPosyInteraction = function(_context)
+var TulipPosyInteraction = function(contexte, objectcontext)
 {
     var __g__ = this;
-    var __context = _context;
 
+	var contxt = contexte;
+	var objectContext = objectcontext;
 
        // This function creates a lasso brush interactor for a specific target, it also redefined
         // the brush intersection function, and applies actions to the selected target.
         // target, the string value of the target svg view         
-        var createLasso = function(target)
+        this.createLasso = function(target)
         {
                 if (!target)
                         return
@@ -18,37 +19,37 @@ var TulipPosyInteraction = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
-                        graph = _context.graph_catalyst        
-                        lasso_catalyst = new lasso(svg);
-                        myL = lasso_catalyst                
+                        svg = contxt.svg_catalyst
+                        graph = contxt.graph_catalyst        
+                        contxt.lasso_catalyst = new lasso(svg);
+                        myL = contxt.lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
-                        graph = graph_substrate
-                        lasso_substrate = new lasso(svg);
-                        myL = lasso_substrate
+                        svg = contxt.svg_substrate
+                        graph = contxt.graph_substrate
+                        contxt.lasso_substrate = new lasso(svg);
+                        myL = contxt.lasso_substrate
                 }
                 
                 var prevSelList = [];
 
                 myL.canMouseUp = function(e)
                 {
-                    if (!mouse_over_button)
+                    if (!contxt.mouse_over_button)
                         this.mouseUp(e)
                 }
             
                 myL.canMouseMove = function(e)
                 {
-                    if (!mouse_over_button)
+                    if (!contxt.mouse_over_button)
                         this.mouseMove(e)
                 }
                 
                 myL.canMouseDown = function(e)
                 {
-                    if (!mouse_over_button)
+                    if (!contxt.mouse_over_button)
                         this.mouseDown(e)
                 }
 
@@ -147,13 +148,13 @@ var TulipPosyInteraction = function(_context)
                                         {
                                                 prevSelList.length = 0
                                                 prevSelList = selList.slice(0);
-                                                syncGraph(getSelection(target), target)
+                                                objectContext.TulipPosyClientObject.syncGraph(objectContext.TulipPosyClientObject.getSelection(target), target)
                                         }
                                 }else{
                                         
                                                 prevSelList.length = 0
                                                 prevSelList = selList.slice(0);
-                                                syncGraph(getSelection(target), target)
+                                                objectContext.TulipPosyClientObject.syncGraph(objectContext.TulipPosyClientObject.getSelection(target), target)
                                 }
                         }
                         else
@@ -161,9 +162,9 @@ var TulipPosyInteraction = function(_context)
                             svg.selectAll("g.node").select("circle.node").style('fill', 'steelblue');
                             svg.selectAll("g.link").select("path.link").style('stroke', 'gray');
                             if (target == "catalyst")
-                                resetSize("substrate");
+                                objectContext.TulipPosyVisualizationObject.resetSize("substrate");
                             if (target == "substrate")
-                                resetSize("catalyst");
+                                objectContext.TulipPosyVisualizationObject.resetSize("catalyst");
                             prevSelList = selList.slice(0);
                             console.log("warning: the selection list is empty");
                             
@@ -175,21 +176,21 @@ var TulipPosyInteraction = function(_context)
         // This function associate a d3.svg.brush element to select nodes in a view
         // target, the string value of the target svg view 
         // This function is unused and a bit deprecated but one can activate it anytime
-        var addBrush = function(target)
+        this.addBrush = function(target)
         {
                 var svg = null
                 var graph = null
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
-                        graph = _context.graph_catalyst                        
+                        svg = contxt.svg_catalyst
+                        graph = contxt.graph_catalyst                        
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
-                        graph = graph_substrate
+                        svg = contxt.svg_substrate
+                        graph = contxt.graph_substrate
                 }
                         
                 if (!target)
@@ -255,13 +256,13 @@ var TulipPosyInteraction = function(_context)
                                         {
                                                 prevSelList.length = 0
                                                 prevSelList = selList.slice(0);
-                                                syncGraph(getSelection(target), target)
+                                                objectContext.TulipPosyClientObject.syncGraph(objectContext.TulipPosyClientObject.getSelection(target), target)
                                         }
                                 }else{
                                         
                                                 prevSelList.length = 0
                                                 prevSelList = selList.slice(0);
-                                                syncGraph(getSelection(target), target)
+                                                objectContext.TulipPosyClientObject.syncGraph(objectContext.TulipPosyClientObject.getSelection(target), target)
                                 }
                         }
                                 
@@ -282,7 +283,7 @@ var TulipPosyInteraction = function(_context)
 
         // Applies the lasso interactor to a specific svg target as callback to the mouse events.
         // target, the string value of the target svg view         
-        var addLasso = function(target)
+        this.addLasso = function(target)
         {
                 if (!target)
                         return
@@ -292,14 +293,14 @@ var TulipPosyInteraction = function(_context)
 
                 if (target == "catalyst")
                 {
-                        mySvg = _context.svg_catalyst
-                        myL = lasso_catalyst                
+                        mySvg = contxt.svg_catalyst
+                        myL = contxt.lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        mySvg = _context.svg_substrate
-                        myL = lasso_substrate
+                        mySvg = contxt.svg_substrate
+                        myL = contxt.lasso_substrate
                 }
 
                 mySvg.on("mouseup", function(d){myL.canMouseUp(d3.mouse(this))});
@@ -310,7 +311,7 @@ var TulipPosyInteraction = function(_context)
 
         // Removes the lasso interactor from a specific svg target's callbacks to its mouse events.
         // target, the string value of the target svg view         
-        var removeLasso = function(target)
+        this.removeLasso = function(target)
         {
                 if (!target)
                         return
@@ -319,12 +320,12 @@ var TulipPosyInteraction = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
+                        svg = contxt.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 svg.on("mouseup", null);
@@ -335,7 +336,7 @@ var TulipPosyInteraction = function(_context)
 
       // Adds a zoom interactor to a specific svg target as callbacks to its mouse events.
         // target, the string value of the target svg view         
-        var addZoom = function(target)
+        this.addZoom = function(target)
         {
 
                 if (!target)
@@ -345,12 +346,12 @@ var TulipPosyInteraction = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
+                        svg = contxt.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
@@ -361,7 +362,7 @@ var TulipPosyInteraction = function(_context)
                             .scaleExtent([0.5, 2.0])
                             .on("zoom", function() {
                                 
-                                if (!eval("move_mode_"+target))
+                                if (!eval("contxt.move_mode_"+target))
                                 {
                                          return;
                                 }
@@ -379,9 +380,9 @@ var TulipPosyInteraction = function(_context)
 
                                 svg.selectAll("g.node,g.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
                                 svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/d3.event.scale);});
-                                addInterfaceSubstrate();
-                                addInterfaceCatalyst();
-                                entanglementCaught();
+                                objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+                                objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+                                objectContext.TulipPosyVisualizationObject.entanglementCaught();
         
                             })
                         );
@@ -391,7 +392,7 @@ var TulipPosyInteraction = function(_context)
 
         // Removes the lasso interactor from a specific svg target's callbacks to its mouse events.
         // target, the string value of the target svg view         
-        var removeZoom = function(target)
+        this.removeZoom = function(target)
         {
                 if (!target)
                         return
@@ -400,12 +401,12 @@ var TulipPosyInteraction = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
+                        svg = contxt.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
+                        svg = contxt.svg_substrate
                 }
         svg.on("mousedown.zoom", null)
             .on("mousewheel.zoom", null)
@@ -422,28 +423,28 @@ var TulipPosyInteraction = function(_context)
         }
 
 
-        var toggleCatalystSyncOperator = function()
+        this.toggleCatalystSyncOperator = function()
         {
-            if (catalyst_sync_operator == "OR")
+            if (contxt.catalyst_sync_operator == "OR")
             {
-                catalyst_sync_operator = "AND";
+                contxt.catalyst_sync_operator = "AND";
             }else{
-                catalyst_sync_operator = "OR"
+                contxt.catalyst_sync_operator = "OR"
             }
-            _context.svg_catalyst.selectAll("g.toggleCatalystOp")
+            contxt.svg_catalyst.selectAll("g.toggleCatalystOp")
                 .select("text")
-                .text("operator "+catalyst_sync_operator)
+                .text("operator "+contxt.catalyst_sync_operator)
 
         }
 
-        var highlight = function (data, i, j)
+        this.highlight = function (data, i, j)
         {
-            _context.svg_catalyst.selectAll("circle.node")
+            contxt.svg_catalyst.selectAll("circle.node")
                 //.style("fill", function(d){if(i == j && d.baseID == data){return "pink"}else{ return "steelblue";}})
                 .style("opacity", function(d){if(i == j && d.baseID == data){return 1}else{ return .25;}})
                 .style("stroke", function(d){if(i == j && d.baseID == data){return "red"}else{return "gray";}})
                 .style("stroke-width", function(d){ if(i == j && d.baseID == data){return 5}else{return 0;}})
-            _context.svg_catalyst.selectAll("path.link")
+            contxt.svg_catalyst.selectAll("path.link")
                 .style("stroke", function(d){if(i != j && d.baseID == data){return "red"}else{return "gray";}})
                 .style("stroke-width", function(d){ if(i != j && d.baseID == data){return 5}else{return 1;}})
                 .style("opacity", function(d){if(i != j && d.baseID == data){return 1 }else{ return .25;}})

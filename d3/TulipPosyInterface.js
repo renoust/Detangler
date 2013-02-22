@@ -1,8 +1,10 @@
-var TulipPosyInterface = function(_context)
+var TulipPosyInterface = function(contexte, objectcontext)
 {
     var __g__ = this;
-    var __context = _context;
 
+	var contxt = contexte;
+	var objectContext = objectcontext;	
+		
         this.includeFormParam = function (target)
         {
                 myinput =  svg.append("foreignObject")
@@ -33,27 +35,27 @@ var TulipPosyInterface = function(_context)
         {
                 var target = "catalyst";
                 
-                eraseAllInterface(target);
+                objectContext.TulipPosyInterfaceObject.eraseAllInterface(target);
 
-                addButton(target, 0, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
-                addButton(target, 1, "circular layout", "button3", function(){callLayout("Circular", target)});
-                addButton(target, 2, "random layout", "button4", function(){callLayout("Random", target)});
-                addButton(target, 3, "reset view", "button5", function(){resetView(target)});
-                addButton(target, 4, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
-                addButton(target, 5, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 6, "reset size", "button8", function(){resetSize(target)});  
-                addButton(target, 7, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
-                addButton(target, 8, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addButton(target, 9, "node information", "infoBox", function(){attachInfoBox(target)});
-                addButton(target, 10, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
-                addButton(target, 11, "weight mapping", "button9", function(){sizeMapping("weight", target)});
-                addButton(target, 12, "ent. mapping", "button10", function(){sizeMapping("entanglementIndice", target)});
-                addButton(target, 13, "ent. color", "button11", function(){colorMapping("entanglementIndice", target)});
-                addButton(target, 14, "computeMatrix", "button12", function(){buildEdgeMatrices()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 0, "force layout", "button2", function(){objectContext.TulipPosyClientObject.callLayout("FM^3 (OGDF)", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 1, "circular layout", "button3", function(){objectContext.TulipPosyClientObject.callLayout("Circular", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 2, "random layout", "button4", function(){objectContext.TulipPosyClientObject.callLayout("Random", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 3, "reset view", "button5", function(){objectContext.TulipPosyVisualizationObject.resetView(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 4, "degree metric", "button6", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 5, "btw. centrality", "button7", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Betweenness Centrality", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 6, "reset size", "button8", function(){objectContext.TulipPosyVisualizationObject.resetSize(target)});  
+                objectContext.TulipPosyInterfaceObject.addButton(target, 7, "hide labels", "showHideLabels", function(){objectContext.TulipPosyVisualizationObject.showhideLabels(target)});              
+                objectContext.TulipPosyInterfaceObject.addButton(target, 8, "hide links", "showHideLinks", function(){objectContext.TulipPosyVisualizationObject.showhideLinks(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 9, "node information", "infoBox", function(){objectContext.TulipPosyInterfaceObject.attachInfoBox(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 10, "operator "+contxt.catalyst_sync_operator, "toggleCatalystOp", function(){objectContext.TulipPosyInteractionObject.toggleCatalystSyncOperator()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 11, "weight mapping", "button9", function(){objectContext.TulipPosyVisualizationObject.sizeMapping("weight", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 12, "ent. mapping", "button10", function(){objectContext.TulipPosyVisualizationObject.sizeMapping("entanglementIndice", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 13, "ent. color", "button11", function(){objectContext.TulipPosyVisualizationObject.colorMapping("entanglementIndice", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 14, "computeMatrix", "button12", function(){objectContext.TulipPosyVisualizationObject.buildEdgeMatrices()});
 
-                addGraphInteractorButtons(target, 15);
+                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 15);
         
-                addInfoButton(target);
+                objectContext.TulipPosyInterfaceObject.addInfoButton(target);
 
         }
 
@@ -62,27 +64,27 @@ var TulipPosyInterface = function(_context)
         {
                 var target = 'substrate'
 
-                eraseAllInterface(target);
+                objectContext.TulipPosyInterfaceObject.eraseAllInterface(target);
 
-                addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
-                addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
-                addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
-                addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
-                addButton(target, 4, "reset view", "button5", function(){resetView(target)});
-                addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
-                addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
-                addButton(target, 7, "analyse", "button8", function(){analyseGraph()});
-                addButton(target, 8, "reset size", "button9", function(){resetSize(target)});
-                addButton(target, 9, "hide labels", "showHideLabels", function(){showhideLabels(target)});
-                addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
-                addButton(target, 11, "node information", "infoBox", function(){attachInfoBox(target)});
-                addButton(target, 12, "sync layouts", "button10", function(){syncLayouts()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 0, "induced subgraph", "button1", function(){objectContext.TulipPosyClientObject.sendSelection(objectContext.TulipPosyClientObject.getSelection(target), target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 1, "force layout", "button2", function(){objectContext.TulipPosyClientObject.callLayout("FM^3 (OGDF)", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 2, "circular layout", "button3", function(){objectContext.TulipPosyClientObject.callLayout("Circular", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 3, "random layout", "button4", function(){objectContext.TulipPosyClientObject.callLayout("Random", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 4, "reset view", "button5", function(){objectContext.TulipPosyVisualizationObject.resetView(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 5, "degree metric", "button6", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 6, "btw. centrality", "button7", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Betweenness Centrality", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 7, "analyse", "button8", function(){objectContext.TulipPosyClientObject.analyseGraph()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 8, "reset size", "button9", function(){objectContext.TulipPosyVisualizationObject.resetSize(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 9, "hide labels", "showHideLabels", function(){objectContext.TulipPosyVisualizationObject.showhideLabels(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 10, "hide links", "showHideLinks", function(){objectContext.TulipPosyVisualizationObject.showhideLinks(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 11, "node information", "infoBox", function(){objectContext.TulipPosyInterfaceObject.attachInfoBox(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 12, "sync layouts", "button10", function(){objectContext.TulipPosyClientObject.syncLayouts()});
 
                 
-                addGraphInteractorButtons(target, 13);
-                addEntanglementFeedback(target);
-                addInfoButton(target);
-                addSettingsButton();
+                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 13);
+                objectContext.TulipPosyInterfaceObject.addEntanglementFeedback(target);
+                objectContext.TulipPosyInterfaceObject.addInfoButton(target);
+                objectContext.TulipPosyInterfaceObject.addSettingsButton();
         }
 
         this.eraseAllInterface = function(target)
@@ -92,14 +94,14 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
 
                 var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
@@ -116,14 +118,14 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
 
                 var coh = svg.selectAll("rect entanglement").data(["entanglement"]).enter().append('g')
@@ -145,8 +147,8 @@ var TulipPosyInterface = function(_context)
                         .attr("dy", 15)
                         .text("Entanglement")
                         .style("fill", 'black')
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
+                        .style("font-family", contxt.defaultTextFont)
+                        .style("font-size", contxt.defaultTextSize)
 
                 coh.append("text")
                         .attr('class', 'intensitylabel')
@@ -155,18 +157,18 @@ var TulipPosyInterface = function(_context)
                         .attr("dy", 35)
                         .text("intensity:")
                         .style("fill", 'black')
-                        .style("font-size", defaultTextSize)
-                        .style("font-family", defaultTextFont)
+                        .style("font-size", contxt.defaultTextSize)
+                        .style("font-family", contxt.defaultTextFont)
 
                 coh.append("text")
                         .attr('class', 'intensity')
                         .classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 50)
-                        .text(function(d){return ""+entanglement_intensity})
+                        .text(function(d){return ""+contxt.entanglement_intensity})
                         .style("fill", 'blue')
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
+                        .style("font-family", contxt.defaultTextFont)
+                        .style("font-size", contxt.defaultTextSize)
                         .style('text-anchor', 'end')
 
                 coh.append("text")
@@ -175,9 +177,9 @@ var TulipPosyInterface = function(_context)
                         .attr("dx", 10)
                         .attr("dy", 70)
                         .attr("width", 120)
-                        .style("font-family", defaultTextFont)
+                        .style("font-family", contxt.defaultTextFont)
                         .text('homogeneity:')
-                        .style("font-size", defaultTextSize)
+                        .style("font-size", contxt.defaultTextSize)
                         .style("fill", 'black')
 
                 coh.append("text")
@@ -185,11 +187,11 @@ var TulipPosyInterface = function(_context)
                         .classed("interfaceButton", 1)
                         .attr("dx", 110)
                         .attr("dy", 85)
-                        .text(function(d){return ""+entanglement_homogeneity})
+                        .text(function(d){return ""+contxt.entanglement_homogeneity})
                         .style('text-anchor', 'end')
-                        .style("font-family", defaultTextFont)
+                        .style("font-family", contxt.defaultTextFont)
                         .style("fill", 'blue')
-                        .style("font-size", defaultTextSize)
+                        .style("font-size", contxt.defaultTextSize)
 
         }
 
@@ -206,42 +208,42 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
 
-                var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
+                var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:contxt.defaultFillColor, colorOut:contxt.highlightFillColor}]).enter().append('g')
                         .attr("class", "moveButton")
                         .classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
                         .on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove(target);
+                                objectContext.TulipPosyInterfaceObject.toggleSelectMove(target);
                         })
                         .on("mouseover", function(d){
-                                mouse_over_button = true;
-                                if(!eval("move_mode_"+target)){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
+                                contxt.mouse_over_button = true;
+                                if(!eval("contxt.move_mode_"+target)){
+                                        d.colorOver = contxt.highlightFillColor; 
+                                        d.colorOut = contxt.defaultFillColor;
                                 }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
+                                        d.colorOver = contxt.defaultFillColor; 
+                                        d.colorOut = contxt.highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOver);})
                         .on("mouseout", function(d){
-                                mouse_over_button = false;
-                                if(!eval("move_mode_"+target)){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
+                                contxt.mouse_over_button = false;
+                                if(!eval("contxt.move_mode_"+target)){
+                                        d.colorOver = contxt.highlightFillColor; 
+                                        d.colorOut = contxt.defaultFillColor;
                                 }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
+                                        d.colorOver = contxt.defaultFillColor; 
+                                        d.colorOut = contxt.highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill", d.colorOut);})
                 
@@ -250,11 +252,11 @@ var TulipPosyInterface = function(_context)
                         .classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
-                        .style("fill", highlightFillColor)        
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
-                        //.on("mouseover", function(){d3.select(this).style("fill",highlightFillColor);})
-                        //.on("mouseout", function(){d3.select(this).style("fill",defaultFillColor);})
+                        .style("fill", contxt.highlightFillColor)        
+                        .style("stroke-width", contxt.defaultBorderWidth)
+                        .style("stroke", contxt.defaultBorderColor)
+                        //.on("mouseover", function(){d3.select(this).style("fill",contxt.highlightFillColor);})
+                        //.on("mouseout", function(){d3.select(this).style("fill",contxt.defaultFillColor);})
 
                 btMove.append("text")
                         .attr("class", "moveButton")
@@ -262,37 +264,37 @@ var TulipPosyInterface = function(_context)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d.text})
-                        .style("font-family", defaultTextFont)
-                        .style("fill", defaultTextColor)
-                        .style("font-size", defaultTextSize)
+                        .style("font-family", contxt.defaultTextFont)
+                        .style("fill", contxt.defaultTextColor)
+                        .style("font-size", contxt.defaultTextSize)
 
 
-                var btSelect = svg.selectAll("rect.selectButton").data([{text:"select", colorOver:highlightFillColor, colorOut:defaultFillColor}]).enter().append('g')
+                var btSelect = svg.selectAll("rect.selectButton").data([{text:"select", colorOver:contxt.highlightFillColor, colorOut:contxt.defaultFillColor}]).enter().append('g')
                         .attr("class", "selectButton")
                         .classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*(positionNumber+1)) + ")"; })
                         .on("click", function(d){
                                 d3.select(this).select("rect").style("fill","yellow"); 
-                                toggleSelectMove(target);   
+                                objectContext.TulipPosyInterfaceObject.toggleSelectMove(target);   
                         })
                         .on("mouseover", function(d){
-                                mouse_over_button = true;
-                                if(!eval("select_mode_"+target)){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
+                                contxt.mouse_over_button = true;
+                                if(!eval("contxt.select_mode_"+target)){
+                                        d.colorOver = contxt.highlightFillColor; 
+                                        d.colorOut = contxt.defaultFillColor;
                                 }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
+                                        d.colorOver = contxt.defaultFillColor; 
+                                        d.colorOut = contxt.highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOver);})
                         .on("mouseout", function(d){
-                                mouse_over_button = false;
-                                if(!eval("select_mode_"+target)){
-                                        d.colorOver = highlightFillColor; 
-                                        d.colorOut = defaultFillColor;
+                                contxt.mouse_over_button = false;
+                                if(!eval("contxt.select_mode_"+target)){
+                                        d.colorOver = contxt.highlightFillColor; 
+                                        d.colorOut = contxt.defaultFillColor;
                                 }else{
-                                        d.colorOver = defaultFillColor; 
-                                        d.colorOut = highlightFillColor;
+                                        d.colorOver = contxt.defaultFillColor; 
+                                        d.colorOut = contxt.highlightFillColor;
                                 }
                                 d3.select(this).select("rect").style("fill",d.colorOut);})
                 
@@ -301,9 +303,9 @@ var TulipPosyInterface = function(_context)
                         .classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
-                        .style("fill", defaultFillColor)        
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
+                        .style("fill", contxt.defaultFillColor)        
+                        .style("stroke-width", contxt.defaultBorderWidth)
+                        .style("stroke", contxt.defaultBorderColor)
                         //.on("mouseover", function(d){d3.select(this).style("fill",d.colorOver);})
                         //.on("mouseout", function(d){d3.select(this).style("fill",d.colorOut);})
 
@@ -313,9 +315,9 @@ var TulipPosyInterface = function(_context)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d.text})
-                        .style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
+                        .style("fill", contxt.defaultTextColor)
+                        .style("font-family", contxt.defaultTextFont)
+                        .style("font-size", contxt.defaultTextSize)
         }
 
 
@@ -327,18 +329,18 @@ var TulipPosyInterface = function(_context)
 
             if (target == 'substrate')
             {        
-                    cGraph = _context.graph_substrate
-                    svg = _context.svg_substrate
+                    cGraph = contxt.graph_substrate
+                    svg = contxt.svg_substrate
             }
 
             if (target == 'catalyst')
             {        
-                    cGraph = _context.graph_catalyst
-                    svg = _context.svg_catalyst
+                    cGraph = contxt.graph_catalyst
+                    svg = contxt.svg_catalyst
             }
 
-            posInfo_x = width-30
-            posInfo_y = height-5
+            posInfo_x = contxt.width-30
+            posInfo_y = contxt.height-5
 
             //var width
             var btInfo = svg.selectAll("g.info").data(["`"]).enter().append('g')
@@ -365,27 +367,27 @@ var TulipPosyInterface = function(_context)
                     .attr("class","infoWindow")
                     .attr("width", 120)
                     .attr("height", 35)
-                    .style("fill", defaultFillColor)        
-                    .style("stroke-width", defaultBorderWidth)
-                    .style("stroke", defaultBorderColor)
+                    .style("fill", contxt.defaultFillColor)        
+                    .style("stroke-width", contxt.defaultBorderWidth)
+                    .style("stroke", contxt.defaultBorderColor)
                 
                 sGroup.append("text")
                     .attr("class","infoWindow")
                     .attr("dx", 5)
                     .attr("dy", 15)
                     .text(function(){return ""+cGraph.nodes().length+" nodes"})
-                    .style("font-family", defaultTextFont)
-                    .style("fill", defaultTextColor)
-                    .style("font-size", defaultTextSize)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-size", contxt.defaultTextSize)
 
                 sGroup.append("text")
                     .attr("class","infoWindow")
                     .attr("dx", 5)
                     .attr("dy", 28)
                     .text(function(){return ""+cGraph.links().length+" links"})
-                    .style("font-family", defaultTextFont)
-                    .style("fill", defaultTextColor)
-                    .style("font-size", defaultTextSize)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-size", contxt.defaultTextSize)
 
             })     
         }
@@ -412,11 +414,11 @@ var TulipPosyInterface = function(_context)
                     selectHTMLString = "<form><select id=weightPropSel>"
                     selectHTMLString += " <option value=\"\"><i>--</i></option>"
 
-                    nbElements = Object.keys(substrateProperties).length
-                    Object.keys(substrateProperties).forEach(function(k, i)
+                    nbElements = Object.keys(contxt.substrateProperties).length
+                    Object.keys(contxt.substrateProperties).forEach(function(k, i)
                     {
                         console.log("props: ",k)
-                        if(substrateProperties[k] == "number")
+                        if(contxt.substrateProperties[k] == "number")
                         {
                             selectHTMLString += " <option value=\""+k+"\">"+k+"</option>"
                         }
@@ -439,15 +441,15 @@ var TulipPosyInterface = function(_context)
                                 .append("xhtml:body")
                                 .html("<form><input type=radio name=weight value=null /></form>")
                                 .on("click", function(d){
-                                    substrateWeightProperty=null
+                                    contxt.substrateWeightProperty=null
                                 });*/
 
         }
 
         this.holdSVGInteraction = function(target)
         {
-            removeZoom(target);
-            removeLasso(target);
+            objectContext.TulipPosyInteractionObject.removeZoom(target);
+            objectContext.TulipPosyInteractionObject.removeLasso(target);
         }
 
 
@@ -463,98 +465,46 @@ var TulipPosyInterface = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
-                        //select_mode = select_mode_catalyst
-                        //move_mode = move_mode_catalyst
+                        svg = contxt.svg_catalyst
+                        //select_mode = contxt.select_mode_catalyst
+                        //move_mode = contxt.move_mode_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
-                        //select_mode = select_mode_substrate
-                        //move_mode = move_mode_substrate
+                        svg = contxt.svg_substrate
+                        //select_mode = contxt.select_mode_substrate
+                        //move_mode = contxt.move_mode_substrate
                 }
 
-                eval("select_mode_"+target+" = ! select_mode_"+target);
-                eval("move_mode_"+target+" = ! move_mode_"+target);
+                eval("contxt.select_mode_"+target+" = ! contxt.select_mode_"+target);
+                eval("contxt.move_mode_"+target+" = ! contxt.move_mode_"+target);
 
-                if(eval("select_mode_"+target))
+                if(eval("contxt.select_mode_"+target))
                 {
-                        svg.select('rect.moveButton').style('fill', defaultFillColor);
-                        svg.select('rect.selectButton').style('fill', highlightFillColor);
-                        addLasso(target);
-                        removeZoom(target);
+                        svg.select('rect.moveButton').style('fill', contxt.defaultFillColor);
+                        svg.select('rect.selectButton').style('fill', contxt.highlightFillColor);
+                        objectContext.TulipPosyInteractionObject.addLasso(target);
+                        objectContext.TulipPosyInteractionObject.removeZoom(target);
                 }
 
-                if(eval("move_mode_"+target))
+                if(eval("contxt.move_mode_"+target))
                 {
                         svg.style("cursor", "all-scroll");
-                        svg.select('rect.moveButton').style('fill', highlightFillColor);
-                        svg.select('rect.selectButton').style('fill', defaultFillColor);                        
-                        removeLasso(target);
-                        addZoom(target);
+                        svg.select('rect.moveButton').style('fill', contxt.highlightFillColor);
+                        svg.select('rect.selectButton').style('fill', contxt.defaultFillColor);                        
+                        objectContext.TulipPosyInteractionObject.removeLasso(target);
+                        objectContext.TulipPosyInteractionObject.addZoom(target);
                 }
-        }
-
-        this.selectWeightProperty = function(group)
-        {
-            /*
-            <select>
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select> 
-            */
-             group.append("foreignObject")
-                .attr("x", 10)
-                .attr("y", 20)
-                .attr("width", 200)
-                .attr("height", 200)
-                .append("xhtml:body")
-                .html(function(d)
-                {
-                    selectHTMLString = "<form><select id=weightPropSel>"
-                    selectHTMLString += " <option value=\"\"><i>--</i></option>"
-
-                    nbElements = Object.keys(substrateProperties).length
-                    Object.keys(substrateProperties).forEach(function(k, i)
-                    {
-                        console.log("props: ",k)
-                        if(substrateProperties[k] == "number")
-                        {
-                            selectHTMLString += " <option value=\""+k+"\">"+k+"</option>"
-                        }
-                    });
-
-                    
-                    selectHTMLString += "</select></form>"
-
-                    return selectHTMLString
-                })
-                /*.on("change", function(d, i)
-                    {
-                        console.log("value has changed: ", d3.select(this));
-                    })*/
-                /*group.append("foreignObject")
-                                .attr("x", 10)
-                                .attr("y", 10*nbElements+1)
-                                .attr("width", 200)
-                                .attr("height", 200)
-                                .append("xhtml:body")
-                                .html("<form><input type=radio name=weight value=null /></form>")
-                                .on("click", function(d){
-                                    substrateWeightProperty=null
-                                });*/
         }
 
 
        this.addSettingsButton = function()
         {
-            holdSVGInteraction("substrate")
+            objectContext.TulipPosyInterfaceObject.holdSVGInteraction("substrate")
 
-            svg = _context.svg_substrate
-            posSettings_x = width-30
+            svg = contxt.svg_substrate
+            posSettings_x = contxt.width-30
             posSettings_y = 30
 
             //var width
@@ -581,20 +531,20 @@ var TulipPosyInterface = function(_context)
                     .attr("class","settingsWindow")
                     .attr("width", 120)
                     .attr("height", 120)
-                    .style("fill", defaultFillColor)        
-                    .style("stroke-width", defaultBorderWidth)
-                    .style("stroke", defaultBorderColor)
+                    .style("fill", contxt.defaultFillColor)        
+                    .style("stroke-width", contxt.defaultBorderWidth)
+                    .style("stroke", contxt.defaultBorderColor)
                 
                 sGroup.append("text")
                     .attr("class","settingsWindow")
                     .attr("dx", 5)
                     .attr("dy", 15)
                     .text(function(){return "Weight property"})
-                    .style("font-family", defaultTextFont)
-                    .style("fill", defaultTextColor)
-                    .style("font-size", defaultTextSize)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-size", contxt.defaultTextSize)
 
-                selectWeightProperty(sGroup);
+                objectContext.TulipPosyInterfaceObject.selectWeightProperty(sGroup);
 
                 sGroup.append("text")
                     .attr("class","settingsWindow")
@@ -604,7 +554,7 @@ var TulipPosyInterface = function(_context)
                     .style("font-family", "EntypoRegular")
                     .style("fill", "lightgray")
                     .style("font-size", 30)
-                    .on("click", function(){substrateWeightProperty = svg.select("#weightPropSel").node().value;svg.selectAll(".settingsWindow").data([]).exit().remove();})
+                    .on("click", function(){contxt.substrateWeightProperty = svg.select("#weightPropSel").node().value;svg.selectAll(".settingsWindow").data([]).exit().remove();})
                     .on("mouseover", function(){d3.select(this).style("fill", "black")})
                     .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
 
@@ -626,14 +576,14 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
 
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
@@ -641,17 +591,17 @@ var TulipPosyInterface = function(_context)
                         .classed("interfaceButton", 1)
                         .attr("transform", function(d) { return "translate(" + 10 + "," + (10+25*positionNumber) + ")"; })
                         .on("click", function(){d3.select(this).select("rect").style("fill","yellow"); callback();})
-                        .on("mouseover", function(){d3.select(this).select("rect").style("fill",highlightFillColor); mouse_over_button = true;})
-                        .on("mouseout", function(){d3.select(this).select("rect").style("fill",defaultFillColor); mouse_over_button = false;})
+                        .on("mouseover", function(){d3.select(this).select("rect").style("fill",contxt.highlightFillColor); contxt.mouse_over_button = true;})
+                        .on("mouseout", function(){d3.select(this).select("rect").style("fill",contxt.defaultFillColor); contxt.mouse_over_button = false;})
 
                 bt.append("rect")
                         .attr("class", className)
                          .classed("interfaceButton", 1)
                         .attr("width", 120)
                         .attr("height", 20)
-                        .style("fill", defaultFillColor)
-                        .style("stroke-width", defaultBorderWidth)
-                        .style("stroke", defaultBorderColor)
+                        .style("fill", contxt.defaultFillColor)
+                        .style("stroke-width", contxt.defaultBorderWidth)
+                        .style("stroke", contxt.defaultBorderColor)
                         
 
                 bt.append("text")
@@ -660,9 +610,9 @@ var TulipPosyInterface = function(_context)
                         .attr("dx", 5)
                         .attr("dy", 15)
                         .text(function(d){return d})
-                        .style("fill", defaultTextColor)
-                        .style("font-family", defaultTextFont)
-                        .style("font-size", defaultTextSize)
+                        .style("fill", contxt.defaultTextColor)
+                        .style("font-family", contxt.defaultTextFont)
+                        .style("font-size", contxt.defaultTextSize)
         }
 
 
@@ -675,27 +625,27 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
                 
-                eval("node_information_"+target+" = !node_information_"+target);
+                eval("contxt.node_information_"+target+" = !contxt.node_information_"+target);
 
-                if (!eval("node_information_"+target))
+                if (!eval("contxt.node_information_"+target))
                 {
-                    svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",defaultFillColor); mouse_over_button = false;});
+                    svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",contxt.defaultFillColor); contxt.mouse_over_button = false;});
                     svg.selectAll("g.node").on("mouseover", null);
                     return
                 }
 
-                svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",highlightFillColor); mouse_over_button = false;});
-                svg.selectAll("g.node").on("mouseover", function(d){addInfoBox(target, d)});
+                svg.selectAll("g.infoBox").on("mouseout", function(){d3.select(this).select("rect.infoBox").style("fill",contxt.highlightFillColor); contxt.mouse_over_button = false;});
+                svg.selectAll("g.node").on("mouseover", function(d){objectContext.TulipPosyInterfaceObject.addInfoBox(target, d)});
         
         }
 
@@ -707,20 +657,20 @@ var TulipPosyInterface = function(_context)
 
                 if (target == 'substrate')
                 {        
-                        cGraph = _context.graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
                              
           function move(){
                     //var e = window.event;
                     //if (e.ctrlKey || e.metaKey) return;
-                    this.parentNode.appendChild(this);
+                    objectContext.TulipPosyInterfaceObject.parentNode.appendChild(this);
                     var dragTarget = d3.select(this);
                     var currentPanel = dragTarget.data()[0]
                     var posX = d3.event.dx
@@ -749,7 +699,7 @@ var TulipPosyInterface = function(_context)
                 ib = svg.selectAll("g.nodeInfo"+node.baseID).data([node]).enter().append("g")
                         .attr("class", function(d){return "nodeInfo"+d.baseID})
                         .attr("transform", function(d){ return "translate(" + d.currentX + "," + d.currentY + ")";})
-                        .call(d3.behavior.drag().on("drag", move))
+                        .call(d3.behavior.drag().on("drag", objectContext.TulipPosyInterfaceObject.move))
                         
             
                 ib.append("rect")
@@ -758,36 +708,36 @@ var TulipPosyInterface = function(_context)
                     .attr("height", 200)
                     //.attr("x", function (d){return d.x;})
                     //.attr("y", function (d){return d.y;})
-                    .style("fill", defaultFillColor)
-                    .style("stroke-width", defaultBorderWidth)
-                    .style("stroke", defaultBorderColor)
+                    .style("fill", contxt.defaultFillColor)
+                    .style("stroke-width", contxt.defaultBorderWidth)
+                    .style("stroke", contxt.defaultBorderColor)
 
                 ib.append("text")
                     .classed("nodeInfo", true)
                     .text("node information")
                     .attr("dx", 5)
                     .attr("dy", 15)
-                    .style("fill", defaultTextColor)
-                    .style("font-family", defaultTextFont)
-                    .style("font-size", defaultTextSize)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("font-size", contxt.defaultTextSize)
 
                 ib.append("text")
                     .classed("nodeInfo", true)
                     .text(function(d){return ("ID "+d.baseID)})
                     .attr("dx", 5)
                     .attr("dy", 30)
-                    .style("fill", defaultTextColor)
-                    .style("font-family", defaultTextFont)
-                    .style("font-size", defaultTextSize)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("font-size", contxt.defaultTextSize)
 
                 ib.append("text")
                     .classed("nodeInfo", true)
                     .text(function(d){return d.label})
                     .attr("dx", 5)
                     .attr("dy", 42)
-                    .style("fill", defaultTextColor)
-                    .style("font-family", defaultTextFont)
-                    .style("font-size", defaultTextSize)
+                    .style("fill", contxt.defaultTextColor)
+                    .style("font-family", contxt.defaultTextFont)
+                    .style("font-size", contxt.defaultTextSize)
 
                 ib.append("text")
                     .classed("nodeInfo", true)

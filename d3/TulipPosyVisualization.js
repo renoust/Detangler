@@ -1,9 +1,13 @@
-var TulipPosyVisualization = function(_context)
+var TulipPosyVisualization = function(contexte, objectcontext)
 {
     var __g__ = this;
-    var __context = _context;
 
-        var showhideLinks = function(target)
+	var contxt = contexte;
+	var objectContext = objectcontext;
+       
+
+		
+        this.showhideLinks = function(target)
         {
 
                 if (!target)
@@ -13,17 +17,17 @@ var TulipPosyVisualization = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
+                        svg = contxt.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
+                        svg = contxt.svg_substrate
                 }
 
-                eval("show_links_"+target+" = ! show_links_"+target);
+                eval("contxt.show_links_"+target+" = ! contxt.show_links_"+target);
 
-                if(eval("show_links_"+target))
+                if(eval("contxt.show_links_"+target))
                 {
                     svg.selectAll('g.link').attr("visibility","visible");
                     svg.select('text.showHideLinks').text('hide links');
@@ -35,22 +39,22 @@ var TulipPosyVisualization = function(_context)
 
         // This function updates the entanglement values displayed in the entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame following a Brewer's scale (www.colorbrewer2.org).
-        var entanglementCaught = function()
+        this.entanglementCaught = function()
         {
                 var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
-                _context.svg_substrate.selectAll("text.homogeneity").text(function(d){return ""+round(entanglement_homogeneity,5)});
-                _context.svg_substrate.selectAll("text.intensity").text(function(d){return ""+round(entanglement_intensity,5)});
-                var index = Math.round(entanglement_intensity*5)%6
-                _context.svg_substrate.selectAll("rect.entanglementframe").transition().style('fill-opacity', .5)
+                contxt.svg_substrate.selectAll("text.homogeneity").text(function(d){return ""+objectContext.ToolObject.round(contxt.entanglement_homogeneity,5)});
+                contxt.svg_substrate.selectAll("text.intensity").text(function(d){return ""+objectContext.ToolObject.round(contxt.entanglement_intensity,5)});
+                var index = Math.round(contxt.entanglement_intensity*5)%6
+                contxt.svg_substrate.selectAll("rect.entanglementframe").transition().style('fill-opacity', .5)
                         .style("fill", brewerSeq[index])
-                if(lasso_catalyst) lasso_catalyst.fillColor = brewerSeq[index]
-                if(lasso_substrate) lasso_substrate.fillColor = brewerSeq[index]
+                if(contxt.lasso_catalyst) contxt.lasso_catalyst.fillColor = brewerSeq[index]
+                if(contxt.lasso_substrate) contxt.lasso_substrate.fillColor = brewerSeq[index]
         }
 
-        var buildEdgeMatrices = function()
+        this.buildEdgeMatrices = function()
         {
             var matrixData = [];
-            nbNodes = _context.graph_catalyst.nodes().length;
+            nbNodes = contxt.graph_catalyst.nodes().length;
             for(i=0; i<nbNodes; i++)
             {
                 matrixData[i] = [];
@@ -59,8 +63,8 @@ var TulipPosyVisualization = function(_context)
             }
 
             var catalystToInd = {};
-            _context.graph_catalyst.nodes().forEach(function(d,i){catalystToInd[d.label] = i; matrixData[i][i] = [d.baseID, d.frequency];});
-            _context.graph_catalyst.links().forEach(function(d){
+            contxt.graph_catalyst.nodes().forEach(function(d,i){catalystToInd[d.label] = i; matrixData[i][i] = [d.baseID, d.frequency];});
+            contxt.graph_catalyst.links().forEach(function(d){
                 var freq = JSON.parse(d.conditionalFrequency);
                 i = catalystToInd[freq['order'][0]]
                 j = catalystToInd[freq['order'][1]]
@@ -79,7 +83,7 @@ var TulipPosyVisualization = function(_context)
                 function move(){
                     //var e = window.event;
                     //if (e.ctrlKey || e.metaKey) return;
-                    this.parentNode.appendChild(this);
+                    objectContext.TulipPosyVisualizationObject.parentNode.appendChild(this);
                     var dragTarget = d3.select(this);
                     var currentPanel = dragTarget
                     //console.log("currentPanel:",);
@@ -107,7 +111,7 @@ var TulipPosyVisualization = function(_context)
 
 
 
-                var mat = _context.svg_catalyst.selectAll("g.matrixInfo").data(["matrix"]).enter().append("g")
+                var mat = contxt.svg_catalyst.selectAll("g.matrixInfo").data(["matrix"]).enter().append("g")
                         .classed("matrixInfo", true)
                         .attr("transform", function(d){ return "translate(" + 500 + "," + 10 + ")";})
                         .call(d3.behavior.drag().on("drag", move))
@@ -118,9 +122,9 @@ var TulipPosyVisualization = function(_context)
                     .attr("height", overallSize+30)
                     //.attr("x", function (d){return d.x;})
                     //.attr("y", function (d){return d.y;})
-                    .style("fill", defaultFillColor)
-                    .style("stroke-width", defaultBorderWidth)
-                    .style("stroke", defaultBorderColor)
+                    .style("fill", contxt.defaultFillColor)
+                    .style("stroke-width", contxt.defaultBorderWidth)
+                    .style("stroke", contxt.defaultBorderColor)
 
 
                 mat.append("text")
@@ -131,7 +135,7 @@ var TulipPosyVisualization = function(_context)
                     .style("fill", "lightgray")
                     .style("font-family", "EntypoRegular")
                     .style("font-size", 30)
-                    .on("click", function(d) {_context.svg_catalyst.selectAll("g.matrixInfo").data([]).exit().remove(); gD = graphDrawing(_context.graph_catalyst, _context.svg_catalyst).draw()})
+                    .on("click", function(d) {contxt.svg_catalyst.selectAll("g.matrixInfo").data([]).exit().remove(); gD = graphDrawing(contxt.graph_catalyst, contxt.svg_catalyst).draw()})
                     .on("mouseover", function(){d3.select(this).style("fill", "black")})
                     .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
 
@@ -155,7 +159,7 @@ var TulipPosyVisualization = function(_context)
                         .style("fill-opacity", 1)
                         .style("stroke","black")
                         .style("stroke-width", 0)
-                        .on("mouseover", function(){if(d2[0]!=-1){d3.select(this).style("stroke-width", 1);}; highlight(d2[0], i, j);})
+                        .on("mouseover", function(){if(d2[0]!=-1){d3.select(this).style("stroke-width", 1);}; objectContext.TulipPosyInteractionObject.highlight(d2[0], i, j);})
                         .on("mouseout", function(){d3.select(this).style("stroke-width", 0);})//style("fill", function(){ if(d2[0] == -1){return "lightgray";}else{return brewerSeq[index(d2[1])];}}])
                                                                     
                 })
@@ -164,21 +168,21 @@ var TulipPosyVisualization = function(_context)
     
 
 
-        var resetView = function(target)
+        this.resetView = function(target)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
 
                 nodeDatum = svg.selectAll("g.node").data()
@@ -188,26 +192,26 @@ var TulipPosyVisualization = function(_context)
                 
                 svg.selectAll(".node,.link").attr("transform","translate(" + 0 + "," +  0 + ") scale(" +  1 + ")")
                 svg.selectAll("text.node").style("font-size", function(){ return 12;});
-                addInterfaceSubstrate();
-                addInterfaceCatalyst();
-                entanglementCaught();
+                objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+                objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+                objectContext.TulipPosyVizualisationObject.entanglementCaught();
         }
 
-        var resetSize = function(target)
+        this.resetSize = function(target)
         {
                 var cGraph = null
                 var svg = null
 
                 if (target == 'substrate')
                 {        
-                        cGraph = graph_substrate
-                        svg = _context.svg_substrate
+                        cGraph = contxt.graph_substrate
+                        svg = contxt.svg_substrate
                 }
 
                 if (target == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst
-                        svg = _context.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                        svg = contxt.svg_catalyst
                 }
                 
                 cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
@@ -216,7 +220,7 @@ var TulipPosyVisualization = function(_context)
         }
 
        // 
-        var showhideLabels = function(target)
+        this.showhideLabels = function(target)
         {
 
                 if (!target)
@@ -226,17 +230,17 @@ var TulipPosyVisualization = function(_context)
 
                 if (target == "catalyst")
                 {
-                        svg = _context.svg_catalyst
+                        svg = contxt.svg_catalyst
                 }
         
                 if (target == "substrate")
                 {
-                        svg = _context.svg_substrate
+                        svg = contxt.svg_substrate
                 }
 
-                eval("show_labels_"+target+" = ! show_labels_"+target); 
+                eval("contxt.show_labels_"+target+" = ! contxt.show_labels_"+target); 
 
-                if(eval("show_labels_"+target))
+                if(eval("contxt.show_labels_"+target))
                 {
                     //svg.selectAll('text.node').text(function(d) { return d.label; });
                     svg.selectAll('text.node').attr("visibility", function(d) { return "visible";});
@@ -257,7 +261,7 @@ var TulipPosyVisualization = function(_context)
 
         // This function rescales the graph data in order to fit the svg window
         // data, the graph data (modified during the function)
-        var rescaleGraph = function(data)
+        this.rescaleGraph = function(data)
         {
 
                 console.log("should be rescaling graphe, here is the data: ", data);
@@ -265,8 +269,8 @@ var TulipPosyVisualization = function(_context)
                 // these should be set as globale variables
                 var buttonWidth = 130.0
                 var frame = 10.0
-                var w = width-(buttonWidth+2*frame)
-                var h = height-(2*frame)
+                var w = contxt.width-(buttonWidth+2*frame)
+                var h = contxt.height-(2*frame)
                 if (data.nodes.length<=0) return
                 
                 var minX = data.nodes[0].x
@@ -285,7 +289,7 @@ var TulipPosyVisualization = function(_context)
                 data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame; d.currentX = d.x; d.currentY = d.y;})
         }
 
-       var sizeMapping = function(parameter, graphName)
+       this.sizeMapping = function(parameter, graphName)
         {
 
                 var cGraph = null;
@@ -293,27 +297,27 @@ var TulipPosyVisualization = function(_context)
 
                 if (graphName == 'substrate')
                 {        
-                        cGraph = graph_substrate;
-                        svg = _context.svg_substrate;
+                        cGraph = contxt.graph_substrate;
+                        svg = contxt.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst;
-                        svg = _context.svg_catalyst;
+                        cGraph = contxt.graph_catalyst;
+                        svg = contxt.svg_catalyst;
                 }
         
                 var graph_drawing = graphDrawing(cGraph, svg);
                 graph_drawing.nodeSizeMap(cGraph, 0, parameter);
 
-                addInterfaceSubstrate();
-                addInterfaceCatalyst();
-                entanglementCaught();
+                objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+                objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+                objectContext.TulipPosyVisualizationObject.entanglementCaught();
 
         };
 
 
-        var colorMapping = function(parameter, graphName)
+        this.colorMapping = function(parameter, graphName)
         {
 
                 var cGraph = null;
@@ -321,22 +325,22 @@ var TulipPosyVisualization = function(_context)
 
                 if (graphName == 'substrate')
                 {        
-                        cGraph = graph_substrate;
-                        svg = _context.svg_substrate;
+                        cGraph = contxt.graph_substrate;
+                        svg = contxt.svg_substrate;
                 }
 
                 if (graphName == 'catalyst')
                 {        
-                        cGraph = _context.graph_catalyst;
-                        svg = _context.svg_catalyst;
+                        cGraph = contxt.graph_catalyst;
+                        svg = contxt.svg_catalyst;
                 }
         
                 var graph_drawing = graphDrawing(cGraph, svg);
                 graph_drawing.nodeColorMap(cGraph, 0, parameter);
 
-                addInterfaceSubstrate();
-                addInterfaceCatalyst();
-                entanglementCaught();
+                objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+                objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+                objectContext.TulipPosyVisualizationObject.entanglementCaught();
 
         };
 
