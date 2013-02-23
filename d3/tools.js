@@ -106,6 +106,7 @@ this.loadJSON = function(data)
 return __g__;
 
 };
+
 var Foo = function()
 {
     this.x = 10;

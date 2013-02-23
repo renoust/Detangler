@@ -1,3 +1,5 @@
+(function (){
+
 var TulipPosyInterface = function(contexte, objectcontext)
 {
     var __g__ = this;
@@ -763,3 +765,5 @@ var TulipPosyInterface = function(contexte, objectcontext)
     return __g__;
 
 }
+return {TulipPosyInterface:TulipPosyInterface};
+})()

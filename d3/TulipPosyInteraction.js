@@ -1,3 +1,4 @@
+(function(){
 var TulipPosyInteraction = function(contexte, objectcontext)
 {
     var __g__ = this;
@@ -455,3 +456,5 @@ var TulipPosyInteraction = function(contexte, objectcontext)
     return __g__;
 
 }
+    return {TulipPosyInteraction:TulipPosyInteraction};
+})()
