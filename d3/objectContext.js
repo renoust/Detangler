@@ -1,8 +1,13 @@
+
+(function()
+{
+
 import_class('tools.js', 'TOOL');
 import_class('TulipPosyVisualization.js', 'TP');
 import_class('TulipPosyInteraction.js', 'TP');
 import_class('TulipPosyInterface.js', 'TP');
 import_class('TulipPosyClient.js', 'TP');
+
 
 var ObjectContext = function(contexte)
 {
@@ -22,3 +27,5 @@ var ObjectContext = function(contexte)
 		return __g__;
 		
 }
+    return {ObjectContext:ObjectContext};
+})()

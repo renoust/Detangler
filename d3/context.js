@@ -1,4 +1,5 @@
-context = function() {
+(function(){
+var Context = function() {
 		var __g__ = this;
 	
         // initialization of the communication address and port        
@@ -59,6 +60,7 @@ context = function() {
         this.substrateProperties = {};
         this.substrateWeightProperty = null;
 		
-		return __g__;
-		
+		return __g__;		
 }
+    return {Context:Context}
+})()

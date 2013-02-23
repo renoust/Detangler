@@ -17,12 +17,15 @@
 // with the communication, the other with the interaction, another for the overall
 // interface...
 
+import_class("context.js", "TP");
+import_class("objectContext.js", "TP");
+
 var TulipPosy = function(originalJSON)
 { 
 
 
-        var conteext = new context();
-		var objectContext = new ObjectContext(conteext);
+        var context = new TP.Context();
+		var objectContext = new TP.ObjectContext(context);
 		
 
         // We create the interfaces for each svg
