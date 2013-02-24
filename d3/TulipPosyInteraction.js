@@ -33,6 +33,15 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         contxt.lasso_substrate = new lasso(svg);
                         myL = contxt.lasso_substrate
                 }
+
+                if (target == "combined")
+                {
+                        svg = contxt.svg_combined
+                        graph = contxt.graph_combined
+                        contxt.lasso_combined = new lasso(svg);
+                        myL = contxt.lasso_combined
+                }
+
                 
                 var prevSelList = [];
 
@@ -66,6 +75,8 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         //console.log('control pushed ', e.ctrlKey)
                         //console.log("svg operating the selection", svg)
                         svg.selectAll("g.node").classed("selected", function(d){
+                                        if (target=="combined" && d._type != contxt.combined_foreground)
+                                            return false;
                                         console.log('current obj', d)
                                         var x = 0;
                                         var y = 0;
@@ -120,6 +131,23 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                                         return d.selected
 
                                 })
+                                .select("g.glyph").select(".node").style('fill', function(d){
+                                        if (e.ctrlKey && d.selected == true)
+                                        {
+                                                selList.push(d.baseID)
+                                                return 'red';
+                                        }
+                                        if (d.selected){
+                                                selList.push(d.baseID)
+                                                return 'red';
+                                        }else{
+                                            if(d._type == "catalyst")
+                                                return 'steelblue';
+                                            else
+                                                return "sienna"
+                                        }
+                                });
+                                /*
                                 .select("circle.node").style('fill', function(d){
                                         if (e.ctrlKey && d.selected == true)
                                         {
@@ -131,7 +159,7 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                                                 return 'red';
                                         }else
                                                 return 'steelblue';
-                                });
+                                });*/
 
                         
                         selList.sort()
@@ -160,14 +188,29 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         }
                         else
                         {   
-                            svg.selectAll("g.node").select("circle.node").style('fill', 'steelblue');
-                            svg.selectAll("g.link").select("path.link").style('stroke', 'gray');
-                            if (target == "catalyst")
+
+
+                                contxt.svg_catalyst.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                contxt.svg_catalyst.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                contxt.svg_catalyst.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                contxt.svg_catalyst.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+                                contxt.svg_substrate.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                contxt.svg_substrate.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                contxt.svg_substrate.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                contxt.svg_substrate.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+                                contxt.svg_combined.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                contxt.svg_combined.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                contxt.svg_combined.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                contxt.svg_combined.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+
+                                //if (target == "catalyst")
                                 objectContext.TulipPosyVisualizationObject.resetSize("substrate");
-                            if (target == "substrate")
+                                //if (target == "substrate")
                                 objectContext.TulipPosyVisualizationObject.resetSize("catalyst");
-                            prevSelList = selList.slice(0);
-                            console.log("warning: the selection list is empty");
+                                objectContext.TulipPosyVisualizationObject.resetSize("combined");
+                                prevSelList = selList.slice(0);
+                                console.log("warning: the selection list is empty");
+
                             
                         }
                 }        
@@ -304,6 +347,12 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         myL = contxt.lasso_substrate
                 }
 
+                if (target == "combined")
+                {
+                        mySvg = contxt.svg_combined
+                        myL = contxt.lasso_combined
+                }
+
                 mySvg.on("mouseup", function(d){myL.canMouseUp(d3.mouse(this))});
                 mySvg.on("mousedown", function(d){myL.canMouseDown(d3.mouse(this))});
                 mySvg.on("mousemove", function(d){myL.canMouseMove(d3.mouse(this))});        
@@ -327,6 +376,11 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 if (target == "substrate")
                 {
                         svg = contxt.svg_substrate
+                }
+
+                if (target == "combined")
+                {
+                        svg = contxt.svg_combined
                 }
 
                 svg.on("mouseup", null);
@@ -353,6 +407,11 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 if (target == "substrate")
                 {
                         svg = contxt.svg_substrate
+                }
+                
+                if (target == "combined")
+                {
+                        svg = contxt.svg_combined
                 }
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
@@ -409,6 +468,12 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 {
                         svg = contxt.svg_substrate
                 }
+                
+                if (target == "combined")
+                {
+                        svg = contxt.svg_combined
+                }
+
         svg.on("mousedown.zoom", null)
             .on("mousewheel.zoom", null)
             .on("mousemove.zoom", null)

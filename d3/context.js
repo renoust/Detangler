@@ -20,12 +20,18 @@ var Context = function() {
             .attr("width", this.width)
             .attr("height", this.height)
             .attr("id", "svg_catalyst");
-        
+        this.svg_combined = d3.select("body")/*svg_i*/.append("svg")
+            .attr("width", this.width)
+            .attr("height", this.height)
+            .attr("id", "svg_combined");
+
         // initialization of the graphs, and lasso interactors
         this.graph_substrate = new graph();
         this.graph_catalyst = new graph();
+        this.graph_combined = new graph();
         this.lasso_catalyst = null;
         this.lasso_substrate = null;
+        this.lasso_combined = null;
 
         // initialization of the selection and move modes
         this.select_mode_substrate = false;
@@ -39,6 +45,12 @@ var Context = function() {
         this.show_links_catalyst = true;
         this.node_information_catalyst = false;
         this.mouse_over_button = false;
+        this.select_mode_combined = false;
+        this.move_mode_combined = true;
+        this.show_labels_combined = true;
+        this.show_links_combined = true;
+        this.node_information_combined = false;
+        this.combined_foreground = "substrate";
         
         // initialization of the global entanglement parameters
         this.catalyst_sync_operator = "AND";

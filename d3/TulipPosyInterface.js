@@ -54,8 +54,9 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 objectContext.TulipPosyInterfaceObject.addButton(target, 12, "ent. mapping", "button10", function(){objectContext.TulipPosyVisualizationObject.sizeMapping("entanglementIndice", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 13, "ent. color", "button11", function(){objectContext.TulipPosyVisualizationObject.colorMapping("entanglementIndice", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 14, "computeMatrix", "button12", function(){objectContext.TulipPosyVisualizationObject.buildEdgeMatrices()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 15, "arrange labels", "arrLabels", function(){objectContext.TulipPosyVisualizationObject.arrangeLabels(target)});
 
-                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 15);
+                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 16);
         
                 objectContext.TulipPosyInterfaceObject.addInfoButton(target);
 
@@ -81,12 +82,24 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 objectContext.TulipPosyInterfaceObject.addButton(target, 10, "hide links", "showHideLinks", function(){objectContext.TulipPosyVisualizationObject.showhideLinks(target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 11, "node information", "infoBox", function(){objectContext.TulipPosyInterfaceObject.attachInfoBox(target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 12, "sync layouts", "button10", function(){objectContext.TulipPosyClientObject.syncLayouts()});
-
+                objectContext.TulipPosyInterfaceObject.addButton(target, 13, "arrange labels", "arrLabels", function(){objectContext.TulipPosyVisualizationObject.arrangeLabels(target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 14, "labels foward", "buttonLblFwd", function(){objectContext.TulipPosyVisualizationObject.bringLabelsForward(target);});
                 
-                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 13);
+                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 15);
                 objectContext.TulipPosyInterfaceObject.addEntanglementFeedback(target);
                 objectContext.TulipPosyInterfaceObject.addInfoButton(target);
                 objectContext.TulipPosyInterfaceObject.addSettingsButton();
+        }
+
+        this.addInterfaceCombined = function()
+        {
+                var target = "combined";
+                objectContext.TulipPosyInterfaceObject.eraseAllInterface(target);
+
+                objectContext.TulipPosyInterfaceObject.addGraphInteractorButtons(target, 0);
+                objectContext.TulipPosyInterfaceObject.addButton(target, 2, "fg "+contxt.combined_foreground, "toggleCombinedForeground", function(){objectContext.TulipPosyInterfaceObject.toggleCombinedForeground()});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 3, "arrange labels", "button11", function(){objectContext.TulipPosyVisualizationObject.arrangeLabels(target)});
+
         }
 
         this.eraseAllInterface = function(target)
@@ -104,6 +117,12 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 {        
                         cGraph = contxt.graph_catalyst
                         svg = contxt.svg_catalyst
+                }
+                
+                if (target == 'combined')
+                {        
+                        cGraph = contxt.graph_combined
+                        svg = contxt.svg_combined
                 }
 
                 var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
@@ -218,6 +237,13 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 {        
                         cGraph = contxt.graph_catalyst
                         svg = contxt.svg_catalyst
+                }
+
+
+                if (target == 'combined')
+                {
+                        cGraph = contxt.graph_combined
+                        svg = contxt.svg_combined
                 }
 
                 var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:contxt.defaultFillColor, colorOut:contxt.highlightFillColor}]).enter().append('g')
@@ -588,6 +614,13 @@ var TulipPosyInterface = function(contexte, objectcontext)
                         svg = contxt.svg_catalyst
                 }
 
+                if (target == 'combined')
+                {        
+                        cGraph = contxt.graph_combined
+                        svg = contxt.svg_combined
+                }
+
+
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
                         .attr("class", className)
                         .classed("interfaceButton", 1)
@@ -759,6 +792,42 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 console.log("node info appended", ib)
         }
 
+
+        this.setCombinedForeground = function(target)
+        {
+            contxt.combined_foreground = target;
+            var toggleBtnText = ""
+            if(target == "substrate")
+            {
+                toggleBtnText = "catalyst";
+            }else if(target == "catalyst")
+            {
+                toggleBtnText = "substrate";
+            }
+
+
+            console.log ("toggling: ",contxt.combined_foreground);
+
+            contxt.svg_combined.selectAll("g.toggleCombinedForeground")
+                .select("text")
+                .text("g "+toggleBtnText)
+
+            contxt.svg_combined.selectAll("g.node").data(contxt.graph_combined.nodes())
+                .style("opacity", function(d){if(d._type == contxt.combined_foreground){return 1;}else{return 0.5;}})
+
+        }
+
+        this.toggleCombinedForeground = function()
+        {
+            if(contxt.combined_foreground == "substrate")
+            {
+                __g__.setCombinedForeground("catalyst");
+            }else if(contxt.combined_foreground == "catalyst")
+            {
+                __g__.setCombinedForeground("substrate");
+            }
+        
+        }
 
 
 

@@ -215,11 +215,72 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         cGraph = contxt.graph_catalyst
                         svg = contxt.svg_catalyst
                 }
+
+                if (target == 'combined')
+                {        
+                        cGraph = contxt.graph_combined
+                        svg = contxt.svg_combined
+                }
                 
                 cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
                 graph_drawing = graphDrawing(cGraph, svg)
                 graph_drawing.resize(cGraph, 0)
         }
+
+
+        this.arrangeLabels = function(target)
+        {
+                var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = contxt.graph_substrate;
+                        svg = contxt.svg_substrate;
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = contxt.graph_catalyst;
+                        svg = contxt.svg_catalyst;
+                }
+
+                if (target == 'combined')
+                {        
+                        cGraph = contxt.graph_combined;
+                        svg = contxt.svg_combined;
+                }
+                
+                //cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
+                graph_drawing = graphDrawing(cGraph, svg);
+                graph_drawing.arrangeLabels();
+        }
+
+        this.bringLabelsForward = function(target)
+        {
+                if (!target)
+                        return
+
+                var svg = null
+                var cGraph = null
+
+                if (target == "catalyst")
+                {
+                        svg = contxt.svg_catalyst
+                        cGraph = contxt.graph_catalyst
+                }
+        
+                if (target == "substrate")
+                {
+                        svg = contxt.svg_substrate
+                        cGraph = contxt.graph_substrate
+                }
+
+                var gD = graphDrawing(cGraph, svg);
+                gD.bringLabelsForward();
+
+        }
+
 
        // 
         this.showhideLabels = function(target)

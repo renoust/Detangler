@@ -48,12 +48,13 @@ var graphDrawing = function(_graph, _svg)
                     //if (e.ctrlKey || e.metaKey) return;
                     this.parentNode.appendChild(this);
                     var dragTarget = d3.select(this);
-                    var nodeTarget = dragTarget.select("circle.node");
-                    var labelTarget = dragTarget.select("text.node");
+                    var circleTarget = dragTarget.select("circle.node");
+                    var rectTarget = dragTarget.select("rect.node");
+                    //var labelTarget = dragTarget.select("text.node");
                     var currentNode = dragTarget.data()[0]
                     var posX = d3.event.dx
                     var posY = d3.event.dy
-
+                    var labelTarget = dragTarget.select("text.node"+currentNode.baseID);
                     
                     currentNode.x += posX
                     currentNode.y += posY
@@ -65,9 +66,20 @@ var graphDrawing = function(_graph, _svg)
                 
                     var currentBaseID = currentNode.baseID
                     
-                    nodeTarget
-                        .attr("cx", function(){return d3.event.dx + parseInt(nodeTarget.attr("cx"))})
-                        .attr("cy", function(){return d3.event.dy + parseInt(nodeTarget.attr("cy"))});
+                    if(circleTarget)
+                    {
+                        circleTarget
+                            .attr("cx", function(){return d3.event.dx + parseInt(circleTarget.attr("cx"))})
+                            .attr("cy", function(){return d3.event.dy + parseInt(circleTarget.attr("cy"))});
+                    }
+
+                    if (rectTarget)
+                    {
+                        rectTarget
+                            .attr("x", function(){return d3.event.dx + parseInt(rectTarget.attr("x"))})
+                            .attr("y", function(){return d3.event.dy + parseInt(rectTarget.attr("y"))});
+                    }
+    
                     labelTarget
                         .attr("dx", function(){return d3.event.dx + parseInt(labelTarget.attr("dx"))})
                         .attr("dy", function(){return d3.event.dy + parseInt(labelTarget.attr("dy"))});
@@ -75,11 +87,13 @@ var graphDrawing = function(_graph, _svg)
                     //dragTarget.attr("transform", function(d){d.x += posX; d.y+= posY; d.currentX += posX; d.currentY += posY;});
 
                     //g.drawLinks();
+                    console.log("current svg:", g.svg, g.cGraph.links());
                     var links = g.svg.selectAll("g.link")
                             .data(g.cGraph.links(),function(d){return d.baseID})
                             .select("path.link")
-                            .attr("d", function(d) { return "M"+d.source.x+" "+d.source.y +" L"+d.target.x+" "+d.target.y; })
-                            .style("stroke", "gray")
+                            .attr("d", function(d) {console.log("updating the graph");return "M"+d.source.x+" "+d.source.y +" L"+d.target.x+" "+d.target.y; })
+                            //.attr("d", function(d) {return "M"+0+" "+0 +" L"+0+" "+0; })
+                            //.style("stroke", "gray")
                             .style("stroke-width", function(d) { return 1;})
                                         
             
@@ -112,11 +126,14 @@ var graphDrawing = function(_graph, _svg)
                
                 var node = g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
-                        .attr("class", "node")
+                        .attr("class", function(d){return d._type})
+                        .classed("node", true)
                         .attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
                         .call(d3.behavior.drag().on("drag", move))
-                        .on("click", showHideLabel);
-
+                        .on("click", showHideLabel)
+                        .append("g")
+                                .attr("class", function(d){return d._type})
+                                .classed("glyph", true)
                         /*.on("click", function(d){
                                 var o = d3.select(this); 
                                 if (o.classed("selected"))
@@ -141,19 +158,35 @@ var graphDrawing = function(_graph, _svg)
                                 }
                        });*/
 
-                
-                node.append("circle").attr("class", "node").classed("circle", 1)
-                        .attr("cx", function(d){d.currentX = d.x; return d.currentX})
-                        .attr("cy", function(d){d.currentY = d.y; return d.currentY})
-                        .attr("r", 5)
-                        .style("fill", "steelblue")
-                        
+                            
+
+                var glyphR = g.svg.selectAll("g.glyph.substrate")//.data(g.cGraph.nodes().filter(function(d){return d._type == "substrate"})).enter()
+                            .append("rect")
+                            .attr("class", function(d){return d._type})
+                            .classed("node", true).classed("rect", true)
+                            .style("fill", "sienna")
+                            .attr("x", function(d){d.currentX = d.x; return d.currentX})
+                            .attr("y", function(d){d.currentY = d.y; return d.currentY})
+                            .attr("width", 2*5)
+                            .attr("height", 2*5)
+                            
+                 var glyphC = g.svg.selectAll("g.glyph.catalyst")//.data(g.cGraph.nodes().filter(function(d){return d._type == "catalyst"})).enter()
+                            .append("circle")
+                            .attr("class", function(d){return d._type})
+                            .classed("node", true).classed("circle", true)
+                            .style("fill", "steelblue")
+                            .attr("cx", function(d){d.currentX = d.x; return d.currentX})
+                            .attr("cy", function(d){d.currentY = d.y; return d.currentY})
+                            .attr("r", 5)
                         
 
                 //textNode = node.append("g").attr("class", "node")
                 //        .classed("textGroup", 1)
                         
-                node.append("text").attr("class", "node").classed("text", 1)
+                var node = g.svg.selectAll("g.node")
+                node.append("text")
+                        .attr("class", function(d){return "node"+d.baseID+" "+d._type})
+                        .classed("node", true).classed("text", true)
                         .attr("dx", function(d){d.currentX = d.x; return d.currentX})
                         .attr("dy", function(d){d.currentY = d.y; return d.currentY})
                         .style("stroke", "black")
@@ -166,6 +199,29 @@ var graphDrawing = function(_graph, _svg)
         g.delLinks = function()
         {
             var links = g.svg.selectAll("g.link").data([]).exit().remove();
+        }
+
+        g.delLabels = function()
+        {
+            var selection = g.svg.selectAll("text.node").data([]).exit().remove();
+        }
+        
+        g.addLabels = function()
+        {
+            var selection = g.svg.selectAll("text.node")
+            //var selection = g.svg.selectAll("g.node")            
+            selection.data(g.cGraph.nodes()).enter()
+            //selection
+                    .append("text")
+                    .attr("class", function(d){return "node"+d.baseID+" "+d._type})
+                    .classed("node", true).classed("text", true)
+                    .attr("dx", function(d){d.currentX = d.x; return d.currentX})
+                    .attr("dy", function(d){d.currentY = d.y; return d.currentY})
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .style("font-family", "Arial")
+                    .style("font-size", 12)
+                    .text(function(d) { return d.label; });
         }
 
 
@@ -188,7 +244,9 @@ var graphDrawing = function(_graph, _svg)
  
                 var link = g.svg.selectAll("g.link")
                         .data(g.cGraph.links(),function(d){return d.baseID}).enter().append("g")
-                        .attr("class", "link")
+                        .attr("class", function(d){return d._type})
+                        .classed("link", true)
+                        
                         //.attr("transform", function(d) { return "translate(" + d.source.x + "," + d.source.y + ")"; })
                         /*.on("click", function(){
                                 var o = d3.select(this); 
@@ -212,9 +270,11 @@ var graphDrawing = function(_graph, _svg)
                                 }
                         });*/
                         
-                console.log("Before the problem occures: ", g.cGraph.links());
+                //console.log("Before the problem occures: ", g.cGraph.links());
 
-                link.append("path").attr("class", "link").classed("path", 1)
+                link.append("path")
+                        .attr("class", function(d){return d._type})
+                        .classed("link", true).classed("path", 1)
                         //.attr("d", function(d) { return "M"+0+" "+0 +" L"+(d.target.x - d.source.x)+" "+(d.target.y - d.source.y); })
                         .attr("d", function(d) { return "M"+d.source.x+" "+d.source.y +" L"+d.target.x+" "+d.target.y; })
                         .style("stroke", "gray")
@@ -239,6 +299,11 @@ var graphDrawing = function(_graph, _svg)
                         node.select("circle")
                                 .attr("cx", function(d){d.currentX = d.x; d.currentY = d.y; return d.x})
                                 .attr("cy", function(d){return d.y})
+                        node.select("rect")
+                                .attr("x", function(d){d.currentX = d.x; d.currentY = d.y; return d.x})
+                                .attr("y", function(d){return d.y});
+
+                var node = g.svg.selectAll("g.node")                                
                         node.select("text")//.transition().delay(dTime)
                                 .attr("dx", function(d){return d.x})
                                 .attr("dy", function(d){return d.y})
@@ -292,11 +357,11 @@ var graphDrawing = function(_graph, _svg)
                 g.cGraph = _graph
 
                 //we would like it better as a parameter
-                scaleMin = 3.0
-                scaleMax = 12.0
+                var scaleMin = 3.0
+                var scaleMax = 12.0
 
-                valMin = null
-                valMax = null
+                var valMin = null
+                var valMax = null
 
                 g.cGraph.nodes().forEach(
                     function(n)
@@ -310,19 +375,28 @@ var graphDrawing = function(_graph, _svg)
                     });
             
                 //linear
-                factor = scaleMin
-                if (valMax == valMin || valMax-valMin < 0.00001)
+                var factor = scaleMin
+                var equalScales = false
+                if (valMax == valMin || valMax-valMin < 0.0001)
+                {
+                    equalScales = true
+                    scaleMin = 7
                     factor = factor/valMin
+                }
                 else
+                {
                     factor =  (scaleMax-scaleMin) / (valMax-valMin)
-                    
+                }    
 
                 var node = g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID})
                         .transition().delay(dTime)
                 node.select("circle.node")
-                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(r == NaN){r = scaleMin;} return r;})
+                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return r;})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+                node.select("rect.node")
+                        .attr("width", function(d){ r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return 2*r;})
+                        .attr("height", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return 2*r;})
 
                 var link = g.svg.selectAll("g.link")
                         .data(g.cGraph.links(),function(d){return d.baseID})
@@ -367,8 +441,8 @@ var graphDrawing = function(_graph, _svg)
                         .data(g.cGraph.nodes(),function(d){return d.baseID})
                         .transition().delay(dTime)
 
-                node.select("circle.node")
-                        .style("fill", function(d){c = color(eval("d."+parameter)); console.log("the color: "+c); return d3.rgb(c);})
+                node.select("g.glyph")
+                        .style("fill", function(d){c = color(eval("d."+parameter)); return d3.rgb(c);})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
                 var link = g.svg.selectAll("g.link")
@@ -392,29 +466,43 @@ var graphDrawing = function(_graph, _svg)
         // we might want to apply persistant colors and sizes stored in the data
         g.show = function(_graph, dTime)
         {
+
                 //g.cGraph = _graph
 
                 // redraw the previous nodes to the default values
                 var node = g.svg.selectAll("g.node")
-                        .select("circle.node")
+                        .style("opacity", .5)
+                        .select("g.glyph").select("circle.node")
                             .style('fill', 'steelblue')
                             .attr('r', 5)
+                            .style("stroke-width", 0)
+                            .style("stroke", "black")
+
+                var node = g.svg.selectAll("g.node")
+                        .select("g.glyph").select("rect.node")
+                            .style('fill', 'sienna')
+                            .attr('width', 2*5)
+                            .attr('height', 2*5)
+                            .style("stroke-width", 0)
+                            .style("stroke", "black")
+
                 var node = g.svg.selectAll("g.node")
                         .select("text.node")
                             .attr("visibility", "hidden")
 
                 var link = g.svg.selectAll("g.link")
+                        .style("opacity", .25)
                         .select("path.link")
                         .style("stroke", "gray")
                         .style("stroke-width", function(d) { return 1;})
 
                //we would like it better as a parameter
-                scaleMin = 3.0
-                scaleMax = 12.0
-                parameter = "entanglementIndice"
+               var scaleMin = 3.0
+               var scaleMax = 12.0
+               var parameter = "entanglementIndice"
 
-                valMin = null
-                valMax = null
+               var valMin = null
+               var valMax = null
 
                 _graph.nodes().forEach(
                     function(n)
@@ -428,12 +516,18 @@ var graphDrawing = function(_graph, _svg)
                     });
             
                 //linear
-                factor = scaleMin
-                if (valMax == valMin || valMax-valMin < 0.00001)
-                    factor = factor/valMin
+                
+                var factor = scaleMin
+                var equalScales = false
+                if (valMax == valMin || valMax-valMin < 0.0001)
+                {
+                    equalScales = true
+                    scaleMin = 7
+                }
                 else
+                {
                     factor =  (scaleMax-scaleMin) / (valMax-valMin)
-
+                }    
 
 
                 // assign the new data
@@ -441,43 +535,57 @@ var graphDrawing = function(_graph, _svg)
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.nodes(),function(d){return d.baseID})
                         .transition().delay(500)
+                        .style("opacity", 1)
 
                 var link = g.svg.selectAll("g.link")
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.links(),function(d){return d.baseID})
                         .transition().delay(500)
+                        .style("opacity", 1)
 
            
 
                 // update the nodes
+                //node.select("circle.node")
+                //        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(!r){r = scaleMin;} return r;})
+                        
                 node.select("circle.node")
-                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(r == NaN){r = scaleMin;} return r;})
+                        .attr("r", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return r;})
+                        .style("stroke-width", function(d) { return 2;})
+                        .style("stroke", "brown")
+                        //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
+                node.select("rect.node")
+                        .attr("width", function(d){ r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return 2*r;})
+                        .attr("height", function(d){r = eval("d."+parameter+"*factor+scaleMin"); if(!r || equalScales){r = scaleMin;} return 2*r;})
+                        .style("stroke-width", function(d) { return 2;})
+                        .style("stroke", "brown")
+                        
 
                 node.select("text.node")
                         .attr("visibility", "visible")
 
                 link.select("path.link")
                         .style("stroke-width", function(d) { return 2;})
+                        .style("stroke", "brown")
 
                 //var node2 = g.svg.selectAll("g.node")
                 //        .data(_graph.nodes(),function(d){return d.baseID})
                 //        .transition().delay(1000)
 
-                node.select("circle.node")
-                        .style("fill", "pink")
+                //node.select("g.glyph")
+                //        .style("fill", "pink")
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 
-                link.select("path.link")
-                        .style("stroke", "pink")
+                //link.select("path.link")
+                //        .style("stroke", "pink")
 
                 // reassign the original data
+
                 g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID})                        
 
                 g.svg.selectAll("g.link")
                         .data(g.cGraph.links(),function(d){return d.baseID})                        
-
-
         }
 
 
@@ -508,6 +616,112 @@ var graphDrawing = function(_graph, _svg)
 
                 var link = g.svg.selectAll("g.link").data([])
                 link.exit().remove()
+        }
+
+
+        g.arrangeLabels = function()
+        {
+
+
+            var intersect = function(rectDiag, point)
+            {
+                if (rectDiag[0][0] <= point[0] && rectDiag[1][0] >= point[0] 
+                    && rectDiag[0][1] <= point[1] && rectDiag[1][1] >= point[1])
+                    return true;
+               return false;
+            }
+
+
+            var labels = g.svg.selectAll("text.node")
+                .attr("visibility", "visible");
+            //console.log("labels:", labels[0]);
+            var labelsArray = []
+            var iterArray = []
+            //var bboxArray = []
+            //console.log(svg); 
+            //console.log(svg.contentDocument);
+            labels[0].forEach(function(d){labelsArray.push(d3.select(d)); iterArray.push(d.getBBox());});
+            
+            var margin = 1;
+            
+            var iterate = function()
+            {
+                var anyChange = false, noChange = false;
+                //We should reduce the complexity of this alg!!
+                for (var iLabel = 0; iLabel < iterArray.length-1; iLabel++)
+                {
+                    //var d = iterArray[iLabel];
+                    //var bbox = d.getBBox();
+                    var bbox = iterArray[iLabel];
+
+                     if(labelsArray[iLabel].attr("visibility") == "visible")
+                     {
+
+
+                        
+                        var polygon = [[bbox.x-margin, bbox.y-margin],
+                                       [bbox.x + bbox.width+margin, bbox.y-margin],
+                                       [bbox.x-margin, bbox.y + bbox.height+margin],
+                                       [bbox.x + bbox.width+margin, bbox.y + bbox.height+margin],
+                                     ];
+
+                        noChange = false;
+                        for (var iLabel2 = iLabel+1; iLabel2 < iterArray.length; iLabel2++)
+                        {
+                            //var d2 = iterArray[iLabel2];
+                            if(labelsArray[iLabel2].attr("visibility") == "visible")// && d != d2)
+                            {
+                                //var bbox2 = d2.getBBox();
+                                var bbox2 = iterArray[iLabel2];
+                                var polygon2 = [[bbox2.x-margin, bbox2.y-margin],
+                                               [bbox2.x + bbox2.width+margin, bbox2.y-margin],
+                                               [bbox2.x-margin, bbox2.y + bbox2.height+margin],
+                                               [bbox2.x + bbox2.width+margin, bbox2.y + bbox2.height+margin],
+                                             ];
+                                for(var iPoint = 0; iPoint<polygon2.length && !noChange; iPoint++)
+                                {
+                                    if(intersect([polygon[0], polygon[3]], polygon2[iPoint]))
+                                    {
+                                        labelsArray[iLabel2].attr("visibility", "hidden");
+                                        noChange = true;
+                                        anyChange = true;
+                                        break;
+                                    }
+                                }
+                                for(var iPoint = 0; iPoint<polygon2.length && !noChange; iPoint++)
+                                {
+                                    if(intersect([polygon2[0], polygon2[3]], polygon[iPoint]))
+                                    {
+                                        labelsArray[iLabel2].attr("visibility", "hidden");
+                                        noChange = true;
+                                        anyChange = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return anyChange;
+            }
+            // I think normally just one pass of the algorithm should do it!
+            var count = 0;
+            while(iterate()){count++};
+            console.log("iterated: ",count);
+    
+        }
+
+        g.removeNodeOverlap = function()
+        {
+            //fast overlap removal in javascript...
+        }
+
+        g.bringLabelsForward = function()
+        {
+            g.delLabels();
+            g.addLabels();
+            //g.svg.selectAll("text.node")
+            // .text(function(d){return d.label.slice(0,10)+"...";});
         }
 
         return g

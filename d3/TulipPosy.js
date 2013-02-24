@@ -31,6 +31,7 @@ var TulipPosy = function(originalJSON)
         // We create the interfaces for each svg
         objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
         objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+        objectContext.TulipPosyInterfaceObject.addInterfaceCombined();
         
         //console.log("beginning of the generation", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
@@ -60,5 +61,7 @@ var TulipPosy = function(originalJSON)
         objectContext.TulipPosyInteractionObject.createLasso("catalyst");
         objectContext.TulipPosyInteractionObject.addZoom("substrate");
         objectContext.TulipPosyInteractionObject.addZoom("catalyst");
+        objectContext.TulipPosyInteractionObject.createLasso("combined");
+        objectContext.TulipPosyInteractionObject.addZoom("combined");
 };
 

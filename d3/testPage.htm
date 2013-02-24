@@ -115,6 +115,8 @@ document.getElementById('files').addEventListener('change', function(e) {
 	    //console.log(xhr.responseText);
 	    remove("svg_substrate");
 	    remove("svg_catalyst");
+        remove("svg_combined");
+
 	    TulipPosy({file:xhr.responseText})
         }
     };
@@ -134,6 +136,8 @@ document.getElementById('send').addEventListener('click', function(e) {
 	//console.log('logging file: ', query)
 	remove("svg_substrate");
 	remove("svg_catalyst");
+    remove("svg_combined");
+
 	TulipPosy({'query':query})
 
 }, false);

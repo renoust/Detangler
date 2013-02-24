@@ -175,7 +175,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                 });
         }
 
-// This function calls the synchronization from a given graph through tulip, returns and applies
+        // This function calls the synchronization from a given graph through tulip, returns and applies
         // the result on the other graph. The computed entanglement indices are also updated.
         // selection, the JSON string of the selected subgraph
         // graphName, the graph origin of the selection
@@ -185,6 +185,7 @@ var TulipPosyClient = function(contexte, objectcontext)
 
                 var cGraph = null
                 var svg = null
+                var syncTarget = graphName
 
                 if (graphName == 'substrate')
                 {        
@@ -199,16 +200,31 @@ var TulipPosyClient = function(contexte, objectcontext)
                         console.log(selection)
                         svg = contxt.svg_substrate
                 }
-
+                
+                if (graphName == 'combined')
+                {        
+                        cGraph = contxt.graph_combined;
+                        console.log("synGraph combined:", selection);
+                        svg = contxt.svg_combined;
+                        syncTarget = contxt.combined_foreground;
+                }
         
 
-                $.post(contxt.tulip_address, {sid:contxt.sessionSid, 
+                $.ajax({url:tulip_address,    data:{sid:sessionSid, 
+                                                   type:'analyse', 
+                                                   graph:selection, 
+                                                   target:syncTarget, 
+                                                   operator:catalyst_sync_operator, 
+                                                   weight:substrateWeightProperty},
+                           type:'POST', async:false, success:function(data){
+               
+                /* $.post(contxt.tulip_address, {sid:contxt.sessionSid, 
                                        type:'analyse', 
                                        graph:selection, 
                                        target:graphName, 
                                        operator:contxt.catalyst_sync_operator, 
                                        weight:contxt.substrateWeightProperty}, 
-                        function(data){
+                        function(data){*/
                         
                         data = JSON.parse(data)
                         //var oldData = cGraph.nodes();
@@ -241,17 +257,62 @@ var TulipPosyClient = function(contexte, objectcontext)
                         //g.clear()
                         //g.draw()
                         graph_drawing.show(tempGraph)
+
+
+                        if (graphName == 'combined')
+                        {
+                            var svg_target;
+                            var graph_target;
+                            if(combined_foreground == 'substrate')
+                            {
+                                svg_target = contxt.svg_catalyst
+                                graph_target = contxt.graph_catalyst
+                            }
+                            if(combined_foreground == 'catalyst')
+                            {
+                                svg_target = contxt.svg_substrate
+                                graph_target = contxt.graph_substrate
+                            }
+                            var graph_drawing = graphDrawing(graph_target, svg_target);                        
+                            graph_drawing.show(tempGraph);
+                        }else{
+                            var tempCombined = new graph();
+                            var nodeSelection = JSON.parse(selection).nodes;
+                            var nodeSelList = [];
+                            nodeSelection.forEach(function(d){nodeSelList.push(d.baseID);});
+                            var nodeTargetList = [];
+                            data.nodes.forEach(function(d){nodeTargetList.push(d.baseID);});
+                            var dataType = (graphName == "substrate") ? "catalyst" : "substrate";
+                            tempCombined.nodes(data.nodes, dataType);
+                            tempCombined.addNodes(nodeSelection, graphName);
+                            var tempLinks = [];
+                            contxt.graph_combined.links().forEach(function(d){
+                                if (!d.source.baseID || !d.target.baseID) console.log(d);
+                                if(nodeSelList.indexOf(d.source.baseID) != -1 &&  nodeTargetList.indexOf(d.target.baseID) != -1
+                                    || nodeSelList.indexOf(d.target.baseID) != -1 &&  nodeTargetList.indexOf(d.source.baseID) != -1)
+                                    {console.log("selected:",d, d.source, d.target); tempLinks.push(d);                                    }
+                            })
+                            tempCombined.links(tempLinks);
+                            
+                            tempCombined.specialEdgeBinding("substrate", "catalyst");
+                            //console.log(nodeSelList, nodeTargetList);
+                            //console.log(tempLinks.length,"/",graph_combined.links().length, " LINKS TO BE SYNCHRONIZED", tempLinks);
+                            var graph_drawing = graphDrawing(contxt.graph_combined, contxt.svg_combined);
+                            graph_drawing.show(tempCombined);                         
+                        }
+
+
                         if ('data' in data)
                         {
                                 contxt.entanglement_homogeneity = data['data']['entanglement homogeneity'];
                                 contxt.entanglement_intensity = data['data']['entanglement intensity'];
                                 objectContext.TulipPosyVisualizationObject.entanglementCaught();
                         }
-                });
+                 }});
 
         }
 
-
+        /*
         this.syncLayouts = function()
         {
 
@@ -275,6 +336,113 @@ var TulipPosyClient = function(contexte, objectcontext)
                         graph_drawing.move(cGraph, 0);
                 });
         };
+        */
+
+        this.syncLayouts = function()
+        {
+
+                var params = {type:"synchronize layouts", name:"synchronize layouts"};
+                //console.log('going to send params as: ', params)
+                
+                var cGraph = null;
+                var svg = null;
+
+                cGraph = contxt.graph_substrate;
+                svg = contxt.svg_substrate;
+
+                $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                        // we need to rescale the graph so it will fit the current svg frame and wont overlap with the buttons
+                        data = JSON.parse(data)
+                        console.log("syncLayoutData: ",data.data);
+                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
+                        cGraph.nodes(data.nodes, "substrate");
+                        cGraph.links(data.links, "substrate");
+                        cGraph.edgeBinding();
+                        var graph_drawing = graphDrawing(cGraph, svg);
+                        graph_drawing.move(cGraph, 0);
+                        
+                        var newGraph = JSON.parse(data.data.graph);
+                        var newLinks = newGraph.links;    
+
+                        contxt.graph_combined.nodes(graph_substrate.nodes(), "substrate");
+                        contxt.graph_combined.addNodes(graph_catalyst.nodes());
+                        contxt.graph_combined.links(newLinks);
+                        contxt.graph_combined.specialEdgeBinding("substrate","catalyst");
+
+                        var p1_s = data.data['substrate'][0];
+                        var p2_s = data.data['substrate'][1];
+                        var p1prime_s;
+                        var p2prime_s;
+                       
+                        contxt.graph_substrate.nodes().forEach(function(d){
+                            if(d.baseID == p1_s.baseID)
+                            {
+                                p1prime_s = d;
+                            }
+                            if(d.baseID == p2_s.baseID)
+                            {
+                                p2prime_s = d;
+                            }
+                        });
+                        var delta = 0.0000000000000001;
+                        var scaleX_s = (p2prime_s.x - p1prime_s.x) / (p2_s.x - p1_s.x +delta)
+                        var scaleY_s = (p2prime_s.y - p1prime_s.y) / (p2_s.y - p1_s.y +delta)
+
+                        var deltaX_s = p2prime_s.x - p2_s.x * scaleX_s
+                        var deltaY_s = p2prime_s.y - p2_s.y * scaleY_s
+                        console.log("delta substrate: ", scaleX_s, scaleY_s, deltaX_s, deltaY_s)
+
+                        var p1_c = data.data['catalyst'][0];
+                        var p2_c = data.data['catalyst'][1];
+                        var p1prime_c;
+                        var p2prime_c;
+                       
+
+                        contxt.graph_catalyst.nodes().forEach(function(d){
+                            if(d.baseID == p1_c.baseID)
+                            {
+                                p1prime_c = d;
+                            }
+                            if(d.baseID == p2_c.baseID)
+                            {
+                                p2prime_c = d;
+                            }
+                        });
+                        delta = 0.0000000000000001
+                        
+                        //console.log(p1prime_s, p2prime_s)
+                        var scaleX_c = (p2prime_c.x - p1prime_c.x) / (p2_c.x - p1_c.x +delta)
+                        var scaleY_c = (p2prime_c.y - p1prime_c.y) / (p2_c.y - p1_c.y +delta)
+                        var deltaX_c = p2prime_c.x - p2_c.x * scaleX_c
+                        var deltaY_c = p2prime_c.y - p2_c.y * scaleY_c
+
+                        console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
+                        console.log("delta catalyst: ", scaleX_c, scaleY_c, deltaX_c, deltaY_c)
+
+                        //console.log(scale_c, deltaX_c, deltaY_c)
+
+                        //scale_f = scale_s/scale_c
+
+                    
+                        contxt.graph_combined.nodes().forEach(function(nprime){
+                            if (nprime._type == "substrate")
+                            {
+                                var newX = ((nprime.x - deltaX_s)/scaleX_s)*scaleX_c+deltaX_c;
+                                nprime.x = newX; 
+                                var newY = ((nprime.y - deltaY_s)/scaleY_s)*scaleY_c+deltaY_c;
+                                nprime.y = newY;
+                            };
+                        });
+                        
+                        var graph_drawing = graphDrawing(contxt.graph_combined, contxt.svg_combined);
+                        graph_drawing.clear();
+                        graph_drawing.draw();
+
+                });
+        };
+
+
+
 
        
         // This function calls a layout algorithm of a graph through tulip, and moves the given graph accordingly
@@ -367,6 +535,11 @@ var TulipPosyClient = function(contexte, objectcontext)
                         svg = contxt.svg_catalyst;
                 }
 
+                if (graphName == 'combined')
+                {        
+                        cGraph = contxt.graph_combined;
+                        svg = contxt.svg_combined;
+                }
 
                 //console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
                 var u = svg.selectAll("g.node.selected").data();
