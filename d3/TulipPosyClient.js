@@ -263,12 +263,12 @@ var TulipPosyClient = function(contexte, objectcontext)
                         {
                             var svg_target;
                             var graph_target;
-                            if(combined_foreground == 'substrate')
+                            if(contxt.combined_foreground == 'substrate')
                             {
                                 svg_target = contxt.svg_catalyst
                                 graph_target = contxt.graph_catalyst
                             }
-                            if(combined_foreground == 'catalyst')
+                            if(contxt.combined_foreground == 'catalyst')
                             {
                                 svg_target = contxt.svg_substrate
                                 graph_target = contxt.graph_substrate

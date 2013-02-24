@@ -126,7 +126,7 @@ var graphDrawing = function(_graph, _svg)
                
                 var node = g.svg.selectAll("g.node")
                         .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
-                        .attr("class", function(d){return d._type})
+                        .attr("class", function(d){console.log(d._type); return d._type})
                         .classed("node", true)
                         .attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
                         .call(d3.behavior.drag().on("drag", move))
@@ -441,7 +441,7 @@ var graphDrawing = function(_graph, _svg)
                         .data(g.cGraph.nodes(),function(d){return d.baseID})
                         .transition().delay(dTime)
 
-                node.select("g.glyph")
+                node.select("g.glyph").select(".node")
                         .style("fill", function(d){c = color(eval("d."+parameter)); return d3.rgb(c);})
                         //.attr("transform", function(d) { console.log(d); return "scale(" + d.viewMetric + "," + d.viewMetric + ")"; })
 

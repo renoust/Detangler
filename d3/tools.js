@@ -92,8 +92,8 @@ this.loadJSON = function(data)
         objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
         console.log("the data to store:", data);
         this.grabDataProperties(data);
-        contxt.graph_substrate.nodes(data.nodes);
-        contxt.graph_substrate.links(data.links);
+        contxt.graph_substrate.nodes(data.nodes, 'substrate');
+        contxt.graph_substrate.links(data.links, 'substrate');
         contxt.graph_substrate.edgeBinding();
         console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 

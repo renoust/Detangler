@@ -505,6 +505,13 @@ var TulipPosyInterface = function(contexte, objectcontext)
                         //move_mode = contxt.move_mode_substrate
                 }
 
+                if (target == "combined")
+                {
+                        svg = contxt.svg_combined
+                        //select_mode = contxt.select_mode_substrate
+                        //move_mode = contxt.move_mode_substrate
+                }
+
                 eval("contxt.select_mode_"+target+" = ! contxt.select_mode_"+target);
                 eval("contxt.move_mode_"+target+" = ! contxt.move_mode_"+target);
 
