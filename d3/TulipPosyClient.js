@@ -90,8 +90,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                         contxt.sessionSid = data.data.sid
                         console.log("the session sid has just been affected: ",contxt.sessionSid);
                         objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
-                        contxt.graph_substrate.nodes(data.nodes)
-                        contxt.graph_substrate.links(data.links)
+                        contxt.graph_substrate.nodes(data.nodes, "substrate")
+                        contxt.graph_substrate.links(data.links, "substrate")
                         contxt.graph_substrate.edgeBinding()
                         graph_drawing = graphDrawing(contxt.graph_substrate, contxt.svg_substrate)
                         graph_drawing.move(contxt.graph_substrate, 0)
@@ -117,11 +117,11 @@ var TulipPosyClient = function(contexte, objectcontext)
                         //convertLinks(data);
                         objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
                         //console.log("right before:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
-                        contxt.graph_catalyst.nodes(data.nodes)
+                        contxt.graph_catalyst.nodes(data.nodes, "catalyst")
 
                         //console.log("loaded graph:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
 
-                        contxt.graph_catalyst.links(data.links)
+                        contxt.graph_catalyst.links(data.links, "catalyst")
                         contxt.graph_catalyst.edgeBinding()
                         graph_drawing = graphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
                         graph_drawing.clear()
@@ -161,8 +161,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                 $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         data = JSON.parse(data)
                         objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.resize(cGraph, 0);
@@ -210,12 +210,12 @@ var TulipPosyClient = function(contexte, objectcontext)
                 }
         
 
-                $.ajax({url:tulip_address,    data:{sid:sessionSid, 
+                $.ajax({url:contxt.tulip_address,    data:{sid:contxt.sessionSid, 
                                                    type:'analyse', 
                                                    graph:selection, 
                                                    target:syncTarget, 
-                                                   operator:catalyst_sync_operator, 
-                                                   weight:substrateWeightProperty},
+                                                   operator:contxt.catalyst_sync_operator, 
+                                                   weight:contxt.substrateWeightProperty},
                            type:'POST', async:false, success:function(data){
                
                 /* $.post(contxt.tulip_address, {sid:contxt.sessionSid, 
@@ -242,8 +242,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                         //objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
                         
                         var tempGraph = new graph()
-                        tempGraph.nodes(data.nodes)
-                        tempGraph.links(data.links)
+                        tempGraph.nodes(data.nodes, graphName)
+                        tempGraph.links(data.links, graphName)
 
                         tempGraph.edgeBinding()
 
@@ -350,7 +350,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                 cGraph = contxt.graph_substrate;
                 svg = contxt.svg_substrate;
 
-                $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         // we need to rescale the graph so it will fit the current svg frame and wont overlap with the buttons
                         data = JSON.parse(data)
                         console.log("syncLayoutData: ",data.data);
@@ -364,8 +364,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                         var newGraph = JSON.parse(data.data.graph);
                         var newLinks = newGraph.links;    
 
-                        contxt.graph_combined.nodes(graph_substrate.nodes(), "substrate");
-                        contxt.graph_combined.addNodes(graph_catalyst.nodes());
+                        contxt.graph_combined.nodes(contxt.graph_substrate.nodes(), "substrate");
+                        contxt.graph_combined.addNodes(contxt.graph_catalyst.nodes());
                         contxt.graph_combined.links(newLinks);
                         contxt.graph_combined.specialEdgeBinding("substrate","catalyst");
 
@@ -473,8 +473,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                         // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
                         data = JSON.parse(data)
                         objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.move(cGraph, 0);
@@ -505,8 +505,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                 $.post(contxt.tulip_address, { sid:contxt.sessionSid, type:"update", graph:json, target:graphName }, function(data){
                         data = JSON.parse(data)
                         console.log("querying an induced subgraph:",graphName," ",json);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.exit(cGraph, 0);

@@ -196,7 +196,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 svg.selectAll("text.node").style("font-size", function(){ return 12;});
                 objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
                 objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
-                objectContext.TulipPosyVizualisationObject.entanglementCaught();
+                objectContext.TulipPosyVisualizationObject.entanglementCaught();
         }
 
         this.resetSize = function(target)
