@@ -50,7 +50,7 @@ class graphManager():
 
     The method can then restrict the amount of information dumped in the JSON to only what it is passed beforehand.
     Default is 'baseID', 'x', 'y', 'source', 'target'.
-    Extra data can be passed through the 'data' member of properties
+    Extra data can be passed through the 'data' member of 'properties'
     '''
     def graphToJSON(self, graph=0, properties={}, nodeList=0, edgeList=0):
 
@@ -286,6 +286,9 @@ class graphManager():
         #self.root = g #temporary, we should manage sessions and graphIDs
         #self.graph = g
         self.substrate = g
+        #typeP = self.substrate.getStringProperty("_type")
+        #typeP.setAllNodesValue("substrate")
+        #typeP.setAllEdgesValue("substrate")
         return g
 
 
@@ -512,9 +515,14 @@ class graphManager():
     
    
     def synchronizeLayouts(self):
-        bipartiteLayout.draw(self.substrate, self.catalyst)
-        print "layout synchronized"
-        return self.graphToJSON(self.substrate, {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'}]})
+        bLResult = bipartiteLayout.draw(self.substrate, self.catalyst)
+        #print "layout synchronized ",vectors
+        #vector = {k:v for k,v in bLResult.items() if k != "graph"}
+        resGraph = bLResult['graph']
+        #source of the resultint graph edges are always of type 'substrate'
+        jsresgraph = self.graphToJSON(resGraph, {'nodes':[{'type':'string', 'name':'label'}, {'type':'string', 'name':'_type'}]})
+        bLResult['graph'] = jsresgraph 
+        return self.graphToJSON(self.substrate, {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'}], 'data':bLResult})
         
 
     '''

@@ -17,6 +17,7 @@
 // with the communication, the other with the interaction, another for the overall
 // interface...
 
+//defines a function for object.keys()
 if (typeof Object.keys !== "function") {
     (function() {
         Object.keys = Object_keys;
@@ -43,13 +44,21 @@ var TulipPosy = function(originalJSON)
         // initialization of the default svg parameters
         var width = 960;
         var height = 500;
-         
+       
+        //var svg_i = d3.select("body").append("svg")
+  
         // initialization of the svg frames
-        var svg_substrate = d3.select("body").append("svg")
+        var svg_substrate = d3.select("body")/*svg_i*/.append("svg")
             .attr("width", width)
             .attr("height", height)
             .attr("id", "svg_substrate");
-        var svg_catalyst = d3.select("body").append("svg")
+
+        var svg_combined = d3.select("body")/*svg_i*/.append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("id", "svg_combined");
+
+        var svg_catalyst = d3.select("body")/*svg_i*/.append("svg")
             .attr("width", width)
             .attr("height", height)
             .attr("id", "svg_catalyst");
@@ -57,6 +66,8 @@ var TulipPosy = function(originalJSON)
         // initialization of the graphs, and lasso interactors
         var graph_substrate = new graph();
         var graph_catalyst = new graph();
+        var graph_combined = new graph();
+
         var lasso_catalyst = null;
         var lasso_substrate = null;
 
@@ -72,6 +83,12 @@ var TulipPosy = function(originalJSON)
         var show_links_catalyst = true;
         var node_information_catalyst = false;
         var mouse_over_button = false;
+        var select_mode_combined = false;
+        var move_mode_combined = true;
+        var show_labels_combined = true;
+        var show_links_combined = true;
+        var node_information_combined = false;
+        var combined_foreground = "substrate";
         
         // initialization of the global entanglement parameters
         var catalyst_sync_operator = "AND";
@@ -93,6 +110,41 @@ var TulipPosy = function(originalJSON)
         var substrateProperties = {};
         var substrateWeightProperty = null;
 
+        var setCombinedForeground = function(target)
+        {
+            combined_foreground = target;
+            var toggleBtnText = ""
+            if(target == "substrate")
+            {
+                toggleBtnText = "catalyst";
+            }else if(target == "catalyst")
+            {
+                toggleBtnText = "substrate";
+            }
+
+
+            console.log ("toggling: ",combined_foreground);
+
+            svg_combined.selectAll("g.toggleCombinedForeground")
+                .select("text")
+                .text("g "+toggleBtnText)
+
+            svg_combined.selectAll("g.node").data(graph_combined.nodes())
+                .style("opacity", function(d){if(d._type == combined_foreground){return 1;}else{return 0.5;}})
+
+        }
+
+        var toggleCombinedForeground = function()
+        {
+            if(combined_foreground == "substrate")
+            {
+                setCombinedForeground("catalyst");
+            }else if(combined_foreground == "catalyst")
+            {
+                setCombinedForeground("substrate");
+            }
+        
+        }
         
         // This method returns the nodes that are selected in a given graph.
         // graphName, the string value corresponding to the graph we want to select nodes in ('substrate' or 'catalyst')
@@ -116,6 +168,13 @@ var TulipPosy = function(originalJSON)
                 }
 
 
+                if (graphName == 'combined')
+                {        
+                        cGraph = graph_combined;
+                        svg = svg_combined;
+                }
+
+
                 //console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
                 var u = svg.selectAll("g.node.selected").data();
 
@@ -126,6 +185,7 @@ var TulipPosy = function(originalJSON)
                 {
                         var node = {};
                         node.baseID = u[i].baseID;
+                        node._type = u[i]._type;
                         //console.log(u[i]);
                         toStringify.nodes.push(node);
                 }
@@ -157,9 +217,8 @@ var TulipPosy = function(originalJSON)
 
                 $.post(tulip_address, { sid:sessionSid, type:"update", graph:json, target:graphName }, function(data){
                         data = JSON.parse(data)
-                        console.log("querying an induced subgraph:",graphName," ",json);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.exit(cGraph, 0);
@@ -194,11 +253,11 @@ var TulipPosy = function(originalJSON)
                 }
 
                 $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
+                        // we need to rescale the graph so it will fit the current svg frame and wont overlap with the buttons
                         data = JSON.parse(data)
                         rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.move(cGraph, 0);
@@ -218,17 +277,97 @@ var TulipPosy = function(originalJSON)
                 svg = svg_substrate;
 
                 $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
+                        // we need to rescale the graph so it will fit the current svg frame and wont overlap with the buttons
                         data = JSON.parse(data)
+                        console.log("syncLayoutData: ",data.data);
                         rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, "substrate");
+                        cGraph.links(data.links, "substrate");
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.move(cGraph, 0);
+                        
+                        var newGraph = JSON.parse(data.data.graph);
+                        var newLinks = newGraph.links;    
+
+                        graph_combined.nodes(graph_substrate.nodes(), "substrate");
+                        graph_combined.addNodes(graph_catalyst.nodes());
+                        graph_combined.links(newLinks);
+                        graph_combined.specialEdgeBinding("substrate","catalyst");
+
+                        var p1_s = data.data['substrate'][0];
+                        var p2_s = data.data['substrate'][1];
+                        var p1prime_s;
+                        var p2prime_s;
+                       
+                        graph_substrate.nodes().forEach(function(d){
+                            if(d.baseID == p1_s.baseID)
+                            {
+                                p1prime_s = d;
+                            }
+                            if(d.baseID == p2_s.baseID)
+                            {
+                                p2prime_s = d;
+                            }
+                        });
+                        var delta = 0.0000000000000001;
+                        var scaleX_s = (p2prime_s.x - p1prime_s.x) / (p2_s.x - p1_s.x +delta)
+                        var scaleY_s = (p2prime_s.y - p1prime_s.y) / (p2_s.y - p1_s.y +delta)
+
+                        var deltaX_s = p2prime_s.x - p2_s.x * scaleX_s
+                        var deltaY_s = p2prime_s.y - p2_s.y * scaleY_s
+                        console.log("delta substrate: ", scaleX_s, scaleY_s, deltaX_s, deltaY_s)
+
+                        var p1_c = data.data['catalyst'][0];
+                        var p2_c = data.data['catalyst'][1];
+                        var p1prime_c;
+                        var p2prime_c;
+                       
+
+                        graph_catalyst.nodes().forEach(function(d){
+                            if(d.baseID == p1_c.baseID)
+                            {
+                                p1prime_c = d;
+                            }
+                            if(d.baseID == p2_c.baseID)
+                            {
+                                p2prime_c = d;
+                            }
+                        });
+                        delta = 0.0000000000000001
+                        
+                        //console.log(p1prime_s, p2prime_s)
+                        var scaleX_c = (p2prime_c.x - p1prime_c.x) / (p2_c.x - p1_c.x +delta)
+                        var scaleY_c = (p2prime_c.y - p1prime_c.y) / (p2_c.y - p1_c.y +delta)
+                        var deltaX_c = p2prime_c.x - p2_c.x * scaleX_c
+                        var deltaY_c = p2prime_c.y - p2_c.y * scaleY_c
+
+                        console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
+                        console.log("delta catalyst: ", scaleX_c, scaleY_c, deltaX_c, deltaY_c)
+
+                        //console.log(scale_c, deltaX_c, deltaY_c)
+
+                        //scale_f = scale_s/scale_c
+
+                    
+                        graph_combined.nodes().forEach(function(nprime){
+                            if (nprime._type == "substrate")
+                            {
+                                var newX = ((nprime.x - deltaX_s)/scaleX_s)*scaleX_c+deltaX_c;
+                                nprime.x = newX; 
+                                var newY = ((nprime.y - deltaY_s)/scaleY_s)*scaleY_c+deltaY_c;
+                                nprime.y = newY;
+                            };
+                        });
+                        
+                        var graph_drawing = graphDrawing(graph_combined, svg_combined);
+                        graph_drawing.clear();
+                        graph_drawing.draw();
+
                 });
         };
 
+        
 
 
         // This function calls a float algorithm of a graph through tulip, and moves the given graph accordingly
@@ -258,14 +397,16 @@ var TulipPosy = function(originalJSON)
                 $.post(tulip_address, {sid:sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         data = JSON.parse(data)
                         rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
+                        cGraph.nodes(data.nodes, graphName);
+                        cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
                         var graph_drawing = graphDrawing(cGraph, svg);
                         graph_drawing.resize(cGraph, 0);
 
                         addInterfaceSubstrate();
                         addInterfaceCatalyst();
+                        addInterfaceCombined();
+
                         entanglementCaught();
 
 
@@ -295,6 +436,8 @@ var TulipPosy = function(originalJSON)
 
                 addInterfaceSubstrate();
                 addInterfaceCatalyst();
+                addInterfaceCatalyst();
+
                 entanglementCaught();
 
         };
@@ -323,6 +466,8 @@ var TulipPosy = function(originalJSON)
 
                 addInterfaceSubstrate();
                 addInterfaceCatalyst();
+                addInterfaceCombined();
+
                 entanglementCaught();
 
         };
@@ -379,8 +524,8 @@ var TulipPosy = function(originalJSON)
                 rescaleGraph(data);
                 console.log("the data to store:", data);
                 grabDataProperties(data);
-                graph_substrate.nodes(data.nodes);
-                graph_substrate.links(data.links);
+                graph_substrate.nodes(data.nodes, "substrate");
+                graph_substrate.links(data.links, "substrate");
                 graph_substrate.edgeBinding();
                 console.log("loading JSON", graph_substrate.nodes(), graph_catalyst.nodes());
 
@@ -400,30 +545,49 @@ var TulipPosy = function(originalJSON)
 
                 var cGraph = null
                 var svg = null
+                var syncTarget = graphName
+                
 
                 if (graphName == 'substrate')
                 {        
-                        cGraph = graph_catalyst
-                        svg = svg_catalyst
+                        cGraph = graph_catalyst;
+                        svg = svg_catalyst;
                 }
 
                 if (graphName == 'catalyst')
                 {        
                         console.log('target is catalyst');
-                        cGraph = graph_substrate
-                        console.log(selection)
-                        svg = svg_substrate
+                        cGraph = graph_substrate;
+                        console.log(selection);
+                        svg = svg_substrate;
                 }
 
+
+                if (graphName == 'combined')
+                {        
+                        cGraph = graph_combined;
+                        console.log("synGraph combined:", selection);
+                        svg = svg_combined;
+                        syncTarget = combined_foreground;
+                }
         
 
-                $.post(tulip_address, {sid:sessionSid, 
+ /*               $.post(tulip_address, {sid:sessionSid, 
                                        type:'analyse', 
                                        graph:selection, 
-                                       target:graphName, 
+                                       target:syncTarget, 
                                        operator:catalyst_sync_operator, 
-                                       weight:substrateWeightProperty}, 
-                        function(data){
+                                       weight:substrateWeightProperty},
+*/
+                
+                $.ajax({url:tulip_address,    data:{sid:sessionSid, 
+                                                   type:'analyse', 
+                                                   graph:selection, 
+                                                   target:syncTarget, 
+                                                   operator:catalyst_sync_operator, 
+                                                   weight:substrateWeightProperty},
+                           type:'POST', async:false, success:function(data){
+                 
                         
                         data = JSON.parse(data)
                         //var oldData = cGraph.nodes();
@@ -441,28 +605,70 @@ var TulipPosy = function(originalJSON)
                         //rescaleGraph(data)
                         
                         var tempGraph = new graph()
-                        tempGraph.nodes(data.nodes)
-                        tempGraph.links(data.links)
+                        tempGraph.nodes(data.nodes, graphName)
+                        tempGraph.links(data.links, graphName)
 
                         tempGraph.edgeBinding()
 
-                        //cGraph.nodes(data.nodes)
-                        //cGraph.links(data.links)
+                        //cGraph.nodes(data.nodes, graphName)
+                        //cGraph.links(data.links, graphName)
 
                         //cGraph.edgeBinding()
                         
-                        var graph_drawing = graphDrawing(cGraph, svg)
-                        
+                        var graph_drawing = graphDrawing(cGraph, svg);                        
                         //g.clear()
                         //g.draw()
-                        graph_drawing.show(tempGraph)
+                        graph_drawing.show(tempGraph);
+
+                        if (graphName == 'combined')
+                        {
+                            var svg_target;
+                            var graph_target;
+                            if(combined_foreground == 'substrate')
+                            {
+                                svg_target = svg_catalyst
+                                graph_target = graph_catalyst
+                            }
+                            if(combined_foreground == 'catalyst')
+                            {
+                                svg_target = svg_substrate
+                                graph_target = graph_substrate
+                            }
+                            var graph_drawing = graphDrawing(graph_target, svg_target);                        
+                            graph_drawing.show(tempGraph);
+                        }else{
+                            var tempCombined = new graph();
+                            var nodeSelection = JSON.parse(selection).nodes;
+                            var nodeSelList = [];
+                            nodeSelection.forEach(function(d){nodeSelList.push(d.baseID);});
+                            var nodeTargetList = [];
+                            data.nodes.forEach(function(d){nodeTargetList.push(d.baseID);});
+                            var dataType = (graphName == "substrate") ? "catalyst" : "substrate";
+                            tempCombined.nodes(data.nodes, dataType);
+                            tempCombined.addNodes(nodeSelection, graphName);
+                            var tempLinks = [];
+                            graph_combined.links().forEach(function(d){
+                                if (!d.source.baseID || !d.target.baseID) console.log(d);
+                                if(nodeSelList.indexOf(d.source.baseID) != -1 &&  nodeTargetList.indexOf(d.target.baseID) != -1
+                                    || nodeSelList.indexOf(d.target.baseID) != -1 &&  nodeTargetList.indexOf(d.source.baseID) != -1)
+                                    {console.log("selected:",d, d.source, d.target); tempLinks.push(d);                                    }
+                            })
+                            tempCombined.links(tempLinks);
+                            
+                            tempCombined.specialEdgeBinding("substrate", "catalyst");
+                            //console.log(nodeSelList, nodeTargetList);
+                            //console.log(tempLinks.length,"/",graph_combined.links().length, " LINKS TO BE SYNCHRONIZED", tempLinks);
+                            var graph_drawing = graphDrawing(graph_combined, svg_combined);
+                            graph_drawing.show(tempCombined);                         
+                        }
+
                         if ('data' in data)
                         {
                                 entanglement_homogeneity = data['data']['entanglement homogeneity'];
                                 entanglement_intensity = data['data']['entanglement intensity'];
                                 entanglementCaught();
                         }
-                });
+                }});
 
         }
 
@@ -484,11 +690,11 @@ var TulipPosy = function(originalJSON)
                         //convertLinks(data);
                         rescaleGraph(data)
                         //console.log("right before:",graph_catalyst.nodes(), graph_substrate.nodes())
-                        graph_catalyst.nodes(data.nodes)
+                        graph_catalyst.nodes(data.nodes, "catalyst")
 
                         //console.log("loaded graph:",graph_catalyst.nodes(), graph_substrate.nodes())
 
-                        graph_catalyst.links(data.links)
+                        graph_catalyst.links(data.links, "catalyst")
                         graph_catalyst.edgeBinding()
                         graph_drawing = graphDrawing(graph_catalyst, svg_catalyst)
                         graph_drawing.clear()
@@ -514,8 +720,8 @@ var TulipPosy = function(originalJSON)
                         sessionSid = data.data.sid
                         console.log("the session sid has just been affected: ",sessionSid);
                         rescaleGraph(data)
-                        graph_substrate.nodes(data.nodes)
-                        graph_substrate.links(data.links)
+                        graph_substrate.nodes(data.nodes, "substrate")
+                        graph_substrate.links(data.links, "substrate")
                         graph_substrate.edgeBinding()
                         graph_drawing = graphDrawing(graph_substrate, svg_substrate)
                         graph_drawing.move(graph_substrate, 0)
@@ -754,6 +960,14 @@ var TulipPosy = function(originalJSON)
                         svg = svg_catalyst
                 }
 
+
+                if (target == 'combined')
+                {        
+                        cGraph = graph_combined
+                        svg = svg_combined
+                }
+
+
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
                         .attr("class", className)
                         .classed("interfaceButton", 1)
@@ -800,7 +1014,7 @@ var TulipPosy = function(originalJSON)
 
             btSettings.append("text")
                 .text(function(d){return "@"})
-            	.style("fill", "lightgray")
+                .style("fill", "lightgray")
                 .style("font-family", "EntypoRegular")
                 .style("font-size", 50)
                 .on("mouseover", function(){d3.select(this).style("fill", "black")})
@@ -929,7 +1143,7 @@ var TulipPosy = function(originalJSON)
 
             btInfo.append("text")
                 .text(function(d){return "`"})
-            	.style("fill", "lightgray")
+                .style("fill", "lightgray")
                 .style("font-family", "EntypoRegular")
                 .style("font-size", 50)
                 .on("mouseover", function(){d3.select(this).style("fill", "black")})
@@ -990,6 +1204,13 @@ var TulipPosy = function(originalJSON)
                         cGraph = graph_catalyst
                         svg = svg_catalyst
                 }
+
+                if (target == 'combined')
+                {
+                        cGraph = graph_combined
+                        svg = svg_combined
+                }
+
 
                 var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:defaultFillColor, colorOut:highlightFillColor}]).enter().append('g')
                         .attr("class", "moveButton")
@@ -1195,6 +1416,13 @@ var TulipPosy = function(originalJSON)
                         cGraph = graph_catalyst
                         svg = svg_catalyst
                 }
+                
+                if (target == 'combined')
+                {        
+                        cGraph = graph_combined
+                        svg = svg_combined
+                }
+
 
                 var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
                 
@@ -1246,11 +1474,48 @@ var TulipPosy = function(originalJSON)
                         cGraph = graph_catalyst
                         svg = svg_catalyst
                 }
+
+                if (target == 'combined')
+                {        
+                        cGraph = graph_combined
+                        svg = svg_combined
+                }
                 
                 cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
                 graph_drawing = graphDrawing(cGraph, svg)
                 graph_drawing.resize(cGraph, 0)
         }
+
+
+
+        var arrangeLabels = function(target)
+        {
+                var cGraph = null
+                var svg = null
+
+                if (target == 'substrate')
+                {        
+                        cGraph = graph_substrate;
+                        svg = svg_substrate;
+                }
+
+                if (target == 'catalyst')
+                {        
+                        cGraph = graph_catalyst;
+                        svg = svg_catalyst;
+                }
+
+                if (target == 'combined')
+                {        
+                        cGraph = graph_combined;
+                        svg = svg_combined;
+                }
+                
+                //cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
+                graph_drawing = graphDrawing(cGraph, svg);
+                graph_drawing.arrangeLabels();
+        }
+
 
 
         // This function add all the interface elements for the catalyst view
@@ -1275,12 +1540,44 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 12, "ent. mapping", "button10", function(){sizeMapping("entanglementIndice", target)});
                 addButton(target, 13, "ent. color", "button11", function(){colorMapping("entanglementIndice", target)});
                 addButton(target, 14, "computeMatrix", "button12", function(){buildEdgeMatrices()});
+                addButton(target, 15, "arrange labels", "arrLabels", function(){arrangeLabels(target)});
 
-                addGraphInteractorButtons(target, 15);
+                addGraphInteractorButtons(target, 16);
         
                 addInfoButton(target);
 
         }
+
+
+        var addInterfaceCombined = function()
+        {
+                var target = "combined";
+                eraseAllInterface(target);
+
+                addGraphInteractorButtons(target, 0);
+                addButton(target, 2, "fg "+combined_foreground, "toggleCombinedForeground", function(){toggleCombinedForeground()});
+                addButton(target, 3, "arrange labels", "button11", function(){arrangeLabels(target)});
+               /*addButton(target, 0, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
+                addButton(target, 1, "circular layout", "button3", function(){callLayout("Circular", target)});
+                addButton(target, 2, "random layout", "button4", function(){callLayout("Random", target)});
+                addButton(target, 3, "reset view", "button5", function(){resetView(target)});
+                addButton(target, 4, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
+                addButton(target, 5, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
+                addButton(target, 6, "reset size", "button8", function(){resetSize(target)});  
+                addButton(target, 7, "hide labels", "showHideLabels", function(){showhideLabels(target)});              
+                addButton(target, 8, "hide links", "showHideLinks", function(){showhideLinks(target)});
+                addButton(target, 9, "node information", "infoBox", function(){attachInfoBox(target)});
+                addButton(target, 10, "operator "+catalyst_sync_operator, "toggleCatalystOp", function(){toggleCatalystSyncOperator()});
+                addButton(target, 11, "weight mapping", "button9", function(){sizeMapping("weight", target)});
+                addButton(target, 12, "ent. mapping", "button10", function(){sizeMapping("entanglementIndice", target)});
+                addButton(target, 13, "ent. color", "button11", function(){colorMapping("entanglementIndice", target)});
+                addButton(target, 14, "computeMatrix", "button12", function(){buildEdgeMatrices()});
+                */
+        
+                //addInfoButton(target);
+
+        }
+
 
         // This function add all the interface elements for the substrate view
         var addInterfaceSubstrate = function()
@@ -1292,7 +1589,8 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 0, "induced subgraph", "button1", function(){sendSelection(getSelection(target), target)});
                 addButton(target, 1, "force layout", "button2", function(){callLayout("FM^3 (OGDF)", target)});
                 addButton(target, 2, "circular layout", "button3", function(){callLayout("Circular", target)});
-                addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
+                addButton(target, 3, "labels foward", "button4", function(){bringLabelsForward(target);});
+                //addButton(target, 3, "random layout", "button4", function(){callLayout("Random", target)});
                 addButton(target, 4, "reset view", "button5", function(){resetView(target)});
                 addButton(target, 5, "degree metric", "button6", function(){callFloatAlgorithm("Degree", target)});
                 addButton(target, 6, "btw. centrality", "button7", function(){callFloatAlgorithm("Betweenness Centrality", target)});
@@ -1302,9 +1600,10 @@ var TulipPosy = function(originalJSON)
                 addButton(target, 10, "hide links", "showHideLinks", function(){showhideLinks(target)});
                 addButton(target, 11, "node information", "infoBox", function(){attachInfoBox(target)});
                 addButton(target, 12, "sync layouts", "button10", function(){syncLayouts()});
+                addButton(target, 13, "arrange labels", "button11", function(){arrangeLabels(target)});
 
                 
-                addGraphInteractorButtons(target, 13);
+                addGraphInteractorButtons(target, 14);
                 addEntanglementFeedback(target);
                 addInfoButton(target);
                 addSettingsButton();
@@ -1487,6 +1786,10 @@ var TulipPosy = function(originalJSON)
                         //move_mode = move_mode_substrate
                 }
 
+                if (target == "combined")
+                {
+                        svg = svg_combined
+                }
                 eval("select_mode_"+target+" = ! select_mode_"+target);
                 eval("move_mode_"+target+" = ! move_mode_"+target);
 
@@ -1545,6 +1848,31 @@ var TulipPosy = function(originalJSON)
                     svg.selectAll('g.node').on("mouseover", function(d){d.mouseOver = true; d3.select(this).select("text.node").attr("visibility", "visible");})
                                            .on("mouseout", function(d){if (!d.labelVisibility) { d.mouseOver = false; d3.select(this).select("text.node").attr("visibility", "hidden");}});
                 }
+        }
+
+        var bringLabelsForward = function(target)
+        {
+                if (!target)
+                        return
+
+                var svg = null
+                var cGraph = null
+
+                if (target == "catalyst")
+                {
+                        svg = svg_catalyst
+                        cGraph = graph_catalyst
+                }
+        
+                if (target == "substrate")
+                {
+                        svg = svg_substrate
+                        cGraph = graph_substrate
+                }
+
+                var gD = graphDrawing(cGraph, svg);
+                gD.bringLabelsForward();
+
         }
 
 
@@ -1737,6 +2065,16 @@ var TulipPosy = function(originalJSON)
                         lasso_substrate = new lasso(svg);
                         myL = lasso_substrate
                 }
+
+
+                if (target == "combined")
+                {
+                        svg = svg_combined
+                        graph = graph_combined
+                        lasso_combined = new lasso(svg);
+                        myL = lasso_combined
+                }
+
                 
                 var prevSelList = [];
 
@@ -1770,7 +2108,9 @@ var TulipPosy = function(originalJSON)
                         //console.log('control pushed ', e.ctrlKey)
                         //console.log("svg operating the selection", svg)
                         svg.selectAll("g.node").classed("selected", function(d){
-                                        console.log('current obj', d)
+                                        if (target=="combined" && d._type != combined_foreground)
+                                            return false;
+                                        //console.log('current obj', d)
                                         var x = 0;
                                         var y = 0;
                                         if (!('currentX' in d))
@@ -1803,7 +2143,7 @@ var TulipPosy = function(originalJSON)
                                                 return true;
 
                                         var intersects = __g.intersect(pointArray, x, y)
-                                        if (intersects) console.log("node intersects", d)
+                                        //if (intersects) console.log("node intersects", d)
                                         //console.log('result of intersects? ',intersects,pointArray,x,y)
 
                                         if (e.shiftKey && intersects)
@@ -1820,11 +2160,11 @@ var TulipPosy = function(originalJSON)
                                                 //console.log ("d.selected = ",intersects);
                                                 d.selected = intersects;
                                         }
-                                        console.log("returning selection:",d.selected)
+                                        //console.log("returning selection:",d.selected)
                                         return d.selected
 
                                 })
-                                .select("circle.node").style('fill', function(d){
+                                .select("g.glyph").select(".node").style('fill', function(d){
                                         if (e.ctrlKey && d.selected == true)
                                         {
                                                 selList.push(d.baseID)
@@ -1833,13 +2173,17 @@ var TulipPosy = function(originalJSON)
                                         if (d.selected){
                                                 selList.push(d.baseID)
                                                 return 'red';
-                                        }else
+                                        }else{
+                                            if(d._type == "catalyst")
                                                 return 'steelblue';
+                                            else
+                                                return "sienna"
+                                        }
                                 });
 
                         
                         selList.sort()
-                        console.log("selection list: ",selList, " with length ", selList.length)
+                        //console.log("selection list: ",selList, " with length ", selList.length)
                         
                         if(selList.length>0)// && target == "substrate")
                         {        
@@ -1864,14 +2208,26 @@ var TulipPosy = function(originalJSON)
                         }
                         else
                         {   
-                            svg.selectAll("g.node").select("circle.node").style('fill', 'steelblue');
-                            svg.selectAll("g.link").select("path.link").style('stroke', 'gray');
-                            if (target == "catalyst")
+                                svg_catalyst.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                svg_catalyst.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                svg_catalyst.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                svg_catalyst.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+                                svg_substrate.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                svg_substrate.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                svg_substrate.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                svg_substrate.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+                                svg_combined.selectAll("g.node").style('opacity', 1.0).select("circle.node").style('fill', 'steelblue').style("stroke-width",0);
+                                svg_combined.selectAll("g.node").select("text.node").attr("visibility", "visible");
+                                svg_combined.selectAll("g.node").select("rect.node").style('fill', 'sienna').style("stroke-width",0);
+                                svg_combined.selectAll("g.link").style('opacity', 1.0).select("path.link").style('stroke', 'gray');
+
+                                //if (target == "catalyst")
                                 resetSize("substrate");
-                            if (target == "substrate")
+                                //if (target == "substrate")
                                 resetSize("catalyst");
-                            prevSelList = selList.slice(0);
-                            console.log("warning: the selection list is empty");
+                                resetSize("combined");
+                                prevSelList = selList.slice(0);
+                                console.log("warning: the selection list is empty");
                             
                         }
                 }        
@@ -1898,6 +2254,12 @@ var TulipPosy = function(originalJSON)
                 {
                         mySvg = svg_substrate
                         myL = lasso_substrate
+                }
+
+                if (target == "combined")
+                {
+                        mySvg = svg_combined
+                        myL = lasso_combined
                 }
 
                 mySvg.on("mouseup", function(d){myL.canMouseUp(d3.mouse(this))});
@@ -1931,6 +2293,11 @@ var TulipPosy = function(originalJSON)
                         svg = svg_substrate
                 }
 
+                if (target == "combined")
+                {
+                        svg = svg_combined
+                }
+
                 svg.on("mouseup", null);
                 svg.on("mousedown", null);
                 svg.on("mousemove", null);
@@ -1955,6 +2322,13 @@ var TulipPosy = function(originalJSON)
                 {
                         svg = svg_substrate
                 }
+
+                if (target == "combined")
+                {
+                        svg = svg_combined
+                }
+
+
         svg.on("mousedown.zoom", null)
             .on("mousewheel.zoom", null)
             .on("mousemove.zoom", null)
@@ -1999,6 +2373,11 @@ var TulipPosy = function(originalJSON)
                         svg = svg_substrate
                 }
 
+                if (target == "combined")
+                {
+                        svg = svg_combined
+                }
+
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
                 console.log("preparing to add zoom in view",target);
                 svg.call (d3.behavior.zoom()
@@ -2012,7 +2391,7 @@ var TulipPosy = function(originalJSON)
                                          return;
                                 }
 
-                                nodeDatum = svg.selectAll("g.node").data()
+                                /*nodeDatum = svg.selectAll("g.node").data()
                                 // strangely the matrix that should be applied by transform is squared?! so we adapt the nodes values
                                 //nodeDatum.forEach(function(d){d.currentX = (d.x*Math.pow(d3.event.scale,2)+d3.event.translate[0]*(1+d3.event.scale));
                                 //                              d.currentY = (d.y*Math.pow(d3.event.scale,2)+d3.event.translate[1]*(1+d3.event.scale));
@@ -2021,12 +2400,13 @@ var TulipPosy = function(originalJSON)
                                 nodeDatum.forEach(function(d){d.currentX = (d.x*d3.event.scale+d3.event.translate[0]);
                                                               d.currentY = (d.y*d3.event.scale+d3.event.translate[1]);
                                                                 });
-                                
+                                */
 
                                 svg.selectAll("g.node,g.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
                                 svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/d3.event.scale);});
                                 addInterfaceSubstrate();
                                 addInterfaceCatalyst();
+                                addInterfaceCombined();
                                 entanglementCaught();
         
                             })
@@ -2088,6 +2468,8 @@ var TulipPosy = function(originalJSON)
         // We create the interfaces for each svg
         addInterfaceSubstrate();
         addInterfaceCatalyst();
+        addInterfaceCombined();
+
         
         //console.log("beginning of the generation", graph_substrate.nodes(), graph_catalyst.nodes());
 
@@ -2115,7 +2497,10 @@ var TulipPosy = function(originalJSON)
         // we create then the basic interactors
         createLasso("substrate");
         createLasso("catalyst");
+        createLasso("combined");
         addZoom("substrate");
         addZoom("catalyst");
+        addZoom("combined");
+
 };
 

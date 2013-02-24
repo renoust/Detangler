@@ -102,6 +102,7 @@ document.getElementById('files').addEventListener('change', function(e) {
             console.log(['xhr upload complete', e]);
 	    //console.log(xhr.responseText);
 	    remove("svg_substrate");
+        remove("svg_combined");
 	    remove("svg_catalyst");
 	    TulipPosy({file:xhr.responseText})
         }
@@ -121,6 +122,7 @@ document.getElementById('send').addEventListener('click', function(e) {
 	query = document.getElementById('query').value
 	//console.log('logging file: ', query)
 	remove("svg_substrate");
+    remove("svg_combined");
 	remove("svg_catalyst");
 	TulipPosy({'query':query})
 
