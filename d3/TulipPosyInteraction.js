@@ -21,26 +21,23 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 var graph = null
                 var myL = null
 
+                svg = contxt.getViewSVG(target);
+                graph = contxt.getViewGraph(target);
+
                 if (target == "catalyst")
                 {
-                        svg = contxt.svg_catalyst
-                        graph = contxt.graph_catalyst        
                         contxt.lasso_catalyst = new TP.Lasso(svg);
                         myL = contxt.lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        svg = contxt.svg_substrate
-                        graph = contxt.graph_substrate
                         contxt.lasso_substrate = new TP.Lasso(svg);
                         myL = contxt.lasso_substrate
                 }
 
                 if (target == "combined")
                 {
-                        svg = contxt.svg_combined
-                        graph = contxt.graph_combined
                         contxt.lasso_combined = new TP.Lasso(svg);
                         myL = contxt.lasso_combined
                 }
@@ -222,26 +219,17 @@ var TulipPosyInteraction = function(contexte, objectcontext)
 
         // This function associate a d3.svg.brush element to select nodes in a view
         // target, the string value of the target svg view 
-        // This function is unused and a bit deprecated but one can activate it anytime
+        // This function is deprecated but one can activate it anytime
         this.addBrush = function(target)
         {
                 var svg = null
                 var graph = null
-
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                        graph = contxt.graph_catalyst                        
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                        graph = contxt.graph_substrate
-                }
                         
                 if (!target)
                         return
+
+                svg = contxt.getViewSVG(target);
+                graph = contxt.getViewGraph(target);
 
                 var h = svg.attr("height")
                 var w = svg.attr("width")
@@ -338,21 +326,20 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 var mySvg = null
                 var myL = null
 
+                mySvg = contxt.getViewSVG(target);
+
                 if (target == "catalyst")
                 {
-                        mySvg = contxt.svg_catalyst
                         myL = contxt.lasso_catalyst                
                 }
         
                 if (target == "substrate")
                 {
-                        mySvg = contxt.svg_substrate
                         myL = contxt.lasso_substrate
                 }
 
                 if (target == "combined")
                 {
-                        mySvg = contxt.svg_combined
                         myL = contxt.lasso_combined
                 }
 
@@ -370,22 +357,8 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         return
 
                 var svg = null
-
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == "combined")
-                {
-                        svg = contxt.svg_combined
-                }
-
+                svg = contxt.getViewSVG(target);
+                
                 svg.on("mouseup", null);
                 svg.on("mousedown", null);
                 svg.on("mousemove", null);
@@ -401,21 +374,8 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                         return
 
                 var svg = null
+                svg = contxt.getViewSVG(target);
 
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                }
-                
-                if (target == "combined")
-                {
-                        svg = contxt.svg_combined
-                }
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
                 console.log("preparing to add zoom in view",target);
@@ -457,38 +417,25 @@ var TulipPosyInteraction = function(contexte, objectcontext)
         // target, the string value of the target svg view         
         this.removeZoom = function(target)
         {
-                if (!target)
-                        return
+            if (!target)
+                    return
 
-                var svg = null
+            var svg = null
+            svg = contxt.getViewSVG(target);
 
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                }
-                
-                if (target == "combined")
-                {
-                        svg = contxt.svg_combined
-                }
 
-        svg.on("mousedown.zoom", null)
-            .on("mousewheel.zoom", null)
-            .on("mousemove.zoom", null)
-            .on("DOMMouseScroll.zoom", null)
-            .on("dblclick.zoom", null)
-            .on("touchstart.zoom", null)
-            .on("touchmove.zoom", null)
-            .on("touchend.zoom", null)
-            //.on("click",null);
-               // svg.on("mouseup", null);
-               // svg.on("mousedown", null);
-               // svg.on("mousemove", null);
+            svg.on("mousedown.zoom", null)
+                .on("mousewheel.zoom", null)
+                .on("mousemove.zoom", null)
+                .on("DOMMouseScroll.zoom", null)
+                .on("dblclick.zoom", null)
+                .on("touchstart.zoom", null)
+                .on("touchmove.zoom", null)
+                .on("touchend.zoom", null)
+                //.on("click",null);
+                   // svg.on("mouseup", null);
+                   // svg.on("mousedown", null);
+                   // svg.on("mousemove", null);
         }
 
 

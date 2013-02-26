@@ -18,16 +18,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         return
 
                 var svg = null
-
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                }
+                svg = contxt.getViewSVG(target);
 
                 eval("contxt.show_links_"+target+" = ! contxt.show_links_"+target);
 
@@ -177,17 +168,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 nodeDatum = svg.selectAll("g.node").data()
                 // strangely the matrix that should be applied by transform is squared?! so we adapt the nodes values
@@ -206,23 +188,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
-
-                if (target == 'combined')
-                {        
-                        cGraph = contxt.graph_combined
-                        svg = contxt.svg_combined
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
                 
                 cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
                 graph_drawing = TP.GraphDrawing(cGraph, svg)
@@ -235,23 +202,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
-
-                if (target == 'combined')
-                {        
-                        cGraph = contxt.graph_combined;
-                        svg = contxt.svg_combined;
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
                 
                 //cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
                 graph_drawing = TP.GraphDrawing(cGraph, svg);
@@ -266,17 +218,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var svg = null
                 var cGraph = null
 
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                        cGraph = contxt.graph_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                        cGraph = contxt.graph_substrate
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 var gD = TP.GraphDrawing(cGraph, svg);
                 gD.bringLabelsForward();
@@ -292,16 +235,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         return
 
                 var svg = null
-
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                }
+                svg = contxt.getViewSVG(target);
 
                 eval("contxt.show_labels_"+target+" = ! contxt.show_labels_"+target); 
 
@@ -360,17 +294,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var cGraph = null;
                 var svg = null;
 
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
         
                 var graph_drawing = TP.GraphDrawing(cGraph, svg);
                 graph_drawing.nodeSizeMap(cGraph, 0, parameter);
@@ -388,17 +313,8 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 var cGraph = null;
                 var svg = null;
 
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
         
                 var graph_drawing = TP.GraphDrawing(cGraph, svg);
                 graph_drawing.nodeColorMap(cGraph, 0, parameter);

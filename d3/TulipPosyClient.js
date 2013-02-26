@@ -148,18 +148,9 @@ var TulipPosyClient = function(contexte, objectcontext)
 
                 var cGraph = null;
                 var svg = null;
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
 
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
         
 
                 $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
@@ -460,18 +451,9 @@ var TulipPosyClient = function(contexte, objectcontext)
                 
                 var cGraph = null;
                 var svg = null;
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
 
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
 
                 $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
                         // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
@@ -494,17 +476,8 @@ var TulipPosyClient = function(contexte, objectcontext)
                 var cGraph = null;
                 var svg = null;
 
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
 
                 $.post(contxt.tulip_address, { sid:contxt.sessionSid, type:"update", graph:json, target:graphName }, function(data){
                         data = JSON.parse(data)
@@ -526,24 +499,8 @@ var TulipPosyClient = function(contexte, objectcontext)
         {
                 var cGraph = null;
                 var svg = null;
-
-                if (graphName == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate;
-                        svg = contxt.svg_substrate;
-                }
-
-                if (graphName == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst;
-                        svg = contxt.svg_catalyst;
-                }
-
-                if (graphName == 'combined')
-                {        
-                        cGraph = contxt.graph_combined;
-                        svg = contxt.svg_combined;
-                }
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
 
                 //console.log("GETSELECTION: The node selection= ", svg.selectAll("g.node.selected"));
                 var u = svg.selectAll("g.node.selected").data();

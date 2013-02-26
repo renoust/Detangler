@@ -23,7 +23,7 @@ var ObjectContext = function(contexte)
 		this.TulipPosyInterfaceObject = new TP.TulipPosyInterface(context, this);
 		this.TulipPosyInteractionObject = new TP.TulipPosyInteraction(context, this);
 		this.ToolObject = new TOOL.Tools(context, this);
-		
+
 		return __g__;
 		
 }

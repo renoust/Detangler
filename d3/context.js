@@ -75,6 +75,45 @@ var Context = function() {
         this.substrateProperties = {};
         this.substrateWeightProperty = null;
 		
+        this.getViewSVG = function(viewID)
+        {
+            if (viewID == "catalyst")
+            {
+                    return __g__.svg_catalyst;
+            }
+    
+            if (viewID == "substrate")
+            {
+                    return __g__.svg_substrate;
+            }
+
+            if (viewID == "combined")
+            {
+                    return __g__.svg_combined;
+            }
+        };
+
+
+        this.getViewGraph = function(viewID)
+        {
+            if (viewID == "catalyst")
+            {
+                    return __g__.graph_catalyst;      
+            }
+    
+            if (viewID == "substrate")
+            {
+                    return __g__.graph_substrate;
+            }
+
+            if (viewID == "combined")
+            {
+                    return __g__.graph_combined;
+            }
+        };
+
+
+
 		return __g__;		
 }
     return {Context:Context}

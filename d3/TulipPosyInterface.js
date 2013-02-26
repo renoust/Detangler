@@ -107,23 +107,8 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
-                
-                if (target == 'combined')
-                {        
-                        cGraph = contxt.graph_combined
-                        svg = contxt.svg_combined
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 var coh = svg.selectAll(".interfaceButton").data([]).exit().remove()
                 
@@ -137,17 +122,8 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 var coh = svg.selectAll("rect entanglement").data(["entanglement"]).enter().append('g')
                         .attr("transform", function(d) { return "translate(" + 10 + "," + 395 + ")"; })
@@ -227,24 +203,8 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
-
-
-                if (target == 'combined')
-                {
-                        cGraph = contxt.graph_combined
-                        svg = contxt.svg_combined
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 var btMove = svg.selectAll("rect.moveButton").data([{text:"move", colorOver:contxt.defaultFillColor, colorOut:contxt.highlightFillColor}]).enter().append('g')
                         .attr("class", "moveButton")
@@ -355,18 +315,9 @@ var TulipPosyInterface = function(contexte, objectcontext)
             var cGraph = null
             var svg = null
 
-            if (target == 'substrate')
-            {        
-                    cGraph = contxt.graph_substrate
-                    svg = contxt.svg_substrate
-            }
-
-            if (target == 'catalyst')
-            {        
-                    cGraph = contxt.graph_catalyst
-                    svg = contxt.svg_catalyst
-            }
-
+            svg = contxt.getViewSVG(target);
+            cGraph = contxt.getViewGraph(target);
+           
             posInfo_x = contxt.width-30
             posInfo_y = contxt.height-5
 
@@ -490,27 +441,7 @@ var TulipPosyInterface = function(contexte, objectcontext)
                         return
 
                 var svg = null
-
-                if (target == "catalyst")
-                {
-                        svg = contxt.svg_catalyst
-                        //select_mode = contxt.select_mode_catalyst
-                        //move_mode = contxt.move_mode_catalyst
-                }
-        
-                if (target == "substrate")
-                {
-                        svg = contxt.svg_substrate
-                        //select_mode = contxt.select_mode_substrate
-                        //move_mode = contxt.move_mode_substrate
-                }
-
-                if (target == "combined")
-                {
-                        svg = contxt.svg_combined
-                        //select_mode = contxt.select_mode_substrate
-                        //move_mode = contxt.move_mode_substrate
-                }
+                svg = contxt.getViewSVG(target);
 
                 eval("contxt.select_mode_"+target+" = ! contxt.select_mode_"+target);
                 eval("contxt.move_mode_"+target+" = ! contxt.move_mode_"+target);
@@ -609,24 +540,8 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
-
-                if (target == 'combined')
-                {        
-                        cGraph = contxt.graph_combined
-                        svg = contxt.svg_combined
-                }
-
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
                 var bt = svg.selectAll("rect."+className).data([buttonLabel]).enter().append('g')
                         .attr("class", className)
@@ -665,17 +580,8 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
-
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
                 
                 eval("contxt.node_information_"+target+" = !contxt.node_information_"+target);
 
@@ -697,19 +603,11 @@ var TulipPosyInterface = function(contexte, objectcontext)
                 var cGraph = null
                 var svg = null
 
-                if (target == 'substrate')
-                {        
-                        cGraph = contxt.graph_substrate
-                        svg = contxt.svg_substrate
-                }
+                svg = contxt.getViewSVG(target);
+                cGraph = contxt.getViewGraph(target);
 
-                if (target == 'catalyst')
-                {        
-                        cGraph = contxt.graph_catalyst
-                        svg = contxt.svg_catalyst
-                }
                              
-          function move(){
+                function move(){
                     //var e = window.event;
                     //if (e.ctrlKey || e.metaKey) return;
                     objectContext.TulipPosyInterfaceObject.parentNode.appendChild(this);
