@@ -1,5 +1,7 @@
 (function(){
 
+import_class("graphDrawing.js","TP");
+
 var TulipPosyVisualization = function(contexte, objectcontext)
 {
     var __g__ = this;
@@ -137,7 +139,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                     .style("fill", "lightgray")
                     .style("font-family", "EntypoRegular")
                     .style("font-size", 30)
-                    .on("click", function(d) {contxt.svg_catalyst.selectAll("g.matrixInfo").data([]).exit().remove(); gD = graphDrawing(contxt.graph_catalyst, contxt.svg_catalyst).draw()})
+                    .on("click", function(d) {contxt.svg_catalyst.selectAll("g.matrixInfo").data([]).exit().remove(); gD = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst).draw()})
                     .on("mouseover", function(){d3.select(this).style("fill", "black")})
                     .on("mouseout", function(){d3.select(this).style("fill", "lightgray")})
 
@@ -223,7 +225,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 }
                 
                 cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
-                graph_drawing = graphDrawing(cGraph, svg)
+                graph_drawing = TP.GraphDrawing(cGraph, svg)
                 graph_drawing.resize(cGraph, 0)
         }
 
@@ -252,7 +254,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                 }
                 
                 //cGraph.nodes().forEach(function(d){d.viewMetric = 3;})
-                graph_drawing = graphDrawing(cGraph, svg);
+                graph_drawing = TP.GraphDrawing(cGraph, svg);
                 graph_drawing.arrangeLabels();
         }
 
@@ -276,7 +278,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         cGraph = contxt.graph_substrate
                 }
 
-                var gD = graphDrawing(cGraph, svg);
+                var gD = TP.GraphDrawing(cGraph, svg);
                 gD.bringLabelsForward();
 
         }
@@ -370,7 +372,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         svg = contxt.svg_catalyst;
                 }
         
-                var graph_drawing = graphDrawing(cGraph, svg);
+                var graph_drawing = TP.GraphDrawing(cGraph, svg);
                 graph_drawing.nodeSizeMap(cGraph, 0, parameter);
 
                 objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
@@ -398,7 +400,7 @@ var TulipPosyVisualization = function(contexte, objectcontext)
                         svg = contxt.svg_catalyst;
                 }
         
-                var graph_drawing = graphDrawing(cGraph, svg);
+                var graph_drawing = TP.GraphDrawing(cGraph, svg);
                 graph_drawing.nodeColorMap(cGraph, 0, parameter);
 
                 objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();

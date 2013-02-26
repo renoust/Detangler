@@ -1,4 +1,7 @@
 (function(){
+
+import_class('lasso.js', 'TP');
+
 var TulipPosyInteraction = function(contexte, objectcontext)
 {
     var __g__ = this;
@@ -22,7 +25,7 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 {
                         svg = contxt.svg_catalyst
                         graph = contxt.graph_catalyst        
-                        contxt.lasso_catalyst = new lasso(svg);
+                        contxt.lasso_catalyst = new TP.Lasso(svg);
                         myL = contxt.lasso_catalyst                
                 }
         
@@ -30,7 +33,7 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 {
                         svg = contxt.svg_substrate
                         graph = contxt.graph_substrate
-                        contxt.lasso_substrate = new lasso(svg);
+                        contxt.lasso_substrate = new TP.Lasso(svg);
                         myL = contxt.lasso_substrate
                 }
 
@@ -38,7 +41,7 @@ var TulipPosyInteraction = function(contexte, objectcontext)
                 {
                         svg = contxt.svg_combined
                         graph = contxt.graph_combined
-                        contxt.lasso_combined = new lasso(svg);
+                        contxt.lasso_combined = new TP.Lasso(svg);
                         myL = contxt.lasso_combined
                 }
 

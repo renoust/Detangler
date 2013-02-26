@@ -1,3 +1,5 @@
+(function()
+{
 /************************************************************************
  * This container takes care of the actual drawing of the graph (e.g.
  * nodes and links) and of its direct interaction
@@ -12,7 +14,7 @@
 //
 // something to check with the currentX/currentY association that is repeated here
 // not harmful yet, but doesn't seem to be really useful either
-var graphDrawing = function(_graph, _svg)
+var GraphDrawing = function(_graph, _svg)
 {
 
         // g, the return variable
@@ -724,5 +726,7 @@ var graphDrawing = function(_graph, _svg)
             // .text(function(d){return d.label.slice(0,10)+"...";});
         }
 
-        return g
+        return g;
 }
+    return {GraphDrawing:GraphDrawing};
+})()

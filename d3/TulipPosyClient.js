@@ -1,4 +1,8 @@
 (function(){
+
+import_class("graph.js", "TP");
+import_class("graphDrawing.js", "TP");
+
 var TulipPosyClient = function(contexte, objectcontext)
 {
     var __g__ = this;
@@ -93,7 +97,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         contxt.graph_substrate.nodes(data.nodes, "substrate")
                         contxt.graph_substrate.links(data.links, "substrate")
                         contxt.graph_substrate.edgeBinding()
-                        graph_drawing = graphDrawing(contxt.graph_substrate, contxt.svg_substrate)
+                        graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate)
                         graph_drawing.move(contxt.graph_substrate, 0)
                 }});
         }
@@ -123,7 +127,7 @@ var TulipPosyClient = function(contexte, objectcontext)
 
                         contxt.graph_catalyst.links(data.links, "catalyst")
                         contxt.graph_catalyst.edgeBinding()
-                        graph_drawing = graphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
+                        graph_drawing = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
                         graph_drawing.clear()
                         graph_drawing.draw()
                         contxt.entanglement_homogeneity = data['data']['entanglement homogeneity']
@@ -164,7 +168,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         cGraph.nodes(data.nodes, graphName);
                         cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
-                        var graph_drawing = graphDrawing(cGraph, svg);
+                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
                         graph_drawing.resize(cGraph, 0);
 
                         objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
@@ -241,7 +245,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         //convertLinks(data);
                         //objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
                         
-                        var tempGraph = new graph()
+                        var tempGraph = new TP.Graph()
                         tempGraph.nodes(data.nodes, graphName)
                         tempGraph.links(data.links, graphName)
 
@@ -252,7 +256,7 @@ var TulipPosyClient = function(contexte, objectcontext)
 
                         //cGraph.edgeBinding()
                         
-                        var graph_drawing = graphDrawing(cGraph, svg)
+                        var graph_drawing = TP.GraphDrawing(cGraph, svg)
                         
                         //g.clear()
                         //g.draw()
@@ -273,10 +277,10 @@ var TulipPosyClient = function(contexte, objectcontext)
                                 svg_target = contxt.svg_substrate
                                 graph_target = contxt.graph_substrate
                             }
-                            var graph_drawing = graphDrawing(graph_target, svg_target);                        
+                            var graph_drawing = TP.GraphDrawing(graph_target, svg_target);                        
                             graph_drawing.show(tempGraph);
                         }else{
-                            var tempCombined = new graph();
+                            var tempCombined = new TP.Graph();
                             var nodeSelection = JSON.parse(selection).nodes;
                             var nodeSelList = [];
                             nodeSelection.forEach(function(d){nodeSelList.push(d.baseID);});
@@ -297,7 +301,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                             tempCombined.specialEdgeBinding("substrate", "catalyst");
                             //console.log(nodeSelList, nodeTargetList);
                             //console.log(tempLinks.length,"/",graph_combined.links().length, " LINKS TO BE SYNCHRONIZED", tempLinks);
-                            var graph_drawing = graphDrawing(contxt.graph_combined, contxt.svg_combined);
+                            var graph_drawing = TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
                             graph_drawing.show(tempCombined);                         
                         }
 
@@ -358,7 +362,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         cGraph.nodes(data.nodes, "substrate");
                         cGraph.links(data.links, "substrate");
                         cGraph.edgeBinding();
-                        var graph_drawing = graphDrawing(cGraph, svg);
+                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
                         graph_drawing.move(cGraph, 0);
                         
                         var newGraph = JSON.parse(data.data.graph);
@@ -434,7 +438,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                             };
                         });
                         
-                        var graph_drawing = graphDrawing(contxt.graph_combined, contxt.svg_combined);
+                        var graph_drawing = TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
                         graph_drawing.clear();
                         graph_drawing.draw();
 
@@ -476,7 +480,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         cGraph.nodes(data.nodes, graphName);
                         cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
-                        var graph_drawing = graphDrawing(cGraph, svg);
+                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
                         graph_drawing.move(cGraph, 0);
                 });
         };
@@ -508,7 +512,7 @@ var TulipPosyClient = function(contexte, objectcontext)
                         cGraph.nodes(data.nodes, graphName);
                         cGraph.links(data.links, graphName);
                         cGraph.edgeBinding();
-                        var graph_drawing = graphDrawing(cGraph, svg);
+                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
                         graph_drawing.exit(cGraph, 0);
                 });
 

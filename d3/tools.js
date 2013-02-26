@@ -1,4 +1,7 @@
 (function(){
+
+import_class("graphDrawing.js", "TP");
+
 var Tools = function(contexte, objectcontext)
 {
 
@@ -97,7 +100,7 @@ this.loadJSON = function(data)
         contxt.graph_substrate.edgeBinding();
         console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
-        var graph_drawing = graphDrawing(contxt.graph_substrate, contxt.svg_substrate);
+        var graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate);
         graph_drawing.draw();
         
         return

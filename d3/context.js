@@ -1,4 +1,7 @@
 (function(){
+
+import_class("graph.js", "TP");
+
 var Context = function() {
 		var __g__ = this;
 	
@@ -26,9 +29,9 @@ var Context = function() {
             .attr("id", "svg_combined");
 
         // initialization of the graphs, and lasso interactors
-        this.graph_substrate = new graph();
-        this.graph_catalyst = new graph();
-        this.graph_combined = new graph();
+        this.graph_substrate = new TP.Graph();
+        this.graph_catalyst = new TP.Graph();
+        this.graph_combined = new TP.Graph();
         this.lasso_catalyst = null;
         this.lasso_substrate = null;
         this.lasso_combined = null;

@@ -7,9 +7,11 @@
  * @created May 2012
  **************************************************************************/
 
+(function(){
+
 // This class can be called with 'new' to create independant instances
 // with deep copies of the links and nodes
-graph = function() 
+var Graph = function() 
 {
     // g, the return variable
     // nodes_array, the array containing the list of nodes
@@ -27,11 +29,11 @@ graph = function()
     this.nodes = function(x, type) 
     {
         if (!arguments.length) return g.nodes_array;
-        g.nodes_array = []
+        g.nodes_array = [];
         x.forEach(function(d)
         {
             d._type = type; 
-            g.nodes_array.push(jQuery.extend(true, {}, d))
+            g.nodes_array.push(jQuery.extend(true, {}, d));
         });
         //console.log("created
         return g.nodes_array;
@@ -80,7 +82,7 @@ graph = function()
             if(type != null) {d._type = type;}
             d.source = d.source.baseID;
             d.target = d.target.baseID;
-            g.links_array.push(jQuery.extend(true, {}, d))
+            g.links_array.push(jQuery.extend(true, {}, d));
         });
         //links = jQuery.extend(true, {}, x);
         return g.links_array;
@@ -102,7 +104,7 @@ graph = function()
            o = {};
 
        for (var i = 0; i < n; ++i) {
-           var node = g.nodes_array[i]
+           var node = g.nodes_array[i];
            if(!(node._type in o))
             {
                 o[node._type] = {};
@@ -133,7 +135,7 @@ graph = function()
            o = {};
 
        for (var i = 0; i < n; ++i) {
-           var node = g.nodes_array[i]
+           var node = g.nodes_array[i];
            if(!(node._type in o))
             {
                 o[node._type] = {};
@@ -183,3 +185,5 @@ graph = function()
 
    return g;
 }
+    return {Graph:Graph};
+})()
