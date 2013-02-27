@@ -23,7 +23,6 @@ import_class("objectContext.js", "TP");
 var TulipPosy = function(originalJSON)
 { 
 
-
         var context = new TP.Context();
 		var objectContext = new TP.ObjectContext(context);
 		
