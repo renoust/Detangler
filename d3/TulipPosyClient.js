@@ -5,17 +5,17 @@ import_class("graphDrawing.js", "TP");
 
 var TulipPosyClient = function(contexte, objectcontext)
 {
-    var __g__ = this;
-	
-	var contxt = contexte;
-	var objectContext = objectcontext;
+	    var __g__ = this;
+		
+		var contxt = contexte;
+		var objectContext = objectcontext;
 		
 		
         // Loads the data from a json file, if no JSON is passed, then we load the default JSON stored in
         // 'contxt.json_address', otherwise it loads the given json file.
         // It is first formatted correctly, locally, then sent to tulip to be initialized (so it is modified
         // again), and analyzed.
-        __g__.loadData = function(json)
+        this.loadData = function(json)
         {
                 //d3.json(contxt.tulip_address+"?n=50", function(json) {
                 //d3.json(contxt.json_address, function(data) {
@@ -66,7 +66,7 @@ var TulipPosyClient = function(contexte, objectcontext)
         // query, the query to pass to the search engine
         this.callSearchQuery = function(query)
         {
-                var recieved_data;
+                var recieved_data = {};
                 console.log('calling search query ', query)
                 $.ajax({url:contxt.tulip_address, async:false, data:{ type:"creation", 'search':query['query'] }, type:'POST', 
                         success:function(data){
@@ -88,20 +88,9 @@ var TulipPosyClient = function(contexte, objectcontext)
         this.createTulipGraph = function(json)
         {
                 $.ajax({url:contxt.tulip_address, data:{type:"creation", graph:json}, type:'POST', async:false, success:function(data){
-                        console.log('creating in tulip, and recieved data: ',data)
-                        data = JSON.parse(data)
-                        console.log("here should be sid: ", data.data.sid)
-                        contxt.sessionSid = data.data.sid
-                        console.log("the session sid has just been affected: ",contxt.sessionSid);
-                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
-                        contxt.graph_substrate.nodes(data.nodes, "substrate")
-                        contxt.graph_substrate.links(data.links, "substrate")
-                        contxt.graph_substrate.edgeBinding()
-                        graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate)
-                        graph_drawing.move(contxt.graph_substrate, 0)
+                        __g__.buildGraphFromData(data);
                 }});
         }
-
 
 
         // This function calls through tulip the analysis of a substrate graph, stores and displays it
@@ -115,28 +104,52 @@ var TulipPosyClient = function(contexte, objectcontext)
                 truc = contxt.sessionSid;
 
                 $.post(contxt.tulip_address, {sid:truc, type:'analyse', target:'substrate', weight:contxt.substrateWeightProperty}, function(data){
-                        data = JSON.parse(data)
-                        console.log("received data after analysis:")
-                        console.log(data);
-                        //convertLinks(data);
-                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
-                        //console.log("right before:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
-                        contxt.graph_catalyst.nodes(data.nodes, "catalyst")
-
-                        //console.log("loaded graph:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
-
-                        contxt.graph_catalyst.links(data.links, "catalyst")
-                        contxt.graph_catalyst.edgeBinding()
-                        graph_drawing = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
-                        graph_drawing.clear()
-                        graph_drawing.draw()
-                        contxt.entanglement_homogeneity = data['data']['entanglement homogeneity']
-                        contxt.entanglement_intensity = data['data']['entanglement intensity']
-                        //console.log("after analysis:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
-                        objectContext.TulipPosyVisualizationObject.entanglementCaught();
+                        __g__.applySubstrateAnalysisFromData(data);
                 });
 
         }
+        
+        
+        
+        // This function send to the tulip server a selection of nodes and removes the unselected nodes
+        // json, the json string of the graph
+        // graphName, the string value corresponding to the graph
+        this.sendSelection = function(json, graphName)
+        {
+                console.log("calling sendselection: ",graphName," ",json);
+                var cGraph = null;
+                var svg = null;
+
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
+
+                $.post(contxt.tulip_address, { sid:contxt.sessionSid, type:"update", graph:json, target:graphName }, function(data){
+			           console.log("querying an induced subgraph:",graphName," ",json);
+                       __g__.applyInducedSubGraphFromData(data,svg,cGraph, graphName);
+                });
+
+        };
+               
+        // This function calls a layout algorithm of a graph through tulip, and moves the given graph accordingly
+        // layoutName, the name of the tulip layout we want to call
+        // graphName, the string value corresponding to the graph
+        this.callLayout = function(layoutName, graphName)
+        {
+
+                var params = {type:"layout", name:layoutName, target:graphName};
+                //console.log('going to send params as: ', params)
+                
+                var cGraph = null;
+                var svg = null;
+                svg = contxt.getViewSVG(graphName);
+                cGraph = contxt.getViewGraph(graphName);
+
+
+                $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
+                        __g__.applyLayoutFromData(data,svg,cGraph, graphName);
+                        
+                });
+        };
         
         // This function calls a float algorithm of a graph through tulip, and moves the given graph accordingly
         // floatAlgorithmName, the name of the tulip algorithm we want to call
@@ -154,21 +167,13 @@ var TulipPosyClient = function(contexte, objectcontext)
         
 
                 $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                        data = JSON.parse(data)
-                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
-                        cGraph.nodes(data.nodes, graphName);
-                        cGraph.links(data.links, graphName);
-                        cGraph.edgeBinding();
-                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
-                        graph_drawing.resize(cGraph, 0);
-
-                        objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
-                        objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
-                        objectContext.TulipPosyVisualizationObject.entanglementCaught();
+                        __g__.applyFloatAlgorithmFromData(data,svg,cGraph, graphName);
 
 
                 });
         }
+        
+        
 
         // This function calls the synchronization from a given graph through tulip, returns and applies
         // the result on the other graph. The computed entanglement indices are also updated.
@@ -307,31 +312,6 @@ var TulipPosyClient = function(contexte, objectcontext)
 
         }
 
-        /*
-        this.syncLayouts = function()
-        {
-
-                var params = {type:"synchronize layouts", name:"synchronize layouts"};
-                //console.log('going to send params as: ', params)
-                
-                var cGraph = null;
-                var svg = null;
-
-                cGraph = contxt.graph_substrate;
-                svg = contxt.svg_substrate;
-
-                $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
-                        data = JSON.parse(data)
-                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
-                        cGraph.nodes(data.nodes);
-                        cGraph.links(data.links);
-                        cGraph.edgeBinding();
-                        var graph_drawing = graphDrawing(cGraph, svg);
-                        graph_drawing.move(cGraph, 0);
-                });
-        };
-        */
 
         this.syncLayouts = function()
         {
@@ -435,61 +415,85 @@ var TulipPosyClient = function(contexte, objectcontext)
 
                 });
         };
+        
+        
+		this.buildGraphFromData = function(data)
+		{
+			console.log('creating in tulip, and recieved data: ',data)
+            data = JSON.parse(data)
+            console.log("here should be sid: ", data.data.sid)
+            contxt.sessionSid = data.data.sid
+            console.log("the session sid has just been affected: ",contxt.sessionSid);
+            objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
+            contxt.graph_substrate.nodes(data.nodes, "substrate")
+            contxt.graph_substrate.links(data.links, "substrate")
+            contxt.graph_substrate.edgeBinding()
+            graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate)
+            graph_drawing.move(contxt.graph_substrate, 0)
+		}
 
-
-
-
-       
-        // This function calls a layout algorithm of a graph through tulip, and moves the given graph accordingly
-        // layoutName, the name of the tulip layout we want to call
-        // graphName, the string value corresponding to the graph
-        this.callLayout = function(layoutName, graphName)
+        this.applySubstrateAnalysisFromData = function(data)
         {
+        	data = JSON.parse(data)
+            console.log("received data after analysis:")
+            console.log(data);
+            //convertLinks(data);
+            objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
+            //console.log("right before:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
+            contxt.graph_catalyst.nodes(data.nodes, "catalyst")
 
-                var params = {type:"layout", name:layoutName, target:graphName};
-                //console.log('going to send params as: ', params)
-                
-                var cGraph = null;
-                var svg = null;
-                svg = contxt.getViewSVG(graphName);
-                cGraph = contxt.getViewGraph(graphName);
+            //console.log("loaded graph:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
 
+            contxt.graph_catalyst.links(data.links, "catalyst")
+            contxt.graph_catalyst.edgeBinding()
+            graph_drawing = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
+            graph_drawing.clear()
+            graph_drawing.draw()
+            contxt.entanglement_homogeneity = data['data']['entanglement homogeneity']
+            contxt.entanglement_intensity = data['data']['entanglement intensity']
+            //console.log("after analysis:",contxt.graph_catalyst.nodes(), contxt.graph_substrate.nodes())
+            objectContext.TulipPosyVisualizationObject.entanglementCaught();
+        }
 
-                $.post(contxt.tulip_address, {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(params)}, function(data){
-                        // we need to rescale the graph so it will fit the current svg frame and not overlap the buttons
-                        data = JSON.parse(data)
-                        objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
-                        cGraph.nodes(data.nodes, graphName);
-                        cGraph.links(data.links, graphName);
-                        cGraph.edgeBinding();
-                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
-                        graph_drawing.move(cGraph, 0);
-                });
-        };
-
-        // This function send to the tulip server a selection of nodes and removes the unselected nodes
-        // json, the json string of the graph
-        // graphName, the string value corresponding to the graph
-        this.sendSelection = function(json, graphName)
+        
+        this.applyLayoutFromData = function (data, svg, graph, graphName)
         {
-                console.log("calling sendselection: ",graphName," ",json);
-                var cGraph = null;
-                var svg = null;
+        	data = JSON.parse(data)
+            objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
+            graph.nodes(data.nodes, graphName);
+            graph.links(data.links, graphName);
+            graph.edgeBinding();
+            var graph_drawing = TP.GraphDrawing(graph, svg);
+            graph_drawing.move(graph, 0);
+        }
 
-                svg = contxt.getViewSVG(graphName);
-                cGraph = contxt.getViewGraph(graphName);
+        this.applyInducedSubGraphFromData = function(data, svg, graph, graphName)
+        {
+        	data = JSON.parse(data);
+            graph.nodes(data.nodes, graphName);
+            graph.links(data.links, graphName);
+            graph.edgeBinding();
+            var graph_drawing = TP.GraphDrawing(graph, svg);
+            graph_drawing.exit(graph, 0);
+        }
 
-                $.post(contxt.tulip_address, { sid:contxt.sessionSid, type:"update", graph:json, target:graphName }, function(data){
-                        data = JSON.parse(data)
-                        console.log("querying an induced subgraph:",graphName," ",json);
-                        cGraph.nodes(data.nodes, graphName);
-                        cGraph.links(data.links, graphName);
-                        cGraph.edgeBinding();
-                        var graph_drawing = TP.GraphDrawing(cGraph, svg);
-                        graph_drawing.exit(cGraph, 0);
-                });
 
-        };
+        this.applyFloatAlgorithmFromData = function(data,svg,graph, graphName)
+        {
+        	data = JSON.parse(data)
+            objectContext.TulipPosyVisualizationObject.rescaleGraph(data);
+            graph.nodes(data.nodes, graphName);
+            graph.links(data.links, graphName);
+            graph.edgeBinding();
+            var graph_drawing = TP.GraphDrawing(graph, svg);
+            graph_drawing.resize(graph, 0);
+
+            objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+            objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+            objectContext.TulipPosyVisualizationObject.entanglementCaught();
+        }
+
+        
 
         // This method returns the nodes that are selected in a given graph.
         // graphName, the string value corresponding to the graph we want to select nodes in ('substrate' or 'catalyst')
