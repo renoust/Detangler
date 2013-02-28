@@ -7,7 +7,7 @@ import_class('TulipPosyVisualization.js', 'TP');
 import_class('TulipPosyInteraction.js', 'TP');
 import_class('TulipPosyInterface.js', 'TP');
 import_class('TulipPosyClient.js', 'TP');
-
+import_class('TulipPosyInteractionCallbacks.js', 'TP');
 
 var ObjectContext = function(contexte)
 {
@@ -22,6 +22,7 @@ var ObjectContext = function(contexte)
 		this.TulipPosyVisualizationObject = new TP.TulipPosyVisualization(context, this);
 		this.TulipPosyInterfaceObject = new TP.TulipPosyInterface(context, this);
 		this.TulipPosyInteractionObject = new TP.TulipPosyInteraction(context, this);
+		this.TulipPosyInteractionCallbacksObject = new TP.TulipPosyInteractionCallbacks(context, this);
 		this.ToolObject = new TOOL.Tools(context, this);
 
 		return __g__;
