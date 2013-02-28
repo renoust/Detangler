@@ -25,7 +25,7 @@ function import_class(url, namespace) {
 
     function extend_object(object1, object2)
     {
-        for(key in object2)
+        for(var key in object2)
         {
             object1[key] = object2[key]
         }
