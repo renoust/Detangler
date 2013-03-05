@@ -1,13 +1,15 @@
 (function(){
 
 import_class("graphDrawing.js","TP");
+import_class('context.js', 'TP');
+import_class("objectContext.js", "TP");
 
-var TulipPosyVisualization = function(contexte, objectcontext)
+var TulipPosyVisualization = function()
 {
     var __g__ = this;
 
-	var contxt = contexte;
-	var objectContext = objectcontext;
+	var contxt = TP.Context();
+	var objectContext = TP.ObjectContext();
        
 
 		

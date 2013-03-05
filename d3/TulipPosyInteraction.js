@@ -1,13 +1,16 @@
 (function(){
 
+import_class('context.js', 'TP');
+import_class("objectContext.js", "TP");
 import_class('lasso.js', 'TP');
 
-var TulipPosyInteraction = function(contexte, objectcontext)
+var TulipPosyInteraction = function()
 {
     var __g__ = this;
 
-	var contxt = contexte;
-	var objectContext = objectcontext;
+	var contxt = TP.Context();
+	
+	var objectContext = TP.ObjectContext();
 
        // This function creates a lasso brush interactor for a specific target, it also redefined
         // the brush intersection function, and applies actions to the selected target.

@@ -1,6 +1,7 @@
 // here's import function
 
 var imported = {};
+var importing = {};
 
 
 function import_class(url, namespace) {
@@ -32,7 +33,8 @@ function import_class(url, namespace) {
         return object1
     }
 
-    if (!(url in imported)) {
+    if (!(url in imported) && !(url in importing)) {
+    	importing[url] = "processing";
         // fetch content of the URL, should be synchronized
         content = fetch_js(url);
         //console.log('the content:', content)
@@ -47,6 +49,7 @@ function import_class(url, namespace) {
             //console.log(window[namespace]);
         }
         imported[url] = __s__;
+        importing["url"] = "done";
     }
     return imported[url]
 }

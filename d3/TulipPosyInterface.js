@@ -1,11 +1,16 @@
 (function (){
 
-var TulipPosyInterface = function(contexte, objectcontext)
+import_class('context.js', 'TP');
+import_class("objectContext.js", "TP");
+
+
+var TulipPosyInterface = function()
 {
     var __g__ = this;
 
-	var contxt = contexte;
-	var objectContext = objectcontext;	
+	var contxt = TP.Context();
+	
+	var objectContext = TP.ObjectContext();	
 		
         this.includeFormParam = function (target)
         {

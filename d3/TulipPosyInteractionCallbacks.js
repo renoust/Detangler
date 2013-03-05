@@ -1,15 +1,17 @@
 (function(){
 	
+	import_class('context.js', 'TP');
+	import_class("objectContext.js", "TP");
 	import_class("graph.js", "TP");
 	import_class("graphDrawing.js", "TP");
 
 	
-	var TulipPosyInteractionCallbacks = function(contexte, objectcontext)
+	var TulipPosyInteractionCallbacks = function()
 	{
 		var __g__ = this;
 		
-		var contxt = contexte;
-		var objectContext = objectcontext;
+		var contxt = TP.Context();
+		var objectContext = TP.ObjectContext();
 
 		
         this.syncLayoutsFromData = function(data)

@@ -23,8 +23,7 @@ import_class("objectContext.js", "TP");
 var TulipPosy = function(originalJSON)
 { 
 
-        var context = new TP.Context();
-		var objectContext = new TP.ObjectContext(context);
+		var objectContext = TP.ObjectContext();
 		
 
         // We create the interfaces for each svg

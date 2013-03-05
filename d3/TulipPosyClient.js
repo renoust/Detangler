@@ -1,15 +1,18 @@
 (function(){
 
+import_class('context.js', 'TP');
+import_class("objectContext.js", "TP");
+
 import_class("graph.js", "TP");
 import_class("graphDrawing.js", "TP");
 import_class("TulipPosyInteractionCallbacks.js", "TP");
 
-var TulipPosyClient = function(contexte, objectcontext)
+var TulipPosyClient = function()
 {
 	    var __g__ = this;
 		
-		var contxt = contexte;
-		var objectContext = objectcontext;
+		var contxt = TP.Context();
+		var objectContext = TP.ObjectContext();
 		
 		
         // Loads the data from a json file, if no JSON is passed, then we load the default JSON stored in
