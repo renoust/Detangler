@@ -236,15 +236,27 @@ class MyRequestHandler(tornado.web.RequestHandler):
     request, the JSON object of the request
     '''
     def updateGraphRequest(self, request):
-        #print "update request: ",request
-        graphSelection = json.loads(request['graph'][0]) 
-        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0])
-        #g = self.getGraphMan(request).modifyGraph(g)
-        #print 'recieved this list: ',graphSelection
-        graphJSON = self.getGraphMan(request).graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
-        #graphJSON = self.getGraphMan(request).graphToJSON(g)
-        #print 'sending this list: ',graphJSON
-        self.sendJSON(graphJSON)
+        if 'parameters' in request.keys():
+                params = request['parameters'][0]
+                params = json.loads(params)
+
+                if 'type' in params:
+                    if params['type'] == 'induced':
+                        #print "update request: ",request
+                        graphSelection = json.loads(request['graph'][0]) 
+                        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0])
+                        #g = self.getGraphMan(request).modifyGraph(g)
+                        #print 'recieved this list: ',graphSelection
+                        graphJSON = self.getGraphMan(request).graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
+                        #graphJSON = self.getGraphMan(request).graphToJSON(g)
+                        #print 'sending this list: ',graphJSON
+                        self.sendJSON(graphJSON)
+                    if params['type'] == 'layout':
+                        
+                        graphSelection = json.loads(params['graph'])
+                        self.getGraphMan(request).updateLayout(graphSelection, params['target'])
+                        #update the layout here from the target graph
+                        #shouldn't we check the sid beforehand?
 
 
     '''

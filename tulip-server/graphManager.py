@@ -200,6 +200,30 @@ class graphManager():
         #self.graph = g
         return graph
 
+    def updateLayout(self, jsonGraph, target):
+        
+        
+        print "updating the layout:"
+        print "target: ", target
+        print "jsonGraph: ",jsonGraph 
+        
+        
+        nodeList = {}
+
+        for n in jsonGraph[u'nodes']:
+                nodeList[n[u'baseID']] = [n[u'x'], n[u'y']]
+
+        graph = self.substrate
+        if target == 'catalyst':
+                graph = self.catalyst
+                
+        baseIDP = graph.getDoubleProperty("baseID")
+        vLayoutP = graph.getLayoutProperty("viewLayout")
+        for n in graph.getNodes():
+                if baseIDP[n] in nodeList:
+                        c = tlp.Coord(nodeList[baseIDP[n]][0], nodeList[baseIDP[n]][1], 0)
+                        vLayoutP[n] = c
+
 
     '''
     Returns a graph with a randomized layout

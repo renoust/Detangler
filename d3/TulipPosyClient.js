@@ -144,7 +144,8 @@ var TulipPosyClient = function()
         // graphName, the string value corresponding to the graph
         this.sendSelection = function(json, graphName)
         {
-				var params = { sid:contxt.sessionSid, type:"update", graph:json, target:graphName}
+	        	var updateParams = {type:"induced"};
+				var params = { sid:contxt.sessionSid, type:"update", parameters:JSON.stringify(updateParams), graph:json, target:graphName}
 				__g__.sendQuery({parameters:params, success:function(data){objectContext.TulipPosyInteractionCallbacksObject.applyInducedSubGraphFromData(data, graphName);}});
         };
                
@@ -158,6 +159,15 @@ var TulipPosyClient = function()
                 var params = {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(layoutParams)};
                 //console.log('going to send params as: ', params)
                 __g__.sendQuery({parameters:params, success:function(data){objectContext.TulipPosyInteractionCallbacksObject.applyLayoutFromData(data, graphName);}});
+        };
+        
+        this.updateLayout = function(graphName, json)
+        {
+        		json = JSON.stringify({nodes:TP.Context().graph_catalyst.nodes()})
+				var updateParams = {type:"layout", target:graphName, graph:json};
+                var params = {sid:contxt.sessionSid, type:'update', parameters:JSON.stringify(updateParams)};
+                //console.log('going to send params as: ', params)
+                __g__.sendQuery({parameters:params, success:function(data){/*objectContext.TulipPosyInteractionCallbacksObject.applyLayoutFromData(data, graphName);*/}});
         };
         
         // This function calls a float algorithm of a graph through tulip, and moves the given graph accordingly
