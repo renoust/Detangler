@@ -31,6 +31,9 @@ var TulipPosy = function(originalJSON)
         objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
         objectContext.TulipPosyInterfaceObject.addInterfaceCombined();
         
+        assert(true, "context loading");
+        assert(false, "objectContext loading");
+        
         //console.log("beginning of the generation", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
         // This is the tricky part, because the json given to the function can be of many shapes.
