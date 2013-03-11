@@ -50,7 +50,7 @@ var TulipPosyInterface = function()
                 
                 objectContext.TulipPosyInterfaceObject.addButton(target, 2, "random layout", "button4", function(){objectContext.TulipPosyClientObject.callLayout("Random", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 3, "reset view", "button5", function(){objectContext.TulipPosyVisualizationObject.resetView(target)});
-                objectContext.TulipPosyInterfaceObject.addButton(target, 4, "degree metric", "button6", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 4, "degree metric", "button6", function(){ objectContext.TulipPosyClientObject.callLayout("FM^3 (OGDF)", target)/*objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)*/});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 5, "btw. centrality", "button7", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Betweenness Centrality", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 6, "reset size", "button8", function(){objectContext.TulipPosyVisualizationObject.resetSize(target)});  
                 objectContext.TulipPosyInterfaceObject.addButton(target, 7, "hide labels", "showHideLabels", function(){objectContext.TulipPosyVisualizationObject.showhideLabels(target)});              
@@ -81,7 +81,7 @@ var TulipPosyInterface = function()
                 objectContext.TulipPosyInterfaceObject.addButton(target, 2, "circular layout", "button3", function(){objectContext.TulipPosyClientObject.callLayout("Circular", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 3, "random layout", "button4", function(){objectContext.TulipPosyClientObject.callLayout("Random", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 4, "reset view", "button5", function(){objectContext.TulipPosyVisualizationObject.resetView(target)});
-                objectContext.TulipPosyInterfaceObject.addButton(target, 5, "degree metric", "button6", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)});
+                objectContext.TulipPosyInterfaceObject.addButton(target, 5, "degree metric", "button6", function(){objectContext.TulipPosyClientObject.callLayout("LinLog Layout (Noack)", target);/*objectContext.TulipPosyClientObject.callFloatAlgorithm("Degree", target)*/});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 6, "btw. centrality", "button7", function(){objectContext.TulipPosyClientObject.callFloatAlgorithm("Betweenness Centrality", target)});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 7, "analyse", "button8", function(){objectContext.TulipPosyClientObject.analyseGraph()});
                 objectContext.TulipPosyInterfaceObject.addButton(target, 8, "reset size", "button9", function(){objectContext.TulipPosyVisualizationObject.resetSize(target)});

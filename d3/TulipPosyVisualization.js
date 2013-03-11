@@ -44,6 +44,10 @@ var TulipPosyVisualization = function()
                 var index = Math.round(contxt.entanglement_intensity*5)%6
                 contxt.svg_substrate.selectAll("rect.entanglementframe").transition().style('fill-opacity', .5)
                         .style("fill", brewerSeq[index])
+                d3.selectAll("rect.view").style("fill", brewerSeq[index])
+                d3.selectAll("rect.brush").style("fill", brewerSeq[index])
+                d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+                
                 if(contxt.lasso_catalyst) contxt.lasso_catalyst.fillColor = brewerSeq[index]
                 if(contxt.lasso_substrate) contxt.lasso_substrate.fillColor = brewerSeq[index]
         }
