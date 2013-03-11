@@ -382,7 +382,7 @@ var GraphDrawing = function(_graph, _svg)
                 if (valMax == valMin || valMax-valMin < 0.0001)
                 {
                     equalScales = true
-                    scaleMin = 7
+                    scaleMin = 5
                     factor = factor/valMin
                 }
                 else
@@ -524,7 +524,7 @@ var GraphDrawing = function(_graph, _svg)
                 if (valMax == valMin || valMax-valMin < 0.0001)
                 {
                     equalScales = true
-                    scaleMin = 7
+                    scaleMin = 5
                 }
                 else
                 {
