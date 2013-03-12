@@ -682,7 +682,7 @@ var Lasso = function(svg)
                 .attr("width", Math.abs(p0[0]-p1[0]))
                 .attr("height", Math.abs(p0[1]-p1[1]))
                 .style("fill", function(){return __g.fillColor;})
-                .style("fill-opacity", .125)
+                .style("fill-opacity", .5)
                 .style("stroke", "purple")
                 .style("stroke-width",2)
                         __g.checkIntersect();
