@@ -457,22 +457,9 @@ var GraphDrawing = function(_graph, _svg)
 
         }
 
-        // this function puts forward a selection of nodes
-        // _graph, the new graph selection
-        // dTime, the delay in ms to apply the selection
-        // we initialized all the nodes and then select all the nodes passed in 
-        // the given graph and change their aspect (size and color)
-        //
-        // this function name doesn't seem appropriate
-        // we assign to the nodes the new data, and reassign the original data
-        // we might want to apply persistant colors and sizes stored in the data
-        g.show = function(_graph, dTime)
-        {
-
-                //g.cGraph = _graph
-
-                // redraw the previous nodes to the default values
-                var node = g.svg.selectAll("g.node")
+		g.resetDrawing = function()
+		{
+			var node = g.svg.selectAll("g.node")
                         .style("opacity", .5)
                         .select("g.glyph").select("circle.node")
                             .style('fill', 'steelblue')
@@ -497,14 +484,27 @@ var GraphDrawing = function(_graph, _svg)
                         .select("path.link")
                         .style("stroke", "gray")
                         .style("stroke-width", function(d) { return 1;})
+		}
 
-               //we would like it better as a parameter
-               var scaleMin = 3.0
-               var scaleMax = 12.0
-               var parameter = "entanglementIndice"
+        // this function puts forward a selection of nodes
+        // _graph, the new graph selection
+        // dTime, the delay in ms to apply the selection
+        // we initialized all the nodes and then select all the nodes passed in 
+        // the given graph and change their aspect (size and color)
+        //
+        // this function name doesn't seem appropriate
+        // we assign to the nodes the new data, and reassign the original data
+        // we might want to apply persistant colors and sizes stored in the data
+        g.show = function(_graph, dTime)
+        {
+        		g.resetDrawing();
+        		               //we would like it better as a parameter
+               	var scaleMin = 3.0
+               	var scaleMax = 12.0
+               	var parameter = "entanglementIndice"
 
-               var valMin = null
-               var valMax = null
+               	var valMin = null
+               	var valMax = null
 
                 _graph.nodes().forEach(
                     function(n)
@@ -532,17 +532,19 @@ var GraphDrawing = function(_graph, _svg)
                 }    
 
 
+				//transition disabled until we can manage the flush
+
                 // assign the new data
                 var node = g.svg.selectAll("g.node")
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.nodes(),function(d){return d.baseID})
-                        .transition().delay(500)
+                        //.transition().delay(50)
                         .style("opacity", 1)
 
                 var link = g.svg.selectAll("g.link")
                         //.data(g.cGraph.nodes(),function(d){return d.baseID})
                         .data(_graph.links(),function(d){return d.baseID})
-                        .transition().delay(500)
+                        //.transition().delay(50)
                         .style("opacity", 1)
 
            

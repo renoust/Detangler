@@ -80,7 +80,7 @@ var TulipPosyInteraction = function()
                         svg.selectAll("g.node").classed("selected", function(d){
                                         if (target=="combined" && d._type != contxt.combined_foreground)
                                             return false;
-                                        console.log('current obj', d)
+                                        //console.log('current obj', d)
                                         var x = 0;
                                         var y = 0;
                                         if (!('currentX' in d))
@@ -113,7 +113,7 @@ var TulipPosyInteraction = function()
                                                 return true;
 
                                         var intersects = __g.intersect(pointArray, x, y)
-                                        if (intersects) console.log("node intersects", d)
+                                        //if (intersects) console.log("node intersects", d)
                                         //console.log('result of intersects? ',intersects,pointArray,x,y)
 
                                         if (e.shiftKey && intersects)
@@ -130,7 +130,7 @@ var TulipPosyInteraction = function()
                                                 //console.log ("d.selected = ",intersects);
                                                 d.selected = intersects;
                                         }
-                                        console.log("returning selection:",d.selected)
+                                        //console.log("returning selection:",d.selected)
                                         return d.selected
 
                                 })
@@ -166,7 +166,7 @@ var TulipPosyInteraction = function()
 
                         
                         selList.sort()
-                        console.log("selection list: ",selList, " with length ", selList.length)
+                        //console.log("selection list: ",selList, " with length ", selList.length)
                         
                         if(selList.length>0)// && target == "substrate")
                         {        
@@ -212,7 +212,7 @@ var TulipPosyInteraction = function()
                                 objectContext.TulipPosyVisualizationObject.resetSize("catalyst");
                                 objectContext.TulipPosyVisualizationObject.resetSize("combined");
                                 prevSelList = selList.slice(0);
-                                console.log("warning: the selection list is empty");
+                                //console.log("warning: the selection list is empty");
 
                             
                         }

@@ -202,6 +202,36 @@
         }
 
 
+		this.resetSyncView = function(graphName)
+		{
+			var graph = null
+			var svg = null
+			var target = null
+
+	        if (graphName == 'substrate')
+	        {        
+	                graph = contxt.graph_catalyst
+	                svg = contxt.svg_catalyst
+	                target = "catalyst"
+	        }
+	
+	        if (graphName == 'catalyst')
+	        {        
+	                graph = contxt.graph_substrate
+	                svg = contxt.svg_substrate
+	                target = "substrate"
+	        }
+	        
+	        if (graphName == 'combined')
+	        {        
+	                graph = contxt.graph_combined;
+	                svg = contxt.svg_combined;
+	                target = "combined"
+	        }
+	        
+	       	TP.GraphDrawing(graph, svg).resetDrawing();
+         }
+
 
         this.syncGraphRequestFromData = function(data, selection, graphName)
         {
@@ -216,16 +246,16 @@
 
                 if (graphName == 'catalyst')
                 {        
-                        console.log('target is catalyst');
+                        //console.log('target is catalyst');
                         graph = contxt.graph_substrate
-                        console.log(selection)
+                        //console.log(selection)
                         svg = contxt.svg_substrate
                 }
                 
                 if (graphName == 'combined')
                 {        
                         graph = contxt.graph_combined;
-                        console.log("synGraph combined:", selection);
+                        //console.log("synGraph combined:", selection);
                         svg = contxt.svg_combined;
                 }
         	
@@ -248,27 +278,31 @@
                         //cGraph.nodes().forEach(function(d){if(selectedID.indexOf(d.baseID) > -1) selectedNodes.push(d);});
                         //console.log("Selected Nodes:", selectedNodes);
 
-                        console.log("received data after synchronization: ")
-                        console.log(data);
+                        //console.log("received data after synchronization: ")
+                        //console.log(data);
                         //convertLinks(data);
                         //objectContext.TulipPosyVisualizationObject.rescaleGraph(data)
                         
-                        var tempGraph = new TP.Graph()
-                        tempGraph.nodes(data.nodes, graphName)
-                        tempGraph.links(data.links, graphName)
+                        var tempGraph = new TP.Graph();
+                        tempGraph.nodes(data.nodes, graphName);
+                        tempGraph.links(data.links, graphName);
 
-                        tempGraph.edgeBinding()
+                        tempGraph.edgeBinding();
 
                         //cGraph.nodes(data.nodes)
                         //cGraph.links(data.links)
 
                         //cGraph.edgeBinding()
-                        
-                        var graph_drawing = TP.GraphDrawing(graph, svg)
+                        //assert (true, "calling show in "+graphName);
+                        var graph_drawing = new TP.GraphDrawing(graph, svg);
                         
                         //g.clear()
                         //g.draw()
-                        graph_drawing.show(tempGraph)
+                        d3.timer.flush();
+                        //(function(g){
+                        	var graph_drawing = new TP.GraphDrawing(graph, svg);
+                        	graph_drawing.show(tempGraph);
+                        //})(tempGraph);
 
 
                         if (graphName == 'combined')
@@ -285,9 +319,10 @@
                                 svg_target = contxt.svg_substrate
                                 graph_target = contxt.graph_substrate
                             }
-                            var graph_drawing = TP.GraphDrawing(graph_target, svg_target);                        
+                            var graph_drawing = new TP.GraphDrawing(graph_target, svg_target);                        
                             graph_drawing.show(tempGraph);
-                        }else{
+                        }else{ 
+                        	
                             var tempCombined = new TP.Graph();
                             var nodeSelection = JSON.parse(selection).nodes;
                             var nodeSelList = [];
@@ -302,15 +337,15 @@
                                 if (!d.source.baseID || !d.target.baseID) console.log(d);
                                 if(nodeSelList.indexOf(d.source.baseID) != -1 &&  nodeTargetList.indexOf(d.target.baseID) != -1
                                     || nodeSelList.indexOf(d.target.baseID) != -1 &&  nodeTargetList.indexOf(d.source.baseID) != -1)
-                                    {console.log("selected:",d, d.source, d.target); tempLinks.push(d);                                    }
+                                    {/*console.log("selected:",d, d.source, d.target);*/ tempLinks.push(d);                                    }
                             })
                             tempCombined.links(tempLinks);
                             
                             tempCombined.specialEdgeBinding("substrate", "catalyst");
                             //console.log(nodeSelList, nodeTargetList);
                             //console.log(tempLinks.length,"/",graph_combined.links().length, " LINKS TO BE SYNCHRONIZED", tempLinks);
-                            var graph_drawing = TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
-                            graph_drawing.show(tempCombined);                         
+                            var graph_drawing = new TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
+                            d3.timer.flush();/*(function(tempCombined){*/graph_drawing.show(tempCombined)/*})(tempCombined)*/;                         
                         }
 
 

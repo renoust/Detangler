@@ -57,7 +57,7 @@ var Graph = function()
     // a deep copy is made using jQuery
     this.links = function(x, type) {
         if (!arguments.length) return g.links_array;
-        console.log("Reassigning edges");
+        //console.log("Reassigning edges");
 
         g.links_array = []
         x.forEach(function(d)
@@ -124,7 +124,7 @@ var Graph = function()
         }
            if (typeof l.target == "number") l.target = o[l._type][l.target];
        }
-        console.log("The binding: ", g.links_array);
+        //console.log("The binding: ", g.links_array);
 
     }
 
@@ -155,7 +155,7 @@ var Graph = function()
         }
            if (typeof l.target == "number") l.target = o[targetType][l.target];
        }
-        console.log("The binding: ", g.links_array);
+        //console.log("The binding: ", g.links_array);
 
     }
 

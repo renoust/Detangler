@@ -102,6 +102,7 @@ var Lasso = function(svg)
         __g.totalDistanceAlongDrag = 0;
         __g.distanceFromStartToEnd = 0;
         __g.cSvg.selectAll(".brush").data(this.pointList).exit().remove();
+        //__g.cSvg.selectAll(".view").data(this.pointList).exit().remove();
         __g.cSvg.selectAll(".resize").data(this.pointList).exit().remove();
         __g.pointList.push( [e[0], e[1]]);
 

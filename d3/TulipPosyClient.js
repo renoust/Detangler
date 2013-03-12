@@ -204,7 +204,9 @@ var TulipPosyClient = function()
                               target:syncTarget, 
                               operator:contxt.catalyst_sync_operator, 
                               weight:contxt.substrateWeightProperty}
+                
 
+                //objectContext.TulipPosyInteractionCallbacksObject.resetSyncView(graphName);
                 __g__.sendQuery({parameters:params, async:false, success:function(data){objectContext.TulipPosyInteractionCallbacksObject.syncGraphRequestFromData(data, selection, graphName);}});
 
         }

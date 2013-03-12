@@ -32,6 +32,7 @@ var TulipPosy = function(originalJSON)
         objectContext.TulipPosyInterfaceObject.addInterfaceCombined();
         
         
+        /*
         console.log("THOSE ARE EXAMPLES OF ASSERT CALLS:")
         assert(true, "context loading");
         assert(false, "objectContext loading");
@@ -41,7 +42,7 @@ var TulipPosy = function(originalJSON)
         {
 	        assert(true, "context loading");
 	        assert(false, "objectContext loading");        	
-        });
+        });*/
         
         //console.log("beginning of the generation", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
@@ -67,13 +68,14 @@ var TulipPosy = function(originalJSON)
         }
 
         // we create then the basic interactors
-        console.log("THESE ARE EXAMPLEs OF PROFILING:");
-        profile(function(){objectContext.TulipPosyInteractionObject.createLasso("substrate")});
-		profile(function(){
+        //console.log("THESE ARE EXAMPLEs OF PROFILING:");
+        //profile(function(){objectContext.TulipPosyInteractionObject.createLasso("substrate")});
+		/*profile(function(){
 			objectContext.TulipPosyInteractionObject.removeLasso("substrate");
 			objectContext.TulipPosyInteractionObject.createLasso("substrate");},
 			10000);
-		        
+		*/
+		objectContext.TulipPosyInteractionObject.createLasso("substrate");        
         objectContext.TulipPosyInteractionObject.createLasso("catalyst");
         objectContext.TulipPosyInteractionObject.addZoom("substrate");
         objectContext.TulipPosyInteractionObject.addZoom("catalyst");
