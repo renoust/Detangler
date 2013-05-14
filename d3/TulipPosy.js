@@ -81,5 +81,7 @@ var TulipPosy = function(originalJSON)
         objectContext.TulipPosyInteractionObject.addZoom("catalyst");
         objectContext.TulipPosyInteractionObject.createLasso("combined");
         objectContext.TulipPosyInteractionObject.addZoom("combined");
+        objectContext.TulipPosyInterfaceObject.toggleSelectMove('substrate');
+        objectContext.TulipPosyInterfaceObject.toggleSelectMove('catalyst');
 };
 

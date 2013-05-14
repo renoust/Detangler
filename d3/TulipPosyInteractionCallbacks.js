@@ -109,6 +109,9 @@
                 graph_drawing.clear();
                 graph_drawing.draw();
 
+				TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
+				TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("substrate");
+				TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst");                
 
 		}        
         
@@ -286,7 +289,16 @@
                         var tempGraph = new TP.Graph();
                         tempGraph.nodes(data.nodes, graphName);
                         tempGraph.links(data.links, graphName);
-
+                        if (graphName == 'catalyst')
+                        {
+	                        TP.Context().syncNodes = []
+	                        data.nodes.forEach(function(d)
+	                        {
+	                        	TP.Context().syncNodes.push(d.baseID);
+	                        });
+	                    }else{
+	                    	TP.Context().syncNodes = undefined;
+						}
                         tempGraph.edgeBinding();
 
                         //cGraph.nodes(data.nodes)

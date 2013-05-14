@@ -63,6 +63,19 @@ var TulipPosyClient = function()
                         console.log("graph analysed",contxt.sessionSid)
                         
                 }
+                TP.ObjectContext().TulipPosyClientObject.syncLayouts();
+                //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
+                /*var cGraph = null;
+                var svg = null;
+
+                svg = contxt.getViewSVG('catalyst');
+                cGraph = contxt.getViewGraph('catalyst');
+                var graph_drawing = TP.GraphDrawing(cGraph, svg);
+                graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndice');
+
+                objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+                objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+                objectContext.TulipPosyVisualizationObject.entanglementCaught();*/
         }
         
 
@@ -214,13 +227,15 @@ var TulipPosyClient = function()
 
 
 
-        this.syncLayouts = function()
+        this.syncLayouts = function(async)
         {
+        		if(async !== false)
+        			async = true;
 
                 var syncLayoutParams = {type:"synchronize layouts", name:"synchronize layouts"};
                 var params = {sid:contxt.sessionSid, type:'algorithm', parameters:JSON.stringify(syncLayoutParams)};
                 
-                __g__.sendQuery({parameters:params, success:objectContext.TulipPosyInteractionCallbacksObject.syncLayoutsFromData});
+                __g__.sendQuery({parameters:params, async:async, success:objectContext.TulipPosyInteractionCallbacksObject.syncLayoutsFromData});
         };
                 
 

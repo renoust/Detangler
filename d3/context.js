@@ -34,7 +34,8 @@
 	        this.svg_combined = d3.select("body")/*svg_i*/.append("svg")
 	            .attr("width", this.width)
 	            .attr("height", this.height)
-	            .attr("id", "svg_combined");
+	            .attr("id", "svg_combined")
+	            //.attr("visibility", "hidden");
 	
 	        // initialization of the graphs, and lasso interactors
 	        this.graph_substrate = new TP.Graph();
@@ -56,15 +57,15 @@
 	        this.show_links_catalyst = true;
 	        this.node_information_catalyst = false;
 	        this.mouse_over_button = false;
-	        this.select_mode_combined = false;
-	        this.move_mode_combined = true;
+	        this.select_mode_combined = true;
+	        this.move_mode_combined = false;
 	        this.show_labels_combined = true;
 	        this.show_links_combined = true;
 	        this.node_information_combined = false;
 	        this.combined_foreground = "substrate";
 	        
 	        // initialization of the global entanglement parameters
-	        this.catalyst_sync_operator = "AND";
+	        this.catalyst_sync_operator = "OR";
 	        this.entanglement_intensity = 0.0;
 	        this.entanglement_homogeneity = 0.0;
 	

@@ -48,7 +48,7 @@ var GraphDrawing = function(_graph, _svg)
                 function move(){
                     //var e = window.event;
                     //if (e.ctrlKey || e.metaKey) return;
-                    this.parentNode.appendChild(this);
+                    //this.parentNode.appendChild(this);
                     var dragTarget = d3.select(this);
                     var circleTarget = dragTarget.select("circle.node");
                     var rectTarget = dragTarget.select("rect.node");
@@ -56,7 +56,7 @@ var GraphDrawing = function(_graph, _svg)
                     var currentNode = dragTarget.data()[0]
                     var posX = d3.event.dx
                     var posY = d3.event.dy
-                    var labelTarget = dragTarget.select("text.node"+currentNode.baseID);
+                    var labelTarget = g.svg.select("text.node"+currentNode.baseID);
                     
                     currentNode.x += posX
                     currentNode.y += posY
@@ -133,6 +133,21 @@ var GraphDrawing = function(_graph, _svg)
                         .attr("transform", function(d) { d.currentX = d.x; d.currentY = d.y; return })
                         .call(d3.behavior.drag().on("drag", move))
                         .on("click", showHideLabel)
+                        .on("mouseover", function(d){
+                        	console.log("appending a snippet");
+                        	g.svg.selectAll("text.snippet").data([d]).enter()
+                        							.append("text")
+                        								.attr("dx", function(dd){return dd.currentX})
+                    									.attr("dy", function(dd){return dd.currentY})
+	                        							.classed("snippet", true)
+	                        							.style("stroke", "black")
+									                    .style("stroke-width", 0.5)
+									                    .style("font-family", "Arial")
+									                    .style("font-size", 12)
+	                        							.text(function(dd){return dd.label}); })
+                        .on("mouseout",function(){
+                                var o = g.svg.selectAll("text.snippet").data([]).exit().remove();
+                        })
                         .append("g")
                                 .attr("class", function(d){return d._type})
                                 .classed("glyph", true)
@@ -184,7 +199,27 @@ var GraphDrawing = function(_graph, _svg)
 
                 //textNode = node.append("g").attr("class", "node")
                 //        .classed("textGroup", 1)
-                        
+                
+            var selection = g.svg.selectAll("text.node")
+            //var selection = g.svg.selectAll("g.node")            
+            selection.data(g.cGraph.nodes(), function(d){return d.baseID}).enter()
+            //selection
+                    .append("text")
+                    .attr("class", function(d){return "node"+d.baseID+" "+d._type})
+                    .classed("node", true).classed("text", true)
+                    .attr("dx", function(d){d.currentX = d.x; return d.currentX})
+                    .attr("dy", function(d){d.currentY = d.y; return d.currentY})
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .style("font-family", "Arial")
+                    .style("font-size", 12)
+                    //.attr('unselectable', 'on')
+                    //.on('selectstart', function(){return false;})
+                    .text(function(d) { return d.label; });
+            
+            //quick and dirty to disable text selection        
+            //$('text').attr('unselectable','on').css('UserSelect','none').css('MozUserSelect','none').css('user-select', 'none');
+                /*        
                 var node = g.svg.selectAll("g.node")
                 node.append("text")
                         .attr("class", function(d){return "node"+d.baseID+" "+d._type})
@@ -195,7 +230,8 @@ var GraphDrawing = function(_graph, _svg)
                         .style("stroke-width", 0.5)
                         .style("font-family", "Arial")
                         .style("font-size", 12)
-                        .text(function(d) { return d.label; });                
+                        .text(function(d) { return d.label; });
+                */                
         }
 
         g.delLinks = function()
@@ -212,7 +248,7 @@ var GraphDrawing = function(_graph, _svg)
         {
             var selection = g.svg.selectAll("text.node")
             //var selection = g.svg.selectAll("g.node")            
-            selection.data(g.cGraph.nodes()).enter()
+            selection.data(g.cGraph.nodes(), function(d){return d.baseID}).enter()
             //selection
                     .append("text")
                     .attr("class", function(d){return "node"+d.baseID+" "+d._type})
@@ -305,10 +341,11 @@ var GraphDrawing = function(_graph, _svg)
                                 .attr("x", function(d){d.currentX = d.x; d.currentY = d.y; return d.x})
                                 .attr("y", function(d){return d.y});
 
-                var node = g.svg.selectAll("g.node")                                
-                        node.select("text")//.transition().delay(dTime)
+                //var node = g.svg.selectAll("g.node")                                
+                //        node.select("text")//.transition().delay(dTime)
+                var labels = g.svg.selectAll("text.node").data(g.cGraph.nodes(),function(d){	return d.baseID;})
                                 .attr("dx", function(d){return d.x})
-                                .attr("dy", function(d){return d.y})
+                                .attr("dy", function(d){return d.y});
                         //.attr("transform", function(d) { /*console.log(d);*/ return "translate(" + d.x + "," + d.y + ")"; })
 
                 var link = g.svg.selectAll("g.link")
@@ -320,6 +357,12 @@ var GraphDrawing = function(_graph, _svg)
                                 .attr("d", function(d) { return "M"+d.source.x+" "+d.source.y +" L"+d.target.x+" "+d.target.y; })
         }
 
+		g.drawLabels = function()
+		{
+			var labels = g.svg.selectAll("text.node").data(g.cGraph.nodes(),function(d){return d.baseID;})
+                                .attr("dx", function(d){return d.x})
+                                .attr("dy", function(d){return d.y});
+		}
 
         // this function resizes the nodes
         // _graph, the new graph with size
@@ -345,7 +388,8 @@ var GraphDrawing = function(_graph, _svg)
                         .transition().delay(dTime)
                 link.select("path.link")
                         .style("stroke-width", function(d) { return 1;})
-                */        
+                */
+               	g.drawLabels();        
                         
 
         }
@@ -475,9 +519,10 @@ var GraphDrawing = function(_graph, _svg)
                             .style("stroke-width", 0)
                             .style("stroke", "black")
 
-                var node = g.svg.selectAll("g.node")
-                        .select("text.node")
-                            .attr("visibility", "hidden")
+                var node = g.svg.selectAll("text.node")
+                        //.select("text.node")
+                            //.attr("visibility", "hidden")
+                            .style("opacity", .5)
 
                 var link = g.svg.selectAll("g.link")
                         .style("opacity", .25)
@@ -497,8 +542,9 @@ var GraphDrawing = function(_graph, _svg)
         // we might want to apply persistant colors and sizes stored in the data
         g.show = function(_graph, dTime)
         {
+           	    g.arrangeLabels();
         		g.resetDrawing();
-        		               //we would like it better as a parameter
+        		//we would like it better as a parameter
                	var scaleMin = 3.0
                	var scaleMax = 12.0
                	var parameter = "entanglementIndice"
@@ -532,6 +578,11 @@ var GraphDrawing = function(_graph, _svg)
                 }    
 
 
+                /*g.svg.selectAll("text.node")
+                        .data(g.cGraph.nodes(),function(d){return d.baseID})  
+						.style("opacity", .5)
+						*/
+
 				//transition disabled until we can manage the flush
 
                 // assign the new data
@@ -547,7 +598,10 @@ var GraphDrawing = function(_graph, _svg)
                         //.transition().delay(50)
                         .style("opacity", 1)
 
-           
+				var text = g.svg.selectAll("text.node")
+		                .data(_graph.nodes(),function(d){return d.baseID})
+                		.style("opacity", 1)
+                        //.attr("visibility", "visible")           
 
                 // update the nodes
                 //node.select("circle.node")
@@ -565,8 +619,7 @@ var GraphDrawing = function(_graph, _svg)
                         .style("stroke", "brown")
                         
 
-                node.select("text.node")
-                        .attr("visibility", "visible")
+                
 
                 link.select("path.link")
                         .style("stroke-width", function(d) { return 2;})
@@ -586,10 +639,16 @@ var GraphDrawing = function(_graph, _svg)
                 // reassign the original data
 
                 g.svg.selectAll("g.node")
-                        .data(g.cGraph.nodes(),function(d){return d.baseID})                        
-
+                        .data(g.cGraph.nodes(),function(d){return d.baseID})
+                        
+                g.svg.selectAll("text.node")
+                        .data(g.cGraph.nodes(),function(d){return d.baseID})  
+                        
                 g.svg.selectAll("g.link")
-                        .data(g.cGraph.links(),function(d){return d.baseID})                        
+                        .data(g.cGraph.links(),function(d){return d.baseID})
+                   
+                 
+                //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", 'catalyst')                      
         }
 
 
@@ -623,9 +682,9 @@ var GraphDrawing = function(_graph, _svg)
         }
 
 
-        g.arrangeLabels = function()
+        g.arrangeLabels = function(nodeList)
         {
-
+        	
 
             var intersect = function(rectDiag, point)
             {
@@ -636,15 +695,15 @@ var GraphDrawing = function(_graph, _svg)
             }
 
 
-            var labels = g.svg.selectAll("text.node")
-                .attr("visibility", "visible");
+            var labels = g.svg.selectAll("text.node").data(g.cGraph.nodes())
+                .attr("visibility", function(d){if (!nodeList || nodeList.indexOf(d.baseID) != -1) return "visible"});
             //console.log("labels:", labels[0]);
             var labelsArray = []
             var iterArray = []
             //var bboxArray = []
             //console.log(svg); 
             //console.log(svg.contentDocument);
-            labels[0].forEach(function(d){labelsArray.push(d3.select(d)); iterArray.push(d.getBBox());});
+            labels[0].forEach(function(d){if (!nodeList || indexOf(d3.select(d).data()[0].baseID) != -1){ labelsArray.push(d3.select(d)); iterArray.push(d.getBBox());}});
             
             var margin = 1;
             

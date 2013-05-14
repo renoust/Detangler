@@ -212,7 +212,16 @@ var TulipPosyInteraction = function()
                                 objectContext.TulipPosyVisualizationObject.resetSize("catalyst");
                                 objectContext.TulipPosyVisualizationObject.resetSize("combined");
                                 prevSelList = selList.slice(0);
+                                
+                                TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", 'catalyst')    
                                 //console.log("warning: the selection list is empty");
+				               	contxt.svg_catalyst.selectAll("text.node").style("opacity", 1)
+				                contxt.svg_substrate.selectAll("text.node").style("opacity", 1)
+				                contxt.svg_combined.selectAll("text.node").style("opacity", 1)
+				                
+				                objectContext.TulipPosyVisualizationObject.arrangeLabels("substrate");
+				                objectContext.TulipPosyVisualizationObject.arrangeLabels("catalyst");
+
 
                             
                         }
@@ -356,6 +365,7 @@ var TulipPosyInteraction = function()
         // target, the string value of the target svg view         
         this.removeLasso = function(target)
         {
+        	console.log("calling remove LASSO");
                 if (!target)
                         return
 
@@ -377,7 +387,8 @@ var TulipPosyInteraction = function()
                         return
 
                 var svg = null
-                svg = contxt.getViewSVG(target);
+                svg = TP.Context().getViewSVG(target);
+                graph = TP.Context().getViewGraph(target);
 
 
                 // Defines the zoom behavior and updates that data currentX and currentY values to match with intersections
@@ -388,7 +399,7 @@ var TulipPosyInteraction = function()
                             .scaleExtent([0.5, 2.0])
                             .on("zoom", function() {
                                 
-                                if (!eval("contxt.move_mode_"+target))
+                                if (!eval("TP.Context().move_mode_"+target))
                                 {
                                          return;
                                 }
@@ -404,7 +415,7 @@ var TulipPosyInteraction = function()
                                                                 });
                                 
 
-                                svg.selectAll("g.node,g.link").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
+                                svg.selectAll("g.node,g.link,text.node").attr("transform","translate(" + d3.event.translate[0] + "," +  d3.event.translate[1] + ") scale(" +  d3.event.scale + ")")
                                 svg.selectAll("text.node").style("font-size", function(){ return Math.ceil(12/d3.event.scale);});
                                 objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
                                 objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
@@ -469,6 +480,39 @@ var TulipPosyInteraction = function()
                 .style("opacity", function(d){if(i != j && d.baseID == data){return 1 }else{ return .25;}})
         }
 
+		this.delSelection = function ()
+		{
+			svg = TP.Context().svg_substrate;
+			graph = TP.Context().graph_substrate;
+			
+			newLinks = []
+			newNodes = []
+			graph.links().forEach(function(d){
+				if(!(TP.Context().syncNodes.indexOf(d.source.baseID) != -1 || TP.Context().syncNodes.indexOf(d.target.baseID) != -1))
+				{ newLinks.push(d); }				
+			})
+
+			graph.nodes().forEach(function(d){
+				if(!(TP.Context().syncNodes.indexOf(d.baseID) != -1))
+				{ newNodes.push(d); }				
+			})
+			
+			graph.nodes(newNodes, "substrate");
+			graph.links(newLinks, "substrate");
+			graph.edgeBinding()
+
+			svg.selectAll("g.node").data(graph.nodes(), function(d){return d.baseID}).exit().remove();
+			svg.selectAll("text.node").data(graph.nodes(), function(d){return d.baseID}).exit().remove();
+			svg.selectAll("g.link").data(graph.links(), function(d){return d.baseID}).exit().remove();
+			
+			//svg.selectAll("g.node").data(graph.nodes())
+			//	.attr("visibility", function(d){if(TP.Context().syncNodes.indexOf(d.baseID) != -1){return "hidden"}else{return "visible"}})
+			//svg.selectAll("g.link").data(graph.links())
+			//	.attr("visibility", function(d){if(TP.Context().syncNodes.indexOf(d.source.baseID) != -1 || TP.Context().syncNodes.indexOf(d.target.baseID) != -1){return "hidden"}else{return "visible"}})
+				
+			
+			console.log(TP.Context().syncNodes);
+		}
 
 
     return __g__;
