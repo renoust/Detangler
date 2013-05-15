@@ -58,7 +58,9 @@ var data=[[1,2],[3,4],[5,6]]
 
 //    $("body").append("div").attr("id","dialog")
 d3.select("body").append("div")
-                .attr("id", "dialog")
+                    .attr("id", "dialog")
+                .append("input")
+                    .on("mouseover", function(d,e,f){console.log(d,e,f); d3.select(this).attr("value", "toto")});
                 
  $(function() {
 $( "#dialog" ).dialog();
@@ -153,11 +155,12 @@ document.onkeydown = function(e){
 console.log(d3.selectAll("circle"))
 
 </script> 
- 
+<body>
+<div>
 <p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
- 
+</div>
 <p>We're just trying</p>
- 
+ </body>
 <footer> 
   <aside>May 25, 2012</aside> 
   Benjamin Renoust (from Mike Bostock) 

@@ -19,7 +19,9 @@
 // Maybe we'd like to standardize some naming in this class, and cut the
 // methods that look like too heavy...
 
-var lasso = function(svg)
+(function(){
+
+var Lasso = function(svg)
 {
 
     // __g, the container to return and manipulate through the callbacks
@@ -70,7 +72,7 @@ var lasso = function(svg)
             fPoint = __g.pointList[0]
             lPoint = __g.pointList[__g.pointList.length-1]
             __g.totalDistanceAlongDrag += Math.sqrt(((cPoint[0]-lPoint[0])*(cPoint[0]-lPoint[0])) + ((cPoint[1]-lPoint[1])*(cPoint[1]-lPoint[1])))
-            __g.distanceFromStartToEnd = Math.sqrt(((cPoint[0]-fPoint[0])*(cPoint[0]-fPoint[0])) + ((cPoint[1]-fPoint[1])*(cPoint[1]-fPoint[1]))            )
+            __g.distanceFromStartToEnd = Math.sqrt(((cPoint[0]-fPoint[0])*(cPoint[0]-fPoint[0])) + ((cPoint[1]-fPoint[1])*(cPoint[1]-fPoint[1])))
         }
         __g.pointList.push([cPoint[0], cPoint[1]]);
     }
@@ -100,6 +102,7 @@ var lasso = function(svg)
         __g.totalDistanceAlongDrag = 0;
         __g.distanceFromStartToEnd = 0;
         __g.cSvg.selectAll(".brush").data(this.pointList).exit().remove();
+        //__g.cSvg.selectAll(".view").data(this.pointList).exit().remove();
         __g.cSvg.selectAll(".resize").data(this.pointList).exit().remove();
         __g.pointList.push( [e[0], e[1]]);
 
@@ -173,8 +176,8 @@ var lasso = function(svg)
                                 .attr("y", Math.min(p0[1], p1[1]))
                                 .attr("width", Math.abs(p0[0]-p1[0]))
                                 .attr("height", Math.abs(p0[1]-p1[1]))
-                                .style("fill", function(){return this.fillColor;})
-                                .style("fill-opacity", .125)
+                                .style("fill", function(){return __g.fillColor;})
+                                .style("fill-opacity", .5)
                                 .style("stroke", "purple")
                                 .style("stroke-width",2)
 
@@ -289,7 +292,7 @@ var lasso = function(svg)
                 .attr("width", Math.abs(p0[0]-p1[0]))
                 .attr("height", Math.abs(p0[1]-p1[1]))
                 .style("fill", "black")
-                .style("fill-opacity", .125)
+                .style("fill-opacity", .5)
         }
             
     }
@@ -351,8 +354,8 @@ var lasso = function(svg)
                 .attr("y", Math.min(p0[1], p1[1]))
                 .attr("width", Math.abs(p0[0]-p1[0]))
                 .attr("height", Math.abs(p0[1]-p1[1]))
-                .style("fill", this.fillColor)
-                .style("fill-opacity", .125)
+                .style("fill", function(){return __g.fillColor;})
+                .style("fill-opacity", .5)
                 .style("stroke", "purple")
                 .style("stroke-width",2)
                                 .style("cursor", "move")
@@ -556,131 +559,131 @@ var lasso = function(svg)
         this.resizeRectangleEvent = function(current, p0, p1)
         {
 
-                        if(__g.isResizing)
-                        {
-                                console.log('we are resizing the rectangle: ', this.resizeDirection)
-                                console.log("mouse: ", current)
-                        }
+            if(__g.isResizing)
+            {
+                console.log('we are resizing the rectangle: ', this.resizeDirection)
+                console.log("mouse: ", current)
+            }
                         
-                        if (__g.resizeDirection == "north")
-                        {
-                                maxP = p0[1] > p1[1] ? p0 : p1
-                                minP = p0[1] > p1[1] ? p1 : p0
-                        
+            if (__g.resizeDirection == "north")
+            {
+                    maxP = p0[1] > p1[1] ? p0 : p1
+                    minP = p0[1] > p1[1] ? p1 : p0
+            
 
-                                if (current[1] >= maxP[1])
-                                {
-                                        __g.resizeDirection = "south"
-                                        __g.resizeRectangleEvent(current, minP, maxP)
-                                }
-                                else
-                                {
-                                        minP[1] = current[1]
-                                        __g.cSvg.selectAll("g.resize").data([]).exit().remove()
-                                        __g.drawResizeRectangles(minP, maxP)
-                                }
-                        }
+                    if (current[1] >= maxP[1])
+                    {
+                            __g.resizeDirection = "south"
+                            __g.resizeRectangleEvent(current, minP, maxP)
+                    }
+                    else
+                    {
+                            minP[1] = current[1]
+                            __g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                            __g.drawResizeRectangles(minP, maxP)
+                    }
+            }
 
-                        if (__g.resizeDirection == "south")
-                        {
-                                maxP = p0[1] > p1[1] ? p0 : p1
-                                minP = p0[1] > p1[1] ? p1 : p0
-                        
-                                if (current[1] <= minP[1])
-                                {
-                                        __g.resizeDirection = "north"
-                                        __g.resizeRectangleEvent(current, minP, maxP)
-                                }
-                                else
-                                {
-                                        maxP[1] = current[1]
-                                        //console.log("min, max",minP,maxP)
-                                        __g.cSvg.selectAll("g.resize").data([]).exit().remove()
-                                        __g.drawResizeRectangles(minP, maxP)
-                                }
-                        }
-
-
-                        if (__g.resizeDirection == "east")
-                        {
-                                maxP = p0[0] > p1[0] ? p0 : p1
-                                minP = p0[0] > p1[0] ? p1 : p0
-                                
-                                if (current[0] <= minP[0])
-                                {
-                                        __g.resizeDirection = "west"
-                                        __g.resizeRectangleEvent(current, minP, maxP)
-                                }else
-                                {
-                                        maxP[0] = current[0]
-                                        //console.log("min, max",minP,maxP)
-                                        __g.cSvg.selectAll("g.resize").data([]).exit().remove()
-                                        __g.drawResizeRectangles(minP, maxP)
-                                }
-                        }
-
-                        if (__g.resizeDirection == "west")
-                        {
-                                maxP = p0[0] > p1[0] ? p0 : p1
-                                minP = p0[0] > p1[0] ? p1 : p0
-                        
-                                if (current[0] >= maxP[0])
-                                {
-                                        __g.resizeDirection = "east"
-                                        __g.resizeRectangleEvent(current, minP, maxP)
-                                }else
-                                {
-                                        minP[0] = current[0]
-                                        //console.log("min, max",minP,maxP)
-                                        __g.cSvg.selectAll("g.resize").data([]).exit().remove()
-                                        __g.drawResizeRectangles(minP, maxP)
-                                }
-                        }
+            if (__g.resizeDirection == "south")
+            {
+                    maxP = p0[1] > p1[1] ? p0 : p1
+                    minP = p0[1] > p1[1] ? p1 : p0
+            
+                    if (current[1] <= minP[1])
+                    {
+                            __g.resizeDirection = "north"
+                            __g.resizeRectangleEvent(current, minP, maxP)
+                    }
+                    else
+                    {
+                            maxP[1] = current[1]
+                            //console.log("min, max",minP,maxP)
+                            __g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                            __g.drawResizeRectangles(minP, maxP)
+                    }
+            }
 
 
-                        if (__g.resizeDirection == "south_west")
-                        {
-                                __g.resizeDirection = "south"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "west"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "south_west"
-                        }
+            if (__g.resizeDirection == "east")
+            {
+                    maxP = p0[0] > p1[0] ? p0 : p1
+                    minP = p0[0] > p1[0] ? p1 : p0
+                    
+                    if (current[0] <= minP[0])
+                    {
+                            __g.resizeDirection = "west"
+                            __g.resizeRectangleEvent(current, minP, maxP)
+                    }else
+                    {
+                            maxP[0] = current[0]
+                            //console.log("min, max",minP,maxP)
+                            __g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                            __g.drawResizeRectangles(minP, maxP)
+                    }
+            }
 
-                        if (__g.resizeDirection == "north_west")
-                        {
-                                __g.resizeDirection = "north"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "west"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "north_west"
-                        }
+            if (__g.resizeDirection == "west")
+            {
+                    maxP = p0[0] > p1[0] ? p0 : p1
+                    minP = p0[0] > p1[0] ? p1 : p0
+            
+                    if (current[0] >= maxP[0])
+                    {
+                            __g.resizeDirection = "east"
+                            __g.resizeRectangleEvent(current, minP, maxP)
+                    }else
+                    {
+                            minP[0] = current[0]
+                            //console.log("min, max",minP,maxP)
+                            __g.cSvg.selectAll("g.resize").data([]).exit().remove()
+                            __g.drawResizeRectangles(minP, maxP)
+                    }
+            }
 
-                        if (__g.resizeDirection == "north_east")
-                        {
-                                __g.resizeDirection = "north"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "east"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "north_east"
-                        }
 
-                        if (__g.resizeDirection == "south_east")
-                        {
-                                __g.resizeDirection = "south"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "east"
-                                __g.resizeRectangleEvent(current, p0, p1)
-                                __g.resizeDirection = "south_east"
-                        }
+            if (__g.resizeDirection == "south_west")
+            {
+                    __g.resizeDirection = "south"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "west"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "south_west"
+            }
 
-                        __g.cSvg.select("rect.view").data([1])
+            if (__g.resizeDirection == "north_west")
+            {
+                    __g.resizeDirection = "north"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "west"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "north_west"
+            }
+
+            if (__g.resizeDirection == "north_east")
+            {
+                    __g.resizeDirection = "north"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "east"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "north_east"
+            }
+
+            if (__g.resizeDirection == "south_east")
+            {
+                    __g.resizeDirection = "south"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "east"
+                    __g.resizeRectangleEvent(current, p0, p1)
+                    __g.resizeDirection = "south_east"
+            }
+
+            __g.cSvg.select("rect.view").data([1])
                 .attr("x", Math.min(p0[0], p1[0]))
                 .attr("y", Math.min(p0[1], p1[1]))
                 .attr("width", Math.abs(p0[0]-p1[0]))
                 .attr("height", Math.abs(p0[1]-p1[1]))
-                .style("fill", function(){return this.fillColor;})
-                .style("fill-opacity", .125)
+                .style("fill", function(){return __g.fillColor;})
+                .style("fill-opacity", .5)
                 .style("stroke", "purple")
                 .style("stroke-width",2)
                         __g.checkIntersect();
@@ -706,8 +709,8 @@ var lasso = function(svg)
             ((polygon[j][1] <= y) && (y < polygon[i][1]))) &&
             (x < (polygon[j][0] - polygon[i][0]) * (y - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) + polygon[i][0]))
             c = !c;
-              }
-              return c;
+        }
+        return c;
     }
 
     return this
@@ -734,16 +737,16 @@ var lasso = function(svg)
                 if (__g.intersect(pointArray, x, y))
                     return 'red';
                 else
-                                {
-                                        var e=window.event
-                                        //console.log('control pushed ', e.ctrlKey)
-                                        if (!e.ctrlKey)
+                {
+                    var e=window.event
+                    //console.log('control pushed ', e.ctrlKey)
+                    if (!e.ctrlKey)
                             return 'blue';
-                                }
+                }
             });
     }
-
-
-
 }
+
+return {Lasso:Lasso}
+})()
 

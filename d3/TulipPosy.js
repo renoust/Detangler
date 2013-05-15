@@ -23,15 +23,26 @@ import_class("objectContext.js", "TP");
 var TulipPosy = function(originalJSON)
 { 
 
-
-        var context = new TP.Context();
-		var objectContext = new TP.ObjectContext(context);
+		var objectContext = TP.ObjectContext();
 		
 
         // We create the interfaces for each svg
         objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
         objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
         objectContext.TulipPosyInterfaceObject.addInterfaceCombined();
+        
+        
+        /*
+        console.log("THOSE ARE EXAMPLES OF ASSERT CALLS:")
+        assert(true, "context loading");
+        assert(false, "objectContext loading");
+
+        console.log("THOSE ARE EXAMPLES OF A TEST CONSTRUCTION:")        
+        Test("init test", function()
+        {
+	        assert(true, "context loading");
+	        assert(false, "objectContext loading");        	
+        });*/
         
         //console.log("beginning of the generation", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
@@ -57,11 +68,20 @@ var TulipPosy = function(originalJSON)
         }
 
         // we create then the basic interactors
-        objectContext.TulipPosyInteractionObject.createLasso("substrate");
+        //console.log("THESE ARE EXAMPLEs OF PROFILING:");
+        //profile(function(){objectContext.TulipPosyInteractionObject.createLasso("substrate")});
+		/*profile(function(){
+			objectContext.TulipPosyInteractionObject.removeLasso("substrate");
+			objectContext.TulipPosyInteractionObject.createLasso("substrate");},
+			10000);
+		*/
+		objectContext.TulipPosyInteractionObject.createLasso("substrate");        
         objectContext.TulipPosyInteractionObject.createLasso("catalyst");
         objectContext.TulipPosyInteractionObject.addZoom("substrate");
         objectContext.TulipPosyInteractionObject.addZoom("catalyst");
         objectContext.TulipPosyInteractionObject.createLasso("combined");
         objectContext.TulipPosyInteractionObject.addZoom("combined");
+        objectContext.TulipPosyInterfaceObject.toggleSelectMove('substrate');
+        objectContext.TulipPosyInterfaceObject.toggleSelectMove('catalyst');
 };
 
