@@ -1,0 +1,395 @@
+/************************************************************************
+ * This module manipulates the svg representation of the graphs 
+ * (e.g it can rearrange layouts, hide labels ...)
+ * @authors Guy Melancon, Benjamin Renoust
+ * @created May 2012
+ ***********************************************************************/
+
+(function () {
+
+    import_class("graphDrawing.js", "TP");
+    import_class('context.js', 'TP');
+    import_class("objectReferences.js", "TP");
+
+    var Visualization = function () {
+        var __g__ = this;
+
+        var contxt = TP.Context();
+        var objectReferences = TP.ObjectReferences();
+
+
+        this.showhideLinks = function (target) {
+
+            if (!target)
+                return
+
+            var svg = null
+            svg = contxt.getViewSVG(target);
+
+            eval("contxt.show_links_" + target + " = ! contxt.show_links_" + target);
+
+            if (eval("contxt.show_links_" + target)) {
+                svg.selectAll('g.link').attr("visibility", "visible");
+                svg.select('text.showHideLinks').text('hide links');
+            } else {
+                svg.selectAll('g.link').attr("visibility", "hidden");
+                svg.select('text.showhideLinks').text('show links');
+            }
+        }
+
+        // This function updates the entanglement values displayed in the 
+        //entanglement frame of the substrate view
+        // The entanglement intensity drives the color of the frame 
+        //following a Brewer's scale (www.colorbrewer2.org).
+        this.entanglementCaught = function () {
+            var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+            contxt.svg_substrate.selectAll("text.homogeneity").text(function (d) {
+                return "" + objectReferences.ToolObject.round(contxt.entanglement_homogeneity, 5)
+            });
+            contxt.svg_substrate.selectAll("text.intensity").text(function (d) {
+                return "" + objectReferences.ToolObject.round(contxt.entanglement_intensity, 5)
+            });
+            var index = Math.round(contxt.entanglement_intensity * 5) % 6
+            contxt.svg_substrate.selectAll("rect.entanglementframe")
+                .transition()
+                .style('fill-opacity', .5)
+                .style("fill", brewerSeq[index])
+            d3.selectAll("rect.view").style("fill", brewerSeq[index])
+            d3.selectAll("rect.brush").style("fill", brewerSeq[index])
+            d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+
+            if (contxt.lasso_catalyst) 
+                contxt.lasso_catalyst.fillColor = brewerSeq[index]
+            if (contxt.lasso_substrate) 
+                contxt.lasso_substrate.fillColor = brewerSeq[index]
+        }
+
+        this.buildEdgeMatrices = function () {
+            var matrixData = [];
+            nbNodes = contxt.graph_catalyst.nodes().length;
+            for (i = 0; i < nbNodes; i++) {
+                matrixData[i] = [];
+                for (j = 0; j < nbNodes; j++)
+                    matrixData[i][j] = [-1, 0.0];
+            }
+
+            var catalystToInd = {};
+            contxt.graph_catalyst.nodes().forEach(function (d, i) {
+                catalystToInd[d.label] = i;
+                matrixData[i][i] = [d.baseID, d.frequency];
+            });
+            contxt.graph_catalyst.links().forEach(function (d) {
+                var freq = JSON.parse(d.conditionalFrequency);
+                i = catalystToInd[freq['order'][0]]
+                j = catalystToInd[freq['order'][1]]
+                matrixData[i][j] = [d.baseID, freq['values'][0]]
+                matrixData[j][i] = [d.baseID, freq['values'][1]]
+            })
+
+
+
+            var overallSize = 200.0;
+            var indSize = overallSize / nbNodes;
+            overallSize = indSize * nbNodes + 1;
+
+
+
+            function move() {
+                objectReferences.VisualizationObject.parentNode.appendChild(this);
+                var dragTarget = d3.select(this);
+                var currentPanel = dragTarget
+                panelPos = currentPanel.attr("transform")
+                    .replace("translate(", "")
+                    .replace(")", "")
+                    .split(',');
+                var posX = d3.event.dx
+                var posY = d3.event.dy
+                var newX = parseInt(panelPos[0]) + posX
+                var newY = parseInt(panelPos[1]) + posY
+
+
+                dragTarget.attr("transform", function (d) {
+                    d.panelPosX = newX;
+                    d.panelPosY = newY;
+                    return "translate(" + newX + "," + newY + ")"
+                });
+            };
+
+
+
+            var mat = contxt.svg_catalyst.selectAll("g.matrixInfo")
+                .data(["matrix"])
+                .enter()
+                .append("g")
+                .classed("matrixInfo", true)
+                .attr("transform", function (d) {
+                    return "translate(" + 500 + "," + 10 + ")";
+                })
+                .call(d3.behavior.drag()
+                .on("drag", move))
+
+            mat.append("rect")
+                .classed("matrixInfo", true)
+                .attr("width", overallSize + 20)
+                .attr("height", overallSize + 30)
+                .style("fill", contxt.defaultFillColor)
+                .style("stroke-width", contxt.defaultBorderWidth)
+                .style("stroke", contxt.defaultBorderColor)
+
+
+            mat.append("text")
+                .classed("matrixInfo", true)
+                .text("X")
+                .attr("dx", 208)
+                .attr("dy", 18)
+                .style("fill", "lightgray")
+                .style("font-family", "EntypoRegular")
+                .style("font-size", 30)
+                .on("click", function (d) {
+                    contxt.svg_catalyst.selectAll("g.matrixInfo")
+                        .data([])
+                        .exit()
+                        .remove();
+                    gD = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst).draw()
+                })
+                .on("mouseover", function () {
+                    d3.select(this).style("fill", "black")
+                })
+                .on("mouseout", function () {
+                    d3.select(this).style("fill", "lightgray")
+                })
+
+
+
+            var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C','#E6550D', '#A63603'];
+            var index = function (x) {
+                return Math.round(x * 5) % 6;
+            };
+            matrixData.forEach(function (d1, i) {
+                d1.forEach(function (d2, j) {
+                    piece = mat.append("rect")
+                    piece.data(d2).enter()
+
+                    piece.attr("class", "matrixUnit")
+                        .classed("matrixInfo", true)
+                        .attr("x", i * indSize + 10)
+                        .attr("y", j * indSize + 18)
+                        .attr("width", indSize)
+                        .attr("height", indSize)
+                        .style("fill", function () {
+                            if (d2[0] == -1) {
+                                return "lightgray";
+                            } else {
+                                return brewerSeq[index(d2[1])];
+                            }
+                        })
+                        .style("fill-opacity", 1)
+                        .style("stroke", "black")
+                        .style("stroke-width", 0)
+                        .on("mouseover", function () {
+                            if (d2[0] != -1) {
+                                d3.select(this).style("stroke-width", 1);
+                            };
+                            objectReferences.InteractionObject.highlight(d2[0], i, j);
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this).style("stroke-width", 0);
+                        })
+
+                })
+            })
+        }
+
+
+
+        this.resetView = function (target) {
+            var cGraph = null
+            var svg = null
+
+            svg = contxt.getViewSVG(target);
+            cGraph = contxt.getViewGraph(target);
+
+            nodeDatum = svg.selectAll("g.node").data()
+            // strangely the matrix that should be applied by transform is 
+            //squared?! so we adapt the nodes values
+            nodeDatum.forEach(function (d) {
+                d.currentX = d.x;
+                d.currentY = d.y;
+            });
+
+            svg.selectAll(".node,.link")
+                .attr("transform", "translate(" + 0 + "," + 0 + ") scale(" + 1 + ")")
+            svg.selectAll("text.node").style("font-size", function () {
+                return 12;
+            });
+            objectReferences.VisualizationObject.entanglementCaught();
+        }
+
+        this.resetSize = function (target) {
+            var cGraph = null
+            var svg = null
+
+            svg = contxt.getViewSVG(target);
+            cGraph = contxt.getViewGraph(target);
+
+            cGraph.nodes().forEach(function (d) {
+                d.viewMetric = 3;
+            })
+            graph_drawing = TP.GraphDrawing(cGraph, svg)
+            graph_drawing.resize(cGraph, 0)
+        }
+
+		this.rotateGraph = function (target) {
+            var cGraph = null
+            var svg = null
+
+            svg = contxt.getViewSVG(target);
+            cGraph = contxt.getViewGraph(target);
+
+            graph_drawing = TP.GraphDrawing(cGraph, svg)
+            graph_drawing.rotate(target,5)
+        }
+        
+        this.arrangeLabels = function (target) {
+            var cGraph = null
+            var svg = null
+
+            svg = TP.Context().getViewSVG(target);
+            cGraph = TP.Context().getViewGraph(target);
+            graph_drawing = TP.GraphDrawing(cGraph, svg);
+            assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
+            console.log(target, svg, cGraph);
+            graph_drawing.arrangeLabels();
+        }
+
+        this.bringLabelsForward = function (target) {
+            if (!target)
+                return
+
+            var svg = null
+            var cGraph = null
+
+            svg = contxt.getViewSVG(target);
+            cGraph = contxt.getViewGraph(target);
+
+            var gD = TP.GraphDrawing(cGraph, svg);
+            gD.bringLabelsForward();
+        }
+
+
+
+        this.showhideLabels = function (target) {
+
+            if (!target)
+                return
+
+            var svg = null
+            svg = contxt.getViewSVG(target);
+
+            eval("contxt.show_labels_" + target + " = ! contxt.show_labels_" + target);
+
+            if (eval("contxt.show_labels_" + target)) {
+                svg.selectAll('text.node').attr("visibility", function (d) {
+                    return "visible";
+                });
+                svg.select('text.showHideLabels').text('hide labels');
+                svg.selectAll('g.node').on("mouseover", function (d) {
+                    d.mouseOver = false;
+                    return null;
+                })
+                .on("mouseout", null);
+            } else {
+                svg.selectAll('text.node').attr("visibility", function (d) {
+                    if (d.selected || d.labelVisibility) {
+                        d.labelVisibility = true;
+                        return "visible";
+                    } else {
+                        d.labelVisibility = false;
+                        return "hidden";
+                    }
+                });
+                svg.select('text.showhideLabels').text('show labels');
+
+                svg.selectAll('g.node').on("mouseover", function (d) {
+                    d.mouseOver = true;
+                    d3.select(this)
+                        .select("text.node")
+                        .attr("visibility", "visible");
+                })
+                .on("mouseout", function (d) {
+                    if (!d.labelVisibility) {
+                        d.mouseOver = false;
+                        d3.select(this)
+                            .select("text.node")
+                            .attr("visibility", "hidden");
+                    }
+                });
+            }
+        }
+
+
+
+        // This function rescales the graph data in order to fit the svg window
+        // data, the graph data (modified during the function)
+        this.rescaleGraph = function(data)
+        {
+
+                console.log("should be rescaling graphe, here is the data: ", data);
+
+                // these should be set as globale variables
+                var buttonWidth = 0//130.0
+                var frame = 10.0
+                var w = contxt.width-(buttonWidth+2*frame)
+                var h = contxt.height-(2*frame)
+                if (data.nodes.length<=0) return
+                
+                var minX = data.nodes[0].x
+                var maxX = data.nodes[0].x
+                var minY = data.nodes[0].y
+                var maxY = data.nodes[0].y
+
+        
+                data.nodes.forEach(function(d){if (d.x < minX){minX = d.x}; if (d.x > maxX){maxX = d.x}; if (d.y < minY){minY = d.y}; if (d.y > maxY){maxY = d.y};})
+        
+                //data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
+
+                var delta = 0.00000000000000000001 //to avoid division by 0
+                scale = Math.min.apply(null, [w/(maxX-minX+delta), h/(maxY-minY+delta)])
+        
+                data.nodes.forEach(function(d){d.x = (d.x-minX)*scale+buttonWidth+frame; d.y = (d.y-minY)*scale+frame; d.currentX = d.x; d.currentY = d.y;})
+        }
+
+
+
+
+        this.sizeMapping = function (parameter, graphName) {
+
+            var cGraph = null;
+            var svg = null;
+
+            svg = contxt.getViewSVG(graphName);
+            cGraph = contxt.getViewGraph(graphName);
+
+            var graph_drawing = TP.GraphDrawing(cGraph, svg);
+            graph_drawing.nodeSizeMap(cGraph, 0, parameter);
+            objectReferences.VisualizationObject.entanglementCaught();
+        };
+
+
+        this.colorMapping = function (parameter, graphName) {
+
+            var cGraph = null;
+            var svg = null;
+
+            svg = contxt.getViewSVG(graphName);
+            cGraph = contxt.getViewGraph(graphName);
+
+            var graph_drawing = TP.GraphDrawing(cGraph, svg);
+            graph_drawing.nodeColorMap(cGraph, 0, parameter);
+            objectReferences.VisualizationObject.entanglementCaught();
+        };
+
+        return __g__;
+    }
+    return {Visualization: Visualization};
+})()
