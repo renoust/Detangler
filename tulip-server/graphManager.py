@@ -12,21 +12,21 @@ import json
 import sys
 
 # path to the tulip library
-libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
-sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+#sys.path.append(libtulip_dir)
 
 from tulip import *
 
 # path to custom scripts that perform the analysis
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement" 
-sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement" 
+#sys.path.append(lgtPython_dir)
 import entanglementAnalysisLgt
 import entanglementSynchronization
 
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
-sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+#sys.path.append(lgtPython_dir)
 import bipartiteLayout
 
 '''

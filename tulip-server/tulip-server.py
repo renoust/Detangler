@@ -15,23 +15,24 @@ import cgi
 import json
 import sys
 
+print sys.path
 # this should point to your tulip directory
-libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/github/TulipPosy/tulip-server"
-sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/github/TulipPosy/tulip-server"
+#sys.path.append(libtulip_dir)
 
 from tulip import *
 
 # custom python scripts for graph and query analysis, might be released soon
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
-sys.path.append(lgtPython_dir)
-lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
-sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+#sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
+#sys.path.append(lgtPython_dir)
 
-import searchQuery
+#import searchQuery
 
 from graphManager import *
 from session import *
