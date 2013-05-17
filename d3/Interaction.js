@@ -469,7 +469,7 @@
                        	return "M"+d.source.x+" "+d.source.y+" L"+d.target.x+" "+d.target.y; 
                     })
                                 							
-                var label = svg.selectAll("g.text")
+                var label = svg.selectAll("text.node")
                 	.data(cGraph.nodes(),function(d){
                         d.currentX = d.x; 
                         d.currentY = d.y; 
@@ -477,13 +477,13 @@
                     })
                    	.transition().delay(time)
 
-               label.select("text")
-               		.attr("x", function(d){
+               //label.select("text")
+               		.attr("dx", function(d){
                         d.currentX = d.x; 
                       	d.currentY = d.y;
                        	return d.x;
                     }) 
-                    .attr("y", function(d){return d.y;})                    
+                    .attr("dy", function(d){return d.y;})                    
                 event.preventDefault();
 			});	
 			svg.on("mousedown", movingZoom(target));
