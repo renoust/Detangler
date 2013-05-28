@@ -3,8 +3,7 @@ from uuid import uuid4
 import time
 import threading
 import sys
-libtulip_dir = "/work/github/TulipPosy/tulip-server"
-sys.path.append(libtulip_dir)
+
 from graphManager import *
         
 

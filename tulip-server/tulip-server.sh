@@ -1,5 +1,14 @@
-#! /bin/sh
-LD_LIBRARY_PATH="/work/tulip-dev/tulip_3_8-build/release/install/lib"
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+#! /bin/bash
+#TODO find automatically tulip
+source ./config
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$tulip_lib_path
 export LD_LIBRARY_PATH
+
+PYTHONPATH=$PYTHONPATH:$tulip_python_path:$entanglement_python_path
+
+export PYTHONPATH
+
+#echo "PYTHONPATH="$PYTHONPATH
+#echo "LDLIBRARYPATH="$LD_LIBRARY_PATH
+
 python tulip-server.py
