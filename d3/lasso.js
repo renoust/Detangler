@@ -40,7 +40,7 @@
         // and ending points
         // fillColor, the color to fill the brush
 
-        console.log('creating a lasso object with', svg);
+        //console.log('creating a lasso object with', svg);
         var __g = this;
         this.cSvg = svg;
 
@@ -373,9 +373,9 @@
 
             var surfaceApproximation = (__g.distanceFromStartToEnd * __g.distanceFromStartToEnd + __g.totalDistanceAlongDrag * __g.totalDistanceAlongDrag) / 2;
 
-            console.log("the surface approximation", surfaceApproximation);
+            //console.log("the surface approximation", surfaceApproximation);
             if (surfaceApproximation < 100) {
-                console.log("The surface is too small!")
+                //console.log("The surface is too small!")
                 __g.pointList = [];
                 __g.totalDistanceAlongDrag = 0;
                 __g.distanceFromStartToEnd = 0;

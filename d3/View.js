@@ -5,28 +5,35 @@
  * @created March 2013
  ***********************************************************************/
 
+(function () {
+
 import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
+import_class('stateSelect.js','TP');
 
 var View = function (bouton, svgs, target, application) {
 
-	assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
+	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
-
     var contxt = TP.Context();
-
     var objectReferences = TP.ObjectReferences();
     var svg = svgs;
 
     elem = document.getElementById("bouton" + target);
-    if (elem)
-        elem.parentNode.removeChild(elem);
-
+    if (elem) elem.parentNode.removeChild(elem);
     elem = $("div[aria-describedby='zone" + target + "']");
-    if (elem)
-        elem.remove();
+    // console.log(elem)
+    //if (elem!=[])elem.remove();
 
-	$("#container").empty();
+    
+    console.log($("div[aria-describedby='zone"+target+"']"))
+    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
+    if( ){
+       // $(".ui-dialog[aria-describedby='zone"+target+"']")[0].remove();
+   }
+    //if (elem!=[])elem.remove();
+
+	//$("#container").empty();
 
     /**************************
      * Application
@@ -59,7 +66,7 @@ var View = function (bouton, svgs, target, application) {
             var obj = this.findProperty("idButton", object.idButton);
             if (obj == null) {
                 this.pushObject(object);
-                console.log("ajout bouton");
+                //console.log("ajout bouton");
             }
         }
     });
@@ -69,62 +76,59 @@ var View = function (bouton, svgs, target, application) {
      * Views
      **************************/
 
-    document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
+    contxt.activeView = target;
+    //console.log('-->'+target);
+
+    if(target==="substrate")    { contxt.dialogTop=0;  contxt.dialogRight=600; }
+    else if(target==="catalyst"){ contxt.dialogTop=0;  contxt.dialogRight=100; }
+    else                        { contxt.dialogTop=235; contxt.dialogRight=260; }
 
 
-    //add the windows
-    $(function () {
-        var targettop, targetright;
-        if(target==="substrate")
-            {targettop=43;targetright=260;}
-        else if(target==="catalyst")
-            {targettop=43;targetright=10;}
-        else {targettop=295;targetright=260;}
-        $("[id=zone" + target + "]")
-            .dialog({
-                height: contxt.dialogHeight,
-                width: contxt.dialogWidth,
-                position: "right-"+ targetright + " top+" + targettop ,
-                resize: function( event, ui ) {contxt.height = ui.size.height-50; contxt.width = ui.size.width-30;}
-            });
+    /****  création du dialog ****/
+    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
+
+     $("<div/>", {id: "zone"+target, title: target}).appendTo("#container");
+
+    var dialog = $("[id=zone" + target + "]");
+    //console.log(dialog);
+
+    dialog.dialog({
+        height: contxt.dialogHeight,
+        width: contxt.dialogWidth,
+        minWidth:185,
+        position: "right-"+ contxt.dialogRight + " top+" + contxt.dialogTop ,/*{my: "center", at: "center", of: "#container"}*/
+    }).parent().resizable({
+        containment: "#container"
+    }).draggable({
+        containment: "#container",
+        opacity: 0.70
     });
 
-    $(document)
-        .ready(function () {
-            $('.ui-dialog').draggable("option", "containment", '[id=container]');
-    });
+    /****   en-tête du dialog   ****/
 
-    var dialog = $("[id='zone" + target + "']");
     var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
+    $("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        
+    $("<button/>", {id: "toggle"+target, text:"Move"}).appendTo(titlebar); 
 
-    $('<button>-</button>')
-        .appendTo(titlebar)
-        .click(function() {
-            dialog.toggle();
+    $('#toggle' + target).button().click (function(event){
+        var interact = $(this).button("option","label");
+        if (interact=="Move")   { $(this).button("option", "label", "Select");}
+        else                    { $(this).button("option", "label", "Move");}
+        contxt.stateStack[target].executeCurrentState();
     });
-    $('<button>move</button>')
-        .appendTo(titlebar)
-        .click(function(){
-            objectReferences.InterfaceObject.toggleSelectMove(target);
-        });
-    $('<button>select</button>')
-        .appendTo(titlebar)
-        .click(function(){
-            objectReferences.InterfaceObject.toggleSelectMove(target);
-        });
 
-
-    this.add = function () {
-
-        var accordDiv = d3.select("#" + target)
-            .append("div")
-            .attr("id", "bouton" + target);
-
+   
+    dialog.parent().click(function(){ 
+        contxt.activeView = target;
+        console.log(contxt.activeView);
         var num = 0;
+        $(".arrayButtons").remove();
 
+        var pane = d3.select('#menu-1').append("div")
+            .attr("id", "button" + target)
+            .attr('class','arrayButtons');
 
         while (num < bouton.length) {
-            console.log(num);
             var i = num;
             var j = 0 + i;
             var bout = application[target].Boutton.create({
@@ -134,51 +138,81 @@ var View = function (bouton, svgs, target, application) {
             application[target].testArrayController.addFunction(bout);
             (function (i) {
 
-                var accordDivB = accordDiv.append("div");
-
-                accordDivB.append("input")
+                var paneB = pane.append("div");
+                paneB.append("input")
                     .attr("type", "button")
                     .attr("class", "button")
                     .attr("value", bouton[i][1])
                     .on("click", function () {
-                    application[target].testArrayController
-                        .loadFunction("idButton", bouton[i][0]);
+                    application[target].testArrayController.loadFunction("idButton", bouton[i][0]);
                 });
             })(i);
-
             num++;
         }
+        $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
+        $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
+        $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));
 
-        if (target == 'substrate') {
-			$("#zoneEntanglement").empty();
-			document.getElementById("zoneEntanglement")
-                .innerHTML += "<div id='entanglement'></div>";
-            document.getElementById("entanglement")
-                .innerHTML += "<h2>Entanglement:</br><ul type='none'><li>Intensity: "
-                    +contxt.entanglement_intensity+"</br></li><li>Homogeneity: "
-                    +contxt.entanglement_homogeneity+"</li></ul></h2>";
-            objectReferences.InterfaceObject.addInfoButton(target);
-            objectReferences.InterfaceObject.addSettingsButton();
-            objectReferences.InteractionObject.createLasso(target);
-            objectReferences.InteractionObject.addZoom(target);
 
+        var cGraph = contxt.getViewGraph(target);
+        objectReferences.InterfaceObject.addInfoButton(target);
+    });
+
+    titlebar.dblclick(function() {
+        if(target==="substrate")    { contxt.dialogTop=26;  contxt.dialogRight=600; }
+        else if(target==="catalyst"){ contxt.dialogTop=26;  contxt.dialogRight=100; }
+        else                        { contxt.dialogTop=240; contxt.dialogRight=260; }
+
+        var fullheight = $('#container').height()-10;
+        var fullwidth = $('#container').width()-10;
+        console.log(dialog.parent().width() + " - " + fullwidth);
+        console.log(dialog.parent());
+        if(dialog.parent().width()!=fullwidth){
+            console.log(1);
+            dialog.dialog({
+                width:fullwidth, 
+                height:fullheight,
+                position: ["left+"+15, "top+"+27] ,
+            });
         }
-        if (target == 'catalyst') {
-            objectReferences.InterfaceObject.addInfoButton(target);
-            objectReferences.InteractionObject.createLasso(target);
-            objectReferences.InteractionObject.addZoom(target);
-                     //TP.ObjectReferences().VisualizationObject.arrangeLabels(target);
-
+        else{
+            console.log(2);
+            dialog.dialog({
+                width:contxt.dialogWidth, 
+                height:contxt.dialogHeight,
+                position: "right-"+ contxt.dialogRight + " top+" + contxt.dialogTop ,
+            });
         }
-        if (target == 'combined') {
-            objectReferences.InteractionObject.createLasso(target);
-            objectReferences.InteractionObject.addZoom(target);
+        console.log(contxt.dialogTop);
+
+            //$(this).height()=fullheight;
+    });
+
+    this.add = function () {
+        if(target != null){
+            if (target == 'substrate') {
+                objectReferences.InterfaceObject.addSettingsButton();
+                objectReferences.InteractionObject.createLasso(target);
+                objectReferences.InteractionObject.addZoom(target);
+                objectReferences.InterfaceObject.addEntanglementFeedback(target);
+            }
+            if (target == 'catalyst') {
+                objectReferences.InteractionObject.createLasso(target);
+                objectReferences.InteractionObject.addZoom(target);
+            }
+            if (target == 'combined') {
+                objectReferences.InteractionObject.createLasso(target);
+                objectReferences.InteractionObject.addZoom(target);
+            }
+            contxt.stateStack[target].addState('select', new TP.stateSelect(target));
+            contxt.stateStack[target].executeCurrentState();
         }
-
-
     }
 
 
+
+
+    
     if (svg[0] == "svg") {
         if (target == 'substrate') {
 
@@ -191,7 +225,7 @@ var View = function (bouton, svgs, target, application) {
 
             contxt.graph_substrate = new TP.Graph();
 
-
+           
             this.add(bouton);
         }
         if (target == 'catalyst') {
@@ -214,15 +248,20 @@ var View = function (bouton, svgs, target, application) {
                 .attr("height", "100%")
                 .attr("id", svg[3])
                 //.attr("viewBox", "0 0 500 600");
-
             contxt.graph_combined = new TP.Graph();
-
-
             this.add(bouton);
-
         }
-/*
-		var tabContext = [];
+    }
+   
+
+
+     $("#zone"+target).parent().appendTo("#container")
+
+
+
+    
+   
+  /*      var tabContext = [];
 		
 		var svgvar = "svg_"+ target;
 		var graphvar = "graph_"+ target;
@@ -237,7 +276,7 @@ var View = function (bouton, svgs, target, application) {
 
 		this.add(bouton); 
 */
-  	}
+  	
 
 //utilisé pour test nombre View
 	
@@ -246,3 +285,5 @@ var View = function (bouton, svgs, target, application) {
     return __g__;
 
 }
+return {View: View};
+})()

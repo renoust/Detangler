@@ -57,6 +57,7 @@
         this.grabDataProperties = function (data) {
 
             function getProps(n) {
+                //console.log(Object.keys(n));
                 Object.keys(n).forEach(function (p) {
                     if (!(p in contxt.substrateProperties)) {
                         contxt.substrateProperties[p] = typeof (n[p])
@@ -67,7 +68,9 @@
             data.nodes.forEach(getProps)
             data.links.forEach(getProps)
 
-            console.log("The properties: ", contxt.substrateProperties);
+            //console.log("The properties: ", contxt.substrateProperties);
+            //console.log("The properties: ", data.nodes);
+            //console.log(contxt.substrateProperties);
         }
 
 
@@ -77,7 +80,7 @@
         // idName, if given, the property value of 'idName' will be assigned 
         // to 'baseID'
         this.addBaseID = function (data, idName) {
-            console.log(data)
+            //console.log(data)
             data.nodes.forEach(function (d) {
                 if ("x" in d) {
                     d.currentX = d.x;
@@ -115,16 +118,16 @@
         //
         // we might want to rename this function...        
         this.loadJSON = function (data) {
-            console.log("loadJSONrescaleBEGIN");
+            //console.log("loadJSONrescaleBEGIN");
 
 		    //TP.GraphDrawing(contxt.getViewGraph('substrate'),contxt.getViewSVG('substrate')).rescaleGraph(contxt,data);
-		    console.log("loadJSONrescaleENDING");
-            console.log("the data to store:", data);
+		    //console.log("loadJSONrescaleENDING");
+            //console.log("the data to store:", data);
             this.grabDataProperties(data);
             contxt.graph_substrate.nodes(data.nodes, 'substrate');
             contxt.graph_substrate.links(data.links, 'substrate');
             contxt.graph_substrate.edgeBinding();
-            console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
+            //console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
             var graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate);
             graph_drawing.draw();

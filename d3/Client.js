@@ -80,7 +80,7 @@
         // query, the query to pass to the search engine
         this.callSearchQuery = function (query) {
             var recieved_data = {};
-            console.log('calling search query ', query)
+            //console.log('calling search query ', query)
             $.ajax({
                 url: contxt.tulip_address,
                 async: false,
@@ -196,6 +196,10 @@
         // graphName, the string value corresponding to the graph
         this.callLayout = function (layoutName, graphName) {
 
+            //save for undo
+            var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
+            var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+            
             var layoutParams = {
                 type: "layout",
                 name: layoutName,
@@ -211,6 +215,11 @@
                 parameters: params,
                 success: function (data) {
                     objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);
+                
+                    var redo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);}
+                    contxt.changeStack.addChange("callLayout", undo, redo);
+                    undo = null;
+                    redo = null;
                 }
             });
         };

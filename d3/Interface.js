@@ -27,9 +27,7 @@
                 .append("xhtml:body")
                 .html("<form><input type=checkbox id=check /></form>")
                 .on("click", function (d, i) {
-                console.log(svg.select("#check")
-                    .node()
-                    .checked);
+                //console.log(svg.select("#check").node().checked);
                 });
             myinput = svg.append("foreignObject")
                 .attr("width", 300)
@@ -39,7 +37,7 @@
                 .append("xhtml:body")
                 .html("<form><input type=input id=input /></form>")
 
-            console.log("input created", myinput);
+            //console.log("input created", myinput);
         }
 
 
@@ -60,10 +58,22 @@
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
+            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
+            $("<div/>", {
+                id:"entanglement",
+                style:"background-color: #fdd0a2;"
+            }).appendTo("#menu-2");
+
+            if ($("#entanglement")[0].innerHTML!=="") {$("#entanglement")[0].innerHTML=""};
+            $("#entanglement")[0].innerHTML += "<p>Entanglement:</br>" + 
+                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p>";
+
             
-            var cGraph = null
+            /*var cGraph = null
             var svg = null
 
+            //document.getElementById("").innerHTML = "<p>Name: " + target + "</p>";
             svg = contxt.getViewSVG(target);
             cGraph = contxt.getViewGraph(target);
 
@@ -127,19 +137,20 @@
                 .text('homogeneity:')
                 .style("font-size", contxt.defaultTextSize)
                 .style("fill", 'black')
-
+                
             coh.append("text")
                 .attr('class', 'homogeneity')
                 .classed("interfaceButton", 1)
                 .attr("dx", 110)
                 .attr("dy", 85)
-                .text(function (d) {
+                .text(function (d) {                   
                     return "" + contxt.entanglement_homogeneity
                 })
                 .style('text-anchor', 'end')
                 .style("font-family", contxt.defaultTextFont)
                 .style("fill", 'blue')
                 .style("font-size", contxt.defaultTextSize)
+                */
         }
 
 
@@ -174,7 +185,8 @@
                     d3.select(this)
                         .select("rect")
                         .style("fill", "yellow");
-                    objectReferences.InterfaceObject.toggleSelectMove(target);
+                    //objectReferences.InterfaceObject.toggleSelectMove(target);
+                    contxt.stateStack[target].executeCurrentState();
                 })
                 .on("mouseover", function (d) {
                     contxt.mouse_over_button = true;
@@ -242,7 +254,8 @@
                     d3.select(this)
                         .select("rect")
                         .style("fill", "yellow");
-                    objectReferences.InterfaceObject.toggleSelectMove(target);
+                    //objectReferences.InterfaceObject.toggleSelectMove(target);
+                    contxt.stateStack[target].executeCurrentState();
                 })
                 .on("mouseover", function (d) {
                     contxt.mouse_over_button = true;
@@ -294,6 +307,13 @@
 
 
         this.addInfoButton = function (target) {
+            var cGraph = contxt.getViewGraph(target);
+            $("<div/>", {id:"infoView"}).appendTo("#menu-2");
+            $("#infoView")[0].innerHTML = "<p>Name: " + target + "</p>";
+            $("#infoView")[0].innerHTML += "<p>" + cGraph.nodes().length + " nodes</p>";
+            $("#infoView")[0].innerHTML += "<p>" + cGraph.links().length + " links</p>";
+
+            /*
             var cGraph = null
             var svg = null
 
@@ -375,7 +395,7 @@
                     .style("font-family", contxt.defaultTextFont)
                     .style("fill", contxt.defaultTextColor)
                     .style("font-size", contxt.defaultTextSize)
-            })
+            })*/
         }
 
 
@@ -394,7 +414,7 @@
                         .length
                     Object.keys(contxt.substrateProperties)
                         .forEach(function (k, i) {
-                            console.log("props: ", k)
+                            //console.log("props: ", k)
                             if (contxt.substrateProperties[k] == "number") {
                                 selectHTMLString += " <option value=\"" + k + "\">" + k + "</option>"
                             }
@@ -667,7 +687,7 @@
             };
 
             nbInfoBox = svg.selectAll("g.nodeInfo")[0].length
-            console.log("the current node", node);
+            //console.log("the current node", node);
 
             ib = svg.selectAll("g.nodeInfo" + node.baseID)
                 .data([node])
@@ -744,7 +764,7 @@
                         .style("fill", "lightgray")
                 })
 
-            console.log("node info appended", ib)
+            //console.log("node info appended", ib)
         }
 
 
@@ -757,7 +777,7 @@
                 toggleBtnText = "substrate";
             }
 
-            console.log("toggling: ", contxt.combined_foreground);
+            //console.log("toggling: ", contxt.combined_foreground);
 
             contxt.svg_combined.selectAll("g.toggleCombinedForeground")
                 .select("text")
@@ -784,6 +804,87 @@
         }
 
 
+        // gestion du menu à gauche
+        
+        this.createMenu = function(nbPane){
+            for(i=0; i<nbPane; i++)
+                this.addPane();
+        }
+
+
+        this.addPane = function(){
+            menuNum =contxt.menuNum++;
+            $("<div/>", {
+                "class": "cont",
+                id: "menu-"+menuNum,
+                style:"left:-231; z-index:0;",
+            }).appendTo("#wrap");
+
+            $("<span/>", {
+                "class": "toggleButton",
+                id: "toggleBtn"+menuNum,
+                text: ">",
+                style:"top:"+40*menuNum+"px;",
+            }).appendTo("#menu-"+menuNum);
+            
+        }
+
+
+        this.apiVisu = function(pane){
+
+            $("<div/>", {id: "visu", style:"padding:10"}).appendTo("#"+pane);
+
+            var visu = $("#visu")[0];
+            var view = contxt.activeView;
+            visu.innerHTML += 
+                "Nodes: </br>" +
+                    "<span id='colorNode' ></span><button id='shapeNode'>shape</button></br>"+
+                "Links: </br>" +
+                    "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
+                "Background: </br>" +
+                    "<span id='colorBg'></span> <span id='test' ></span> </br>"+
+                     "<button id='apply'>Apply</button> </br>";
+            $.fn.jPicker.defaults.images.clientPath='images/';
+           $('#colorNode').jPicker({
+                window:{
+                    expandable: true, 
+                    position:{x:250, y:0},   
+
+                },
+            });
+           $('#colorLink').jPicker({
+                window:{
+                    expandable: true, 
+                    position:{x:250, y:0},
+                }
+            });
+           $('#colorBg').jPicker({
+                window:{
+                    expandable: true,
+                    position:{x:250, y:0},
+                }
+            });
+           console.log("-->"+contxt.activeView);      
+            $('#apply').click(function(){
+                if (contxt.activeView==="substrate"){
+                    contxt.nodeColor_substrate = "#" + $.jPicker.List[0].color.active.val('hex');
+                    contxt.linkColor_substrate = "#" + $.jPicker.List[1].color.active.val('hex');
+                    contxt.bgColor_substrate = "#" + $.jPicker.List[2].color.active.val('hex');
+                    objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.nodeColor_substrate);
+                    objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.linkColor_substrate);
+                    objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.bgColor_substrate);
+                } else if (contxt.activeView==="catalyst") {
+                    contxt.nodeColor_catalyst = "#" + $.jPicker.List[0].color.active.val('hex');
+                    contxt.linkColor_catalyst = "#" + $.jPicker.List[1].color.active.val('hex');
+                    contxt.bgColor_catalyst = "#" + $.jPicker.List[2].color.active.val('hex');
+                    objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.nodeColor_catalyst);
+                    objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.linkColor_catalyst);
+                    objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.bgColor_catalyst);
+                }
+            });
+            
+
+        }
         return __g__;
 
     }
