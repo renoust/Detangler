@@ -22,8 +22,8 @@ var View = function (bouton, svgs, target, application) {
     elem = document.getElementById("bouton" + target);
     if (elem) elem.parentNode.removeChild(elem);
     elem = $("div[aria-describedby='zone" + target + "']");
-    // console.log(elem)
-    //if (elem!=[])elem.remove();
+     console.log(elem)
+    if (elem!=[])elem.remove();
 
     
     console.log($("div[aria-describedby='zone"+target+"']"))

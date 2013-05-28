@@ -167,3 +167,14 @@ p{
 	font-size:12px;
 	font-weight:bold;
 }
+
+@font-face {
+    font-family: 'EntypoRegular';
+    src: url('font/entypo-webfont.eot');
+    src: url('font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('font/entypo-webfont.woff') format('woff'),
+         url('font/entypo-webfont.ttf') format('truetype'),
+         url('font/entypo-webfont.svg#EntypoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
