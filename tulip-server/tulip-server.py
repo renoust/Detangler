@@ -15,23 +15,24 @@ import cgi
 import json
 import sys
 
+print sys.path
 # this should point to your tulip directory
-libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/github/TulipPosy/tulip-server"
-sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/github/TulipPosy/tulip-server"
+#sys.path.append(libtulip_dir)
 
 from tulip import *
 
 # custom python scripts for graph and query analysis, might be released soon
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
-sys.path.append(lgtPython_dir)
-lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
-sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+#sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
+#sys.path.append(lgtPython_dir)
 
-import searchQuery
+#import searchQuery
 
 from graphManager import *
 from session import *
@@ -295,10 +296,34 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 sidMap = {'sid':[self.createNewSession()]}
                 g = self.getGraphMan(sidMap).addGraph(graphJSON)
                 self.getGraphMan(sidMap).substrate = g
-                g = self.getGraphMan(sidMap).randomizeGraph(g)
-                graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
+                #g = self.getGraphMan(sidMap).randomizeGraph(g)
+                #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
+                nodeProps = self.grabProperties(graphJSON['nodes'])
+                linkProps = self.grabProperties(graphJSON['links'])
+                
+                #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
+                graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':nodeProps, 'links':linkProps})
                 #print "Sending SID right here: ", sidMap
                 self.sendJSON(graphJSON)
+        
+        def grabProperties(self, arr):               
+            pairs = set()
+            for n in arr:
+                    # here we should add protection for properties automatic load (warning will crash when diff type w/ same name)
+                    for k in n.keys():
+                            prop = 0
+                            kType = type(n[k])
+                            if kType == int or kType == float:
+                                    prop = "float"
+                            if kType == str:
+                                    prop = "string"
+                            if kType == bool:
+                                    prop = "bool"
+                            if kType == unicode:
+                                    prop = "string"
+                            pairs.add(';'.join[k, prop])
+            return [{'type': p.split(';')[0], 'name': p.split(';')[1]} for p in pairs]               
+                                    
 
     '''
     Handles an analysis of the graph that generates the second graph that is sent to d3.
