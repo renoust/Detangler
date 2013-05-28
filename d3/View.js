@@ -28,9 +28,7 @@ var View = function (bouton, svgs, target, application) {
     
     console.log($("div[aria-describedby='zone"+target+"']"))
     //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
-    if( ){
-       // $(".ui-dialog[aria-describedby='zone"+target+"']")[0].remove();
-   }
+   
     //if (elem!=[])elem.remove();
 
 	//$("#container").empty();
