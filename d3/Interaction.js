@@ -83,7 +83,7 @@
                     .classed("selected", function (d) {
                         if (target == "combined" && d._type != contxt.combined_foreground)
                             return false;
-                        console.log('current obj', d)
+                        //console.log('current obj', d)
                         var x = 0;
                         var y = 0;
                         if (!('currentX' in d)) {
@@ -115,18 +115,18 @@
                         if ((e.ctrlKey || e.metaKey) && d.selected == true)return true;
 
                         var intersects = __g.intersect(pointArray, x, y)
-                        if (intersects) console.log("node intersects", d)
+                        //if (intersects) console.log("node intersects", d)
 
                             if (e.shiftKey && intersects) {
-                                console.log("shift pressed and intersects so return false");
+                                //console.log("shift pressed and intersects so return false");
                                 d.selected = false;
                             } else if (e.shiftKey && !intersects && d.selected==true){
-                                console.log("shift pressed and doesnt intersects and true so return true");
+                                //console.log("shift pressed and doesnt intersects and true so return true");
                                 d.selected = true;
                             } else {
                                 d.selected = intersects;
                             }
-                            console.log("returning selection:", d.selected)
+                            //console.log("returning selection:", d.selected)
                             return d.selected
                     })
                     .select("g.glyph")
@@ -141,14 +141,14 @@
                             return 'red';
                         } else {
                             if (d._type == "catalyst")
-                                return 'steelblue';
+                                return contxt.nodeColor_catalyst;
                             else
-                                return "sienna"
+                                return contxt.nodeColor_substrate
                         }
                     });
 
                 selList.sort()
-                console.log("selection list: ", selList, " with length ", selList.length)
+                //console.log("selection list: ", selList, " with length ", selList.length)
 
                 if (selList.length > 0) {
                     if (selList.length == prevSelList.length) {
@@ -172,64 +172,64 @@
                     contxt.svg_catalyst.selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', 'steelblue')
+                        .style('fill', contxt.nodeColor_catalyst)
                         .style("stroke-width", 0);
                     contxt.svg_catalyst.selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
                     contxt.svg_catalyst.selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', 'sienna')
+                        .style('fill', contxt.nodeColor_substrate)
                         .style("stroke-width", 0);
                     contxt.svg_catalyst.selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', 'gray');
+                        .style('stroke', contxt.linkColor_catalyst);
                     contxt.svg_substrate.selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', 'steelblue')
+                        .style('fill', contxt.nodeColor_catalyst)
                         .style("stroke-width", 0);
                     contxt.svg_substrate.selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
                     contxt.svg_substrate.selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', 'sienna')
+                        .style('fill', contxt.nodeColor_substrate)
                         .style("stroke-width", 0);
                     contxt.svg_substrate.selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', 'gray');
+                        .style('stroke', contxt.linkColor_substrate);
                     contxt.svg_combined.selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', 'steelblue')
+                        .style('fill', contxt.nodeColor_catalyst)
                         .style("stroke-width", 0);
                     contxt.svg_combined.selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
                     contxt.svg_combined.selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', 'sienna')
+                        .style('fill', contxt.nodeColor_substrate)
                         .style("stroke-width", 0);
                     contxt.svg_combined.selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', 'gray');
+                        .style('stroke', contxt.linkColor_combined);
 
                     objectReferences.VisualizationObject.resetSize("substrate");
                     objectReferences.VisualizationObject.resetSize("catalyst");
                     objectReferences.VisualizationObject.resetSize("combined");
                     prevSelList = selList.slice(0);
                     TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", 'catalyst')     
-                    console.log("warning: the selection list is empty");
+                    //console.log("warning: the selection list is empty");
 
                     contxt.svg_catalyst.selectAll("text.node").style("opacity", 1)
                     contxt.svg_substrate.selectAll("text.node").style("opacity", 1)
                     contxt.svg_combined.selectAll("text.node").style("opacity", 1)
                     
-                    assert(true, "arrangeLabels appele depuis le lasso");    
+                    //assert(true, "arrangeLabels appele depuis le lasso");    
                     objectReferences.VisualizationObject.arrangeLabels("substrate");
                     objectReferences.VisualizationObject.arrangeLabels("catalyst"); 
                 }
@@ -257,7 +257,7 @@
             var xScale = d3.scale.linear().range([buttonWidth, w])
             var yScale = d3.scale.linear().range([0, h])
 
-            console.log("svg element: ", svg, w, h)
+            //console.log("svg element: ", svg, w, h)
 
 
             var brush = svg.append("g")
@@ -299,7 +299,7 @@
                         selList.push(d.baseID);
                         return 'red';
                     }
-                    return 'steelblue';
+                    return contxt.nodeColor_substrate;
                 })
 
                 selList.sort()
@@ -366,7 +366,7 @@
         // target, the string value of the target svg view         
         this.removeLasso = function (target) {
 
-			console.log("calling remove LASSO"); 
+			//console.log("calling remove LASSO"); 
             if (!target)
                 return
 
@@ -413,7 +413,7 @@
 	                    d.currentY = (d.y + data_translation[1]);
 	                });
 	                
-	               svg.selectAll("g.node,g.link,g.text").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
+	               svg.selectAll("g.node,g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
 	               eval("contxt.data_translation_"+target+" = data_translation;");
                 }));
        		}
@@ -600,7 +600,7 @@
             //  .attr("visibility", function(d){if(TP.Context().syncNodes.indexOf(d.source.baseID) != -1 || TP.Context().syncNodes.indexOf(d.target.baseID) != -1){return "hidden"}else{return "visible"}})
         
       
-            console.log(TP.Context().syncNodes);
+            //console.log(TP.Context().syncNodes);
         } 
 
         return __g__;

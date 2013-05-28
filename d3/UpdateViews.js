@@ -12,6 +12,7 @@
     import_class("objectReferences.js", "TP");
     import_class("graph.js", "TP");
     import_class("graphDrawing.js", "TP");
+    import_class("Metric.js", "TP");
 
 
     var UpdateViews = function () {
@@ -30,7 +31,7 @@
 
             // we need to rescale the graph so it will fit the current svg 
             //frame and wont overlap with the buttons
-            console.log("syncLayoutData: ", data.data);
+            //console.log("syncLayoutData: ", data.data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
             var graph_drawing = TP.GraphDrawing(cGraph, svg);
             //graph_drawing.rescaleGraph(contxt,data);
@@ -67,7 +68,7 @@
 
             var deltaX_s = p2prime_s.x - p2_s.x * scaleX_s
             var deltaY_s = p2prime_s.y - p2_s.y * scaleY_s
-            console.log("delta substrate: ",scaleX_s,scaleY_s,deltaX_s, deltaY_s)
+            //console.log("delta substrate: ",scaleX_s,scaleY_s,deltaX_s, deltaY_s)
 
             var p1_c = data.data['catalyst'][0];
             var p2_c = data.data['catalyst'][1];
@@ -91,8 +92,8 @@
             var deltaX_c = p2prime_c.x - p2_c.x * scaleX_c
             var deltaY_c = p2prime_c.y - p2_c.y * scaleY_c
 
-            console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
-            console.log("delta catalyst: ",scaleX_c,scaleY_c,deltaX_c,deltaY_c)
+            //console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
+            //console.log("delta catalyst: ",scaleX_c,scaleY_c,deltaX_c,deltaY_c)
 
             contxt.graph_combined.nodes()
                 .forEach(function (nprime) {
@@ -116,10 +117,10 @@
 
 
         this.buildGraphFromData = function (data) {
-            console.log('creating in tulip, and recieved data: ', data)
-            console.log("here should be sid: ", data.data.sid)
+            //console.log('creating in tulip, and recieved data: ', data)
+            //console.log("here should be sid: ", data.data.sid)
             contxt.sessionSid = data.data.sid
-            console.log("the session sid has just been affected: ", contxt.sessionSid);
+            //console.log("the session sid has just been affected: ", contxt.sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
             TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
 
@@ -135,8 +136,8 @@
 
 
         this.applySubstrateAnalysisFromData = function (data) {
-            console.log("received data after analysis:")
-            console.log(data);
+            //console.log("received data after analysis:")
+            //console.log(data);
             TP.GraphDrawing(contxt.getViewGraph("catalyst"),contxt.getViewSVG("catalyst")).rescaleGraph(contxt,data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
@@ -195,6 +196,15 @@
             graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg);
             graph_drawing.resize(graph, 0);
+
+            var pileCentrality = new TP.Metric();
+            
+            var char = d3.selectAll("g.node.substrate");
+            char.attr("x", function(d){ console.log("viewMetric : "+ d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
+          
+            contxt.metric_substrate_BC = pileCentrality.transformToArray("BarChart");
+            contxt.metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");
+            
             objectReferences.VisualizationObject.entanglementCaught();
         }
 
@@ -209,21 +219,21 @@
             }
 
             if (graphName == 'catalyst') {
-                console.log('target is catalyst');
+                //console.log('target is catalyst');
                 graph = contxt.graph_substrate
-                console.log(selection)
+                //console.log(selection)
                 svg = contxt.svg_substrate
             }
 
             if (graphName == 'combined') {
                 graph = contxt.graph_combined;
-                console.log("synGraph combined:", selection);
+                //console.log("synGraph combined:", selection);
                 svg = contxt.svg_combined;
             }
 
 
-            console.log("received data after synchronization: ")
-            console.log(data);
+            //console.log("received data after synchronization: ")
+            //console.log(data);
 
             var tempGraph = new TP.Graph()
             tempGraph.nodes(data.nodes, graphName)
