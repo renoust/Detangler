@@ -150,10 +150,13 @@ var View = function (bouton, svgs, target, application) {
         $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
         $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
         $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));
+        $.jPicker.List[3].color.active.val('hex', contxt.labelColor);
 
 
-        var cGraph = contxt.getViewGraph(target);
+        //var cGraph = contxt.getViewGraph(target);
         objectReferences.InterfaceObject.addInfoButton(target);
+
+
     });
 
     titlebar.dblclick(function() {

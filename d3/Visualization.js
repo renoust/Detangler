@@ -56,7 +56,7 @@
             });
 
             var index = Math.round(contxt.entanglement_intensity * 5) % 6
-            $('#entanglement')[0].style.cssText="background-color:"+ brewerSeq[index]; 
+            $('#bg')[0].style.cssText="background-color:"+ brewerSeq[index]; 
             /*contxt.svg_substrate.selectAll("rect.entanglementframe")
                 .transition()
                 .style('fill-opacity', .5)

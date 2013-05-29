@@ -259,6 +259,7 @@
 			            .attr("dx", function(d){d.currentX = d.x; return d.currentX})
 			            .attr("dy", function(d){d.currentY = d.y; return d.currentY})
 			            .style("stroke", "black")
+                        .style('color',contxt.labelColor)
 			            .style("stroke-width", 0.5)
 			            .style("font-family", "Arial")
 			            .style("font-size", 12)
@@ -290,7 +291,8 @@
                 .classed("node", true).classed("text", true)
                 .attr("dx", function(d){return d.currentX})
                 .attr("dy", function(d){return d.currentY})
-                .style("stroke", "black")
+                //.style("stroke", "black")
+                // .style("stroke", context.labelColor)
                 .style("stroke-width", 0.5)
                 .style("font-family", "Arial")
                 .style("font-size", 12)
@@ -530,8 +532,8 @@
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                /*.transition()
+                .delay(dTime)*/
             node.select("circle.node").attr("r", function (d) {
                 r = eval("d." + parameter + "*factor+scaleMin");
                 if (!r || equalScales) {r = scaleMin;}
@@ -550,8 +552,8 @@
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                /*.transition()
+                .delay(dTime)*/
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
         }
@@ -581,8 +583,8 @@
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                // .transition()
+                // .delay(dTime)
 
             node.select("g.glyph")
                 .select(".node")
@@ -593,18 +595,18 @@
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                // .transition()
+                // .delay(dTime)
 
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
         }
         
-/********************************** ON GOING ***********************************/
+/********************************** ON GOING **********************************/
         g.changeColor = function(graphName, _graph, elem, color){
             g.cGraph = _graph
-            console.log(g);
-            console.log(g.cGraph);
+            // console.log(g);
+            // console.log(g.cGraph);
             if (elem=="node"){
                 var node = g.svg.selectAll("g.node")
                     .data(g.cGraph.nodes(), function(d){return d.baseID})
@@ -620,9 +622,12 @@
                     .style("stroke-width", function (d) {return 1;})      
             }else if(elem==="bg"){
                 $("#zone"+graphName).css("background-color", color);
-                console.log('...');
+            }else if(elem==="label"){
+                g.drawLabels();
+                //var label = g.svg.selectAll("g.text").style('fill',color);
             }else{
                 console.log("erreur g.changeColor");
+
             }
         }
 /********************************** ON GOING ***********************************/
@@ -745,20 +750,20 @@
             // assign the new data
             var node = g.svg.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                // .transition()
+                // .delay(500)
                 .style("opacity", 1)
 
             var link = g.svg.selectAll("g.link")
                 .data(_graph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                // .transition()
+                // .delay(500)
                 .style("opacity", 1)
 
 			var label = g.svg.selectAll("g.text")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                // .transition()
+                // .delay(500)             
                 .style("opacity", 1)
 
             // update the nodes
@@ -795,6 +800,7 @@
                 
             label.select("text.node")
                 .attr("visibility", "visible")
+                .style('color', contxt.labelColor)
 
             // reassign the original data
 
