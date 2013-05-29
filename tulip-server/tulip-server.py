@@ -15,23 +15,24 @@ import cgi
 import json
 import sys
 
+print sys.path
 # this should point to your tulip directory
-libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
-sys.path.append(libtulip_dir)
-libtulip_dir = "/work/github/TulipPosy/tulip-server"
-sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
+#sys.path.append(libtulip_dir)
+#libtulip_dir = "/work/github/TulipPosy/tulip-server"
+#sys.path.append(libtulip_dir)
 
 from tulip import *
 
 # custom python scripts for graph and query analysis, might be released soon
-lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
-sys.path.append(lgtPython_dir)
-lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
-sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
+#sys.path.append(lgtPython_dir)
+#lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
+#sys.path.append(lgtPython_dir)
 
-import searchQuery
+#import searchQuery
 
 from graphManager import *
 from session import *
@@ -236,15 +237,27 @@ class MyRequestHandler(tornado.web.RequestHandler):
     request, the JSON object of the request
     '''
     def updateGraphRequest(self, request):
-        #print "update request: ",request
-        graphSelection = json.loads(request['graph'][0]) 
-        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0])
-        #g = self.getGraphMan(request).modifyGraph(g)
-        #print 'recieved this list: ',graphSelection
-        graphJSON = self.getGraphMan(request).graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
-        #graphJSON = self.getGraphMan(request).graphToJSON(g)
-        #print 'sending this list: ',graphJSON
-        self.sendJSON(graphJSON)
+        if 'parameters' in request.keys():
+                params = request['parameters'][0]
+                params = json.loads(params)
+
+                if 'type' in params:
+                    if params['type'] == 'induced':
+                        #print "update request: ",request
+                        graphSelection = json.loads(request['graph'][0]) 
+                        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0])
+                        #g = self.getGraphMan(request).modifyGraph(g)
+                        #print 'recieved this list: ',graphSelection
+                        graphJSON = self.getGraphMan(request).graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
+                        #graphJSON = self.getGraphMan(request).graphToJSON(g)
+                        #print 'sending this list: ',graphJSON
+                        self.sendJSON(graphJSON)
+                    if params['type'] == 'layout':
+                        
+                        graphSelection = json.loads(params['graph'])
+                        self.getGraphMan(request).updateLayout(graphSelection, params['target'])
+                        #update the layout here from the target graph
+                        #shouldn't we check the sid beforehand?
 
 
     '''

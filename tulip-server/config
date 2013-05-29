@@ -1,0 +1,3 @@
+tulip_lib_path="/work/tulip-dev/tulip_3_8-build/release/install/lib"
+tulip_python_path="/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
+entanglement_python_path="/work/entanglement/python"
