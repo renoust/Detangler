@@ -425,6 +425,8 @@
         g.move = function (_graph, dTime) {
             g.cGraph = _graph
 
+            //assert(true, "assigning g.node_s")
+
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     d.currentX = d.x;
@@ -434,6 +436,8 @@
                 /*.transition()
                 .delay(dTime)*/
 
+            //assert(true, "assigning cirle")
+
             node.select("circle")
                 .attr("cx", function (d) {
                     d.currentX = d.x;
@@ -441,6 +445,8 @@
                     return d.x
                 })
                 .attr("cy", function (d) {return d.y})
+
+            //assert(true, "assigning rect")
 
             node.select("rect")
                 .attr("x", function (d) {
@@ -450,10 +456,14 @@
                 })
                 .attr("y", function (d) {return d.y});
 
+            //assert(false, "g.node.text -- should be empty")
+
             var node = g.svg.selectAll("g.node")
             node.select("text")
                	.attr("dx", function (d) {return d.x})
                 .attr("dy", function (d) {return d.y})
+
+            //assert(true, "assigning g.link_s")
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
@@ -461,6 +471,8 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
+                    assert(false, "edge does not match or isn't bounded")
+                    console.log(d)
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -469,7 +481,9 @@
             //   	    d.currentX = d.x; d.currentY = d.y; return d.baseID;
             //    })
                 //.transition().delay(dTime)
-           // 	.select("text")
+            // 	.select("text")
+            //assert(true, "assigning text.node_s")
+
            var label = g.svg.selectAll("text.node")
            		.data(g.cGraph.nodes(), function(d){return d.baseID})
                 .attr("dx", function(d){
@@ -480,7 +494,10 @@
                 .attr("dy", function(d){return d.y});
              
              //console.log("arrangeLabels after GraphDrawing.move()");
-             g.arrangeLabels();
+            assert(true, "arranging labels")
+            g.arrangeLabels();
+            //assert(true, "OVER!")
+
         }
 
 
