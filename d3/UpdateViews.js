@@ -154,16 +154,22 @@
 
 
         this.applyLayoutFromData = function (data, graphName) {
-            var graph = null;
+            //assert(true, "here");;
+			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			//assert(true, "there");
+			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			//assert(true, "again");
+
+			var graph = null;
             var svg = null;
             svg = contxt.getViewSVG(graphName);
             graph = contxt.getViewGraph(graphName);
 
 			TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            graph.nodes(data.nodes, graphName);
-            graph.links(data.links, graphName);
-            graph.edgeBinding();
+            //graph.nodes(data.nodes, graphName);
+            //graph.links(data.links, graphName);
+            //graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg);
             graph_drawing.move(graph, 0);
         }
@@ -184,16 +190,30 @@
 
         this.applyFloatAlgorithmFromData = function (data, graphName) {
 
+
+			//assert(true, "here");;
+			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			//assert(true, "there");
+			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			//assert(true, "again");
+
+			//data.nodes.forEach(function(d){console.log(d)});
+			//TP.Context().getViewGraph(graphName).nodes().forEach(function(d){console.log(d)});
+			
             var graph = null;
             var svg = null;
+
             svg = contxt.getViewSVG(graphName);
             graph = contxt.getViewGraph(graphName);
 
+
             TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data);
+            
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            graph.nodes(data.nodes, graphName);
-            graph.links(data.links, graphName);
-            graph.edgeBinding();
+            //graph.nodes(data.nodes, graphName);
+            //graph.links(data.links, graphName);
+            //graph.edgeBinding();
+            
             var graph_drawing = TP.GraphDrawing(graph, svg);
             graph_drawing.resize(graph, 0);
 

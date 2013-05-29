@@ -31,6 +31,7 @@
                 d._type = type;
                 g.nodes_array.push(jQuery.extend(true, {}, d));
             });
+            g.nodes_array.sort(function(a,b){return a.baseID-b.baseID})			
             return g.nodes_array;
         };
 
@@ -43,6 +44,47 @@
             });
             return g.nodes_array;
         };
+
+		this.updateNodes = function (nodes, updateExisting) {
+			var newArray = []
+			nodes.sort(nodes, function(a,b){return a.baseID-b.baseID})
+			if (nodes.length != g.nodes_array.length)
+			{
+				assert(false, "updateNodes, cannot match both arrays, what should I do?")
+			}	
+			
+            g.nodes_array.forEach(function (d, i) {
+				for (var key in nodes[i])
+				{
+					if (updateExisting || !(key in d))
+					{
+						d[key] = nodes[i][key]
+					} 	
+				}
+            });
+            
+		}
+		
+		
+		this.updateLinks = function (links, updateExisting) {
+			var newArray = []
+			links.sort(links, function(a,b){return a.baseID-b.baseID})
+			if (links.length != g.links_array.length)
+			{
+				assert(false, "updateLinks, cannot match both arrays, what should I do?")
+			}	
+			
+            g.links_array.forEach(function (d, i) {
+				for (var key in links[i])
+				{
+					if (key != "source" && key!= "target" && (updateExisting || !(key in d)))
+					{
+						d[key] = links[i][key]
+					} 	
+				}
+            });
+            
+		}
 
 
         // setter/getter (with/without argument) of the link array
@@ -65,6 +107,7 @@
                     //object already bounded
                     o.target = o.target.baseID;
             });
+            g.links_array.sort(function(a,b){return a.baseID-b.baseID})			
             return g.links_array;
         };
 
