@@ -58,16 +58,25 @@
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
-            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
+            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solution à voir
+            /*$("<div/>", {id:"entanglement-cont"}).appendTo('#menu-2')
             $("<div/>", {
                 id:"entanglement",
                 style:"background-color: #fdd0a2;"
-            }).appendTo("#menu-2");
+            }).appendTo("#entanglement-cont");*/
 
-            if ($("#entanglement")[0].innerHTML!=="") {$("#entanglement")[0].innerHTML=""};
-            $("#entanglement")[0].innerHTML += "<p>Entanglement:</br>" + 
+            document.getElementById('menu-2').innerHTML += 
+                "<div id='entanglement-cont'>"+
+                    "<div id='bg'></div>"+
+                    "<div id='entanglement'><p>Entanglement:</br>" + 
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p>";
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
+                "</div>"
+
+            /*if ($("#entanglement")[0].innerHTML!=="") {$("#entanglement")[0].innerHTML=""};
+            $("#entanglement")[0].innerHTML += "<div id='entanglement-cont'><p>Entanglement:</br>" + 
+                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";*/
 
             
             /*var cGraph = null
@@ -842,7 +851,9 @@
                 "Links: </br>" +
                     "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
                 "Background: </br>" +
-                    "<span id='colorBg'></span> <span id='test' ></span> </br>"+
+                    "<span id='colorBg'></span> </br>"+
+                "Labels: </br>" +
+                    "<span id='colorLabel'></span> </br>"+
                      "<button id='apply'>Apply</button> </br>";
             $.fn.jPicker.defaults.images.clientPath='images/';
            $('#colorNode').jPicker({
@@ -864,8 +875,17 @@
                     position:{x:250, y:0},
                 }
             });
-           console.log("-->"+contxt.activeView);      
+           $('#colorLabel').jPicker({
+                window:{
+                    expandable: true,
+                    position:{x:250, y:0},
+                }
+            });
+           //console.log("-->"+contxt.activeView);      
             $('#apply').click(function(){
+                contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
+                console.log(contxt.labelColor)
+                
                 if (contxt.activeView==="substrate"){
                     contxt.nodeColor_substrate = "#" + $.jPicker.List[0].color.active.val('hex');
                     contxt.linkColor_substrate = "#" + $.jPicker.List[1].color.active.val('hex');
@@ -873,6 +893,8 @@
                     objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.nodeColor_substrate);
                     objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.linkColor_substrate);
                     objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.bgColor_substrate);
+                    objectReferences.VisualizationObject.changeColor("substrate", "label", contxt.labelColor);
+                    
                 } else if (contxt.activeView==="catalyst") {
                     contxt.nodeColor_catalyst = "#" + $.jPicker.List[0].color.active.val('hex');
                     contxt.linkColor_catalyst = "#" + $.jPicker.List[1].color.active.val('hex');
@@ -880,6 +902,7 @@
                     objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.nodeColor_catalyst);
                     objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.linkColor_catalyst);
                     objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.bgColor_catalyst);
+                    objectReferences.VisualizationObject.changeColor("catalyst", "label", contxt.labelColor);
                 }
             });
             

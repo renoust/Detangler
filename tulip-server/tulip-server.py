@@ -300,17 +300,33 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
                 nodeProps = self.grabProperties(graphJSON['nodes'])
                 linkProps = self.grabProperties(graphJSON['links'])
-                
+                #print "############################### node props"
+                #print nodeProps
+                #print "############################### link props"
+                #print linkProps
+                params = {'data':{'sid':sidMap['sid'][0]}, 'nodes':nodeProps, 'links':linkProps}
+                #print "############################### all parameters"
+                #print params
+
                 #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
-                graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':nodeProps, 'links':linkProps})
+                #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':nodeProps, 'links':linkProps})
+                graphJSON = self.getGraphMan(sidMap).graphToJSON(g, params)
+
+                #print "####################################### SENDING THIS GRAPH"
+                print graphJSON
+                #print "##########################################################"
                 #print "Sending SID right here: ", sidMap
                 self.sendJSON(graphJSON)
-        
-        def grabProperties(self, arr):               
+
+    def grabProperties(self, arr):
+            #print "The given array:"               
+            #print arr
             pairs = set()
             for n in arr:
-                    # here we should add protection for properties automatic load (warning will crash when diff type w/ same name)
+                    #print "a node: ", n.keys()
                     for k in n.keys():
+                        if k != "baseID" and k != "source" and k != "target":
+                            #print "a key: ", k, " its element: ",n[k]
                             prop = 0
                             kType = type(n[k])
                             if kType == int or kType == float:
@@ -321,8 +337,13 @@ class MyRequestHandler(tornado.web.RequestHandler):
                                     prop = "bool"
                             if kType == unicode:
                                     prop = "string"
-                            pairs.add(';'.join[k, prop])
-            return [{'type': p.split(';')[0], 'name': p.split(';')[1]} for p in pairs]               
+                            #print "should add a pair now: "
+                            #print ';'.join([k, prop])
+                            pairs.add(';'.join([prop, k]))
+            pairs.add("string;viewLabel")
+            #print "right before returning"
+            return [{'type': p.split(';')[0].encode('utf-8'), 'name': p.split(';')[1].encode('utf-8')} for p in pairs]               
+            #return [{'type': p.split(';')[0], 'name': p.split(';')[1]} for p in pairs]               
                                     
 
     '''
@@ -351,9 +372,11 @@ class MyRequestHandler(tornado.web.RequestHandler):
         # request the analysis for the given substrate selection 
         if request['target'][0] == 'substrate':
                 print "the weight property: ",weightProperty
-                result = self.getGraphMan(request).analyseGraph(selection, weightProperty)
-                graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'},{'type':'float', 'name':'frequency'}],'links':[{'type':'string', 'name':'conditionalFrequency'}, {'type':'float', 'name':'weight'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
-                #print "Analysis return: "                                        
+        print "graphMan: ",self.getGraphMan(request)
+        print "request: ",request
+        result = self.getGraphMan(request).analyseGraph(selection, weightProperty)
+        graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'},{'type':'float', 'name':'frequency'}],'links':[{'type':'string', 'name':'conditionalFrequency'}, {'type':'float', 'name':'weight'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
+        #print "Analysis return: "                                        
 
         # request the synchronization for the given catalyst selection
         if request['target'][0] == 'catalyst':
