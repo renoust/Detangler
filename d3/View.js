@@ -11,7 +11,7 @@ import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
 
-var View = function (bouton, svgs, target, application) {
+var View = function (bouton, svgs, target, application, nodeColor, linkColor, bgColor) {
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
@@ -114,8 +114,7 @@ var View = function (bouton, svgs, target, application) {
         else                    { $(this).button("option", "label", "Move");}
         contxt.stateStack[target].executeCurrentState();
     });
-
-   
+	        
     dialog.parent().click(function(){ 
         contxt.activeView = target;
         console.log(contxt.activeView);
@@ -147,11 +146,18 @@ var View = function (bouton, svgs, target, application) {
             })(i);
             num++;
         }
-        $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
-        $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
-        $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));
-
-
+ 		
+ 		var colorNode = contxt.tabNodeColor[target];
+ 		var colorLink = contxt.tabLinkColor[target];
+ 		var colorBg = contxt.tabBgColor[target];
+ 		//console.log(colorNode);
+ 		//console.log(colorLink);
+ 		//console.log(colorBg);       
+        
+        $.jPicker.List[0].color.active.val('hex', colorNode);
+        $.jPicker.List[1].color.active.val('hex', colorLink);
+        $.jPicker.List[2].color.active.val('hex', colorBg);
+		
         var cGraph = contxt.getViewGraph(target);
         objectReferences.InterfaceObject.addInfoButton(target);
     });
@@ -187,7 +193,7 @@ var View = function (bouton, svgs, target, application) {
     });
 
     this.add = function () {
-        if(target != null){
+        if(target != null){/*
             if (target == 'substrate') {
                 objectReferences.InterfaceObject.addSettingsButton();
                 objectReferences.InteractionObject.createLasso(target);
@@ -201,54 +207,46 @@ var View = function (bouton, svgs, target, application) {
             if (target == 'combined') {
                 objectReferences.InteractionObject.createLasso(target);
                 objectReferences.InteractionObject.addZoom(target);
-            }
+            }*/
+			
+			contxt.tabDataTranslation[target] = [0,0];
+            
+    	    contxt.tabNodeColor[target] = nodeColor;
+	        contxt.tabLinkColor[target] = linkColor;
+	        contxt.tabBgColor[target] = bgColor;
+		    
+	        contxt.tabSelectMode[target] = false;
+	        contxt.tabMoveMode[target] = true;
+	        contxt.tabShowLabels[target] = true;
+	        contxt.tabShowLinks[target] = true;
+	        contxt.tabNodeInformation[target] = false;           
+           
+            objectReferences.InteractionObject.createLasso(target);
+            objectReferences.InteractionObject.addZoom(target);
+                       if(target == "substrate"){
+           		//objectReferences.InteractionObject.addZoom(target);
+                objectReferences.InterfaceObject.addEntanglementFeedback(target);
+           }
+            contxt.stateStack[target] = new TP.States();
             contxt.stateStack[target].addState('select', new TP.stateSelect(target));
             contxt.stateStack[target].executeCurrentState();
+             
         }
     }
 
-
-
-
     
-    if (svg[0] == "svg") {
-        if (target == 'substrate') {
+    if (svg[0] == "svg" && svg[1] == "graph") {
 
-            contxt.svg_substrate = d3.select("#zone" + target)
+            contxt.tabSvg["svg_"+target] = d3.select("#zone" + target)
                 .append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%")
                 .attr("id", svg[3]);
                 //.attr("viewBox", "0 0 500 600");
 
-            contxt.graph_substrate = new TP.Graph();
+            contxt.tabGraph["graph_"+target] = new TP.Graph();
 
-           
-            this.add(bouton);
-        }
-        if (target == 'catalyst') {
-            contxt.svg_catalyst = d3.select("#zone" + target)
-                .append("svg")
-                .attr("width", "100%")
-                .attr("height", "100%")
-                .attr("id", svg[3])
-                //.attr("viewBox", "0 0 500 600");
-
-            contxt.graph_catalyst = new TP.Graph();
-
-            this.add(bouton);
-
-        }
-        if (target == 'combined') {
-            contxt.svg_combined = d3.select("#zone" + target)
-                .append("svg")
-                .attr("width", "100%")
-                .attr("height", "100%")
-                .attr("id", svg[3])
-                //.attr("viewBox", "0 0 500 600");
-            contxt.graph_combined = new TP.Graph();
-            this.add(bouton);
-        }
+            this.add();
     }
    
 

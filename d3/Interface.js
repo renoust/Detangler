@@ -190,7 +190,7 @@
                 })
                 .on("mouseover", function (d) {
                     contxt.mouse_over_button = true;
-                    if (!eval("contxt.move_mode_" + target)) {
+                    if (!TP.Context().tabMoveMode[target]) {
                         d.colorOver = contxt.highlightFillColor;
                         d.colorOut = contxt.defaultFillColor;
                     } else {
@@ -204,7 +204,7 @@
 
                 .on("mouseout", function (d) {
                     contxt.mouse_over_button = false;
-                    if (!eval("contxt.move_mode_" + target)) {
+                    if (!TP.Context().tabMoveMode[target]) {
                         d.colorOver = contxt.highlightFillColor;
                         d.colorOut = contxt.defaultFillColor;
                     } else {
@@ -259,7 +259,9 @@
                 })
                 .on("mouseover", function (d) {
                     contxt.mouse_over_button = true;
-                    if (!eval("contxt.select_mode_" + target)) {
+                    var select_mode = contxt.tabSelectMode[target];
+                    //if (!eval("contxt.select_mode_" + target)) {
+                    if (!select_mode) {
                         d.colorOver = contxt.highlightFillColor;
                         d.colorOut = contxt.defaultFillColor;
                     } else {
@@ -272,7 +274,9 @@
                 })
                 .on("mouseout", function (d) {
                     contxt.mouse_over_button = false;
-                    if (!eval("contxt.select_mode_" + target)) {
+                    var select_mode = contxt.tabSelectMode[target];
+                    //if (!eval("contxt.select_mode_" + target)) {
+                    if (!select_mode) {
                         d.colorOver = contxt.highlightFillColor;
                         d.colorOut = contxt.defaultFillColor;
                     } else {
@@ -443,17 +447,32 @@
 
             var svg = null
             svg = contxt.getViewSVG(target);
-
-            eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
-            eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target); 
-            if(eval("TP.Context().select_mode_"+target)) {
+			
+            //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
+            //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
+            /*
+            console.log("avant");
+            console.log(TP.Context().tabSelectMode[target]);
+            console.log(TP.Context().tabMoveMode[target]);*/
+           
+            TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
+            TP.Context().tabMoveMode[target] = !TP.Context().tabMoveMode[target];
+            
+            //if(eval("TP.Context().select_mode_"+target)) {
+            /*	
+            console.log("après");
+            console.log(TP.Context().tabSelectMode[target]);
+            console.log(TP.Context().tabMoveMode[target]);*/
+            
+            if(TP.Context().tabSelectMode[target]) {            	
                 svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor); 
                 objectReferences.InteractionObject.addLasso(target);
                 objectReferences.InteractionObject.removeZoom(target);
             }
 
-            if(eval("TP.Context().move_mode_"+target)) {
+            //if(eval("TP.Context().move_mode_"+target)) {
+            if(TP.Context().tabMoveMode[target]) {
                 //svg.style("cursor", "all-scroll");
                 svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
@@ -466,7 +485,7 @@
         this.addSettingsButton = function () {
             objectReferences.InterfaceObject.holdSVGInteraction("substrate")
 
-            svg = contxt.svg_substrate
+            svg = contxt.tabSvg["svg_substrate"]
             posSettings_x = contxt.width - 30
             posSettings_y = 30
 
@@ -626,9 +645,10 @@
             svg = contxt.getViewSVG(target);
             cGraph = contxt.getViewGraph(target);
 
-            eval("contxt.node_information_" + target + " = !contxt.node_information_" + target);
-
-            if (!eval("contxt.node_information_" + target)) {
+            //eval("contxt.node_information_" + target + " = !contxt.node_information_" + target);
+			TP.Context().tabNodeInformation[target] = !TP.Context().tabNodeInformation[target];
+			
+            if (!TP.Context().tabNodeInformation[target]) {
                 svg.selectAll("g.infoBox")
                     .on("mouseout", function () {
                         d3.select(this)
@@ -779,12 +799,12 @@
 
             //console.log("toggling: ", contxt.combined_foreground);
 
-            contxt.svg_combined.selectAll("g.toggleCombinedForeground")
+            contxt.tabSvg["svg_combined"].selectAll("g.toggleCombinedForeground")
                 .select("text")
                 .text("g " + toggleBtnText)
 
-            contxt.svg_combined.selectAll("g.node")
-                .data(contxt.graph_combined.nodes(), function(d){return d.baseID}) 
+            contxt.tabSvg["svg_combined"].selectAll("g.node")
+                .data(contxt.tabGraph["graph_combined"].nodes(), function(d){return d.baseID}) 
                 .style("opacity", function (d) {
                     if (d._type == contxt.combined_foreground) {
                         return 1;
@@ -867,19 +887,19 @@
            console.log("-->"+contxt.activeView);      
             $('#apply').click(function(){
                 if (contxt.activeView==="substrate"){
-                    contxt.nodeColor_substrate = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.linkColor_substrate = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.bgColor_substrate = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.nodeColor_substrate);
-                    objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.linkColor_substrate);
-                    objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.bgColor_substrate);
+                    contxt.tabNodeColor["substrate"] = "#" + $.jPicker.List[0].color.active.val('hex');
+                    contxt.tabLinkColor["substrate"] = "#" + $.jPicker.List[1].color.active.val('hex');
+                    contxt.tabBgColor["substrate"] = "#" + $.jPicker.List[2].color.active.val('hex');
+                    objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.tabNodeColor["substrate"]);
+                    objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.tabLinkColor["substrate"]);
+                    objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.tabBgColor["substrate"]);
                 } else if (contxt.activeView==="catalyst") {
-                    contxt.nodeColor_catalyst = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.linkColor_catalyst = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.bgColor_catalyst = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.nodeColor_catalyst);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.linkColor_catalyst);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.bgColor_catalyst);
+                    contxt.tabNodeColor["catalyst"] = "#" + $.jPicker.List[0].color.active.val('hex');
+                    contxt.tabLinkColor["catalyst"] = "#" + $.jPicker.List[1].color.active.val('hex');
+                    contxt.tabBgColor["catalyst"] = "#" + $.jPicker.List[2].color.active.val('hex');
+                    objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.tabNodeColor["catalyst"]);
+                    objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.tabLinkColor["catalyst"]);
+                    objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.tabBgColor["catalyst"]);
                 }
             });
             

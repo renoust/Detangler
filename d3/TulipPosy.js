@@ -60,8 +60,9 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     
 
-    contxt.view[target] = TP.View(subarray, new Array("svg", 960, 500, "svg_substrate"), target, contxt.application);
+    contxt.view[target] = TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_substrate"), target, contxt.application, "#a0522d", "#808080", "#FFFFFF");
 
+	TP.Context().tabOperator["catalyst"] = "AND";
 
     var ca1 = new Array(0,"force layout",function(){objectReferences.ClientObject.callLayout("FM^3 (OGDF)"/*"LinLog"*/,target1)});
     var ca2 = new Array(1,"update layout",function(){objectReferences.ClientObject.updateLayout(target1)});
@@ -74,7 +75,7 @@ var TulipPosy = function (originalJSON) {
     var ca8 = new Array(7, "hide labels", function () {objectReferences.VisualizationObject.showhideLabels(target1)});
     var ca9 = new Array(8, "hide links", function () {objectReferences.VisualizationObject.showhideLinks(target1)});
     var ca10 = new Array(9, "node information",function () {objectReferences.InterfaceObject.attachInfoBox(target1)});
-    var ca11 = new Array(10, "operator " + contxt.catalyst_sync_operator, function () {objectReferences.InteractionObject.toggleCatalystSyncOperator()});
+    var ca11 = new Array(10, "operator " + TP.Context().tabOperator["catalyst"], function () {objectReferences.InteractionObject.toggleCatalystSyncOperator()});
     var ca12 = new Array(11, "weight mapping",function () {objectReferences.VisualizationObject.sizeMapping("weight", target1)});
     var ca13 = new Array(12, "ent. mapping",function () {objectReferences.VisualizationObject.sizeMapping("entanglementIndice", target1)});
     var ca14 = new Array(13, "ent. color", function () {objectReferences.VisualizationObject.colorMapping("entanglementIndice", target1)});
@@ -83,14 +84,14 @@ var TulipPosy = function (originalJSON) {
 
     var catalystarray = new Array(ca1, ca2, ca7, ca8, ca9, ca10, ca11, ca12, ca13, ca14, ca15, ca16);
 
-    contxt.view[target1] = TP.View(catalystarray, new Array("svg", 960, 500, "svg_catalyst"), target1, contxt.application);
+    contxt.view[target1] = TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_catalyst"), target1, contxt.application, "#4682b4", "#808080", "#FFFFFF");
 
     var co1 = new Array(2, "fg " + contxt.combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground()});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
 
     var combinedarray = new Array(co1, co2);
 
-    contxt.view[target2] = TP.View(combinedarray, new Array("svg", 960, 500, "svg_combined"), target2, contxt.application);
+    contxt.view[target2] = TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_combined"), target2, contxt.application, "#121212", "#808080", "#FFFFFF");
 
 
     $('#undo').click(function(){contxt.changeStack.undo();});

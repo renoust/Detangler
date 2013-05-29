@@ -27,9 +27,10 @@
             var svg = null
             svg = contxt.getViewSVG(target);
 
-            eval("contxt.show_links_" + target + " = ! contxt.show_links_" + target);
-
-            if (eval("contxt.show_links_" + target)) {
+            //eval("contxt.show_links_" + target + " = ! contxt.show_links_" + target);
+			TP.Context().tabShowLinks[target] = !TP.Context().tabShowLinks[target];
+			
+            if (TP.Context().tabShowLinks[target]) {
                 svg.selectAll('g.link').attr("visibility", "visible");
                 svg.select('text.showHideLinks').text('hide links');
             } else {
@@ -47,11 +48,14 @@
             /*contxt.svg_substrate.selectAll("text.homogeneity").text(function (d) {
                 return "" + objectReferences.ToolObject.round(contxt.entanglement_homogeneity, 5)
             });*/
-
+			
+			var target1 = "catalyst";
+			var target2 = "substrate";
+			
             $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(contxt.entanglement_homogeneity, 5);
             $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(contxt.entanglement_intensity, 5);
  
-            contxt.svg_substrate.selectAll("text.intensity").text(function (d) {
+            contxt.tabSvg["svg_substrate"].selectAll("text.intensity").text(function (d) {
                 return "" + objectReferences.ToolObject.round(contxt.entanglement_intensity, 5)
             });
 
@@ -65,15 +69,15 @@
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
             d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
 
-            if (contxt.lasso_catalyst) 
-                contxt.lasso_catalyst.fillColor = brewerSeq[index]
-            if (contxt.lasso_substrate) 
-                contxt.lasso_substrate.fillColor = brewerSeq[index]
+            if (contxt.tabLasso[target1]) 
+                contxt.tabLasso[target1].fillColor = brewerSeq[index]
+            if (contxt.tabLasso[target2]) 
+                contxt.tabLasso[target2].fillColor = brewerSeq[index]
         }
 
         this.buildEdgeMatrices = function () {
             var matrixData = [];
-            nbNodes = contxt.graph_catalyst.nodes().length;
+            nbNodes = contxt.tabGraph["graph_catalyst"].nodes().length;
             for (i = 0; i < nbNodes; i++) {
                 matrixData[i] = [];
                 for (j = 0; j < nbNodes; j++)
@@ -81,11 +85,11 @@
             }
 
             var catalystToInd = {};
-            contxt.graph_catalyst.nodes().forEach(function (d, i) {
+            contxt.tabGraph["graph_catalyst"].nodes().forEach(function (d, i) {
                 catalystToInd[d.label] = i;         
                 matrixData[i][i] = [d.baseID, d.frequency];         
             });
-            contxt.graph_catalyst.links().forEach(function (d) {
+            contxt.tabGraph["graph_catalyst"].links().forEach(function (d) {
                 var freq = JSON.parse(d.conditionalFrequency);
                 i = catalystToInd[freq['order'][0]]
                 j = catalystToInd[freq['order'][1]]
@@ -124,7 +128,7 @@
 
 
 
-            var mat = contxt.svg_catalyst.selectAll("g.matrixInfo")
+            var mat = contxt.tabSvg["svg_catalyst"].selectAll("g.matrixInfo")
                 .data(["matrix"])
                 .enter()
                 .append("g")
@@ -153,11 +157,11 @@
                 .style("font-family", "EntypoRegular")
                 .style("font-size", 30)
                 .on("click", function (d) {
-                    contxt.svg_catalyst.selectAll("g.matrixInfo")
+                    contxt.tabSvg["svg_catalyst"].selectAll("g.matrixInfo")
                         .data([])
                         .exit()
                         .remove();
-                    gD = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst).draw()
+                    gD = TP.GraphDrawing(contxt.tabGraph["graph_catalyst"], contxt.tabSvg["svg_catalyst"]).draw()
                 })
                 .on("mouseover", function () {
                     d3.select(this).style("fill", "black")
@@ -293,9 +297,10 @@
             var svg = null
             svg = contxt.getViewSVG(target);
 
-            eval("contxt.show_labels_" + target + " = ! contxt.show_labels_" + target);
+            //eval("contxt.show_labels_" + target + " = ! contxt.show_labels_" + target);
+            TP.Context().tabShowLabels[target] = !TP.Context().tabShowLabels[target]
 
-            if (eval("contxt.show_labels_" + target)) {
+            if (TP.Context().tabShowLabels[target]) {
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     return "visible";
                 });
@@ -398,7 +403,9 @@
 
 
         this.drawBarChart = function(target, smell){
-    
+    	    
+            var svg = null
+            svg = contxt.getViewSVG(target);
             //console.log("hihi BarChart");
             var numberMetric = contxt.metric_substrate_BC[0];           
             var metric = contxt.metric_substrate_BC[1];
@@ -415,7 +422,7 @@
             //console.log(tabClick);
             
             //console.log("metric[0] : " + tabClick[""+metric[0]+""])
-            contxt.view["BarChart_"+target] = new TP.View(null, new Array("svg_BarChart", width, height, "svg_BarChart_"+target), "BarChart_"+target, contxt.application);          
+            contxt.view["BarChart_"+target] = new TP.View(null, new Array("svg_BarChart", null, width, height, "svg_BarChart_"+target), "BarChart_"+target, contxt.application, null, null, null);          
 
             var chart;
             
@@ -602,14 +609,14 @@
                             
                             if(tabClick[""+value[2]] == 0){
                                 
-                                d3.select(this).style('fill',contxt.nodeColor_catalyst);
+                                d3.select(this).style('fill',contxt.tabNodeColor["catalyst"]);
                                 
                                 
                                 var node = svg.selectAll("g.node")
                                     .select("g."+target)
                                     .select("rect")                
                                     .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                    .style("fill", contxt.nodeColor_substrate);   
+                                    .style("fill", contxt.tabNodeColor["substrate"]);   
                                 
                             }               
     
@@ -637,7 +644,9 @@
         
         
         this.drawScatterPlot = function(target){
-
+        	
+            var svg = null
+            svg = contxt.getViewSVG(target);
 
             var margin = {top: 20, right: 15, bottom: 60, left: 60}
 
@@ -651,7 +660,7 @@
             var height =500 - margin.top - margin.bottom;
             
             
-            contxt.view["Scatter_Plot_"+target] = new TP.View(null, new Array("svg_Scatter_Plot", width, height, "svg_Scatter_Plott_"+target), "Scatter_Plot_"+target, contxt.application);  
+            contxt.view["Scatter_Plot_"+target] = new TP.View(null, new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+target), "Scatter_Plot_"+target, contxt.application, null, null, null);  
         
         
             var tabClick = [];
@@ -805,13 +814,13 @@
                                                 
                     if(tabClick[""+result] == 0){   
                                     
-                        selection.style('fill',contxt.nodeColor_catalyst);
+                        selection.style('fill',contxt.tabNodeColor["catalyst"]);
                             
                         var node = svg.selectAll("g.node")
                             .select("g."+target)
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", contxt.nodeColor_substrate);   
+                            .style("fill", contxt.tabNodeColor["substrate"]);   
                     
                     }                   
                 })

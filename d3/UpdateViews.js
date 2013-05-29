@@ -26,8 +26,8 @@
             var cGraph = null;
             var svg = null;
 
-            cGraph = contxt.graph_substrate;
-            svg = contxt.svg_substrate;
+            cGraph = contxt.tabGraph["graph_substrate"];
+            svg = contxt.tabSvg["svg_substrate"];
 
             // we need to rescale the graph so it will fit the current svg 
             //frame and wont overlap with the buttons
@@ -44,17 +44,17 @@
             var newGraph = JSON.parse(data.data.graph);
             var newLinks = newGraph.links;
 
-            contxt.graph_combined.nodes(contxt.graph_substrate.nodes(), "substrate");
-            contxt.graph_combined.addNodes(contxt.graph_catalyst.nodes());
-            contxt.graph_combined.links(newLinks);
-            contxt.graph_combined.specialEdgeBinding("substrate", "catalyst");
+            contxt.tabGraph["graph_combined"].nodes(contxt.tabGraph["graph_substrate"].nodes(), "substrate");
+            contxt.tabGraph["graph_combined"].addNodes(contxt.tabGraph["graph_catalyst"].nodes());
+            contxt.tabGraph["graph_combined"].links(newLinks);
+            contxt.tabGraph["graph_combined"].specialEdgeBinding("substrate", "catalyst");
 
             var p1_s = data.data['substrate'][0];
             var p2_s = data.data['substrate'][1];
             var p1prime_s;
             var p2prime_s;
 
-            contxt.graph_substrate.nodes().forEach(function (d) {
+            contxt.tabGraph["graph_substrate"].nodes().forEach(function (d) {
                 if (d.baseID == p1_s.baseID) {
                     p1prime_s = d;
                 }
@@ -76,7 +76,7 @@
             var p2prime_c;
 
 
-            contxt.graph_catalyst.nodes()
+            contxt.tabGraph["graph_catalyst"].nodes()
                 .forEach(function (d) {
                 if (d.baseID == p1_c.baseID) {
                     p1prime_c = d;
@@ -95,7 +95,7 @@
             //console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
             //console.log("delta catalyst: ",scaleX_c,scaleY_c,deltaX_c,deltaY_c)
 
-            contxt.graph_combined.nodes()
+            contxt.tabGraph["graph_combined"].nodes()
                 .forEach(function (nprime) {
                 if (nprime._type == "substrate") {
                     var newX = ((nprime.x-deltaX_s)/scaleX_s)*scaleX_c+deltaX_c;
@@ -105,7 +105,7 @@
                 };
             });
 
-            var graph_drawing = TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
+            var graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_combined"], contxt.tabSvg["svg_combined"]);
             graph_drawing.clear();
             graph_drawing.draw();
 
@@ -117,19 +117,22 @@
 
 
         this.buildGraphFromData = function (data) {
-            //console.log('creating in tulip, and recieved data: ', data)
+            console.log('creating in tulip, and recieved data: ', data)
             //console.log("here should be sid: ", data.data.sid)
             contxt.sessionSid = data.data.sid
             //console.log("the session sid has just been affected: ", contxt.sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
-            TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
+            
+            //TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
 
         
-            contxt.graph_substrate.nodes(data.nodes, "substrate")
-            contxt.graph_substrate.links(data.links, "substrate")
-            contxt.graph_substrate.edgeBinding()
-            graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate)
-            graph_drawing.move(contxt.graph_substrate, 0)
+            TP.Context().tabGraph["graph_substrate"].nodes(data.nodes, "substrate")
+            TP.Context().tabGraph["graph_substrate"].links(data.links, "substrate")
+            TP.Context().tabGraph["graph_substrate"].edgeBinding()
+            graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_substrate"], TP.Context().tabSvg["svg_substrate"])
+            assert(true, "graphDrawing created") 
+            graph_drawing.move(contxt.tabGraph["graph_substrate"], 0)
+            assert(true, "moved") 
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
         }
@@ -141,10 +144,10 @@
             TP.GraphDrawing(contxt.getViewGraph("catalyst"),contxt.getViewSVG("catalyst")).rescaleGraph(contxt,data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
-            contxt.graph_catalyst.nodes(data.nodes, "catalyst")
-            contxt.graph_catalyst.links(data.links, "catalyst")
-            contxt.graph_catalyst.edgeBinding()
-            graph_drawing = TP.GraphDrawing(contxt.graph_catalyst, contxt.svg_catalyst)
+            contxt.tabGraph["graph_catalyst"].nodes(data.nodes, "catalyst")
+            contxt.tabGraph["graph_catalyst"].links(data.links, "catalyst")
+            contxt.tabGraph["graph_catalyst"].edgeBinding()
+            graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_catalyst"], contxt.tabSvg["svg_catalyst"])
             graph_drawing.clear()
             graph_drawing.draw()
             contxt.entanglement_homogeneity = data['data']['entanglement homogeneity']
@@ -234,21 +237,21 @@
             var svg = null
 
             if (graphName == 'substrate') {
-                graph = contxt.graph_catalyst
-                svg = contxt.svg_catalyst
+                graph = contxt.tabGraph["graph_catalyst"]
+                svg = contxt.tabSvg["svg_catalyst"]
             }
 
             if (graphName == 'catalyst') {
                 //console.log('target is catalyst');
-                graph = contxt.graph_substrate
+                graph = contxt.tabGraph["graph_substrate"]
                 //console.log(selection)
-                svg = contxt.svg_substrate
+                svg = contxt.tabSvg["svg_substrate"]
             }
 
             if (graphName == 'combined') {
-                graph = contxt.graph_combined;
+                graph = contxt.tabGraph["graph_combined"];
                 //console.log("synGraph combined:", selection);
-                svg = contxt.svg_combined;
+                svg = contxt.tabSvg["svg_combined"];
             }
 
 
@@ -280,12 +283,12 @@
                 var svg_target;
                 var graph_target;
                 if (contxt.combined_foreground == 'substrate') {
-                    svg_target = contxt.svg_catalyst
-                    graph_target = contxt.graph_catalyst
+                    svg_target = contxt.tabSvg["svg_catalyst"]
+                    graph_target = contxt.tabGraph["graph_catalyst"]
                 }
                 if (contxt.combined_foreground == 'catalyst') {
-                    svg_target = contxt.svg_substrate
-                    graph_target = contxt.graph_substrate
+                    svg_target = contxt.tabSvg["svg_substrate"]
+                    graph_target = contxt.tabGraph["graph_substrate"]
                 }
                 var graph_drawing = TP.GraphDrawing(graph_target, svg_target);
                 graph_drawing.show(tempGraph);
@@ -305,7 +308,7 @@
                 tempCombined.nodes(data.nodes, dataType);
                 tempCombined.addNodes(nodeSelection, graphName);
                 var tempLinks = [];
-                contxt.graph_combined.links()
+                contxt.tabGraph["graph_combined"].links()
                     .forEach(function (d) {
                         if (!d.source.baseID || !d.target.baseID) console.log(d);
                         if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
@@ -316,7 +319,7 @@
                 tempCombined.links(tempLinks);
 
                 tempCombined.specialEdgeBinding("substrate", "catalyst");
-                var graph_drawing = TP.GraphDrawing(contxt.graph_combined, contxt.svg_combined);
+                var graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_combined"], contxt.tabSvg["svg_combined"]);
                 graph_drawing.show(tempCombined);
             }
 

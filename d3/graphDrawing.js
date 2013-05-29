@@ -220,7 +220,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("rect", true)
-                .style("fill", contxt.nodeColor_substrate)
+                .style("fill", contxt.tabNodeColor["substrate"])
                 .attr("x", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -237,7 +237,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("circle", true)
-                .style("fill", contxt.nodeColor_catalyst)
+                .style("fill", contxt.tabNodeColor["catalyst"])
                 .attr("cx", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -407,7 +407,7 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", contxt.linkColor_catalyst)
+                .style("stroke", contxt.tabLinkColor["catalyst"])
                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
@@ -459,6 +459,8 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
+					assert(false, "edge does not match or isn't bounded")
+                    console.log(d)                 	
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -478,6 +480,7 @@
                 .attr("dy", function(d){return d.y});
              
              //console.log("arrangeLabels after GraphDrawing.move()");
+             assert(true, "arranging labels")
              g.arrangeLabels();
         }
 
@@ -631,14 +634,14 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', contxt.nodeColor_catalyst)
+                .style('fill', contxt.tabNodeColor["catalyst"])
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', contxt.nodeColor_substrate)
+                .style('fill', contxt.tabNodeColor["substrate"])
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -652,13 +655,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_substrate)
+                .style("stroke", contxt.tabLinkColor["substrate"])
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_catalyst)
+                .style("stroke", contxt.tabLinkColor["catalyst"])
                 .style("stroke-width", function(d) { return 1;})
         }
 
@@ -683,7 +686,7 @@
                 .style("opacity", .5)
                 .select("g.glyph")
                 .select("circle.node")
-                .style('fill', contxt.nodeColor_catalyst)
+                .style('fill', contxt.tabNodeColor["catalyst"])
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
@@ -691,7 +694,7 @@
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph")
                 .select("rect.node")
-                .style('fill', contxt.nodeColor_substrate)
+                .style('fill', contxt.tabNodeColor["substrate"])
                 .attr('width', 2 * 5)
                 .attr('height', 2 * 5)
                 .style("stroke-width", 0)
@@ -704,13 +707,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_substrate)
+                .style("stroke", contxt.tabLinkColor["substrate"])
                 .style("stroke-width", function (d) {return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_catalyst)
+                .style("stroke", contxt.tabLinkColor["catalyst"])
                 .style("stroke-width", function(d) { return 1;})
 
             //we would like it better as a parameter

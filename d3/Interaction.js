@@ -35,7 +35,7 @@
 
             svg = contxt.getViewSVG(target);
             graph = contxt.getViewGraph(target);
-
+			/*
             if (target == "catalyst") {
                 contxt.lasso_catalyst = new TP.Lasso(svg);
                 myL = contxt.lasso_catalyst
@@ -49,7 +49,10 @@
             if (target == "combined") {
                 contxt.lasso_combined = new TP.Lasso(svg);
                 myL = contxt.lasso_combined
-            }
+            }*/
+           
+           contxt.tabLasso[target] = new TP.Lasso(svg);
+           myL = contxt.tabLasso[target];
 
 
             var prevSelList = [];
@@ -141,9 +144,9 @@
                             return 'red';
                         } else {
                             if (d._type == "catalyst")
-                                return contxt.nodeColor_catalyst;
+                                return contxt.tabNodeColor["catalyst"];
                             else
-                                return contxt.nodeColor_substrate
+                                return contxt.tabNodeColor["substrate"];
                         }
                     });
 
@@ -169,54 +172,54 @@
                 } else {
 
 
-                    contxt.svg_catalyst.selectAll("g.node")
+                    contxt.tabSvg["svg_catalyst"].selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', contxt.nodeColor_catalyst)
+                        .style('fill', contxt.tabNodeColor["catalyst"])
                         .style("stroke-width", 0);
-                    contxt.svg_catalyst.selectAll("g.node")
+                    contxt.tabSvg["svg_catalyst"].selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
-                    contxt.svg_catalyst.selectAll("g.node")
+                    contxt.tabSvg["svg_catalyst"].selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', contxt.nodeColor_substrate)
+                        .style('fill', contxt.tabNodeColor["substrate"])
                         .style("stroke-width", 0);
-                    contxt.svg_catalyst.selectAll("g.link")
+                    contxt.tabSvg["svg_catalyst"].selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', contxt.linkColor_catalyst);
-                    contxt.svg_substrate.selectAll("g.node")
+                        .style('stroke', contxt.tabLinkColor["catalyst"]);
+                    contxt.tabSvg["svg_substrate"].selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', contxt.nodeColor_catalyst)
+                        .style('fill', contxt.tabNodeColor["catalyst"])
                         .style("stroke-width", 0);
-                    contxt.svg_substrate.selectAll("g.node")
+                    contxt.tabSvg["svg_substrate"].selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
-                    contxt.svg_substrate.selectAll("g.node")
+                    contxt.tabSvg["svg_substrate"].selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', contxt.nodeColor_substrate)
+                        .style('fill', contxt.tabNodeColor["substrate"])
                         .style("stroke-width", 0);
-                    contxt.svg_substrate.selectAll("g.link")
+                    contxt.tabSvg["svg_substrate"].selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', contxt.linkColor_substrate);
-                    contxt.svg_combined.selectAll("g.node")
+                        .style('stroke', contxt.tabLinkColor["substrate"]);
+                    contxt.tabSvg["svg_combined"].selectAll("g.node")
                         .style('opacity', 1.0)
                         .select("circle.node")
-                        .style('fill', contxt.nodeColor_catalyst)
+                        .style('fill', contxt.tabNodeColor["catalyst"])
                         .style("stroke-width", 0);
-                    contxt.svg_combined.selectAll("g.node")
+                    contxt.tabSvg["svg_combined"].selectAll("g.node")
                         .select("text.node")
                         .attr("visibility", "visible");
-                    contxt.svg_combined.selectAll("g.node")
+                    contxt.tabSvg["svg_combined"].selectAll("g.node")
                         .select("rect.node")
-                        .style('fill', contxt.nodeColor_substrate)
+                        .style('fill', contxt.tabNodeColor["substrate"])
                         .style("stroke-width", 0);
-                    contxt.svg_combined.selectAll("g.link")
+                    contxt.tabSvg["svg_combined"].selectAll("g.link")
                         .style('opacity', 1.0)
                         .select("path.link")
-                        .style('stroke', contxt.linkColor_combined);
+                        .style('stroke', contxt.tabLinkColor["combined"]);
 
                     objectReferences.VisualizationObject.resetSize("substrate");
                     objectReferences.VisualizationObject.resetSize("catalyst");
@@ -225,9 +228,9 @@
                     TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", 'catalyst')     
                     //console.log("warning: the selection list is empty");
 
-                    contxt.svg_catalyst.selectAll("text.node").style("opacity", 1)
-                    contxt.svg_substrate.selectAll("text.node").style("opacity", 1)
-                    contxt.svg_combined.selectAll("text.node").style("opacity", 1)
+                    contxt.tabSvg["svg_catalyst"].selectAll("text.node").style("opacity", 1)
+                    contxt.tabSvg["svg_substrate"].selectAll("text.node").style("opacity", 1)
+                    contxt.tabSvg["svg_combined"].selectAll("text.node").style("opacity", 1)
                     
                     //assert(true, "arrangeLabels appele depuis le lasso");    
                     objectReferences.VisualizationObject.arrangeLabels("substrate");
@@ -299,7 +302,7 @@
                         selList.push(d.baseID);
                         return 'red';
                     }
-                    return contxt.nodeColor_substrate;
+                    return contxt.tabNodeColor["substrate"];
                 })
 
                 selList.sort()
@@ -342,7 +345,7 @@
             var myL = null
 
             mySvg = contxt.getViewSVG(target);
-
+/*
             if (target == "catalyst") {
                 myL = contxt.lasso_catalyst
             }
@@ -353,8 +356,10 @@
 
             if (target == "combined") {
                 myL = contxt.lasso_combined
-            }
-
+            }*/
+           
+           	myL = contxt.tabLasso[target];
+           
             mySvg.on("mouseup", function (d) {myL.canMouseUp(d3.mouse(this))});
             mySvg.on("mousedown", function (d) {myL.canMouseDown(d3.mouse(this))});
             mySvg.on("mousemove", function (d) {myL.canMouseMove(d3.mouse(this))});
@@ -395,12 +400,12 @@
 	            if (!target)
 	                 return
 	
-				var data_translation = eval("contxt.data_translation_"+target);
+				var data_translation = TP.tabDataTranslation[target];//eval("contxt.data_translation_"+target);
 	                
 	            svg.call(d3.behavior.drag()
                     .on("drag", function (){
 					
-	                if (!eval("contxt.move_mode_"+target))	           
+	                if (!TP.Context().tabMoveMode[target])	           
                         return;
 	              	               
 	                data_translation[0] = d3.event.dx + data_translation[0];
@@ -414,13 +419,14 @@
 	                });
 	                
 	               svg.selectAll("g.node,g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
-	               eval("contxt.data_translation_"+target+" = data_translation;");
+	               //eval("contxt.data_translation_"+target+" = data_translation;");
+	               TP.tabDataTranslation[target] = data_translation;
                 }));
        		}
 
        		
 			svg.on("mousewheel", function(){               
-                if (!eval("contxt.move_mode_"+target))            
+                if (!TP.Context().tabMoveMode[target])            
                     return;
             
 				var time = 0;
@@ -433,7 +439,7 @@
 				else
 					scale = 0.9;
 					
-				var data_translate = eval("contxt.data_translation_"+target);
+				var data_translate = TP.tabDataTranslation[target]//eval("contxt.data_translation_"+target);
 				
 				var node = svg.selectAll("g.node")
                     .data(cGraph.nodes(),function(d){
@@ -507,19 +513,19 @@
 
 
         this.toggleCatalystSyncOperator = function () {
-            if (contxt.catalyst_sync_operator == "OR") {
-                contxt.catalyst_sync_operator = "AND";
+            if (TP.Context().tabOperator["catalyst"] == "OR") {
+                TP.Context().tabOperator["catalyst"] = "AND";
             } else {
-                contxt.catalyst_sync_operator = "OR"
+                TP.Context().tabOperator["catalyst"] = "OR"
             }
-            contxt.svg_catalyst.selectAll("g.toggleCatalystOp")
+            contxt.tabSvg["svg_catalyst"].selectAll("g.toggleCatalystOp")
                 .select("text")
-                .text("operator " + contxt.catalyst_sync_operator)
+                .text("operator " + TP.Context().tabOperator["catalyst"])
         }
 
 
         this.highlight = function (data, i, j) {
-            contxt.svg_catalyst.selectAll("circle.node")
+            contxt.tabSvg["svg_catalyst"].selectAll("circle.node")
                 .style("opacity", function (d) {
                     if (i == j && d.baseID == data) {
                         return 1
@@ -542,7 +548,7 @@
                     }
                 })
 
-            contxt.svg_catalyst.selectAll("path.link")
+            contxt.tabSvg["svg_catalyst"].selectAll("path.link")
                 .style("stroke", function (d) {
                     if (i != j && d.baseID == data) {
                         return "red"
@@ -569,8 +575,8 @@
 
 		this.delSelection = function (){
 
-            svg = TP.Context().svg_substrate;
-            graph = TP.Context().graph_substrate;
+            svg = TP.Context().tabSvg["svg_substrate"];
+            graph = TP.Context().tabGraph["graph_substrate"];
       
             newLinks = []
             newNodes = []

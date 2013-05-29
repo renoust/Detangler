@@ -52,11 +52,11 @@
                 objectReferences.ToolObject.addBaseID(data, "id")
                 json = JSON.stringify(data)
                 objectReferences.ToolObject.loadJSON(data)
-                console.log("I am creating the graph in Tulip")
+                //console.log("I am creating the graph in Tulip")
                 this.createTulipGraph(json)
-                console.log("I should now analyse the graph",contxt.sessionSid)
+                //console.log("I should now analyse the graph",contxt.sessionSid)
                 this.analyseGraph()
-                console.log("graph analysed", contxt.sessionSid)
+                //console.log("graph analysed", contxt.sessionSid)
             }
             TP.ObjectReferences().TulipPosyClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
@@ -197,8 +197,8 @@
         this.callLayout = function (layoutName, graphName) {
 
             //save for undo
-            var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
-            var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+            //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
+           // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
             
             var layoutParams = {
                 type: "layout",
@@ -216,10 +216,10 @@
                 success: function (data) {
                     objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);
                 
-                    var redo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);}
-                    contxt.changeStack.addChange("callLayout", undo, redo);
-                    undo = null;
-                    redo = null;
+                    //var redo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);}
+                    //contxt.changeStack.addChange("callLayout", undo, redo);
+                    //undo = null;
+                    //redo = null;
                 }
             });
         };
@@ -227,7 +227,7 @@
 
         this.updateLayout = function (graphName, json) {
             json = JSON.stringify({
-                nodes: TP.Context().graph_catalyst.nodes()
+                nodes: TP.Context().tabGraph["graph_"+graphName].nodes()
             })
             var updateParams = {
                 type: "layout",
@@ -290,7 +290,7 @@
                 type: 'analyse',
                 graph: selection,
                 target: syncTarget,
-                operator: contxt.catalyst_sync_operator,
+                operator: TP.Context().tabOperator["catalyst"],//contxt.catalyst_sync_operator,
                 weight: contxt.substrateWeightProperty
             }
 
