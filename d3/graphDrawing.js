@@ -20,7 +20,7 @@
 	import_class('context.js', 'TP');
 	import_class('objectReferences.js', 'TP');
 	
-    var GraphDrawing = function (_graph, _svg) {
+    var GraphDrawing = function (_graph, _svg, target) {
 
         // g, the return variable
         // cGraph, the current graph
@@ -36,7 +36,10 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-            g.drawNodes()
+            //console.log(TP.Context().tabViewNodes["substrate"]);
+            //console.log(TP.Context().tabViewNodes["catalyst"]);
+            
+            g.drawNodes(TP.Context().tabViewNodes[target]);
             g.drawLabels()
         }
 
@@ -47,7 +50,7 @@
         // mouseover, mouseout)
         // to each group are added an svg:circle (placed according to the node 
         // property x and y) and an svg:text printing the node property label
-        g.drawNodes = function () {
+        g.drawNodes = function (view_nodes) {
 
             var saveUndo = 0;
             var undo = null;
@@ -214,7 +217,7 @@
             .classed("glyph", true)
 
 
-
+/*
             var glyphR = g.svg.selectAll("g.glyph.substrate")
                 .append("rect")
                 .attr("class", function (d) {return d._type})
@@ -247,7 +250,42 @@
                     return d.currentY
                 })
                 .attr("r", 5)
+*/
 
+            var glyphR = g.svg.selectAll("g.glyph."+target)
+                .append(view_nodes)
+                .attr("class", function (d) {return d._type})
+                .classed("node", true)
+                .classed(view_nodes, true)
+                .style("fill", contxt.tabNodeColor[target])
+
+			if(view_nodes == "rect" && glyphR != null)
+			{
+				assert(true, "rect")
+				glyphR.attr("x", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                .attr("y", function (d) {
+                    d.currentY = d.y;
+                    return d.currentY
+                })
+                .attr("width", 2 * 5)
+                .attr("height", 2 * 5)		
+			}
+			if(view_nodes == "circle" && glyphR != null)
+			{
+				assert(true, "circle");
+                glyphR.attr("cx", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                .attr("cy", function (d) {
+                    d.currentY = d.y;
+                    return d.currentY
+                })
+                .attr("r", 5)												
+			}
                  
             var selection = g.svg.selectAll("text.node")
             //var selection = g.svg.selectAll("g.node")
@@ -407,7 +445,7 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", contxt.tabLinkColor["catalyst"])
+                .style("stroke", contxt.tabLinkColor[target]) //before, there was catalyst
                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
@@ -629,8 +667,11 @@
             }
         }
 /********************************** ON GOING ***********************************/
-
-		g.resetDrawing = function(){           
+		//never used. Then there is still "substrate", "catalyst" etc.
+		g.resetDrawing = function(){
+			
+			assert(true, "resetDrawing")
+			
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
@@ -681,7 +722,7 @@
             // redraw the previous nodes to the default values
             //g.arrangeLabels();
             //g.resetDrawing();
-            
+            /*
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph")
@@ -698,12 +739,36 @@
                 .attr('width', 2 * 5)
                 .attr('height', 2 * 5)
                 .style("stroke-width", 0)
+                .style("stroke", "black")*/
+               
+            //assert(true, "dans le show show show");
+            
+            var node = g.svg.selectAll("g.node")
+                .style("opacity", .5)
+                .select("g.glyph")
+                .select(TP.Context().tabViewNodes[target]+".node")
+                .style('fill', contxt.tabNodeColor[target])
+                
+            if(TP.Context().tabViewNodes[target] == "circle")
+            {                
+                node.attr('r', 5)
+                .style("stroke-width", 0)
                 .style("stroke", "black")
+			}
+			if(TP.Context().tabViewNodes[target] == "rect")
+			{
+                node.attr('width', 2 * 5)
+                .attr('height', 2 * 5)
+                .style("stroke-width", 0)
+                .style("stroke", "black")
+           }
 
             var node = g.svg.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "hidden")
-
+                               
+                               
+/*
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
@@ -715,6 +780,13 @@
                 .select("path.link")
                 .style("stroke", contxt.tabLinkColor["catalyst"])
                 .style("stroke-width", function(d) { return 1;})
+*/
+
+            var link = g.svg.selectAll("g.link")
+                .style("opacity", .25)
+                .select("path.link")
+                .style("stroke", contxt.tabLinkColor[target])
+                .style("stroke-width", function (d) {return 1;})
 
             //we would like it better as a parameter
             var scaleMin = 3.0

@@ -117,19 +117,19 @@
         // data, the data to load
         //
         // we might want to rename this function...        
-        this.loadJSON = function (data) {
+        this.loadJSON = function (data, target) {
             //console.log("loadJSONrescaleBEGIN");
 
 		    //TP.GraphDrawing(contxt.getViewGraph('substrate'),contxt.getViewSVG('substrate')).rescaleGraph(contxt,data);
 		    //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
-            contxt.tabGraph["graph_substrate"].nodes(data.nodes, 'substrate');
-            contxt.tabGraph["graph_substrate"].links(data.links, 'substrate');
-            contxt.tabGraph["graph_substrate"].edgeBinding();
+            contxt.tabGraph["graph_"+target].nodes(data.nodes, target);
+            contxt.tabGraph["graph_"+target].links(data.links, target);
+            contxt.tabGraph["graph_"+target].edgeBinding();
             //console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
 
-            var graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_substrate"], contxt.tabSvg["svg_substrate"]);
+            var graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_"+target], contxt.tabSvg["svg_"+target], target);
             graph_drawing.draw();
             objectReferences.VisualizationObject.rescaleGraph(data);
             return

@@ -27,7 +27,7 @@
         // the given json file.
         // It is first formatted correctly, locally, then sent to tulip to be 
         //initialized (so it is modified again), and analyzed.
-        this.loadData = function (json) {
+        this.loadData = function (json, target) {
             //for local use
             if (json == "" || json == null) {
                 var jqxhr = $.getJSON(contxt.json_address, function () {
@@ -43,19 +43,19 @@
                 .success(function (data, b) {
                     objectReferences.ToolObject.addBaseID(data, "id")
                     jsonData = JSON.stringify(data)
-                    objectReferences.ToolObject.loadJSON(data)
-                    this.createTulipGraph(jsonData)
-                    this.analyseGraph()
+                    objectReferences.ToolObject.loadJSON(data, target)
+                    this.createTulipGraph(jsonData, target)
+                    this.analyseGraph(target)
                 });
             } else {
                 data = $.parseJSON(json)
                 objectReferences.ToolObject.addBaseID(data, "id")
                 json = JSON.stringify(data)
-                objectReferences.ToolObject.loadJSON(data)
+                objectReferences.ToolObject.loadJSON(data, target)
                 //console.log("I am creating the graph in Tulip")
-                this.createTulipGraph(json)
+                this.createTulipGraph(json, target)
                 //console.log("I should now analyse the graph",contxt.sessionSid)
-                this.analyseGraph()
+                this.analyseGraph(target)
                 //console.log("graph analysed", contxt.sessionSid)
             }
             TP.ObjectReferences().TulipPosyClientObject.syncLayouts();
@@ -134,7 +134,7 @@
         // This function creates a new substrate graph in tulip, initializes, 
         // returns and displays it.
         // json, the initial json string corresponding to the graph.
-        this.createTulipGraph = function (json) {
+        this.createTulipGraph = function (json, target) {
             params = {
                 type: "creation",
                 graph: json
@@ -142,8 +142,8 @@
             __g__.sendQuery({
                 parameters: params,
                 async: false,
-                success: objectReferences.UpdateViewsObject
-                    .buildGraphFromData
+                //success: objectReferences.UpdateViewsObject.buildGraphFromData
+                success: function(data){objectReferences.UpdateViewsObject.buildGraphFromData(data, target)}
             });
         }
 
@@ -151,17 +151,17 @@
         // This function calls through tulip the analysis of a substrate graph, 
         // stores and displays it in the catalyst view, updating the new 
         // entanglement indices computed.
-        this.analyseGraph = function () {
+        this.analyseGraph = function (target) {
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
-                target: 'substrate',
+                target: target,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
             __g__.sendQuery({
                 parameters: params,
-                success: objectReferences.UpdateViewsObject
-                    .applySubstrateAnalysisFromData
+                //success: objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData
+                success: function(data){objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, "catalyst")}
             });
         }
 
@@ -290,7 +290,7 @@
                 type: 'analyse',
                 graph: selection,
                 target: syncTarget,
-                operator: TP.Context().tabOperator["catalyst"],//contxt.catalyst_sync_operator,
+                operator: TP.Context().tabOperator[/*target*/"catalyst"],//contxt.catalyst_sync_operator,
                 weight: contxt.substrateWeightProperty
             }
 
@@ -321,7 +321,8 @@
             __g__.sendQuery({
                 parameters: params,
                 async:async,
-                success: objectReferences.UpdateViewsObject.syncLayoutsFromData
+                //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
+                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, "substrate")}
             });
         };
 

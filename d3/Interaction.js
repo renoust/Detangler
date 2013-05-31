@@ -142,11 +142,12 @@
                         if (d.selected) {
                             selList.push(d.baseID)
                             return 'red';
-                        } else {
+                        } else {/*
                             if (d._type == "catalyst")
                                 return contxt.tabNodeColor["catalyst"];
                             else
-                                return contxt.tabNodeColor["substrate"];
+                                return contxt.tabNodeColor["substrate"];*/
+                            return contxt.tabNodeColor[d._type];
                         }
                     });
 
@@ -302,7 +303,8 @@
                         selList.push(d.baseID);
                         return 'red';
                     }
-                    return contxt.tabNodeColor["substrate"];
+                    //return contxt.tabNodeColor["substrate"];
+                    return contxt.tabNodeColor[d._type];
                 })
 
                 selList.sort()
@@ -512,20 +514,20 @@
         }
 
 
-        this.toggleCatalystSyncOperator = function () {
-            if (TP.Context().tabOperator["catalyst"] == "OR") {
-                TP.Context().tabOperator["catalyst"] = "AND";
+        this.toggleCatalystSyncOperator = function (target) {
+            if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
+                TP.Context().tabOperator[target] = "AND";
             } else {
-                TP.Context().tabOperator["catalyst"] = "OR"
+                TP.Context().tabOperator[target] = "OR"
             }
-            contxt.tabSvg["svg_catalyst"].selectAll("g.toggleCatalystOp")
+            contxt.tabSvg["svg_"+target].selectAll("g.toggleCatalystOp")
                 .select("text")
-                .text("operator " + TP.Context().tabOperator["catalyst"])
+                .text("operator " + TP.Context().tabOperator[target])
         }
 
 
-        this.highlight = function (data, i, j) {
-            contxt.tabSvg["svg_catalyst"].selectAll("circle.node")
+        this.highlight = function (data, i, j, target) { //befrore, there was only catalyst
+            contxt.tabSvg["svg_"+target].selectAll(TP.Context().tabViewNodes[target]+".node")
                 .style("opacity", function (d) {
                     if (i == j && d.baseID == data) {
                         return 1
@@ -548,7 +550,7 @@
                     }
                 })
 
-            contxt.tabSvg["svg_catalyst"].selectAll("path.link")
+            contxt.tabSvg["svg_"+target].selectAll("path.link")
                 .style("stroke", function (d) {
                     if (i != j && d.baseID == data) {
                         return "red"
@@ -573,10 +575,10 @@
         }
 
 
-		this.delSelection = function (){
+		this.delSelection = function (target){
 
-            svg = TP.Context().tabSvg["svg_substrate"];
-            graph = TP.Context().tabGraph["graph_substrate"];
+            svg = TP.Context().tabSvg["svg_"+target]; //before, it was only svg_substrate
+            graph = TP.Context().tabGraph["graph_"+target];
       
             newLinks = []
             newNodes = []
@@ -592,8 +594,8 @@
                 }
             })
 
-            graph.nodes(newNodes, "substrate");
-            graph.links(newLinks, "substrate");
+            graph.nodes(newNodes, target);
+            graph.links(newLinks, target);
             graph.edgeBinding()
 
             svg.selectAll("g.node").data(graph.nodes(), function(d){return d.baseID}).exit().remove();

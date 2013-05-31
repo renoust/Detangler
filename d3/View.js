@@ -11,7 +11,7 @@ import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
 
-var View = function (bouton, svgs, target, application, nodeColor, linkColor, bgColor) {
+var View = function (bouton, svgs, target, application, nodeColor, linkColor, bgColor, view_nodes) {
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
@@ -208,7 +208,12 @@ var View = function (bouton, svgs, target, application, nodeColor, linkColor, bg
                 objectReferences.InteractionObject.createLasso(target);
                 objectReferences.InteractionObject.addZoom(target);
             }*/
-			
+           
+            if(view_nodes != null)
+            	contxt.tabViewNodes[target] = view_nodes;
+            else
+            	contxt.tabViewNodes[target] = "rect";
+            				
 			contxt.tabDataTranslation[target] = [0,0];
             
     	    contxt.tabNodeColor[target] = nodeColor;
@@ -223,14 +228,13 @@ var View = function (bouton, svgs, target, application, nodeColor, linkColor, bg
            
             objectReferences.InteractionObject.createLasso(target);
             objectReferences.InteractionObject.addZoom(target);
-                       if(target == "substrate"){
+            if(target == "substrate"){
            		//objectReferences.InteractionObject.addZoom(target);
                 objectReferences.InterfaceObject.addEntanglementFeedback(target);
            }
             contxt.stateStack[target] = new TP.States();
             contxt.stateStack[target].addState('select', new TP.stateSelect(target));
-            contxt.stateStack[target].executeCurrentState();
-             
+            contxt.stateStack[target].executeCurrentState();             
         }
     }
 

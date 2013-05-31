@@ -49,13 +49,13 @@
                 return "" + objectReferences.ToolObject.round(contxt.entanglement_homogeneity, 5)
             });*/
 			
-			var target1 = "catalyst";
-			var target2 = "substrate";
+			var target_dest = "catalyst";
+			var target_source = "substrate";
 			
             $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(contxt.entanglement_homogeneity, 5);
             $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(contxt.entanglement_intensity, 5);
  
-            contxt.tabSvg["svg_substrate"].selectAll("text.intensity").text(function (d) {
+            contxt.tabSvg["svg_"+target_source].selectAll("text.intensity").text(function (d) {
                 return "" + objectReferences.ToolObject.round(contxt.entanglement_intensity, 5)
             });
 
@@ -69,15 +69,15 @@
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
             d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
 
-            if (contxt.tabLasso[target1]) 
-                contxt.tabLasso[target1].fillColor = brewerSeq[index]
-            if (contxt.tabLasso[target2]) 
-                contxt.tabLasso[target2].fillColor = brewerSeq[index]
+            if (contxt.tabLasso[target_dest]) 
+                contxt.tabLasso[target_dest].fillColor = brewerSeq[index]
+            if (contxt.tabLasso[target_source]) 
+                contxt.tabLasso[target_source].fillColor = brewerSeq[index]
         }
 
-        this.buildEdgeMatrices = function () {
+        this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code
             var matrixData = [];
-            nbNodes = contxt.tabGraph["graph_catalyst"].nodes().length;
+            nbNodes = contxt.tabGraph["graph_"+target].nodes().length;
             for (i = 0; i < nbNodes; i++) {
                 matrixData[i] = [];
                 for (j = 0; j < nbNodes; j++)
@@ -85,11 +85,11 @@
             }
 
             var catalystToInd = {};
-            contxt.tabGraph["graph_catalyst"].nodes().forEach(function (d, i) {
+            contxt.tabGraph["graph_"+target].nodes().forEach(function (d, i) {
                 catalystToInd[d.label] = i;         
                 matrixData[i][i] = [d.baseID, d.frequency];         
             });
-            contxt.tabGraph["graph_catalyst"].links().forEach(function (d) {
+            contxt.tabGraph["graph_"+target].links().forEach(function (d) {
                 var freq = JSON.parse(d.conditionalFrequency);
                 i = catalystToInd[freq['order'][0]]
                 j = catalystToInd[freq['order'][1]]
@@ -128,7 +128,7 @@
 
 
 
-            var mat = contxt.tabSvg["svg_catalyst"].selectAll("g.matrixInfo")
+            var mat = contxt.tabSvg["svg_"+target].selectAll("g.matrixInfo")
                 .data(["matrix"])
                 .enter()
                 .append("g")
@@ -157,11 +157,11 @@
                 .style("font-family", "EntypoRegular")
                 .style("font-size", 30)
                 .on("click", function (d) {
-                    contxt.tabSvg["svg_catalyst"].selectAll("g.matrixInfo")
+                    contxt.tabSvg["svg_"+target].selectAll("g.matrixInfo")
                         .data([])
                         .exit()
                         .remove();
-                    gD = TP.GraphDrawing(contxt.tabGraph["graph_catalyst"], contxt.tabSvg["svg_catalyst"]).draw()
+                    gD = TP.GraphDrawing(contxt.tabGraph["graph_"+target], contxt.tabSvg["svg_"+target], target).draw()
                 })
                 .on("mouseover", function () {
                     d3.select(this).style("fill", "black")
@@ -201,7 +201,7 @@
                             if (d2[0] != -1) {
                                 d3.select(this).style("stroke-width", 1);
                             };
-                            objectReferences.InteractionObject.highlight(d2[0], i, j);
+                            objectReferences.InteractionObject.highlight(d2[0], i, j, target);
                         })
                         .on("mouseout", function () {
                             d3.select(this).style("stroke-width", 0);
@@ -246,7 +246,7 @@
             cGraph.nodes().forEach(function (d) {
                 d.viewMetric = 3;
             })
-            graph_drawing = TP.GraphDrawing(cGraph, svg)
+            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
             graph_drawing.resize(cGraph, 0)
         }
 
@@ -257,7 +257,7 @@
             svg = contxt.getViewSVG(target);
             cGraph = contxt.getViewGraph(target);
 
-            graph_drawing = TP.GraphDrawing(cGraph, svg)
+            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
             graph_drawing.rotate(target,5)
         }
         
@@ -267,7 +267,7 @@
 
             svg = TP.Context().getViewSVG(target);
             cGraph = TP.Context().getViewGraph(target);
-            graph_drawing = TP.GraphDrawing(cGraph, svg);
+            graph_drawing = TP.GraphDrawing(cGraph, svg, target);
             //assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
             //console.log(target, svg, cGraph);
             graph_drawing.arrangeLabels();
@@ -283,7 +283,7 @@
             svg = contxt.getViewSVG(target);
             cGraph = contxt.getViewGraph(target);
 
-            var gD = TP.GraphDrawing(cGraph, svg);
+            var gD = TP.GraphDrawing(cGraph, svg, target);
             gD.bringLabelsForward();
         }
 
@@ -382,7 +382,7 @@
             svg = contxt.getViewSVG(graphName);
             cGraph = contxt.getViewGraph(graphName);
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg);
+            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeSizeMap(cGraph, 0, parameter);
             objectReferences.VisualizationObject.entanglementCaught();
         };
@@ -396,7 +396,7 @@
             svg = contxt.getViewSVG(graphName);
             cGraph = contxt.getViewGraph(graphName);
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg);
+            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeColorMap(cGraph, 0, parameter);
             objectReferences.VisualizationObject.entanglementCaught();
         };
@@ -407,9 +407,9 @@
             var svg = null
             svg = contxt.getViewSVG(target);
             //console.log("hihi BarChart");
-            var numberMetric = contxt.metric_substrate_BC[0];           
-            var metric = contxt.metric_substrate_BC[1];
-            var tabSommet = contxt.metric_substrate_BC[2];
+            var numberMetric = contxt.metric_BC[target][0];           
+            var metric = contxt.metric_BC[target][1];
+            var tabSommet = contxt.metric_BC[target][2];
             
             var tabClick = [];
             
@@ -609,14 +609,14 @@
                             
                             if(tabClick[""+value[2]] == 0){
                                 
-                                d3.select(this).style('fill',contxt.tabNodeColor["catalyst"]);
+                                d3.select(this).style('fill',"#4682b4");
                                 
                                 
                                 var node = svg.selectAll("g.node")
                                     .select("g."+target)
                                     .select("rect")                
                                     .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                    .style("fill", contxt.tabNodeColor["substrate"]);   
+                                    .style("fill", contxt.tabNodeColor[target]);   
                                 
                             }               
     
@@ -650,10 +650,10 @@
 
             var margin = {top: 20, right: 15, bottom: 60, left: 60}
 
-            var numberMetric = contxt.metric_substrate_SP[0];
-            var metrics = contxt.metric_substrate_SP[1];        
-            var metric = contxt.metric_substrate_SP[2];
-            var axesNames = contxt.metric_substrate_SP[3];
+            var numberMetric = contxt.metric_SP[target][0];
+            var metrics = contxt.metric_SP[target][1];        
+            var metric = contxt.metric_SP[target][2];
+            var axesNames = contxt.metric_SP[target][3];
             
             
             var width = 960 - margin.left - margin.right;
@@ -768,11 +768,11 @@
                       //console.log(scatterP);
                       
                       
-                      scatter.selectAll("text.scatterPlotsubstrate")
+                      scatter.selectAll("text.scatterPlot"+target)
                         .data(dataTab)
                         .enter()
                         .append("text")
-                        .classed("scatterPlotsubstrate", true)
+                        .classed("scatterPlot"+target, true)
                         .style("fill", "red")                       
                        .text(function(d) {
                              //console.log("titi : "+d[0]);
@@ -807,20 +807,20 @@
                     var result = tab[3];
                     
                                 
-                    scatter.selectAll("text.scatterPlotsubstrate")
+                    scatter.selectAll("text.scatterPlot"+target)
                          .data([])
                          .exit()
                          .remove();
                                                 
                     if(tabClick[""+result] == 0){   
                                     
-                        selection.style('fill',contxt.tabNodeColor["catalyst"]);
+                        selection.style('fill',"#4682b4");
                             
                         var node = svg.selectAll("g.node")
                             .select("g."+target)
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", contxt.tabNodeColor["substrate"]);   
+                            .style("fill", contxt.tabNodeColor[target]);   
                     
                     }                   
                 })
@@ -865,7 +865,7 @@
             svg = contxt.getViewSVG(graphName);
             cGraph = contxt.getViewGraph(graphName);
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg);
+            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.changeColor(graphName, cGraph, elem, newcolor);
 
         }

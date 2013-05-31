@@ -482,10 +482,10 @@
         }
 
 
-        this.addSettingsButton = function () {
-            objectReferences.InterfaceObject.holdSVGInteraction("substrate")
+        this.addSettingsButton = function (target) {
+            objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
 
-            svg = contxt.tabSvg["svg_substrate"]
+            svg = contxt.tabSvg["svg_"+target]
             posSettings_x = contxt.width - 30
             posSettings_y = 30
 
@@ -886,21 +886,12 @@
             });
            console.log("-->"+contxt.activeView);      
             $('#apply').click(function(){
-                if (contxt.activeView==="substrate"){
-                    contxt.tabNodeColor["substrate"] = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.tabLinkColor["substrate"] = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.tabBgColor["substrate"] = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.tabNodeColor["substrate"]);
-                    objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.tabLinkColor["substrate"]);
-                    objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.tabBgColor["substrate"]);
-                } else if (contxt.activeView==="catalyst") {
-                    contxt.tabNodeColor["catalyst"] = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.tabLinkColor["catalyst"] = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.tabBgColor["catalyst"] = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.tabNodeColor["catalyst"]);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.tabLinkColor["catalyst"]);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.tabBgColor["catalyst"]);
-                }
+                    contxt.tabNodeColor[contxt.activeView] = "#" + $.jPicker.List[0].color.active.val('hex');
+                    contxt.tabLinkColor[contxt.activeView] = "#" + $.jPicker.List[1].color.active.val('hex');
+                    contxt.tabBgColor[contxt.activeView] = "#" + $.jPicker.List[2].color.active.val('hex');
+                    objectReferences.VisualizationObject.changeColor(contxt.activeView, "node", contxt.tabNodeColor[contxt.activeView]);
+                    objectReferences.VisualizationObject.changeColor(contxt.activeView, "link", contxt.tabLinkColor[contxt.activeView]);
+                    objectReferences.VisualizationObject.changeColor(contxt.activeView, "bg", contxt.tabBgColor[contxt.activeView]);
             });
             
 

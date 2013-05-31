@@ -47,8 +47,8 @@
         
         this.changeStack = new TP.StatesChange();
                 
-        this.metric_substrate_BC = null;
-        this.metric_substrate_SP = null;
+        this.metric_BC = [];
+        this.metric_SP = [];
 
         // initialization of lasso interactors
         this.tabLasso = [];
@@ -58,6 +58,8 @@
         this.tabNodeColor = [];
         this.tabLinkColor = [];
         this.tabBgColor = [];
+        
+        this.tabViewNodes = [];
 
         // initialization of the selection and move modes        
         this.tabSelectMode = [];
