@@ -14,6 +14,7 @@ import tornado.web
 import cgi
 import json
 import sys
+import os
 
 print sys.path
 # this should point to your tulip directory
@@ -47,11 +48,15 @@ We might in the future use a different webserver such as 'tornado'
 '''
 class MyRequestHandler(tornado.web.RequestHandler):
 
-    def initialize(self):
+    def initialize(self, path):
+        print "initialising:", path
         self.sessionMan = globalSessionMan
         #self.sessionMan.start()
         self.utilGraphMan = graphManager()
-
+        newPath = path.split("/")
+        newPath[len(newPath)-1] = "d3"
+        self.currentPath = "/".join(newPath)+"/"
+        print "current path=",self.currentPath
     # the graph manager instance allows many pure graph manipulation
     #graphMan = graphManager()
     
@@ -76,8 +81,50 @@ class MyRequestHandler(tornado.web.RequestHandler):
     This method handles a GET request but doesn't do anything with it
     (it used to create a random graph of n nodes, n argument of the get query)
     '''
-    def get(self):
-        print "path=",self.path
+    @tornado.web.asynchronous
+    def get(self, arg):
+        print ">>>>>>>>>>>>> GET RECIEVED <<<<<<<<<<<<<<<<<<<<<<", arg
+        fileList = os.listdir(self.currentPath)
+        #print fileList
+        #print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> recieved get!!!" 
+        print "the request: ", self.request.uri
+        uri = self.request.uri.split("/")[1]
+        args = uri.split("?")
+        print 'args:',args
+        print "parse:",cgi.parse_qs(uri)
+        
+        
+        if os.path.isfile(self.currentPath+arg):
+            print "FILE found!", self.currentPath+arg
+            f = open(self.currentPath+arg, 'r')
+            self.write(f.read())#.encode('utf-8'))
+            f.close()
+            self.finish()
+        
+        isArg = [True for a in args if a != ""]
+        if uri == "" and not isArg:
+            self.render(self.currentPath+"index.html")
+        
+        if uri == "favicon.ico" or arg == "favicon.ico":
+            print "ignoring icon"
+        
+        '''
+        if uri in fileList:
+            f = open(self.currentPath+uri, 'r')
+            self.write(f.read())#.encode('utf-8')))
+            f.close()
+            self.finish()
+        '''
+        
+        '''
+        print cgi.parse_qs(self.request)
+        
+        #ctype, pdict = cgi.parse_header(self.request.headers.get('content-type'))
+        print ctype
+        print pdict
+        
+        print "before it messes up <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+        
         if len(self.path.split('?'))<2:
             return
         paramStr = self.path.split('?')[1]
@@ -90,6 +137,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         if len(paramStr) > 1:
                 params = cgi.parse_qs(paramStr, True, True)
                 print "this section should deliver probably the JS of the API"
+                print paramStr
                 if "n" in params.keys():
                         print params["n"][0]
                         try:
@@ -106,13 +154,14 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 print "GET parameters: ",params
 
         self.sendJSON(returnJSON)
-
+        '''
 
     '''
     This method handles post queries. The POST content should be a well formatted JSON
     file containing instructions or a file to upload to the server.
     '''
-    def post(self):
+    def post(self,arg):
+        print ">>>>>>>>>>>>>>>>>>>>> POST ARG:",arg
         #print "SESSION MANAGER: ", self.sessionMan.sidList, self.sessionMan
         #print "These are the headers: ",self.headers
         ctype, pdict = cgi.parse_header(self.request.headers.get('content-type'))
@@ -410,14 +459,41 @@ tlp.loadPlugins()
 #main()
 
 
-class MyApplication(tornado.web.Application):
-    def __init__(self, *params):
-        tornado.web.Application.__init__(self, *params)
+#class MyApplication(tornado.web.Application):
+#    def __init__(self, *params):
+#        tornado.web.Application.__init__(self, *params)
         
 
+root = os.path.dirname(__file__)
+#print "ROOT="
+#print os.path.dirname(os.getcwd()+'/../d3/')
+#+"../d3/")
+#root = "/work/PDP/TulipPosy/d3/"
+
+
+
+'''
 application = MyApplication([
     (r"/", MyRequestHandler),
-])
+    ], static_path=root
+)
+'''
+
+#class MainHandler(tornado.web.RequestHandler):
+#    def get(self):
+#        self.render("../d3/index.html")
+
+
+application = tornado.web.Application([
+    #(r"/(.*\.html)", tornado.web.StaticFileHandler, {"path": "/work/PDP/TulipPosy/d3/)"}),
+    #(r"/(.*\.js)", tornado.web.StaticFileHandler, {"path": "/work/PDP/TulipPosy/d3/)"}),
+    #(r"/(.*\.js)", tornado.web.StaticFileHandler, {"path": "/work/PDP/TulipPosy/d3/)"})
+    #])
+    #(r'/(.*)', tornado.web.StaticFileHandler, {'path': "/work/PDP/TulipPosy/d3/)"}),
+    (r"/(.*)", MyRequestHandler, {'path': os.getcwd()})
+    ])
+    #], template_path=root,
+    #static_path=root)
 
 if __name__ == "__main__":
     application.listen(8085)
