@@ -36,10 +36,8 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-            //console.log(TP.Context().tabViewNodes["substrate"]);
-            //console.log(TP.Context().tabViewNodes["catalyst"]);
             
-            g.drawNodes(TP.Context().tabViewNodes[target]);
+            g.drawNodes(TP.Context().view[target].getViewNodes());
             g.drawLabels()
         }
 
@@ -180,14 +178,14 @@
                     tab2[4] = tab2[0].data()[0].currentY;
                     
                     redo = function(){console.log(tab2); move(tab2);}           
-                    //contxt.changeStack.addChange("moveSommet", undo, redo);      
+                    //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
           
                   })
             .on("dragend", function(){
                         console.log("mouseDown, mouseDown");
                         //if(saveUndo == 1){
                             
-                            contxt.changeStack.addChange("moveSommet", undo, redo);
+                            TP.Context().changeStack.addChange("moveSommet", undo, redo);
                             undo = null;
                             redo = null;
                             saveUndo = 0;                   
@@ -223,7 +221,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("rect", true)
-                .style("fill", contxt.tabNodeColor["substrate"])
+                .style("fill", TP.Context().tabNodeColor["substrate"])
                 .attr("x", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -240,7 +238,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("circle", true)
-                .style("fill", contxt.tabNodeColor["catalyst"])
+                .style("fill", TP.Context().tabNodeColor["catalyst"])
                 .attr("cx", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -257,7 +255,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed(view_nodes, true)
-                .style("fill", contxt.tabNodeColor[target])
+                .style("fill", TP.Context().view[target].getNodesColor())
 
 			if(view_nodes == "rect" && glyphR != null)
 			{
@@ -445,7 +443,7 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", contxt.tabLinkColor[target]) //before, there was catalyst
+                .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
@@ -498,7 +496,7 @@
                 .select("path")
                 .attr("d", function (d) {
 					assert(false, "edge does not match or isn't bounded")
-                    console.log(d)                 	
+                    //console.log(d)                 	
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -675,14 +673,14 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', contxt.tabNodeColor["catalyst"])
+                .style('fill', TP.Context().view["catalyst"].getNodesColor())
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', contxt.tabNodeColor["substrate"])
+                .style('fill', TP.Context().view["substrate"].getNodesColor())
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -696,13 +694,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.tabLinkColor["substrate"])
+                .style("stroke", TP.Context().view["substrate"].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.tabLinkColor["catalyst"])
+                .style("stroke", TP.Context().view["catalyst"].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
         }
 
@@ -727,7 +725,7 @@
                 .style("opacity", .5)
                 .select("g.glyph")
                 .select("circle.node")
-                .style('fill', contxt.tabNodeColor["catalyst"])
+                .style('fill', TP.Context().tabNodeColor["catalyst"])
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
@@ -735,7 +733,7 @@
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph")
                 .select("rect.node")
-                .style('fill', contxt.tabNodeColor["substrate"])
+                .style('fill', TP.Context().tabNodeColor["substrate"])
                 .attr('width', 2 * 5)
                 .attr('height', 2 * 5)
                 .style("stroke-width", 0)
@@ -746,16 +744,16 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph")
-                .select(TP.Context().tabViewNodes[target]+".node")
-                .style('fill', contxt.tabNodeColor[target])
+                .select(TP.Context().view[target].getViewNodes()+".node")
+                .style('fill', TP.Context().view[target].getNodesColor())
                 
-            if(TP.Context().tabViewNodes[target] == "circle")
+            if(TP.Context().view[target].getViewNodes() == "circle")
             {                
                 node.attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 			}
-			if(TP.Context().tabViewNodes[target] == "rect")
+			if(TP.Context().view[target].getViewNodes() == "rect")
 			{
                 node.attr('width', 2 * 5)
                 .attr('height', 2 * 5)
@@ -772,20 +770,20 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.tabLinkColor["substrate"])
+                .style("stroke", TP.Context().tabLinkColor["substrate"])
                 .style("stroke-width", function (d) {return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.tabLinkColor["catalyst"])
+                .style("stroke", TP.Context().tabLinkColor["catalyst"])
                 .style("stroke-width", function(d) { return 1;})
 */
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.tabLinkColor[target])
+                .style("stroke", TP.Context().view[target].getLinksColor())
                 .style("stroke-width", function (d) {return 1;})
 
             //we would like it better as a parameter

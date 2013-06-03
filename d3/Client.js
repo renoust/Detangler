@@ -63,7 +63,7 @@
             /*var cGraph = null;
     		var svg = null;
 
-    		svg = contxt.getViewSVG('catalyst');
+    		svg = TP.Context().view('catalyst').getSvg();
     		cGraph = contxt.getViewGraph('catalyst');
     		var graph_drawing = TP.GraphDrawing(cGraph, svg);
     		graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndice');
@@ -152,6 +152,7 @@
         // stores and displays it in the catalyst view, updating the new 
         // entanglement indices computed.
         this.analyseGraph = function (target) {
+        	assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
@@ -279,6 +280,8 @@
         // selection, the JSON string of the selected subgraph
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
+        	
+        	assert(true, "syncGraph");
 
             var syncTarget = graphName;
 
@@ -305,8 +308,11 @@
 
 
         this.syncLayouts = function (async) {
-		if(async !== false)
-            async = true;
+        	
+        	assert(true, "syncLayouts");
+        	
+			if(async !== false)
+           		async = true;
 
             var syncLayoutParams = {
                 type: "synchronize layouts",
@@ -336,7 +342,7 @@
         this.getSelection = function (graphName) {
             var cGraph = null;
             var svg = null;
-            svg = contxt.getViewSVG(graphName);
+            svg = TP.Context().view[graphName].getSvg();
             cGraph = contxt.getViewGraph(graphName);
             var u = svg.selectAll("g.node.selected").data();
 

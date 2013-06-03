@@ -60,7 +60,8 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     
 
-    contxt.view[target] = TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_substrate"), target, contxt.application, "#a0522d", "#808080", "#FFFFFF", "rect");
+    TP.Context().view[target] = new TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_substrate"), target, "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    TP.Context().view[target].addView();
 
 	TP.Context().tabOperator["catalyst"] = "AND";
 
@@ -84,18 +85,25 @@ var TulipPosy = function (originalJSON) {
 
     var catalystarray = new Array(ca1, ca2, ca7, ca8, ca9, ca10, ca11, ca12, ca13, ca14, ca15, ca16);
 
-    contxt.view[target1] = TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_catalyst"), target1, contxt.application, "#4682b4", "#808080", "#FFFFFF", "circle");
-
-    var co1 = new Array(2, "fg " + contxt.combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground()});
+    TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_catalyst"), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", "substrate");
+	TP.Context().view[target1].addView();
+	
+    var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground()});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
 
     var combinedarray = new Array(co1, co2);
 
-    contxt.view[target2] = TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_combined"), target2, contxt.application, "#121212", "#808080", "#FFFFFF", "rect");
+    TP.Context().view[target2] = new TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_combined"), target2, "#121212", "#808080", "#FFFFFF", "rect", "combined", null);
+	TP.Context().view[target2].addView();
+	
+	//assert(true, "tabType");
+	console.log(TP.Context().tabType);
+	//assert(true, "tabAssociation");
+	console.log(TP.Context().tabAssociation);	
+	
 
-
-    $('#undo').click(function(){contxt.changeStack.undo();});
-    $('#redo').click(function(){contxt.changeStack.redo();});     
+    $('#undo').click(function(){TP.Context().changeStack.undo();});
+    $('#redo').click(function(){TP.Context().changeStack.redo();});     
 
     var wrap = $('#wrap')[0];
 
@@ -136,7 +144,7 @@ var TulipPosy = function (originalJSON) {
 
        //objectReferences.InterfaceObject.toggleSelectMove('substrate');
        //objectReferences.InterfaceObject.toggleSelectMove('catalyst'); 
-
+	
     if (originalJSON != null && originalJSON != "") {
         console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {

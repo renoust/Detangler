@@ -19,8 +19,6 @@
         }
 
         Context.prototype._singletonInstance = this;
-
-        this.application = [];
         this.view = [];
 
         // initialization of the communication address and port        
@@ -35,45 +33,18 @@
         this.height = this.dialogHeight-50;
 
         // initialization of the svg frames
-
-        this.tabSvg = [];
 		this.tabGraph = [];
 
         this.activeView = "substrate";
 
-		this.firstGraph = 'substrate';
-
         this.stateStack = [];
         
         this.changeStack = new TP.StatesChange();
-                
-        this.metric_BC = [];
-        this.metric_SP = [];
-
-        // initialization of lasso interactors
-        this.tabLasso = [];
-
-        // initialization of the default colors of the graphs
-        
-        this.tabNodeColor = [];
-        this.tabLinkColor = [];
-        this.tabBgColor = [];
-        
-        this.tabViewNodes = [];
-
-        // initialization of the selection and move modes        
-        this.tabSelectMode = [];
-        this.tabMoveMode = [];
-        this.tabShowLabels = [];
-        this.tabShowLinks = [];
-        this.tabNodeInformation = [];
         
         this.mouse_over_button = false;        
         this.combined_foreground = "substrate";
 
-        // initialization of the global entanglement parameters
-        //this.catalyst_sync_operator = "AND";
-        
+        // initialization of the global entanglement parameters        
         this.tabOperator = [];
                 
         this.entanglement_intensity = 0.0;
@@ -87,11 +58,6 @@
         this.defaultBorderWidth = .5;
         this.defaultTextFont = "Arial";
         this.defaultTextSize = 14;
-        //var color = d3.scale.category20();
-
-		//Added to get translation values 
-		
-		this.tabDataTranslation = [];
 
         this.sessionSid = 0;
 
@@ -100,10 +66,10 @@
 
         //number of pane for the menu
         this.menuNum=1;
-
-        this.getViewSVG = function (viewID) {
-                return __g__.tabSvg["svg_"+viewID];
-        };
+        
+        this.tabType = [];
+        
+        this.tabAssociation = [];
 
 
         this.getViewGraph = function (viewID) {

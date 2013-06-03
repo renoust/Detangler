@@ -59,8 +59,8 @@
             function getProps(n) {
                 //console.log(Object.keys(n));
                 Object.keys(n).forEach(function (p) {
-                    if (!(p in contxt.substrateProperties)) {
-                        contxt.substrateProperties[p] = typeof (n[p])
+                    if (!(p in TP.Context().substrateProperties)) {
+                        TP.Context().substrateProperties[p] = typeof (n[p])
                     }
                 })
             }
@@ -68,9 +68,9 @@
             data.nodes.forEach(getProps)
             data.links.forEach(getProps)
 
-            //console.log("The properties: ", contxt.substrateProperties);
+            //console.log("The properties: ", TP.Context().substrateProperties);
             //console.log("The properties: ", data.nodes);
-            //console.log(contxt.substrateProperties);
+            //console.log(TP.Context().substrateProperties);
         }
 
 
@@ -120,16 +120,16 @@
         this.loadJSON = function (data, target) {
             //console.log("loadJSONrescaleBEGIN");
 
-		    //TP.GraphDrawing(contxt.getViewGraph('substrate'),contxt.getViewSVG('substrate')).rescaleGraph(contxt,data);
+		    //TP.GraphDrawing(TP.Context().getViewGraph('substrate'),TP.Context().getViewSVG('substrate')).rescaleGraph(contxt,data);
 		    //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
-            contxt.tabGraph["graph_"+target].nodes(data.nodes, target);
-            contxt.tabGraph["graph_"+target].links(data.links, target);
-            contxt.tabGraph["graph_"+target].edgeBinding();
-            //console.log("loading JSON", contxt.graph_substrate.nodes(), contxt.graph_catalyst.nodes());
+            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, target);
+            TP.Context().tabGraph["graph_"+target].links(data.links, target);
+            TP.Context().tabGraph["graph_"+target].edgeBinding();
+            //console.log("loading JSON", TP.Context().graph_substrate.nodes(), TP.Context().graph_catalyst.nodes());
 
-            var graph_drawing = TP.GraphDrawing(contxt.tabGraph["graph_"+target], contxt.tabSvg["svg_"+target], target);
+            var graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target);
             graph_drawing.draw();
             objectReferences.VisualizationObject.rescaleGraph(data);
             return
