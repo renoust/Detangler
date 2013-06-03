@@ -132,7 +132,7 @@ var View = function (bouton, svgs, target, application) {
             .attr("id", "button" + target)
             .attr('class','arrayButtons');*/
             console.log(bouton)
-        createArrayButtons(bouton);
+        objectReferences.InterfaceObject.createArrayButtons(bouton);
 
         /*while (num < bouton.length) {
             var i = num;
