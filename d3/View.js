@@ -22,11 +22,11 @@ var View = function (bouton, svgs, target, application) {
     elem = document.getElementById("bouton" + target);
     if (elem) elem.parentNode.removeChild(elem);
     elem = $("div[aria-describedby='zone" + target + "']");
-     console.log(elem)
-    if (elem!=[])elem.remove();
+     //console.log(elem)
+    if (elem)elem.remove();
 
     
-    console.log($("div[aria-describedby='zone"+target+"']"))
+    //console.log($("div[aria-describedby='zone"+target+"']"))
     //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
    
     //if (elem!=[])elem.remove();
@@ -85,7 +85,7 @@ var View = function (bouton, svgs, target, application) {
     /****  création du dialog ****/
     //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
 
-     $("<div/>", {id: "zone"+target, title: target}).appendTo("#container");
+     $("<div/>", {id: "zone"+target, title: target}).appendTo("html");
 
     var dialog = $("[id=zone" + target + "]");
     //console.log(dialog);
@@ -115,18 +115,26 @@ var View = function (bouton, svgs, target, application) {
         contxt.stateStack[target].executeCurrentState();
     });
 
-   
+
+
+
+
+    dialog.parent().appendTo("#container")
     dialog.parent().click(function(){ 
         contxt.activeView = target;
-        console.log(contxt.activeView);
+    
         var num = 0;
         $(".arrayButtons").remove();
-
-        var pane = d3.select('#menu-1').append("div")
+        $('#menu1-content').remove()
+        $('<div/>', {id:'menu1-content'}).appendTo('#menu-1')
+        $('#menu1-content').accordion()
+        /*var pane = d3.select('#menu-1').append("div")
             .attr("id", "button" + target)
-            .attr('class','arrayButtons');
+            .attr('class','arrayButtons');*/
+            console.log(bouton)
+        createArrayButtons(bouton);
 
-        while (num < bouton.length) {
+        /*while (num < bouton.length) {
             var i = num;
             var j = 0 + i;
             var bout = application[target].Boutton.create({
@@ -146,7 +154,7 @@ var View = function (bouton, svgs, target, application) {
                 });
             })(i);
             num++;
-        }
+        }*/
         $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
         $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
         $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));

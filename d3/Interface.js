@@ -826,7 +826,7 @@
             $("<div/>", {
                 "class": "cont",
                 id: "menu-"+menuNum,
-                style:"left:-231; z-index:0;",
+                style:"left:-261; z-index:0;",
             }).appendTo("#wrap");
 
             $("<span/>", {
@@ -908,6 +908,41 @@
             
 
         }
+
+        this.createElement = function(balise, attributes,  parentId, labelPrec, labelSuiv){    //{attr1 : 'val1', attr2:'val2'...,attr-n:'val-n'}      '#parentId'
+            if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
+            var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
+            if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
+            return elem;
+        }
+        this.createForm = function(menuPane, id, title, tab, event){
+
+            if (tab!=''){
+                var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
+                this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
+                for (var i = 0; i < tab.length; i++) {
+                    this.createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
+                    this.createElement('br', null, '#'+id)
+                }
+
+                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
+            }else{
+                var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
+                elem.click(event.click)
+                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
+            }
+
+            $('#'+menuPane).accordion('refresh')
+        }
+
+        this.createArrayButtons = function(tab){
+            console.log('toto')
+                for(var i=0; i<tab.length; i++){
+                    this.createForm(tab[i][0], tab[i][1], tab[i][2], tab[i][3], tab[i][4])
+                }
+                
+            }
+
         return __g__;
 
     }

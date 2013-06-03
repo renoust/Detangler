@@ -471,8 +471,8 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
-                    assert(false, "edge does not match or isn't bounded")
-                    console.log(d)
+                    //assert(false, "edge does not match or isn't bounded")
+                    //console.log(d)
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -494,7 +494,7 @@
                 .attr("dy", function(d){return d.y});
              
              //console.log("arrangeLabels after GraphDrawing.move()");
-            assert(true, "arranging labels")
+            //assert(true, "arranging labels")
             g.arrangeLabels();
             //assert(true, "OVER!")
 
@@ -578,7 +578,7 @@
 
         g.nodeColorMap = function (_graph, dTime, parameter) {
             g.cGraph = _graph
-              console.log(g.cGraph);
+              //console.log(g.cGraph);
             //we would like it better as a parameter
             scaleMin = 3.0
             scaleMax = 12.0

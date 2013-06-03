@@ -125,17 +125,17 @@
             
             //TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
 
-            assert(true, "assigning graph")
+            //assert(true, "assigning graph")
             TP.Context().graph_substrate.nodes(data.nodes, "substrate")
             TP.Context().graph_substrate.links(data.links, "substrate")
             TP.Context().graph_substrate.edgeBinding()
 
-            assert(true,"edge bounded")
+            //assert(true,"edge bounded")
 
             graph_drawing = TP.GraphDrawing(TP.Context().graph_substrate, TP.Context().svg_substrate)
-            assert(true, "graphDrawing created")
+            //assert(true, "graphDrawing created")
             graph_drawing.move(contxt.graph_substrate, 0)
-            assert(true, "moved")
+            //assert(true, "moved")
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
         }

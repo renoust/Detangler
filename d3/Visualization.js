@@ -398,8 +398,11 @@
 
 
         this.drawBarChart = function(target, smell){
-    
+        
+             var svg = null
+            svg = contxt.getViewSVG(target);
             //console.log("hihi BarChart");
+
             var numberMetric = contxt.metric_substrate_BC[0];           
             var metric = contxt.metric_substrate_BC[1];
             var tabSommet = contxt.metric_substrate_BC[2];
