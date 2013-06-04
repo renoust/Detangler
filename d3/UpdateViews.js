@@ -221,13 +221,15 @@
             //graph.edgeBinding();
             
             var graph_drawing = TP.GraphDrawing(graph, svg);
+
             graph_drawing.resize(graph, 0);
+
 
             var pileCentrality = new TP.Metric();
             
             var char = d3.selectAll("g.node.substrate");
             char.attr("x", function(d){ console.log("viewMetric : "+ d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
-          
+            //graph_drawing.resize(graph, 0);
             contxt.metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             contxt.metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");
             

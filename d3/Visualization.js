@@ -369,16 +369,17 @@
 
 
 
-        this.sizeMapping = function (parameter, graphName) {
-
+        this.sizeMapping = function (parameter, graphName, scales) {
             var cGraph = null;
             var svg = null;
-
+            var scaleMin = null;
+            var scaleMax = null
+            if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
             svg = contxt.getViewSVG(graphName);
             cGraph = contxt.getViewGraph(graphName);
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg);
-            graph_drawing.nodeSizeMap(cGraph, 0, parameter);
+            graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
             objectReferences.VisualizationObject.entanglementCaught();
         };
 
@@ -399,21 +400,22 @@
 
         this.drawBarChart = function(target, smell){
         
+
              var svg = null
             svg = contxt.getViewSVG(target);
             //console.log("hihi BarChart");
+            var numberMetric = contxt.metric_substrate_BC[0];   
 
-            var numberMetric = contxt.metric_substrate_BC[0];           
             var metric = contxt.metric_substrate_BC[1];
             var tabSommet = contxt.metric_substrate_BC[2];
-            
+  
             var tabClick = [];
             
             for (i = 0; i < metric.length; i++)
             {
                tabClick[""+metric[i]+""] = 0;
             }
-            
+
             //console.log("mettttrrrrrrrriiiiiiicccccc : ");
             //console.log(tabClick);
             

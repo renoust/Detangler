@@ -58,7 +58,7 @@
                 this.analyseGraph()
                 //console.log("graph analysed", contxt.sessionSid)
             }
-            TP.ObjectReferences().TulipPosyClientObject.syncLayouts();
+            //TP.ObjectReferences().ClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
             /*var cGraph = null;
     		var svg = null;

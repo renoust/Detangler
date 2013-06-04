@@ -38,7 +38,14 @@ var TulipPosy = function (originalJSON) {
     $('<div/>', {class:'header-menu', text:''}).appendTo('#menu-3')
     objectReferences.InterfaceObject.apiVisu("menu-3");
 
-   
+
+
+var paramSizeMap = [
+        //['input',{type:'text', name:'valMin', value:''},'min: '],
+        //['input',{type:'text', name:'valMax', value:''},'max: '],
+        ['div',{id:'sizemap',class:'slider'}, 'scale: ']
+    ]
+
 var subarray = [
     ['menu1-content','b1','induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}],
     ['menu1-content','b2','force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}],
@@ -47,7 +54,7 @@ var subarray = [
     // ['menu1-content','b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],
     ['menu1-content','b6','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}],
     // ['menu1-content','b7','degree metric','',{click:function(){objectReferences.ClientObject.callLayout('LinLog Layout (Noack)',target)}}],
-    ['menu1-content','b8','btw. cetrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}],
+    ['menu1-content','b8','btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}],
     ['menu1-content','b9','analyse','',{click:function(){objectReferences.ClientObject.analyseGraph()}}],
     ['menu1-content','b10','reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}],
     ['menu1-content','b11','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}],
@@ -60,6 +67,7 @@ var subarray = [
     ['menu1-content','b18','BarChart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}],
     ['menu1-content','b19','BarChart_rotate','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}],
     ['menu1-content','b20','ScatterPlot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}],
+    ['menu1-content','b21','Size Map',paramSizeMap, {call:function(parameter, graphName, scales){objectReferences.VisualizationObject.sizeMapping(parameter, graphName, scales) }}]
 ]
 
 var catalystarray = [
@@ -98,83 +106,74 @@ contxt.view[target2] = TP.View(combinedarray, new Array("svg", 960, 500, "svg_co
     $('#redo').click(function(){contxt.changeStack.redo();});     
 
 
-function createElement(balise, attributes,  parentId, labelPrec, labelSuiv){    //{attr1 : 'val1', attr2:'val2'...,attr-n:'val-n'}      '#parentId'
-    if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
-    jQuery('<'+balise+'/>', attributes).appendTo(parentId);
-    if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
-}
-function createForm(menuPane, id, title, tab, event){
-    if (tab!=null){
-        createElement('p', {class:'header-form', text:title}, '#'+menuPane)
-        createElement('div', {class:'accordion', id:id}, '#'+menuPane)
-        for (var i = 0; i < tab.length; i++) {
-            createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
-            createElement('br', null, '#'+id)
-        }
 
-        createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
-    }else{
-        createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
-        createElement('div', {class:"button-collapsed"}, '#'+menuPane)
-    }
-    $('#'+menuPane).accordion('refresh')
-}
+    $('.submit').click(function(){
+        console.log('RESULT')
+    })
 
-function createArrayButtons(tab){
-    console.log('toto')
-        for(var i=0; i<tab.length; i++){
-            createForm(tab[i][0], tab[i][1], tab[i][2], tab[i][3], tab[i][4])
-        }
-        
-    }
-
-
-
-
-
-
-
-
-    var wrap = $('#wrap')[0];
-
-    // Variables
-    var objMain = $('#wrap');
-
-    // Show sidebar
-    function showSidebar(menuNum){
-        objMain[0].className="sidebar-"+menuNum;
-        $('#menu-'+menuNum)[0].style.cssText='z-index:101;'; 
-    }
-
-    // Hide sidebar
-    function hideSidebar(menuNum){
-        objMain[0].className="nosidebar";
-        $('#menu-'+menuNum)[0].style.cssText='left:-261; z-index:0;'; 
-    }
-
+ // Event toggle sidebars
     $('span.toggleButton').click(function(e){
         var menu = event.srcElement.parentNode;
         var menuNum = menu.id.split('-')[1];
         if(menu.parentNode.className==='nosidebar'){
-            showSidebar(menuNum);
-        } else {hideSidebar(menuNum)}
-    });
+            $('#wrap')[0].className="sidebar-"+menuNum;
+            $('#menu-'+menuNum)[0].style.cssText='z-index:101;'; 
 
-/*
-     $("#zonesubstrate").parent().appendTo("#container")
-     $("#zonecatalyst").parent().appendTo("#container")
-     $("#zonecombined").parent().appendTo("#container")
-  */   
+        } else {
+            $('#wrap')[0].className="nosidebar";
+        $('#menu-'+menuNum)[0].style.cssText='left:-261; z-index:0;'; 
+
+        }
+    });
+    console.log($('.submit'))
+    $('.submit').click(function(){
+     
+        res = {}
+        var key = null;
+        var val = null;
+
+
+
+
+        var data = $(this).siblings("input[type='radio']:checked")
+        data.each(function(){
+            key = $(this).attr('name');
+            res[key] = $(this).val();
+        })
+
+        data = $(this).siblings('.ui-spinner')
+        data.each(function(){
+            key = $(this).children('input').attr('name');       
+            val = $(this).children('input')[0].value
+            res[key] = val;
+        })
+
+        data = $(this).siblings("input[type='checkbox']:checked")
+        data.each(function(){
+            key = $(this).attr('name');
+            if (res[key]==null)         
+                res[key] = $(this).val();
+            else
+                res[key] += ", "+$(this).val();
+        })
+
+        data = $(this).siblings("input[type='text']")
+        data.each(function(){
+            key = $(this).attr('name');     
+            val = $(this).val()
+            res[key] = val;
+        })
+
+        console.log(res)
+
+
+    })  
 
 
     // This is the tricky part, because the json given to the function can be of many shapes.
     // If it is a query, we call tulip to perform the search
     // if it is a given file we load it normally
     // other wise we load the default function
-
-       //objectReferences.InterfaceObject.toggleSelectMove('substrate');
-       //objectReferences.InterfaceObject.toggleSelectMove('catalyst'); 
-
     if (originalJSON != null && originalJSON != "") {
         console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {

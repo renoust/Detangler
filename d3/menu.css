@@ -56,7 +56,6 @@
 	margin: 5px;
 }
 
-
 button.submit{
 	float: right;
 }
@@ -77,6 +76,17 @@ input[type=spinner]{
 .button-collapsed{
 	padding:0px !important
 }
+
+#b21 input{
+	width: 50px
+}
+
+#sizemap{
+	/*line-height: 1.3*/
+	font-size: 1em;
+}
+
+
 
 
 /******************************** Menu 2: Infos *********************************/

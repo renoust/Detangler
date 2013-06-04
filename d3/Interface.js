@@ -913,6 +913,7 @@
             if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
             var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
             if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
+            console.log(elem)
             return elem;
         }
         this.createForm = function(menuPane, id, title, tab, event){
@@ -926,6 +927,8 @@
                 }
 
                 this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
+                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
+
             }else{
                 var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
                 elem.click(event.click)
@@ -936,12 +939,96 @@
         }
 
         this.createArrayButtons = function(tab){
-            console.log('toto')
-                for(var i=0; i<tab.length; i++){
-                    this.createForm(tab[i][0], tab[i][1], tab[i][2], tab[i][3], tab[i][4])
-                }
-                
+            for(var i=0; i<tab.length; i++){
+                this.createForm(tab[i][0], tab[i][1], tab[i][2], tab[i][3], tab[i][4])
             }
+                $( "#sizemap" ).slider({ 
+                    range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 25, 75 ],
+                    change: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    },
+                    slide: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    }
+                });
+        }
+
+        this.callbackMenu = function(param, event){
+        var res = {}
+        var key = null;
+        var val = null;
+        var btn = $(param);
+        // console.log(btn.siblings('input'))
+        // console.log(btn.siblings('input[type="text"]')[0].name)
+        // console.log(btn.siblings('input[type="text"]')[0].value)
+
+        var data = btn.siblings("input[type='radio']:checked")
+        data.each(function(){
+            key = btn.attr('name');
+            res[key] = btn.val();
+        })
+
+        data = btn.siblings('.ui-spinner')
+        data.each(function(){
+            key = btn.children('input').attr('name');       
+            val = btn.children('input')[0].value
+            res[key] = val;
+        })
+
+        data = btn.siblings("input[type='checkbox']:checked")
+        data.each(function(){
+
+            key = btn.attr('name');
+            if (res[key]==null)         
+                res[key] = btn.val();
+            else
+                res[key] += ", "+btn.val();
+        })
+
+        data = btn.siblings("input[type='text']")
+        for(var i=0; i<data.length; i++){
+            key = data[i].name;
+            val = data[i].value;
+            res[key] = val;
+        }
+
+        data = btn.siblings('.slider');
+        var data2 = btn.siblings('.slider');
+        console.log(data)
+        for(var i=0; i<data.length; i++){
+            key = 'valMin'+i
+            val = data.eq(i).slider("values",0);
+            res[key] = val;
+            key = 'valMax'+i
+            val = data.eq(i).slider("values",1);
+            res[key] = val;
+        }
+        console.log(res)
+        /*data.each(function(){
+            key = data[i].name
+            console.log('KEY: '+key)
+            key = btn.attr('name');  
+
+            console.log(key)
+            val = btn.val()
+            res[key] = val;
+        })*/
+        //console.log(data)
+        //console.log(event.call)
+        event.call('viewMetric',contxt.activeView, res)
+        
+        }
+
+
 
         return __g__;
 

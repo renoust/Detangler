@@ -69,10 +69,16 @@ body{
 .ui-dialog-titlebar-close {
   visibility: hidden;
 }
-.ui-widget .ui-widget{
-	font-size: 11px;
+
+.ui-dialog .ui-dialog-titlebar button {
+height: 20;
+font-size: 11px;
 	float:right;
 }
+/*.ui-widget .ui-widget{
+	font-size: 11px;
+	float:right;
+}*/
 .ui-dialog .ui-dialog-title {
 	width: auto ;
 }

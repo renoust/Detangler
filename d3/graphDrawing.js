@@ -509,27 +509,28 @@
         // the node's 'viewMetric' property to the svg:circle's 'r' attribute
         g.resize = function (_graph, dTime) {
             //For backward compatibility only
-            g.nodeSizeMap(_graph, dTime, "viewMetric")
+            g.nodeSizeMap(_graph, dTime, {metric:"viewMetric"})
         }
 
 
-        g.nodeSizeMap = function (_graph, dTime, parameter) {
-            // TODO: USE D3 ARRAY OPERATIONS!
-            // TODO: USE D3 SCALES!
+        g.nodeSizeMap = function (_graph, dTime, params) {
+           g.cGraph = _graph
 
-            g.cGraph = _graph
-
-
-            //we would like it better as a parameter
             var scaleMin = 3.0
             var scaleMax = 12.0
 
+            var parameter = ""
+            if(params.metric) parameter = params.metric;
+            if(params.scaleMin) scaleMin = params.scaleMin;
+            if(params.scaleMax) scaleMax = params.scaleMax;
+            if (parameter == "")
+                return
+
             var valMin = null
             var valMax = null
-
             g.cGraph.nodes()
                 .forEach(function (n) {
-                    val = eval("n." + parameter);
+                   val = eval("n." + parameter);
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -537,40 +538,28 @@
             });
 
             //linear
-            var factor = scaleMin
-            var equalScales = false
-            if (valMax == valMin || valMax - valMin < 0.0001) {
-                equalScales = true
-                scaleMin = 5
-                factor = factor / valMin
-            } else {
-                factor = (scaleMax - scaleMin) / (valMax - valMin)
-            }
+            if (valMax == valMin || valMax - valMin < 0.0001) {scaleMin = 5} 
+
+            var dom = [valMin, valMax]
+            var range = [scaleMin, scaleMax]
+            var scale = d3.scale.linear().domain(dom).range(range)
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                /*.transition()
-                .delay(dTime)*/
+
             node.select("circle.node").attr("r", function (d) {
-                r = eval("d." + parameter + "*factor+scaleMin");
-                if (!r || equalScales) {r = scaleMin;}
-                return r;
+                return scale(eval('d.' + parameter))
             })
-            node.select("rect.node").attr("width", function (d) {
-                r = eval("d." + parameter + "*factor+scaleMin");
-                if (!r || equalScales) {r = scaleMin;}
-                return 2 * r;
-            })
-            .attr("height", function (d) {
-                r = eval("d." + parameter + "*factor+scaleMin");
-                if (!r || equalScales) {r = scaleMin;}
-                return 2 * r;
-            })
+            node.select("rect.node")
+                .attr("width", function (d) {
+                    return 2 * scale(eval('d.' + parameter))
+                })
+                .attr("height", function (d) {
+                    return 2 * scale(eval('d.' + parameter))
+                })
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                /*.transition()
-                .delay(dTime)*/
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
         }

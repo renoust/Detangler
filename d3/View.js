@@ -127,11 +127,15 @@ var View = function (bouton, svgs, target, application) {
         $(".arrayButtons").remove();
         $('#menu1-content').remove()
         $('<div/>', {id:'menu1-content'}).appendTo('#menu-1')
-        $('#menu1-content').accordion()
+        $('#menu1-content').accordion({
+            collapsible:true,
+            active:false,
+            heightStyle:'content'
+        });
         /*var pane = d3.select('#menu-1').append("div")
             .attr("id", "button" + target)
             .attr('class','arrayButtons');*/
-            console.log(bouton)
+            
         objectReferences.InterfaceObject.createArrayButtons(bouton);
 
         /*while (num < bouton.length) {
