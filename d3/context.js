@@ -42,7 +42,7 @@
         this.changeStack = new TP.StatesChange();
         
         this.mouse_over_button = false;        
-        this.combined_foreground = "substrate";
+        //this.combined_foreground = "substrate";
 
         // initialization of the global entanglement parameters        
         this.tabOperator = [];
@@ -68,9 +68,8 @@
         this.menuNum=1;
         
         this.tabType = [];
-        
-        this.tabAssociation = [];
-
+		
+		this.tabOperator["catalyst"] = "AND";
 
         this.getViewGraph = function (viewID) {
                 return __g__.tabGraph["graph_"+viewID];

@@ -50,8 +50,8 @@
                 return "" + objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5)
             });*/
 			
-			var target_dest = "catalyst";
-			var target_source = "substrate";
+			var target_dest = "tutu";
+			var target_source = "toto";
 			
             $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
             $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
@@ -147,6 +147,7 @@
                 .style("fill", TP.Context().defaultFillColor)
                 .style("stroke-width", TP.Context().defaultBorderWidth)
                 .style("stroke", TP.Context().defaultBorderColor)
+
 
 
             mat.append("text")
@@ -431,9 +432,11 @@
             
             assert(true, "erreur1");
             
-            TP.Context().view["BarChart_"+target] = new TP.View(null, new Array("svg_BarChart", null, width, height, "svg_BarChart_"+target), "BarChart_"+target, null, null, null);
-            TP.Context().view["BarChart_"+target].addView();  
-	
+            TP.Context().view["BarChart_"+smell+"_"+target] = new TP.View(null, new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+target), "BarChart_"+smell+"_"+target, null, null, null, null,  "barchart", target);
+            
+            TP.Context().view["BarChart_"+smell+"_"+target].addView();			
+			
+			
 			assert(true, "erreur2");
 			
             var chart;
@@ -448,14 +451,14 @@
     
                 var left_width = 200;                   
     
-                var chartt = d3.select("#zoneBarChart_"+target).append("svg")
-                  .attr('class', 'chart_'+target)
+                var chartt = d3.select("#zoneBarChart_"+smell+"_"+target).append("svg")
+                  .attr('class', 'chart_'+smell+"_"+target)
                   //.attr('width', width+left_width)
                   //.attr('height', height);
                   .attr('width', "100%")
                   .attr('height', "100%")   
                 
-                chart = d3.select('.chart_'+target);    
+                chart = d3.select('.chart_'+smell+"_"+target);    
                 
                 var x, y;
                 x = d3.scale.linear()
@@ -516,8 +519,8 @@
                 var width = bar_width * numberMetric.length;        
     
                 //var left_width = 200;
-                var chartt = d3.select("#zoneBarChart_"+target).append("svg")
-                  .attr('class', 'chart_'+target)
+                var chartt = d3.select("#zoneBarChart_"+smell+"_"+target).append("svg")
+                  .attr('class', 'chart_'+smell+"_"+target)
                   //.attr('width', width+margin.left+margin.right)
                   //.attr('height', height+margin.top+margin.bottom)
                   .attr('width', "100%")
@@ -543,10 +546,10 @@
                 .scale(y)
                 .orient("left");    
                 
-                chart = d3.select('.chart_'+target).select("g");
+                chart = d3.select('.chart_'+smell+"_"+target).select("g");
                 
                 chart.append("g")
-                    .attr("class", "x_axis_BarChart"+target)
+                    .attr("class", "x_axis_BarChart"+smell+"_"+target)
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis)
                     .style("fill", "none")
@@ -554,7 +557,7 @@
                     .style("shape-rendering", "crispEdges");
                 
                 chart.append("g")
-                    .attr("class", "y_axis_BarChart"+target)                    
+                    .attr("class", "y_axis_BarChart"+smell+"_"+target)                    
                     .call(yAxis)
                     .style("fill", "none")
                     .style("stroke", "#000")
@@ -581,7 +584,7 @@
                   .style("fill", "white")
                   .text(function(d){return ""+d[0];});
                   
-                var texte = d3.selectAll(".x_axis_BarChart"+target).selectAll("g.tick")
+                var texte = d3.selectAll(".x_axis_BarChart"+smell+"_"+target).selectAll("g.tick")
                               .attr("text-anchor", "middle")
                               .selectAll("text")
                               .style("text-anchor", "end");
@@ -603,7 +606,7 @@
                             //console.log(value[1]);
                             
                             var node = svg.selectAll("g.node")
-                                .select("g."+target)
+                                .select("g."+TP.Context().tabType[target])
                                 .select("rect")                
                                 .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                                 .style("fill", "red");
@@ -625,7 +628,7 @@
                                 
                                 
                                 var node = svg.selectAll("g.node")
-                                    .select("g."+target)
+                                    .select("g."+TP.Context().tabType[target])
                                     .select("rect")                
                                     .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                                     .style("fill", TP.Context().view[target].getNodesColor());   
@@ -675,7 +678,7 @@
             var height =500 - margin.top - margin.bottom;
             
             
-            TP.Context().view["Scatter_Plot_"+target] = new TP.View(null, new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+target), "Scatter_Plot_"+target, null, null, null);  
+            TP.Context().view["Scatter_Plot_"+target] = new TP.View(null, new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+target), "Scatter_Plot_"+target, null, null, null, null, "scatter_plot", target);  
         	TP.Context().view["Scatter_Plot_"+target].addView();
         	
         
@@ -807,7 +810,7 @@
                         //console.log(valeurx-50);
                         
                         var node = svg.selectAll("g.node")
-                            .select("g."+target)
+                            .select("g."+TP.Context().tabType[target])
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                             .style("fill", "red");
@@ -833,7 +836,7 @@
                         selection.style('fill',"#4682b4");
                             
                         var node = svg.selectAll("g.node")
-                            .select("g."+target)
+                            .select("g."+TP.Context().tabType[target])
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                             .style("fill", TP.Context().view[target].getNodesColor());   

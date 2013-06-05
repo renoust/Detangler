@@ -11,7 +11,7 @@ import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
 
-var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, association) {
+var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
@@ -38,8 +38,55 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
     
     var metric_BC = null;
     var metric_SP = null;
+    var combined_foreground = null;
     
     var typeView = type;
+    var acceptedGraph = [];
+    var tabLinks = new Object();
+    var name = target;
+    
+    var graph = null;
+    var viewInitialized = null;
+    
+    this.viewInitialized = function()
+    {
+    	return viewInitialized;
+    }
+    
+    this.getGraph = function()
+    {
+    	return graph;
+    }
+    
+    this.getID = function(){    	
+    	return name;    	
+    }    
+    
+    this.setAssociatedView = function(linkType, view)
+    {
+       	if(tabLinks[linkType] != null)
+    	{
+    		tabLinks[linkType].push(view);    		
+    	}
+    	else{    		
+    		tabLinks[linkType] = new Array();
+    		tabLinks[linkType].push(view);    		
+    	}    	
+    }
+    
+    
+    this.getAssociatedView = function(linkType)
+    {
+    	if(tabLinks[linkType] != null){
+    		if(tabLinks[linkType].length != 0)
+    			return tabLinks[linkType];
+    		else
+    			return null;
+    	}
+    	else
+    		return null;
+    }
+    
     
     
     this.getType = function()
@@ -92,15 +139,27 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	this.getNodesColor = function(){		
 		return nodesColor;		
 	}
+	
+	this.setNodesColor = function(value){		
+		nodesColor = value;		
+	}	
 
 	this.getLinksColor = function(){		
 		return linksColor;		
 	}
 	
+	this.setLinksColor = function(value){		
+		linksColor = value;		
+	}
+	
 	this.getBgColor = function(){		
 		return bgColor;		
 	}
-	
+
+	this.setBgColor = function(value){		
+		bgColor = value;		
+	}
+
 	this.getViewNodes = function(){		
 		return viewNodes;		
 	}
@@ -286,8 +345,7 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
-			
-	        var cGraph = TP.Context().getViewGraph(target);
+
 	        TP.ObjectReferences().Interface().addInfoButton(target);
 	    });
 	
@@ -342,7 +400,7 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	           
 	            TP.Interaction().createLasso(target);
 	            TP.Interaction().addZoom(target);
-	            if(target == "substrate"){
+	            if(typeView == "substrate"){
 	           		//objectReferences.InteractionObject.addZoom(target);
 	                TP.Interface().addEntanglementFeedback(target);
 	           }
@@ -359,28 +417,61 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	                .append("svg")
 	                .attr("width", "100%")
 	                .attr("height", "100%")
-	                .attr("id", tabDataSvg[3]);
+	                .attr("id", tabDataSvg[4]);
+
 	                //.attr("viewBox", "0 0 500 600");
 	                
 	            TP.Context().tabGraph["graph_"+target] = new TP.Graph();
+	            graph = TP.Context().tabGraph["graph_"+target];            
 	
 	            add();
 	            
 	            TP.Context().tabType[target] = typeView;
 	            
+	           	if(typeView == "combined")
+	            {
+	            	combined_foreground = "substrate";
+	            }
+	            /*
 	            if(typeView == "substrate"){
 	            	TP.Context().tabAssociation[target] = new Array();
-	            }
-	            else{
-	            	if(association != null)
-	            		TP.Context().tabAssociation[association].push(target);           	
-	            }
+	            	TP.Context().tabAssociationInverted[target] = [];
 	            	
+	            }
+	            else{*/
 	     }
+	           // }
 		
 	     $("#zone"+target).parent().appendTo("#container")
-     
+	     
+     	viewInitialized = 1;
 	}
+	
+	     this.buildLinks = function(){
+		     if(idAssociation != null)	{
+		            		
+		            		if(typeView !== "combined"){
+		            			var tmp = TP.Context().view[idAssociation];
+		            			tmp.setAssociatedView(typeView, __g__);        		
+		            			__g__.setAssociatedView(tmp.getType(), tmp);
+		            		}
+		            		else
+		            		{
+		            			var tmp1 = TP.Context().view[idAssociation[0]];
+		            			var tmp2 = TP.Context().view[idAssociation[1]];
+		            			
+		            			tmp1.setAssociatedView(typeView, __g__);
+		            			tmp2.setAssociatedView(typeView, __g__); 		
+		            			__g__.setAssociatedView(tmp1.getType(), tmp1);
+		            			__g__.setAssociatedView(tmp2.getType(), tmp2);
+		            				            			
+		            		}
+		            		
+		            		console.log(TP.Context().view[idAssociation]);
+		            		
+		            		           	
+		     }
+	     }
 		
 
 //utilisé pour test nombre View

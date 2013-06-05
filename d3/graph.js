@@ -19,6 +19,7 @@
 
         this.nodes_array = [];
         this.links_array = [];
+        this.type;
 
         // setter/getter (with/without argument) of the node array 
         // x: an array of nodes

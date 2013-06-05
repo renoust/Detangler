@@ -36,21 +36,31 @@
             //frame and wont overlap with the buttons
             //console.log("syncLayoutData: ", data.data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, +target); //substrate before generic code
+            var graph_drawing = TP.GraphDrawing(cGraph, svg, target); //substrate before generic code
             //graph_drawing.rescaleGraph(contxt,data);
-            cGraph.nodes(data.nodes, +target);
-            cGraph.links(data.links, +target);
+            var typeGraph = TP.Context.tabType[target];
+            
+            cGraph.nodes(data.nodes, typeGraph);
+            cGraph.links(data.links, typeGraph);
             cGraph.edgeBinding();
             graph_drawing.move(cGraph, 0);
             objectReferences.VisualizationObject.rescaleGraph(data);
 
             var newGraph = JSON.parse(data.data.graph);
             var newLinks = newGraph.links;
-
-            TP.Context().tabGraph["graph_combined"].nodes(TP.Context().tabGraph["graph_substrate"].nodes(), "substrate");
-            TP.Context().tabGraph["graph_combined"].addNodes(TP.Context().tabGraph["graph_catalyst"].nodes());
-            TP.Context().tabGraph["graph_combined"].links(newLinks);
-            TP.Context().tabGraph["graph_combined"].specialEdgeBinding("substrate", "catalyst");
+			
+			
+			var combinedGraph = null;
+			
+			if(TP.Context().view[target].getAssociatedView("combined")[0].getGraph() != null){
+				var tmp = TP.Context().view[target].getAssociatedView("combined");
+				combinedGraph = tmp[0].getGraph();
+			}
+			
+            combinedGraph.nodes(TP.Context().tabGraph["graph_substrate"].nodes(), "substrate");
+            combinedGraph.addNodes(TP.Context().tabGraph["graph_catalyst"].nodes());
+            combinedGraph.links(newLinks);
+            combinedGraph.specialEdgeBinding("substrate", "catalyst");
 
             var p1_s = data.data[target][0];
             var p2_s = data.data[target][1];
@@ -128,9 +138,10 @@
             
             //TP.GraphDrawing(TP.Context().getViewGraph("substrate"),TP.Context().getViewSVG("substrate")).rescaleGraph(contxt,data);
 
-        
-            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, target) //substrate
-            TP.Context().tabGraph["graph_"+target].links(data.links, target) //substrate
+        	var typeGraph = TP.Context().tabType[target];
+        	
+            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, typeGraph) //substrate
+            TP.Context().tabGraph["graph_"+target].links(data.links, typeGraph) //substrate
             TP.Context().tabGraph["graph_"+target].edgeBinding() //...
             graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target)
             assert(true, "graphDrawing created") 
@@ -144,13 +155,16 @@
         this.applySubstrateAnalysisFromData = function (data, target) { //catalyst at bingin of project, without generic programmation
             //console.log("received data after analysis:")
             //console.log(data);
-            TP.GraphDrawing(TP.Context().getViewGraph(target),TP.Context().view[target].getSvg(), target).rescaleGraph(contxt,data);
+            TP.GraphDrawing(target[0].getGraph(),target[0].getSvg(), target[0].getID()).rescaleGraph(contxt,data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
-            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, target) //catalyst
-            TP.Context().tabGraph["graph_"+target].links(data.links, target) //catalyst
-            TP.Context().tabGraph["graph_"+target].edgeBinding()
-            graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target)
+            
+            var typeGraph = target[0].getType();
+            
+            target[0].getGraph().nodes(data.nodes, typeGraph); //catalyst
+            target[0].getGraph().links(data.links, typeGraph); //catalyst
+            target[0].getGraph().edgeBinding();
+            graph_drawing = TP.GraphDrawing(target[0].getGraph(), target[0].getSvg(), target[0].getID())
             graph_drawing.clear()
             graph_drawing.draw()
             TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity']
@@ -186,8 +200,11 @@
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().getViewGraph(graphName);
-            graph.nodes(data.nodes, graphName);
-            graph.links(data.links, graphName);
+            
+            var typeGraph = TP.Context().tabType[graphName];
+            
+            graph.nodes(data.nodes, typeGraph);
+            graph.links(data.links, typeGraph);
             graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
             graph_drawing.exit(graph, 0);
@@ -232,8 +249,8 @@
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
            
-           var char = d3.selectAll("g.node."+graphName);
-           char.attr("x", function(d){ console.log("viewMetric : "+ d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
+           var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().tabType[graphName]);
+           char.attr("x", function(d){ assert(false,d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
 
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));
             TP.Context().view[graphName].setMetric_SP(pileCentrality.transformToArray("ScatterPlot"));           
@@ -248,94 +265,128 @@
         	
             var graph = null
             var svg = null
-            if (graphName == 'substrate') {
-                graph = TP.Context().tabGraph["graph_catalyst"]
-                svg = TP.Context().view["catalyst"].getSvg();
+            
+            var find = false;
+            
+            var typeGraph = TP.Context().view[graphName].getType();
+            console.log("type de "+graphName+" = "+typeGraph);
+            
+            if (typeGraph == 'substrate' && TP.Context().view[graphName].getAssociatedView("catalyst") != null) {
+            	//if(TP.Context().view[graphName].getAssociatedView("catalyst")[0].viewInitialized() == 1){
+               		var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
+                	graph = tmp[0].getGraph();
+                	svg = tmp[0].getSvg();
+                	find = true;
+               //}
+            }
+            
+            if (typeGraph == 'catalyst' && TP.Context().view[graphName].getAssociatedView("substrate") != null) {
+            	//if(TP.Context().view[graphName].getAssociatedView("substrate")[0].viewInitialized() == 1){
+            		var tmp = TP.Context().view[graphName].getAssociatedView("substrate");
+                	graph = tmp[0].getGraph();
+                	svg = tmp[0].getSvg();
+                	find = true;
+              // }
             }
 
-            if (graphName == 'catalyst') {
-                //console.log('target is catalyst');
-                graph = TP.Context().tabGraph["graph_substrate"]
-                //console.log(selection)
-                svg = TP.Context().view["substrate"].getSvg();
+			
+            if (typeGraph == 'combined' && TP.Context().view[graphName].getAssociatedView("combined") != null) {
+            	//if(TP.Context().view[graphName].getAssociatedView("combined")[0].viewInitialized() == 1){
+            		var tmp = TP.Context().view[graphName].getAssociatedView("combined");
+                	graph = tmp[0].getGraph();
+                	svg = tmp[0].getSvg();
+                	find = true;
+               //}
             }
-
-            if (graphName == 'combined') {
-                graph = TP.Context().tabGraph["graph_combined"];
-                //console.log("synGraph combined:", selection);
-                svg = TP.Context().view["combined"].getSvg();
-            }
-
-
+            
+			
+			if(find == false)
+				return;
             //console.log("received data after synchronization: ")
             //console.log(data);
 
             var tempGraph = new TP.Graph()
-            tempGraph.nodes(data.nodes, graphName)
-            tempGraph.links(data.links, graphName)
-
-            if (graphName == 'catalyst'){
+            tempGraph.nodes(data.nodes, typeGraph)
+            tempGraph.links(data.links, typeGraph)
+			
+			
+			
+            if (typeGraph == 'catalyst'){
                 TP.Context().syncNodes = []
                 data.nodes.forEach(function(d){
                     TP.Context().syncNodes.push(d.baseID);
                 });
             }else{
                 TP.Context().syncNodes = undefined;
-            } 
-
-            tempGraph.edgeBinding()
-
+            }
+			
+            tempGraph.edgeBinding();
 
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName)
 
             graph_drawing.show(tempGraph)
 
-
-            if (graphName == 'combined') {
+            if (typeGraph == 'combined') {
                 var svg_target;
                 var graph_target;
                 if (TP.Context().combined_foreground == 'substrate') {
-                    svg_target = TP.Context().view["catalyst"].getSvg();
-                    graph_target = TP.Context().tabGraph["graph_catalyst"]
+                	var tmp = TP.Context().view[graphName].getAssociatedView("substrate");
+                    svg_target = tmp[0].getSvg();
+                    graph_target = tmp[0].getGraph();
                 }
                 if (TP.Context().combined_foreground == 'catalyst') {
-                    svg_target = TP.Context().view["substrate"].getSvg();
-                    graph_target = TP.Context().tabGraph["graph_substrate"]
+                	var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
+                    svg_target = tmp[0].getSvg();
+                    graph_target = tmp[0].getGraph();
                 }
 
-                
-                var graph_drawing = TP.GraphDrawing(graph_target, svg_target, graphName);
-                graph_drawing.show(tempGraph);
+                if(svg_target != null && graph_target != null){
+                	var graph_drawing = TP.GraphDrawing(graph_target, svg_target, graphName);
+                	graph_drawing.show(tempGraph);
+               	}
             } else {
-                var tempCombined = new TP.Graph();
-                var nodeSelection = JSON.parse(selection)
-                    .nodes;
-                var nodeSelList = [];
-                nodeSelection.forEach(function (d) {
-                    nodeSelList.push(d.baseID);
-                });
-                var nodeTargetList = [];
-                data.nodes.forEach(function (d) {
-                    nodeTargetList.push(d.baseID);
-                });
-                var dataType = (graphName=="substrate")?"catalyst":"substrate";
-                tempCombined.nodes(data.nodes, dataType);
-                tempCombined.addNodes(nodeSelection, graphName);
-                var tempLinks = [];
-                TP.Context().tabGraph["graph_combined"].links()
-                    .forEach(function (d) {
-                        if (!d.source.baseID || !d.target.baseID) console.log(d);
-                        if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
-                            console.log("selected:", d, d.source, d.target);
-                            tempLinks.push(d);
-                        }
-                    })
-                tempCombined.links(tempLinks);
+            	
+            	if(TP.Context().view[graphName].getAssociatedView("combined") != null){
+            		
+            		var tmp = TP.Context().view[graphName].getAssociatedView("combined");
+            		
+	                var tempCombined = new TP.Graph();
+	                var nodeSelection = JSON.parse(selection)
+	                    .nodes;
+	                var nodeSelList = [];
+	                nodeSelection.forEach(function (d) {
+	                    nodeSelList.push(d.baseID);
+	                });
+	                var nodeTargetList = [];
+	                data.nodes.forEach(function (d) {
+	                    nodeTargetList.push(d.baseID);
+	                });
+	                var dataType = (typeGraph=="substrate")?"catalyst":"substrate";
+	                tempCombined.nodes(data.nodes, dataType);
+	                tempCombined.addNodes(nodeSelection, graphName);
+	                var tempLinks = [];
 
-                
-                tempCombined.specialEdgeBinding("substrate", "catalyst");
-                var graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_combined"], TP.Context().view["combined"].getSvg(), "combined");
-                graph_drawing.show(tempCombined);
+	                tmp[0].getGraph().links().forEach(function (d) {
+	                        if (!d.source.baseID || !d.target.baseID) console.log(d);
+	                        if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
+	                            console.log("selected:", d, d.source, d.target);
+	                            tempLinks.push(d);
+	                        }
+	                    })
+
+	                tempCombined.links(tempLinks);
+	
+	                var sub = TP.Context().view[graphName].getAssociatedView("substrate");
+	                var cat = TP.Context().view[graphName].getAssociatedView("catalyst")
+	                tempCombined.specialEdgeBinding(sub, cat);
+	                
+	                var graph_Combined = tmp[0].getGraph();
+	                var svg_Combined = tmp[0].getSvg();
+	                	
+	                var graph_drawing = TP.GraphDrawing(graph_Combined, svg_Combined, tmp[0].getID());
+	                graph_drawing.show(tempCombined);
+                	
+               }
             }
 
 			

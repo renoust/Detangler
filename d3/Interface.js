@@ -813,7 +813,7 @@
         }
 
 
-        this.toggleCombinedForeground = function () {
+        this.toggleCombinedForeground = function (target) {
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -884,9 +884,9 @@
             });
            console.log("-->"+TP.Context().activeView);      
             $('#apply').click(function(){
-                    TP.Context().view[TP.Context().activeView].getNodesColor() = "#" + $.jPicker.List[0].color.active.val('hex');
-                    TP.Context().view[TP.Context().activeView].getLinksColor() = "#" + $.jPicker.List[1].color.active.val('hex');
-                    TP.Context().view[TP.Context().activeView].getBgColor() = "#" + $.jPicker.List[2].color.active.val('hex');
+                    TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
+                    TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
+                    TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "node", TP.Context().view[TP.Context().activeView].getNodesColor());
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "link", TP.Context().view[TP.Context().activeView].getLinksColor());
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "bg", TP.Context().view[TP.Context().activeView].getBgColor());

@@ -45,7 +45,7 @@
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
                     this.createTulipGraph(jsonData, target)
-                    this.analyseGraph(target)
+                    //this.analyseGraph(target)
                 });
             } else {
                 data = $.parseJSON(json)
@@ -55,10 +55,10 @@
                 //console.log("I am creating the graph in Tulip")
                 this.createTulipGraph(json, target)
                 //console.log("I should now analyse the graph",contxt.sessionSid)
-                this.analyseGraph(target)
+                //this.analyseGraph(target)
                 //console.log("graph analysed", contxt.sessionSid)
             }
-            TP.ObjectReferences().TulipPosyClientObject.syncLayouts();
+            //TP.ObjectReferences().ClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
             /*var cGraph = null;
     		var svg = null;
@@ -151,7 +151,13 @@
         // This function calls through tulip the analysis of a substrate graph, 
         // stores and displays it in the catalyst view, updating the new 
         // entanglement indices computed.
-        this.analyseGraph = function (target) {
+        this.analyseGraph = function (target, tabCatalyst) {
+        	
+        	if(TP.Context().tabType[target] !== "substrate"){
+        		assert(false, "not substrate type"); 		
+        		return;
+        	}
+        	
         	assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
@@ -161,8 +167,18 @@
             }
             __g__.sendQuery({
                 parameters: params,
-                //success: objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData
-                success: function(data){objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, "catalyst")}
+                //success: objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData                
+                success: function(data){
+                	
+                	if(TP.Context().view[target].getAssociatedView("catalyst") == null && tabCatalyst.length != null){
+                		
+     						TP.Context().view[tabCatalyst[2]] = new TP.View(tabCatalyst[0], tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8]);
+               				TP.Context().view[tabCatalyst[2]].buildLinks();
+                			TP.Context().view[tabCatalyst[2]].addView();
+                	}                			             
+                		
+                	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[target].getAssociatedView("catalyst"));             	
+                }
             });
         }
 
@@ -281,19 +297,19 @@
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
         	
-        	assert(true, "syncGraph");
+        	assert(true, "syncGraph : "+graphName);
+			
+            var syncTarget = TP.Context().tabType[graphName];
 
-            var syncTarget = graphName;
-
-            if (graphName == 'combined')
-                syncTarget = contxt.combined_foreground;
+            if (syncTarget == 'combined')
+                syncTarget = TP.Context().tabType[contxt.combined_foreground];
 
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
                 graph: selection,
                 target: syncTarget,
-                operator: TP.Context().tabOperator[/*target*/"catalyst"],//contxt.catalyst_sync_operator,
+                operator: TP.Context().tabOperator["catalyst"],//contxt.catalyst_sync_operator,
                 weight: contxt.substrateWeightProperty
             }
 
@@ -301,6 +317,10 @@
                 parameters: params,
                 async: false,
                 success: function (data) {
+                	//assert(true, "selection :")
+                	//console.log(selection);
+                	assert(true, "data :")
+                	console.log(data);
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
@@ -340,12 +360,16 @@
         // constructs and array of nodes with only its 'baseID'
         // and returns a string JSON version of the corresponding selection
         this.getSelection = function (graphName) {
-            var cGraph = null;
+            
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
-            cGraph = contxt.getViewGraph(graphName);
+            
+            assert(false, ""+graphName);
+            
             var u = svg.selectAll("g.node.selected").data();
-
+			
+			console.log(u);
+			
             var toStringify = {};
             toStringify.nodes = new Array();
 

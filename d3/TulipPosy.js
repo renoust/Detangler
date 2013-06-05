@@ -28,13 +28,14 @@ var TulipPosy = function (originalJSON) {
 
     //assert(new testView(5, 3), "test réusssie"); //test nombre view
 
-	var target = 'substrate';	
-	var target1 = 'catalyst';
-	var target2 = 'combined';
+	var target = 'toto';
+	var target1 = 'tutu';
+	var target2 = 'titi';
 	objectReferences.InterfaceObject.createMenu(3);
     objectReferences.InterfaceObject.apiVisu("menu-3");
-
-
+	
+	var tabCatalyst = new Array();
+	
     // list of buttons of the left menu
     var s1 = new Array(0,"induced subgraph",function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)});
     var s2 = new Array(1,"force layout",function(){objectReferences.ClientObject.callLayout("FM^3 (OGDF)", target)});
@@ -44,7 +45,7 @@ var TulipPosy = function (originalJSON) {
     var s5 = new Array(4,"reset view",function(){objectReferences.VisualizationObject.resetView(target)});
     //var s6 = new Array(5,"degree metric",function(){objectReferences.ClientObject.callLayout("LinLog Layout (Noack)",target)});
     var s7 = new Array(6,"btw. centrality",function(){objectReferences.ClientObject.callFloatAlgorithm("Betweenness Centrality",target)});
-    var s8 = new Array(7,"analyse",function(){objectReferences.ClientObject.analyseGraph(target)});
+    var s8 = new Array(7,"analyse",function(){objectReferences.ClientObject.analyseGraph(target, tabCatalyst)});
     var s9 = new Array(8,"reset size",function(){objectReferences.VisualizationObject.resetSize(target)});
     var s10 = new Array(9,"hide labels",function(){objectReferences.VisualizationObject.showhideLabels(target)});
     var s11 = new Array(10,"hide links",function(){objectReferences.VisualizationObject.showhideLinks(target)});
@@ -60,10 +61,9 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     
 
-    TP.Context().view[target] = new TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_substrate"), target, "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    TP.Context().view[target] = new TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_"+target), target, "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
     TP.Context().view[target].addView();
-
-	TP.Context().tabOperator["catalyst"] = "AND";
+    TP.Context().view[target].buildLinks();
 
     var ca1 = new Array(0,"force layout",function(){objectReferences.ClientObject.callLayout("FM^3 (OGDF)"/*"LinLog"*/,target1)});
     var ca2 = new Array(1,"update layout",function(){objectReferences.ClientObject.updateLayout(target1)});
@@ -81,25 +81,42 @@ var TulipPosy = function (originalJSON) {
     var ca13 = new Array(12, "ent. mapping",function () {objectReferences.VisualizationObject.sizeMapping("entanglementIndice", target1)});
     var ca14 = new Array(13, "ent. color", function () {objectReferences.VisualizationObject.colorMapping("entanglementIndice", target1)});
     var ca15 = new Array(14, "computeMatrix", function () {objectReferences.VisualizationObject.buildEdgeMatrices(target1)});
-    var ca16 = new Array(15, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target1)});
+    var ca16 = new Array(15, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target1)}); 
 
     var catalystarray = new Array(ca1, ca2, ca7, ca8, ca9, ca10, ca11, ca12, ca13, ca14, ca15, ca16);
 
-    TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_catalyst"), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", "substrate");
-	TP.Context().view[target1].addView();
+    //TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
+	//TP.Context().view[target1].addView();
+	//TP.Context().view[target1].buildLinks();
+	tabCatalyst = new Array(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
 	
-    var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground()});
+    var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground(target2)});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
 
     var combinedarray = new Array(co1, co2);
-
-    TP.Context().view[target2] = new TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_combined"), target2, "#121212", "#808080", "#FFFFFF", "rect", "combined", null);
+/*
+    TP.Context().view[target2] = new TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_"+target2), target2, "#121212", "#808080", "#FFFFFF", "rect", "combined", [target, target1]);
 	TP.Context().view[target2].addView();
+	TP.Context().view[target2].buildLinks();*/
 	
-	//assert(true, "tabType");
+	assert(true, "tabType");
 	console.log(TP.Context().tabType);
 	//assert(true, "tabAssociation");
-	console.log(TP.Context().tabAssociation);	
+	//console.log(TP.Context().tabAssociation);
+	/*
+	assert(true, "tabAssociation de "+target);
+	console.log(TP.Context().tabAssociation[target]);
+	assert(true, "tabAssociation de "+target1);
+	console.log(TP.Context().tabAssociation[target1]);
+	assert(true, "tabAssociation de "+target2);
+	console.log(TP.Context().tabAssociation[target2]);	
+	
+	assert(true, "tabAssociationInverted de "+target);
+	console.log(TP.Context().tabAssociationInverted[target]);
+	assert(true, "tabAssociationInverted de "+target1);
+	console.log(TP.Context().tabAssociationInverted[target1]);	
+	assert(true, "tabAssociationInverted de "+target2);
+	console.log(TP.Context().tabAssociationInverted[target2]);*/	
 	
 
     $('#undo').click(function(){TP.Context().changeStack.undo();});
@@ -131,9 +148,9 @@ var TulipPosy = function (originalJSON) {
     });
 
 
-     $("#zonesubstrate").parent().appendTo("#container")
-     $("#zonecatalyst").parent().appendTo("#container")
-     $("#zonecombined").parent().appendTo("#container")
+     $("#zonetoto").parent().appendTo("#container")
+     $("#zonetutu").parent().appendTo("#container")
+     $("#zonetiti").parent().appendTo("#container")
      
 
 

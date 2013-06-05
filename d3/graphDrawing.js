@@ -250,7 +250,8 @@
                 .attr("r", 5)
 */
 
-            var glyphR = g.svg.selectAll("g.glyph."+target)
+            //var glyphR = g.svg.selectAll("g.glyph."+target)
+            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().tabType[target])
                 .append(view_nodes)
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
@@ -569,8 +570,8 @@
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                //.transition()
+                //.delay(dTime)
             node.select("circle.node").attr("r", function (d) {
                 r = eval("d." + parameter + "*factor+scaleMin");
                 if (!r || equalScales) {r = scaleMin;}
@@ -589,8 +590,8 @@
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                //.transition()
+                //.delay(dTime)
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
         }
@@ -620,8 +621,8 @@
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                //.transition()
+                //.delay(dTime)
 
             node.select("g.glyph")
                 .select(".node")
@@ -632,8 +633,8 @@
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(dTime)
+                //.transition()
+                //.delay(dTime)
 
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
@@ -673,14 +674,14 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', TP.Context().view["catalyst"].getNodesColor())
+                .style('fill', TP.Context().view[TP.Context().tabAssociationInverted[target]["catalyst"]].getNodesColor())
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', TP.Context().view["substrate"].getNodesColor())
+                .style('fill', TP.Context().view[TP.Context().tabAssociationInverted[target]["substrate"]].getNodesColor())
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -694,13 +695,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view["substrate"].getLinksColor())
+                .style("stroke", TP.Context().view[TP.Context().tabAssociationInverted[target]["substrate"]].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view["catalyst"].getLinksColor())
+                .style("stroke", TP.Context().view[TP.Context().tabAssociationInverted[target]["catalyst"]].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
         }
 
@@ -818,20 +819,20 @@
             // assign the new data
             var node = g.svg.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                //.transition()
+                //.delay(500)
                 .style("opacity", 1)
 
             var link = g.svg.selectAll("g.link")
                 .data(_graph.links(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                //.transition()
+                //.delay(500)
                 .style("opacity", 1)
 
 			var label = g.svg.selectAll("g.text")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                .transition()
-                .delay(500)
+                //.transition()
+                //.delay(500)
                 .style("opacity", 1)
 
             // update the nodes
