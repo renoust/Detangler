@@ -855,7 +855,7 @@
                 "Labels: </br>" +
                     "<span id='colorLabel'></span> </br>"+
                      "<button id='apply'>Apply</button> </br>";
-            $.fn.jPicker.defaults.images.clientPath='images/';
+            
            $('#colorNode').jPicker({
                 window:{
                     expandable: true, 
