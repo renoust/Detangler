@@ -70,6 +70,7 @@
         this.bgColor_substrate = "#FFFFFF";  
         this.bgColor_catalyst =  "#FFFFFF";
         this.bgColor_combined = "#FFFFFF";
+        this.labelColor = "#000000";
 
         // initialization of the selection and move modes
         this.select_mode_substrate = false;

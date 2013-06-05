@@ -52,11 +52,11 @@
                 objectReferences.ToolObject.addBaseID(data, "id")
                 json = JSON.stringify(data)
                 objectReferences.ToolObject.loadJSON(data)
-                console.log("I am creating the graph in Tulip")
+                //console.log("I am creating the graph in Tulip")
                 this.createTulipGraph(json)
-                console.log("I should now analyse the graph",contxt.sessionSid)
+                //console.log("I should now analyse the graph",contxt.sessionSid)
                 this.analyseGraph()
-                console.log("graph analysed", contxt.sessionSid)
+                //console.log("graph analysed", contxt.sessionSid)
             }
             TP.ObjectReferences().TulipPosyClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");

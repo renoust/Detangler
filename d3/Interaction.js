@@ -376,9 +376,10 @@
             svg.on("mouseup", null);
             svg.on("mousedown", null);
             svg.on("mousemove", null);
+            
+            
+
         }
-
-
         // Adds a zoom interactor to a specific svg target as callbacks to its 
         //mouse events.       
         this.addZoom = function(target){

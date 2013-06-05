@@ -117,19 +117,25 @@
 
 
         this.buildGraphFromData = function (data) {
-            //console.log('creating in tulip, and recieved data: ', data)
+            console.log('creating in tulip, and recieved data: ', data)
             //console.log("here should be sid: ", data.data.sid)
             contxt.sessionSid = data.data.sid
             //console.log("the session sid has just been affected: ", contxt.sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
-            TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
+            
+            //TP.GraphDrawing(contxt.getViewGraph("substrate"),contxt.getViewSVG("substrate")).rescaleGraph(contxt,data);
 
-        
-            contxt.graph_substrate.nodes(data.nodes, "substrate")
-            contxt.graph_substrate.links(data.links, "substrate")
-            contxt.graph_substrate.edgeBinding()
-            graph_drawing = TP.GraphDrawing(contxt.graph_substrate, contxt.svg_substrate)
+            assert(true, "assigning graph")
+            TP.Context().graph_substrate.nodes(data.nodes, "substrate")
+            TP.Context().graph_substrate.links(data.links, "substrate")
+            TP.Context().graph_substrate.edgeBinding()
+
+            assert(true,"edge bounded")
+
+            graph_drawing = TP.GraphDrawing(TP.Context().graph_substrate, TP.Context().svg_substrate)
+            assert(true, "graphDrawing created")
             graph_drawing.move(contxt.graph_substrate, 0)
+            assert(true, "moved")
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
         }
@@ -154,16 +160,22 @@
 
 
         this.applyLayoutFromData = function (data, graphName) {
-            var graph = null;
+            //assert(true, "here");;
+			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			//assert(true, "there");
+			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			//assert(true, "again");
+
+			var graph = null;
             var svg = null;
             svg = contxt.getViewSVG(graphName);
             graph = contxt.getViewGraph(graphName);
 
 			TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            graph.nodes(data.nodes, graphName);
-            graph.links(data.links, graphName);
-            graph.edgeBinding();
+            //graph.nodes(data.nodes, graphName);
+            //graph.links(data.links, graphName);
+            //graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg);
             graph_drawing.move(graph, 0);
         }
@@ -184,16 +196,30 @@
 
         this.applyFloatAlgorithmFromData = function (data, graphName) {
 
+
+			//assert(true, "here");;
+			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			//assert(true, "there");
+			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			//assert(true, "again");
+
+			//data.nodes.forEach(function(d){console.log(d)});
+			//TP.Context().getViewGraph(graphName).nodes().forEach(function(d){console.log(d)});
+			
             var graph = null;
             var svg = null;
+
             svg = contxt.getViewSVG(graphName);
             graph = contxt.getViewGraph(graphName);
 
+
             TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data);
+            
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            graph.nodes(data.nodes, graphName);
-            graph.links(data.links, graphName);
-            graph.edgeBinding();
+            //graph.nodes(data.nodes, graphName);
+            //graph.links(data.links, graphName);
+            //graph.edgeBinding();
+            
             var graph_drawing = TP.GraphDrawing(graph, svg);
             graph_drawing.resize(graph, 0);
 

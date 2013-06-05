@@ -22,15 +22,13 @@ var View = function (bouton, svgs, target, application) {
     elem = document.getElementById("bouton" + target);
     if (elem) elem.parentNode.removeChild(elem);
     elem = $("div[aria-describedby='zone" + target + "']");
-    // console.log(elem)
-    //if (elem!=[])elem.remove();
+     console.log(elem)
+    if (elem!=[])elem.remove();
 
     
     console.log($("div[aria-describedby='zone"+target+"']"))
     //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
-    if( ){
-       // $(".ui-dialog[aria-describedby='zone"+target+"']")[0].remove();
-   }
+   
     //if (elem!=[])elem.remove();
 
 	//$("#container").empty();
@@ -152,10 +150,13 @@ var View = function (bouton, svgs, target, application) {
         $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
         $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
         $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));
+        $.jPicker.List[3].color.active.val('hex', contxt.labelColor);
 
 
-        var cGraph = contxt.getViewGraph(target);
+        //var cGraph = contxt.getViewGraph(target);
         objectReferences.InterfaceObject.addInfoButton(target);
+
+
     });
 
     titlebar.dblclick(function() {

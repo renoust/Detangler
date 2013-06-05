@@ -113,6 +113,34 @@ p{
 	font-weight:bold;
 }
 
+/******************************** Entanglement **********************************/
+
+#entanglement-cont{
+	margin:5;
+	border: 1px solid #666666;
+    position: relative;
+    height: 70px;
+
+}
+#bg  {
+    background: #fdd0a2;
+    opacity: 0.5; 
+    position: absolute;
+    height: 100%; width:100%;
+}
+#entanglement {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+
+    
+	font-family:arial;
+	font-size:12px;
+	font-weight:bold;
+}
+
+
+
 
 /******************************** Workspace **********************************/
 
@@ -159,11 +187,15 @@ p{
 
 /***************************** Information zone ******************************/
 
-#entanglement{
-	margin:5;
-	padding: 5;
-	border: 1px solid #666666;
-	font-family:arial;
-	font-size:12px;
-	font-weight:bold;
+
+
+@font-face {
+    font-family: 'EntypoRegular';
+    src: url('font/entypo-webfont.eot');
+    src: url('font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('font/entypo-webfont.woff') format('woff'),
+         url('font/entypo-webfont.ttf') format('truetype'),
+         url('font/entypo-webfont.svg#EntypoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
