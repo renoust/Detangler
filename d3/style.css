@@ -11,18 +11,24 @@ body{
 	margin: 0 ;
 	overflow: hidden;
 	margin-bottom: 0px;
-	position: relative ;
+	position: absolute; ;
 	padding: 0;
+	height:100%;
+	width: 100%;
+	top:34px;
+
 }
 /********************************* Header ************************************/
 
 #header{
 	padding:1 0 1 30;
-	margin-bottom:4px;
+	/*margin-bottom:4px;*/
 	border: 1px solid black;
+	background: #3f3f3f;
+	color: white;
 	/*border-radius:7px;*/
-	/*background-image:url('header.png');*/
-	background-repeat:repeat-x;
+	/*background-image:url('header.png');
+	background-repeat:repeat-x;*/
 	height:30px;
 }
 
@@ -44,7 +50,7 @@ body{
 }
 
 
-/******************************** Left menu **********************************/
+
 
 
 
@@ -56,11 +62,13 @@ body{
 	margin-left: 0px; 
 	padding: 2px; 
 	padding-left: 15px;
-	height: 95%;
+	height: 100%;
 	
 	border:1px solid #666666;
 	background:#F0F0F0;
-	border-radius:7px;
+	/*border-radius:7px;*/
+
+
 }
 
 /********************************** View *************************************/

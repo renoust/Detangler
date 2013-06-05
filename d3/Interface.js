@@ -946,7 +946,7 @@
                     range: true,
                     min: 0,
                     max: 99,
-                    values: [ 25, 75 ],
+                    values: [ 3, 12 ],
                     change: function() {
                         var value = $("#sizemap").slider("values",0);
                         var value2 = $("#sizemap").slider("values",1);
@@ -1013,18 +1013,8 @@
             res[key] = val;
         }
         console.log(res)
-        /*data.each(function(){
-            key = data[i].name
-            console.log('KEY: '+key)
-            key = btn.attr('name');  
 
-            console.log(key)
-            val = btn.val()
-            res[key] = val;
-        })*/
-        //console.log(data)
-        //console.log(event.call)
-        event.call('viewMetric',contxt.activeView, res)
+        event.call(res)
         
         }
 

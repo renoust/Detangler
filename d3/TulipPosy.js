@@ -67,7 +67,7 @@ var subarray = [
     ['menu1-content','b18','BarChart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}],
     ['menu1-content','b19','BarChart_rotate','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}],
     ['menu1-content','b20','ScatterPlot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}],
-    ['menu1-content','b21','Size Map',paramSizeMap, {call:function(parameter, graphName, scales){objectReferences.VisualizationObject.sizeMapping(parameter, graphName, scales) }}]
+    ['menu1-content','b21','Size Map',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}]
 ]
 
 var catalystarray = [
@@ -107,9 +107,7 @@ contxt.view[target2] = TP.View(combinedarray, new Array("svg", 960, 500, "svg_co
 
 
 
-    $('.submit').click(function(){
-        console.log('RESULT')
-    })
+    
 
  // Event toggle sidebars
     $('span.toggleButton').click(function(e){
