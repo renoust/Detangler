@@ -317,11 +317,13 @@
 
         this.addInfoButton = function (target) {
             var cGraph = contxt.getViewGraph(target);
-            $("<div/>", {id:"infoView"}).appendTo("#menu-2");
-            $("#infoView")[0].innerHTML = "<p>Name: " + target + "</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.nodes().length + " nodes</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.links().length + " links</p>";
+            var zone = '#infoView'
+            document.getElementById('infoView').innerHTML = ''
+            $('<p/>', {style:'text-align:center', text:'Name: '+target}).appendTo(zone);
+            $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
+            $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
 
+            
             /*
             var cGraph = null
             var svg = null
@@ -814,19 +816,12 @@
 
 
         // gestion du menu à gauche
-        
-        this.createMenu = function(nbPane){
-            for(i=0; i<nbPane; i++)
-                this.addPane();
-        }
 
-
-        this.addPane = function(){
+        this.addPanelMenu = function(header){
             menuNum =contxt.menuNum++;
             $("<div/>", {
                 "class": "cont",
                 id: "menu-"+menuNum,
-                style:"left:-261; z-index:0;",
             }).appendTo("#wrap");
 
             $("<span/>", {
@@ -835,15 +830,58 @@
                 text: ">",
                 style:"top:"+40*menuNum+"px;",
             }).appendTo("#menu-"+menuNum);
+
+            $('<div/>', {
+                class:'header-menu', 
+                text:header
+            }).appendTo('#menu-'+menuNum);
+
+            $('<div/>',{
+                id:'menu'+menuNum+'-content',
+                class:'menu-content',
+            }).appendTo('#menu-'+menuNum)
             
+            return 'menu-'+menuNum;
         }
 
+        this.interactionPane = function(buttons, mode){
+            var menu, content;
+            if(mode==='update'){
+                for(var i=0; i<contxt.menuNum;i++){
+                    if($('.header-menu').eq(i).text()==='Interactions'){
+                        menu = '#' + $('.header-menu').eq(i).parent().attr('id')
+                        content = $('.header-menu').eq(i).siblings('.menu-content')
+                        document.getElementById(content.attr('id')).innerHTML = ''
+                    }
+                }
+            }else if(mode==='create'){
+                menu = this.addPanelMenu('Interactions');
+                content = $("#"+menu +" .menu-content");
+                content.accordion({
+                    collapsible:true,
+                    active:false,
+                    heightStyle:'content'
+                });
+            }
+            this.createArrayButtons(buttons, content.attr('id'));
+        }
 
-        this.apiVisu = function(pane){
+        this.infoPane = function(){
+            var menu = this.addPanelMenu('Informations');
+            var content = $("#"+menu +" .menu-content");
 
-            $("<div/>", {id: "visu", style:"padding:10"}).appendTo("#"+pane);
+            $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
+            //affichage par défaut
+            //this.addInfoButton(contxt.activeView);
 
-            var visu = $("#visu")[0];
+
+
+        }
+        this.apiVisu = function(){
+            var menu = this.addPanelMenu('');
+            var content = $("#"+menu +" .menu-content");
+
+            var visu = content[0];
             var view = contxt.activeView;
             visu.innerHTML += 
                 "Nodes: </br>" +
@@ -860,7 +898,6 @@
                 window:{
                     expandable: true, 
                     position:{x:250, y:0},   
-
                 },
             });
            $('#colorLink').jPicker({
@@ -881,7 +918,7 @@
                     position:{x:250, y:0},
                 }
             });
-           //console.log("-->"+contxt.activeView);      
+    
             $('#apply').click(function(){
                 contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
                 console.log(contxt.labelColor)
@@ -913,7 +950,7 @@
             if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
             var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
             if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
-            console.log(elem)
+            //console.log(elem)
             return elem;
         }
         this.createForm = function(menuPane, id, title, tab, event){
@@ -938,9 +975,9 @@
             $('#'+menuPane).accordion('refresh')
         }
 
-        this.createArrayButtons = function(tab){
+        this.createArrayButtons = function(tab, pane){
             for(var i=0; i<tab.length; i++){
-                this.createForm(tab[i][0], tab[i][1], tab[i][2], tab[i][3], tab[i][4])
+                this.createForm(pane, tab[i][1], tab[i][2], tab[i][3], tab[i][4])
             }
                 $( "#sizemap" ).slider({ 
                     range: true,

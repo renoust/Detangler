@@ -39,6 +39,7 @@
         this.svg_catalyst = null;
         this.svg_combined = null;
 
+        //substrate by default
         this.activeView = "substrate";
 
         this.stateStack = [];

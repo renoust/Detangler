@@ -11,7 +11,7 @@
         <script type="text/javascript" src="local/d3.v3.min.js"></script>
         <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
         <script type="text/javascript" src="local/colorbrewer.js"></script>
-        
+
         <script type="text/javascript" src="script-test.js"></script>
         <script type="text/javascript" src="assert.js"></script>
         <script type="text/javascript" src="import_class.js"></script>
@@ -35,18 +35,54 @@
         </script>
 
         <div id='header'>
+            <div id='header-content'>
 
-            <button id='undo'> Undo</button><button id='redo'> Redo</button>
-			<div id='header-logo'>TulipPosy</div>
-			<div id='header-input'>
-				<input id='files' type='file' value='Choose a file' class='input-browser'/>
 
-			</div>
+                <button id='undo'> Undo</button><button id='redo'> Redo</button>
+                <div id='header-logo'>TulipPosy</div>
+                 <!-- <ul id="menu">
+                    <li style='width:40px'><a href="#" >Undo</a></li>
+                    <li style='width:40px'><a href="#" >Ref</a></li>
+                    <li style='width:40px'><a href="#">Redo</a></li>
+                    <li><a href="#">File</a>
+                        <ul>
+                            <li><a href='#'>Open</a></li>
+                        </ul>
+                    </li>
+                </ul> -->
+
+                <div id='header-input'>
+				    <input id='files' type='file' value='Choose a file' class='input-browser'/>
+                </div>
+            </div>
 		</div>
 
         <div id="wrap" class="nosidebar" >
             <div id="container"></div></div> 
-        
+        <script>
+            $("#menu").menu({
+                position:{using:positionnerSousMenu}
+            });
+
+            //remplace la flèche droite par la flèche bas pour les menus de premier niveau 
+            $("#menu > li > a > span.ui-icon-carat-1-e").removeClass("ui-icon-carat-1-e").addClass("ui-icon-carat-1-s");
+            function positionnerSousMenu(position,elements){
+                var options = { of:elements.target.element };
+                if(elements.element.element.parent().parent().attr("id")==="menu"){
+                    //le menu à positionner est de niveau 2:
+                    //on va superposer le point central du haut du menu sur le point central bas du menu parent 
+                    options.my="center top";
+                    options.at="center bottom";
+                } else {
+                    // le menu à positionner est de niveau >  2
+                    //le positionnement reste celui par défaut : on va superposer le coin haut gauche et le coin haut droit du menu parent 
+                    options.my="left top";
+                    options.at ="right top";
+                }
+                elements.element.element.position(options);
+            };
+
+        </script>
     	<script type="text/javascript" src="load.js"></script>
     </body>
 </html>

@@ -1,45 +1,63 @@
-/********************************** Body *************************************/
+/********************************* General ***********************************/
+*{
+	font-size: 1em;
+}
+
 body{
 	margin:0px;
 }
 
-/*p{
-	margin: 2;
-}
-*/
+/********************************** Body *************************************/
 #wrap{
-	margin: 0 ;
 	overflow: hidden;
-	margin-bottom: 0px;
-	position: absolute; ;
-	padding: 0;
-	height:100%;
+	position: absolute;
+	height:97%;
 	width: 100%;
-	top:34px;
-
+	top:30px;
 }
 /********************************* Header ************************************/
 
 #header{
-	padding:1 0 1 30;
-	/*margin-bottom:4px;*/
-	border: 1px solid black;
 	background: #3f3f3f;
-	color: white;
-	/*border-radius:7px;*/
-	/*background-image:url('header.png');
-	background-repeat:repeat-x;*/
+	border: 1px solid black;
 	height:30px;
+
+	color: white;
+}
+
+#header-content{
+	position: absolute;
+	left:30px;
+	right:0px;
+	height:28px;
 }
 
 #header-logo{
 	display:inline-block;
 	margin-right:12%;
+
 	font-family: "Caslon";
 	font-style: italic;
 	font-size:1.5em;
 }
-
+/*
+#menu-header{
+	display: inline-block;
+}
+.ui-menu{
+					width:100px;
+					font-size:12px;
+					min-height:22px;
+					
+				}
+				ul#menu{
+					width:500px; 
+				}
+				ul#menu > li {
+					width:100px; 
+					float:left; 
+				}
+*/
 #header-input{
 	display:inline-block;
 }
@@ -50,26 +68,15 @@ body{
 }
 
 
-
-
-
-
-
 /******************************** Workspace **********************************/
-
-
 #container {
-	margin-left: 0px; 
-	padding: 2px; 
 	padding-left: 15px;
 	height: 100%;
-	
+	bottom: 0px;
 	border:1px solid #666666;
 	background:#F0F0F0;
-	/*border-radius:7px;*/
-
-
 }
+
 
 /********************************** View *************************************/
 
@@ -79,8 +86,8 @@ body{
 }
 
 .ui-dialog .ui-dialog-titlebar button {
-height: 20;
-font-size: 11px;
+	height: 20;
+	font-size: 11px;
 	float:right;
 }
 /*.ui-widget .ui-widget{
@@ -89,6 +96,7 @@ font-size: 11px;
 }*/
 .ui-dialog .ui-dialog-title {
 	width: auto ;
+	font-size: 12px
 }
 
 .ui-dialog{
@@ -112,11 +120,11 @@ font-size: 11px;
 
 @font-face {
     font-family: 'EntypoRegular';
-    src: url('font/entypo-webfont.eot');
-    src: url('font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
-         url('font/entypo-webfont.woff') format('woff'),
-         url('font/entypo-webfont.ttf') format('truetype'),
-         url('font/entypo-webfont.svg#EntypoRegular') format('svg');
+    src: url('../font/entypo-webfont.eot');
+    src: url('../font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/entypo-webfont.woff') format('woff'),
+         url('../font/entypo-webfont.ttf') format('truetype'),
+         url('../font/entypo-webfont.svg#EntypoRegular') format('svg');
     font-weight: normal;
     font-style: normal;
 }

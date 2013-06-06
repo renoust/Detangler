@@ -22,16 +22,8 @@ var View = function (bouton, svgs, target, application) {
     elem = document.getElementById("bouton" + target);
     if (elem) elem.parentNode.removeChild(elem);
     elem = $("div[aria-describedby='zone" + target + "']");
-     //console.log(elem)
     if (elem)elem.remove();
 
-    
-    //console.log($("div[aria-describedby='zone"+target+"']"))
-    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
-   
-    //if (elem!=[])elem.remove();
-
-	//$("#container").empty();
 
     /**************************
      * Application
@@ -74,8 +66,6 @@ var View = function (bouton, svgs, target, application) {
      * Views
      **************************/
 
-    contxt.activeView = target;
-    //console.log('-->'+target);
 
     if(target==="substrate")    { contxt.dialogTop=0;  contxt.dialogRight=600; }
     else if(target==="catalyst"){ contxt.dialogTop=0;  contxt.dialogRight=100; }
@@ -83,12 +73,9 @@ var View = function (bouton, svgs, target, application) {
 
 
     /****  création du dialog ****/
-    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
-
      $("<div/>", {id: "zone"+target, title: target}).appendTo("html");
 
     var dialog = $("[id=zone" + target + "]");
-    //console.log(dialog);
 
     dialog.dialog({
         height: contxt.dialogHeight,
@@ -122,53 +109,13 @@ var View = function (bouton, svgs, target, application) {
     dialog.parent().appendTo("#container")
     dialog.parent().click(function(){ 
         contxt.activeView = target;
+        objectReferences.InterfaceObject.interactionPane(bouton,'update')
+        objectReferences.InterfaceObject.addInfoButton(target);
     
-        var num = 0;
-        $(".arrayButtons").remove();
-        $('#menu1-content').remove()
-        $('<div/>', {id:'menu1-content'}).appendTo('#menu-1')
-        $('#menu1-content').accordion({
-            collapsible:true,
-            active:false,
-            heightStyle:'content'
-        });
-        /*var pane = d3.select('#menu-1').append("div")
-            .attr("id", "button" + target)
-            .attr('class','arrayButtons');*/
-            
-        objectReferences.InterfaceObject.createArrayButtons(bouton);
-
-        /*while (num < bouton.length) {
-            var i = num;
-            var j = 0 + i;
-            var bout = application[target].Boutton.create({
-                idButton: bouton[i][0],
-                fonction: bouton[i][2]
-            });
-            application[target].testArrayController.addFunction(bout);
-            (function (i) {
-
-                var paneB = pane.append("div");
-                paneB.append("input")
-                    .attr("type", "button")
-                    .attr("class", "button")
-                    .attr("value", bouton[i][1])
-                    .on("click", function () {
-                    application[target].testArrayController.loadFunction("idButton", bouton[i][0]);
-                });
-            })(i);
-            num++;
-        }*/
         $.jPicker.List[0].color.active.val('hex', eval("contxt.nodeColor_"+target));
         $.jPicker.List[1].color.active.val('hex', eval("contxt.linkColor_"+target));
         $.jPicker.List[2].color.active.val('hex', eval("contxt.bgColor_"+target));
         $.jPicker.List[3].color.active.val('hex', contxt.labelColor);
-
-
-        //var cGraph = contxt.getViewGraph(target);
-        objectReferences.InterfaceObject.addInfoButton(target);
-
-
     });
 
     titlebar.dblclick(function() {
@@ -270,7 +217,9 @@ var View = function (bouton, svgs, target, application) {
 
      $("#zone"+target).parent().appendTo("#container")
 
-
+     if(target==contxt.activeView){
+        objectReferences.InterfaceObject.addInfoButton(target);
+     }
 
     
    
