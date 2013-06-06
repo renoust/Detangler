@@ -44,22 +44,21 @@
         //entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
-        this.entanglementCaught = function () {
+        this.entanglementCaught = function (CurrentViewID) {
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
             /*TP.Context().svg_substrate.selectAll("text.homogeneity").text(function (d) {
                 return "" + objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5)
             });*/
 			
-			var target_dest = "tutu";
-			var target_source = "toto";
+			//var target_dest = tabTarget["catalyst"];
+			//var target_source = tabTarget["substrate"];
+
+			var target_source = CurrentViewID;
 			
             $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
             $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
  
-            TP.Context().view[target_source].getSvg().selectAll("text.intensity").text(function (d) {
-                return "" + objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5)
-            });
-
+            
             var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
             $('#entanglement')[0].style.cssText="background-color:"+ brewerSeq[index]; 
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
@@ -69,16 +68,14 @@
             d3.selectAll("rect.view").style("fill", brewerSeq[index])
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
             d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
-
-            if (TP.Context().view[target_dest].getLasso()) 
-                TP.Context().view[target_dest].getLasso().fillColor = brewerSeq[index]
+            
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
         }
 
         this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code
             var matrixData = [];
-            nbNodes = TP.Context().tabGraph["graph_"+target].nodes().length;
+            nbNodes = TP.Context().view[target].getGraph().nodes().length;
             for (i = 0; i < nbNodes; i++) {
                 matrixData[i] = [];
                 for (j = 0; j < nbNodes; j++)
@@ -86,11 +83,11 @@
             }
 
             var catalystToInd = {};
-            TP.Context().tabGraph["graph_"+target].nodes().forEach(function (d, i) {
+            TP.Context().view[target].getGraph().nodes().forEach(function (d, i) {
                 catalystToInd[d.label] = i;         
                 matrixData[i][i] = [d.baseID, d.frequency];         
             });
-            TP.Context().tabGraph["graph_"+target].links().forEach(function (d) {
+            TP.Context().view[target].getGraph().links().forEach(function (d) {
                 var freq = JSON.parse(d.conditionalFrequency);
                 i = catalystToInd[freq['order'][0]]
                 j = catalystToInd[freq['order'][1]]
@@ -163,7 +160,7 @@
                         .data([])
                         .exit()
                         .remove();
-                    gD = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target).draw()
+                    gD = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target).draw()
                 })
                 .on("mouseover", function () {
                     d3.select(this).style("fill", "black")
@@ -220,7 +217,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             nodeDatum = svg.selectAll("g.node").data()
             // strangely the matrix that should be applied by transform is 
@@ -235,7 +232,11 @@
             svg.selectAll("text.node").style("font-size", function () {
                 return 12;
             });
-            objectReferences.VisualizationObject.entanglementCaught();
+            
+    		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
+	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+	            
+	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }
 
         this.resetSize = function (target) {
@@ -243,7 +244,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             cGraph.nodes().forEach(function (d) {
                 d.viewMetric = 3;
@@ -257,7 +258,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             graph_drawing = TP.GraphDrawing(cGraph, svg, target)
             graph_drawing.rotate(target,5)
@@ -268,7 +269,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
             graph_drawing = TP.GraphDrawing(cGraph, svg, target);
             //assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
             //console.log(target, svg, cGraph);
@@ -283,7 +284,7 @@
             var cGraph = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             var gD = TP.GraphDrawing(cGraph, svg, target);
             gD.bringLabelsForward();
@@ -383,11 +384,14 @@
             var svg = null;
 
             svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().getViewGraph(graphName);
+            cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeSizeMap(cGraph, 0, parameter);
-            objectReferences.VisualizationObject.entanglementCaught();
+            
+    		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
+	          //  objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
+	          objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 
@@ -397,11 +401,14 @@
             var svg = null;
 
             svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().getViewGraph(graphName);
+            cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeColorMap(cGraph, 0, parameter);
-            objectReferences.VisualizationObject.entanglementCaught();
+
+    		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
+	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
+	            objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 
@@ -413,7 +420,7 @@
 
             var tabMetric = TP.Context().view[target].getMetric_BC();
 
-            var numberMetric = tabMetric[0];           
+            var numberMetric = tabMetric[0];       
             var metric = tabMetric[1];
             var tabSommet = tabMetric[2];
                         
@@ -432,10 +439,18 @@
             
             assert(true, "erreur1");
             
-            TP.Context().view["BarChart_"+smell+"_"+target] = new TP.View(null, new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+target), "BarChart_"+smell+"_"+target, null, null, null, null,  "barchart", target);
+            var id = ""+TP.Context().getIndiceView();
             
-            TP.Context().view["BarChart_"+smell+"_"+target].addView();			
-			
+            console.log("iddddddddddddddddddddddd : "+id)
+            
+            TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
+            new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
+            
+            assert(false, "tu fais chier")
+            console.log(TP.Context().view[id]);
+            
+            TP.Context().view[id].addView();			
+			TP.Context().view[id].buildLinks();
 			
 			assert(true, "erreur2");
 			
@@ -451,14 +466,14 @@
     
                 var left_width = 200;                   
     
-                var chartt = d3.select("#zoneBarChart_"+smell+"_"+target).append("svg")
-                  .attr('class', 'chart_'+smell+"_"+target)
+                var chartt = d3.select("#zone"+id).append("svg")
+                  .attr('class', 'chart_'+smell+"_"+id)
                   //.attr('width', width+left_width)
                   //.attr('height', height);
                   .attr('width', "100%")
                   .attr('height', "100%")   
                 
-                chart = d3.select('.chart_'+smell+"_"+target);    
+                chart = d3.select('.chart_'+smell+"_"+id);    
                 
                 var x, y;
                 x = d3.scale.linear()
@@ -519,8 +534,8 @@
                 var width = bar_width * numberMetric.length;        
     
                 //var left_width = 200;
-                var chartt = d3.select("#zoneBarChart_"+smell+"_"+target).append("svg")
-                  .attr('class', 'chart_'+smell+"_"+target)
+                var chartt = d3.select("#zone"+id).append("svg")
+                  .attr('class', 'chart_'+smell+"_"+id)
                   //.attr('width', width+margin.left+margin.right)
                   //.attr('height', height+margin.top+margin.bottom)
                   .attr('width', "100%")
@@ -528,7 +543,7 @@
                   .append("g")
                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                 
-                  
+                
                 var x, y;
                 x = d3.scale.ordinal()
                    .domain(metric)
@@ -546,10 +561,12 @@
                 .scale(y)
                 .orient("left");    
                 
-                chart = d3.select('.chart_'+smell+"_"+target).select("g");
+                chart = d3.select('.chart_'+smell+"_"+id).select("g");
+                
+
                 
                 chart.append("g")
-                    .attr("class", "x_axis_BarChart"+smell+"_"+target)
+                    .attr("class", "x_axis_BarChart"+smell+"_"+id)
                     .attr("transform", "translate(0," + height + ")")
                     .call(xAxis)
                     .style("fill", "none")
@@ -557,7 +574,7 @@
                     .style("shape-rendering", "crispEdges");
                 
                 chart.append("g")
-                    .attr("class", "y_axis_BarChart"+smell+"_"+target)                    
+                    .attr("class", "y_axis_BarChart"+smell+"_"+id)                    
                     .call(yAxis)
                     .style("fill", "none")
                     .style("stroke", "#000")
@@ -584,7 +601,7 @@
                   .style("fill", "white")
                   .text(function(d){return ""+d[0];});
                   
-                var texte = d3.selectAll(".x_axis_BarChart"+smell+"_"+target).selectAll("g.tick")
+                var texte = d3.selectAll(".x_axis_BarChart"+smell+"_"+id).selectAll("g.tick")
                               .attr("text-anchor", "middle")
                               .selectAll("text")
                               .style("text-anchor", "end");
@@ -606,7 +623,7 @@
                             //console.log(value[1]);
                             
                             var node = svg.selectAll("g.node")
-                                .select("g."+TP.Context().tabType[target])
+                                .select("g."+TP.Context().view[target].getType())
                                 .select("rect")                
                                 .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                                 .style("fill", "red");
@@ -628,7 +645,7 @@
                                 
                                 
                                 var node = svg.selectAll("g.node")
-                                    .select("g."+TP.Context().tabType[target])
+                                    .select("g."+TP.Context().view[target].getType())
                                     .select("rect")                
                                     .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                                     .style("fill", TP.Context().view[target].getNodesColor());   
@@ -677,9 +694,12 @@
             var width = 960 - margin.left - margin.right;
             var height =500 - margin.top - margin.bottom;
             
+            var id = ""+TP.Context().getIndiceView();
             
-            TP.Context().view["Scatter_Plot_"+target] = new TP.View(null, new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+target), "Scatter_Plot_"+target, null, null, null, null, "scatter_plot", target);  
-        	TP.Context().view["Scatter_Plot_"+target].addView();
+            TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
+            new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+id), "Scatter_Plot_"+TP.view[target].getName(), null, null, null, null, "scatter_plot", target);  
+        	TP.Context().view[id].addView();
+        	TP.Context().view[id].buildLinks();
         	
         
             var tabClick = [];
@@ -711,10 +731,10 @@
                   .range([ height, minY ]);
             
             
-            var scatterP = d3.select("#zoneScatter_Plot_"+target)
+            var scatterP = d3.select("#zone"+id)
             
             var scatter = scatterP.append("svg")
-               .attr('class', 'scatterPlot'+target)
+               .attr('class', 'scatterPlot'+id)
                //.attr('width', width + margin.right + margin.left)
                //.attr('height', height + margin.top + margin.bottom)
                .attr('width', "100%")
@@ -729,14 +749,14 @@
                 .orient('bottom');
                 
             scatter.append('g')
-                  .attr("class", "x_axis_scatterPlot"+target)
+                  .attr("class", "x_axis_scatterPlot"+id)
                   .attr("transform", "translate(0," + height + ")")
                   .call(xAxis)
                   .style("fill", "none")
                   .style("stroke", "#000")
                   .style("shape-rendering", "crispEdges")
                 .append("text")
-                  .attr("class", "label_x_axis_scatterPlot"+target)
+                  .attr("class", "label_x_axis_scatterPlot"+id)
                   .attr("x", width)
                   .attr("y", -6)
                   .style("text-anchor", "end")
@@ -748,13 +768,13 @@
             
             
             scatter.append('g')
-                  .attr("class", "y_axis_scatterPlot"+target)
+                  .attr("class", "y_axis_scatterPlot"+id)
                   .call(yAxis)
                   .style("fill", "none")
                   .style("stroke", "#000")
                   .style("shape-rendering", "crispEdges")                 
                 .append("text")
-                  .attr("class", "label_y_axis_scatterPlot"+target)
+                  .attr("class", "label_y_axis_scatterPlot"+id)
                   .attr("transform", "rotate(-90)")
                   .attr("y", 6)
                   .attr("dy", ".71em")
@@ -787,11 +807,11 @@
                       //console.log(scatterP);
                       
                       
-                      scatter.selectAll("text.scatterPlot"+target)
+                      scatter.selectAll("text.scatterPlot"+id)
                         .data(dataTab)
                         .enter()
                         .append("text")
-                        .classed("scatterPlot"+target, true)
+                        .classed("scatterPlot"+id, true)
                         .style("fill", "red")                       
                        .text(function(d) {
                              //console.log("titi : "+d[0]);
@@ -810,7 +830,7 @@
                         //console.log(valeurx-50);
                         
                         var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().tabType[target])
+                            .select("g."+TP.Context().view[target].getType())
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                             .style("fill", "red");
@@ -826,7 +846,7 @@
                     var result = tab[3];
                     
                                 
-                    scatter.selectAll("text.scatterPlot"+target)
+                    scatter.selectAll("text.scatterPlot"+id)
                          .data([])
                          .exit()
                          .remove();
@@ -836,7 +856,7 @@
                         selection.style('fill',"#4682b4");
                             
                         var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().tabType[target])
+                            .select("g."+TP.Context().view[target].getType())
                             .select("rect")                
                             .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
                             .style("fill", TP.Context().view[target].getNodesColor());   
@@ -862,10 +882,10 @@
                 
                 function zoomm(){
                     
-                    scatter.selectAll(".x_axis_scatterPlot"+target)
+                    scatter.selectAll(".x_axis_scatterPlot"+id)
                         .call(xAxis);
                         
-                    scatter.selectAll(".y_axis_scatterPlot"+target)
+                    scatter.selectAll(".y_axis_scatterPlot"+id)
                         .call(yAxis);       
                         
                     scatter.selectAll("circle")           
@@ -882,7 +902,7 @@
             var cGraph = null;
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().getViewGraph(graphName);
+            cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.changeColor(graphName, cGraph, elem, newcolor);

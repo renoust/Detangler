@@ -11,14 +11,14 @@ import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
 
-var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
+var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
 
 
     var tabDataSvg = svgs;
-    
+    var viewGroup = groupe;
     //TP.Context().view[target] = __g__;
     
     var controller = null;
@@ -48,6 +48,13 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
     var graph = null;
     var viewInitialized = null;
     
+   	var ID = id;
+    
+    this.getGroup = function()
+    {    	
+    	return viewGroup;    	
+    }
+    
     this.viewInitialized = function()
     {
     	return viewInitialized;
@@ -58,8 +65,14 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
     	return graph;
     }
     
+    this.getName = function()
+    {
+    	return name;
+    }
+    
     this.getID = function(){    	
-    	return name;    	
+    	//return name;
+    	return ID;    	
     }    
     
     this.setAssociatedView = function(linkType, view)
@@ -207,14 +220,14 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 
 	this.addView = function() {
 		
-	    elem = document.getElementById("bouton" + target);
+	    elem = document.getElementById("bouton" + ID);
 	    if (elem) elem.parentNode.removeChild(elem);
-	    elem = $("div[aria-describedby='zone" + target + "']");
+	    elem = $("div[aria-describedby='zone" + ID + "']");
 	     console.log(elem)
 	    if (elem!=[])elem.remove();
 	
 	    
-	    console.log($("div[aria-describedby='zone"+target+"']"))
+	    console.log($("div[aria-describedby='zone"+ID+"']"))
 	    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
 	   
 	    //if (elem!=[])elem.remove();
@@ -262,20 +275,20 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	     * Views
 	     **************************/
 	
-	    TP.Context().activeView = target;
+	    //TP.Context().activeView = ID;
 	    //console.log('-->'+target);
 	
-	    if(target==="substrate")    { TP.Context().dialogTop=0;  TP.Context().dialogRight=600; }
-	    else if(target==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
+	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=600; }
+	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
 	
 	
 	    /****  création du dialog ****/
 	    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
 	
-	     $("<div/>", {id: "zone"+target, title: target}).appendTo("#container");
+	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("#container");
 	
-	    var dialog = $("[id=zone" + target + "]");
+	    var dialog = $("[id=zone" + ID + "]");
 	    //console.log(dialog);
 	
 	    dialog.dialog({
@@ -294,33 +307,33 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
 	    $("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        
-	    $("<button/>", {id: "toggle"+target, text:"Move"}).appendTo(titlebar); 
+	    $("<button/>", {id: "toggle"+ID, text:"Move"}).appendTo(titlebar); 
 	
-	    $('#toggle' + target).button().click (function(event){
+	    $('#toggle' + ID).button().click (function(event){
 	        var interact = $(this).button("option","label");
 	        if (interact=="Move")   { $(this).button("option", "label", "Select");}
 	        else                    { $(this).button("option", "label", "Move");}
-	        TP.Context().stateStack[target].executeCurrentState();
+	        TP.Context().stateStack[ID].executeCurrentState();
 	    });
 		        
 	    dialog.parent().click(function(){ 
-	        TP.Context().activeView = target;
+	        TP.Context().activeView = ID;
 	        console.log(TP.Context().activeView);
 	        var num = 0;
 	        $(".arrayButtons").remove();
 	
 	        var pane = d3.select('#menu-1').append("div")
-	            .attr("id", "button" + target)
+	            .attr("id", "button" + ID)
 	            .attr('class','arrayButtons');
 	
 	        while (num < bouton.length) {
 	            var i = num;
 	            var j = 0 + i;
-	            var bout = TP.Context().view[target].getController().Boutton.create({
+	            var bout = TP.Context().view[ID].getController().Boutton.create({
 	                idButton: bouton[i][0],
 	                fonction: bouton[i][2]
 	            });
-	            TP.Context().view[target].getController().testArrayController.addFunction(bout);
+	            TP.Context().view[ID].getController().testArrayController.addFunction(bout);
 	            (function (i) {
 	
 	                var paneB = pane.append("div");
@@ -329,7 +342,7 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	                    .attr("class", "button")
 	                    .attr("value", bouton[i][1])
 	                    .on("click", function () {
-	                    TP.Context().view[target].getController().testArrayController.loadFunction("idButton", bouton[i][0]);
+	                    TP.Context().view[ID].getController().testArrayController.loadFunction("idButton", bouton[i][0]);
 	                });
 	            })(i);
 	            num++;
@@ -346,12 +359,12 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
 
-	        TP.ObjectReferences().Interface().addInfoButton(target);
+	        TP.ObjectReferences().Interface().addInfoButton(ID);
 	    });
 	
 	    titlebar.dblclick(function() {
-	        if(target==="substrate")    { TP.Context().dialogTop=26;  TP.Context().dialogRight=600; }
-	        else if(target==="catalyst"){ TP.Context().dialogTop=26;  TP.Context().dialogRight=100; }
+	        if(typeView ==="substrate")    { TP.Context().dialogTop=26;  TP.Context().dialogRight=600; }
+	        else if(typeView ==="catalyst"){ TP.Context().dialogTop=26;  TP.Context().dialogRight=100; }
 	        else                        { TP.Context().dialogTop=240; TP.Context().dialogRight=260; }
 	
 	        var fullheight = $('#container').height()-10;
@@ -380,7 +393,7 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 	    });
 	    
 	   function add() {
-	        if(target != null){
+	        if(ID != null){
 	           
 	            if(view_nodes != null)
 	            	viewNodes = view_nodes;
@@ -398,22 +411,23 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 		        showLinks = true;
 		        nodeInformation = false;           
 	           
-	            TP.Interaction().createLasso(target);
-	            TP.Interaction().addZoom(target);
+	            TP.Interaction().createLasso(ID);
+	            TP.Interaction().addZoom(ID);
+	            
 	            if(typeView == "substrate"){
 	           		//objectReferences.InteractionObject.addZoom(target);
-	                TP.Interface().addEntanglementFeedback(target);
+	                TP.Interface().addEntanglementFeedback(ID);
 	           }
-	            TP.Context().stateStack[target] = new TP.States();
-	            TP.Context().stateStack[target].addState('select', new TP.stateSelect(target));
-	            TP.Context().stateStack[target].executeCurrentState();             
+	            TP.Context().stateStack[ID] = new TP.States();
+	            TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
+	            TP.Context().stateStack[ID].executeCurrentState();             
 	        }
 	    }    
 	    
 	    if (tabDataSvg[0] == "svg" && tabDataSvg[1] == "graph") {
 	
 	            //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)            
-	            svg = d3.select("#zone" + target)
+	            svg = d3.select("#zone" + ID)
 	                .append("svg")
 	                .attr("width", "100%")
 	                .attr("height", "100%")
@@ -421,28 +435,29 @@ var View = function (bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type
 
 	                //.attr("viewBox", "0 0 500 600");
 	                
-	            TP.Context().tabGraph["graph_"+target] = new TP.Graph();
-	            graph = TP.Context().tabGraph["graph_"+target];            
-	
+	            TP.Context().tabGraph["graph_"+ID] = new TP.Graph();
+	            graph = TP.Context().tabGraph["graph_"+ID];            
+				
 	            add();
 	            
-	            TP.Context().tabType[target] = typeView;
+	            //TP.Context().tabType[target] = typeView;
 	            
 	           	if(typeView == "combined")
 	            {
 	            	combined_foreground = "substrate";
 	            }
-	            /*
-	            if(typeView == "substrate"){
-	            	TP.Context().tabAssociation[target] = new Array();
-	            	TP.Context().tabAssociationInverted[target] = [];
-	            	
-	            }
-	            else{*/
+	            
 	     }
-	           // }
+	     
+	           	if(typeView == "substrate"){
+	            	TP.Context().GroupOfView[viewGroup] = [];
+	            	TP.Context().GroupOfView[viewGroup]["substrate"] = __g__;
+	            }
+	           	else{
+	            	TP.Context().GroupOfView[viewGroup][typeView] = __g__;
+	            }	     
 		
-	     $("#zone"+target).parent().appendTo("#container")
+	     $("#zone"+ID).parent().appendTo("#container")
 	     
      	viewInitialized = 1;
 	}

@@ -124,13 +124,13 @@
 		    //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
-            typeGraph = TP.Context().tabType[target];
-            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, typeGraph);
-            TP.Context().tabGraph["graph_"+target].links(data.links, typeGraph);
-            TP.Context().tabGraph["graph_"+target].edgeBinding();
+            typeGraph = TP.Context().view[target].getType();
+            TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph);
+            TP.Context().view[target].getGraph().links(data.links, typeGraph);
+            TP.Context().view[target].getGraph().edgeBinding();
             //console.log("loading JSON", TP.Context().graph_substrate.nodes(), TP.Context().graph_catalyst.nodes());
 
-            var graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target);
+            var graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target);
             graph_drawing.draw();
             objectReferences.VisualizationObject.rescaleGraph(data);
             return

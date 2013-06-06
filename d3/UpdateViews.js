@@ -29,7 +29,7 @@
             var cGraph = null;
             var svg = null;
 
-            cGraph = TP.Context().tabGraph["graph_"+target]; //substrate before generic code
+            cGraph = TP.Context().view[target].getGraph(); //substrate before generic code
             svg = TP.Context().view[target].getSvg(); //substrate...
 
             // we need to rescale the graph so it will fit the current svg 
@@ -38,7 +38,7 @@
             //objectReferences.VisualizationObject.rescaleGraph(data);
             var graph_drawing = TP.GraphDrawing(cGraph, svg, target); //substrate before generic code
             //graph_drawing.rescaleGraph(contxt,data);
-            var typeGraph = TP.Context.tabType[target];
+            var typeGraph = TP.Context.view[target].getType();
             
             cGraph.nodes(data.nodes, typeGraph);
             cGraph.links(data.links, typeGraph);
@@ -138,7 +138,7 @@
             
             //TP.GraphDrawing(TP.Context().getViewGraph("substrate"),TP.Context().getViewSVG("substrate")).rescaleGraph(contxt,data);
 
-        	var typeGraph = TP.Context().tabType[target];
+        	var typeGraph = TP.Context().view[target].getType();
         	
             TP.Context().tabGraph["graph_"+target].nodes(data.nodes, typeGraph) //substrate
             TP.Context().tabGraph["graph_"+target].links(data.links, typeGraph) //substrate
@@ -155,35 +155,38 @@
         this.applySubstrateAnalysisFromData = function (data, target) { //catalyst at bingin of project, without generic programmation
             //console.log("received data after analysis:")
             //console.log(data);
-            TP.GraphDrawing(target[0].getGraph(),target[0].getSvg(), target[0].getID()).rescaleGraph(contxt,data);
+            TP.GraphDrawing(TP.Context().view[target].getGraph(),TP.Context().view[target].getSvg(), target).rescaleGraph(contxt,data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
             
-            var typeGraph = target[0].getType();
+            var typeGraph = TP.Context().view[target].getType();
             
-            target[0].getGraph().nodes(data.nodes, typeGraph); //catalyst
-            target[0].getGraph().links(data.links, typeGraph); //catalyst
-            target[0].getGraph().edgeBinding();
-            graph_drawing = TP.GraphDrawing(target[0].getGraph(), target[0].getSvg(), target[0].getID())
+            TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph); //catalyst
+            TP.Context().view[target].getGraph().links(data.links, typeGraph); //catalyst
+            TP.Context().view[target].getGraph().edgeBinding();
+            graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target)
             graph_drawing.clear()
             graph_drawing.draw()
             TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity']
             TP.Context().entanglement_intensity = data['data']['entanglement intensity']
-            objectReferences.VisualizationObject.entanglementCaught();
+    		
+    		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
+	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+	            objectReferences.VisualizationObject.entanglementCaught(target);
         }
 
 
         this.applyLayoutFromData = function (data, graphName) {
             //assert(true, "here");;
-			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
 			//assert(true, "there");
-			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
 			//assert(true, "again");
 
 			var graph = null;
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
-            graph = TP.Context().getViewGraph(graphName);
+            graph = TP.Context().view[graphName].getGraph();
 
 			TP.GraphDrawing(graph,svg,graphName).rescaleGraph(contxt,data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
@@ -199,9 +202,9 @@
             var graph = null;
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
-            graph = TP.Context().getViewGraph(graphName);
+            graph = TP.Context().view[graphName].getGraph();
             
-            var typeGraph = TP.Context().tabType[graphName];
+            var typeGraph = TP.Context().view[graphName].getType();
             
             graph.nodes(data.nodes, typeGraph);
             graph.links(data.links, typeGraph);
@@ -215,9 +218,9 @@
 
 
 			//assert(true, "here");;
-			TP.Context().getViewGraph(graphName).updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
 			//assert(true, "there");
-			TP.Context().getViewGraph(graphName).updateLinks(data.links, true);
+			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
 			//assert(true, "again");
 
 			//data.nodes.forEach(function(d){console.log(d)});
@@ -227,7 +230,7 @@
             var svg = null;
 
             svg = TP.Context().view[graphName].getSvg();
-            graph = TP.Context().getViewGraph(graphName);
+            graph = TP.Context().view[graphName].getGraph();
 
 
             TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data, graphName);
@@ -249,13 +252,15 @@
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
            
-           var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().tabType[graphName]);
+           var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
            char.attr("x", function(d){ assert(false,d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
 
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));
             TP.Context().view[graphName].setMetric_SP(pileCentrality.transformToArray("ScatterPlot"));           
-            
-            objectReferences.VisualizationObject.entanglementCaught();
+
+    		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
+	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
+	            objectReferences.VisualizationObject.entanglementCaught(graphName);
         }
 
 
@@ -393,7 +398,11 @@
             if ('data' in data) {
                 TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
                 TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
-                objectReferences.VisualizationObject.entanglementCaught();
+
+    		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
+	            //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
+	            objectReferences.VisualizationObject.entanglementCaught(graphName);
+
             }
             
         }

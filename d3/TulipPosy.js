@@ -27,10 +27,24 @@ var TulipPosy = function (originalJSON) {
 
 
     //assert(new testView(5, 3), "test réusssie"); //test nombre view
-
+/*
 	var target = 'toto';
 	var target1 = 'tutu';
 	var target2 = 'titi';
+*/
+
+	var target = ""+TP.Context().getIndiceView();
+	var target1 = ""+TP.Context().getIndiceView();
+	var target2 = ""+TP.Context().getIndiceView();
+	
+	assert(false, "target :")
+	console.log(target);
+	console.log(typeof(target));
+	
+	assert(false, "target1 :")
+	console.log(target1);
+	console.log(typeof(target1))
+	
 	objectReferences.InterfaceObject.createMenu(3);
     objectReferences.InterfaceObject.apiVisu("menu-3");
 	
@@ -61,7 +75,7 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     
 
-    TP.Context().view[target] = new TP.View(subarray, new Array("svg", "graph", 960, 500, "svg_"+target), target, "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    TP.Context().view[target] = new TP.View(target, 1, subarray, new Array("svg", "graph", 960, 500, "svg_"+target), "toto", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 
@@ -88,7 +102,7 @@ var TulipPosy = function (originalJSON) {
     //TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
 	//TP.Context().view[target1].addView();
 	//TP.Context().view[target1].buildLinks();
-	tabCatalyst = new Array(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
+	tabCatalyst = new Array(target1, catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), "tutu", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
 	
     var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground(target2)});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
@@ -98,9 +112,7 @@ var TulipPosy = function (originalJSON) {
     TP.Context().view[target2] = new TP.View(combinedarray, new Array("svg", "graph", 960, 500, "svg_"+target2), target2, "#121212", "#808080", "#FFFFFF", "rect", "combined", [target, target1]);
 	TP.Context().view[target2].addView();
 	TP.Context().view[target2].buildLinks();*/
-	
-	assert(true, "tabType");
-	console.log(TP.Context().tabType);
+
 	//assert(true, "tabAssociation");
 	//console.log(TP.Context().tabAssociation);
 	/*

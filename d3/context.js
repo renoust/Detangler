@@ -17,7 +17,9 @@
         if (Context.prototype._singletonInstance) {
             return Context.prototype._singletonInstance;
         }
-
+		
+		this.viewMeter = 0;
+		
         Context.prototype._singletonInstance = this;
         this.view = [];
 
@@ -67,13 +69,19 @@
         //number of pane for the menu
         this.menuNum=1;
         
-        this.tabType = [];
-		
 		this.tabOperator["catalyst"] = "AND";
 
         this.getViewGraph = function (viewID) {
                 return __g__.tabGraph["graph_"+viewID];
         };
+        
+        this.getIndiceView = function(){
+        	var tmp = __g__.viewMeter;
+        	__g__.viewMeter++;
+        	return tmp;
+        };
+        
+        this.GroupOfView = new Object();
 
         return __g__;
     }

@@ -153,7 +153,7 @@
         // entanglement indices computed.
         this.analyseGraph = function (target, tabCatalyst) {
         	
-        	if(TP.Context().tabType[target] !== "substrate"){
+        	if(TP.Context().view[target].getType() !== "substrate"){
         		assert(false, "not substrate type"); 		
         		return;
         	}
@@ -171,13 +171,19 @@
                 success: function(data){
                 	
                 	if(TP.Context().view[target].getAssociatedView("catalyst") == null && tabCatalyst.length != null){
-                		
-     						TP.Context().view[tabCatalyst[2]] = new TP.View(tabCatalyst[0], tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8]);
-               				TP.Context().view[tabCatalyst[2]].buildLinks();
-                			TP.Context().view[tabCatalyst[2]].addView();
-                	}                			             
-                		
-                	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[target].getAssociatedView("catalyst"));             	
+                			
+                			assert(false, tabCatalyst[0])
+                			assert(false, tabCatalyst[8])
+                			assert(false, tabCatalyst[9])
+                			
+                			console.log(tabCatalyst);
+                			
+     						TP.Context().view[tabCatalyst[0]] = new TP.View(tabCatalyst[0], TP.view[target].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], target);
+               				TP.Context().view[tabCatalyst[0]].buildLinks();
+                			TP.Context().view[tabCatalyst[0]].addView();
+                	}
+              
+                	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());             	
                 }
             });
         }
@@ -244,7 +250,7 @@
 
         this.updateLayout = function (graphName, json) {
             json = JSON.stringify({
-                nodes: TP.Context().tabGraph["graph_"+graphName].nodes()
+                nodes: TP.Context().view[graphName].getGraph().nodes()
             })
             var updateParams = {
                 type: "layout",
@@ -299,10 +305,10 @@
         	
         	assert(true, "syncGraph : "+graphName);
 			
-            var syncTarget = TP.Context().tabType[graphName];
+            var syncTarget = TP.Context().view[graphName].getType();
 
             if (syncTarget == 'combined')
-                syncTarget = TP.Context().tabType[contxt.combined_foreground];
+                syncTarget = TP.Context().view[contxt.combined_foreground].getType();
 
             var params = {
                 sid: contxt.sessionSid,

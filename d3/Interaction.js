@@ -34,7 +34,8 @@
             var myL = null
 
             svg = TP.Context().view[target].getSvg();
-            graph = TP.Context().getViewGraph(target);
+            assert(false, "creerLAAALLAAAAASSSSSOOO")
+            graph = TP.Context().view[target].getGraph();
 			/*
             if (target == "catalyst") {
                 TP.Context().lasso_catalyst = new TP.Lasso(svg);
@@ -87,7 +88,7 @@
                 svg.selectAll("g.node")
                     .classed("selected", function (d) {
                     	
-                        if (TP.Context().tabType[target] == "combined" && d._type != TP.Context().combined_foreground)
+                        if (TP.Context().view[target].getType() == "combined" && d._type != TP.Context().combined_foreground)
                             return false;
 
                         //console.log('current obj', d)
@@ -396,7 +397,7 @@
                 return
 
             svg = TP.Context().view[target].getSvg();
-            graph = TP.Context().getViewGraph(target);
+            graph = TP.Context().view[target].getGraph();
 
             var h = svg.attr("height")
             var w = svg.attr("width")
@@ -543,7 +544,7 @@
             var cGraph = null;
             
             svg = TP.Context().view[target].getSvg();
-			cGraph = TP.Context().getViewGraph(target);
+			cGraph = TP.Context().view[target].getGraph();
 				
 			function movingZoom(target){
 	            if (!target)
@@ -728,7 +729,7 @@
 			assert("")
 			
             svg = TP.Context().view[target].getSvg(); //before, it was only svg_substrate
-            graph = TP.Context().tabGraph["graph_"+target];
+            graph = TP.Context().view[target].getGraph();
       
             newLinks = []
             newNodes = []
@@ -744,7 +745,7 @@
                 }
             })
 			
-			var typeGraph = TP.Context().tabType[target];
+			var typeGraph = TP.Context().view[target].getType();
 			
             graph.nodes(newNodes, typeGraph);
             graph.links(newLinks, typeGraph);

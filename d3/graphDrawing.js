@@ -251,7 +251,7 @@
 */
 
             //var glyphR = g.svg.selectAll("g.glyph."+target)
-            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().tabType[target])
+            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().view[target].getType())
                 .append(view_nodes)
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
@@ -674,14 +674,14 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', TP.Context().view[TP.Context().tabAssociationInverted[target]["catalyst"]].getNodesColor())
+                .style('fill', TP.Context().view[target].getAsociated("catalyst")[0].getNodesColor())
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', TP.Context().view[TP.Context().tabAssociationInverted[target]["substrate"]].getNodesColor())
+                .style('fill', TP.Context().view[target].getAsociated("substrate")[0].getNodesColor())
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -695,13 +695,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view[TP.Context().tabAssociationInverted[target]["substrate"]].getLinksColor())
+                .style("stroke", TP.Context().view[target].getAsociated("substrate")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view[TP.Context().tabAssociationInverted[target]["catalyst"]].getLinksColor())
+                .style("stroke", TP.Context().view[target].getAsociated("catalyst")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
         }
 

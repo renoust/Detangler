@@ -46,7 +46,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             var coh = svg.selectAll(".interfaceButton")
                 .data([])
@@ -166,7 +166,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             var btMove = svg.selectAll("rect.moveButton")
                 .data([{
@@ -311,7 +311,7 @@
 
 
         this.addInfoButton = function (target) {
-            var cGraph = TP.Context().getViewGraph(target);
+            var cGraph = TP.Context().view[target].getGraph();
             $("<div/>", {id:"infoView"}).appendTo("#menu-2");
             $("#infoView")[0].innerHTML = "<p>Name: " + target + "</p>";
             $("#infoView")[0].innerHTML += "<p>" + cGraph.nodes().length + " nodes</p>";
@@ -581,7 +581,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             var bt = svg.selectAll("rect." + className)
                 .data([buttonLabel])
@@ -640,7 +640,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             //eval("TP.Context().node_information_" + target + " = !TP.Context().node_information_" + target);
 			//TP.Context().tabNodeInformation[target] = !TP.Context().tabNodeInformation[target];
@@ -677,7 +677,7 @@
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
+            cGraph = TP.Context().view[target].getGraph();
 
             function move() {
                 objectReferences.InterfaceObject.parentNode.appendChild(this);
