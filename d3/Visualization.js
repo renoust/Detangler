@@ -60,7 +60,7 @@
  
             
             var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-            $('#entanglement')[0].style.cssText="background-color:"+ brewerSeq[index]; 
+            $('#bg')[0].style.cssText="background-color:"+ brewerSeq[index]; 
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
                 .transition()
                 .style('fill-opacity', .5)
@@ -378,20 +378,19 @@
 
 
 
-        this.sizeMapping = function (parameter, graphName) {
-
+        this.sizeMapping = function (parameter, graphName, scales) {
             var cGraph = null;
             var svg = null;
+            var scaleMin = null;
+            var scaleMax = null
+            if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.nodeSizeMap(cGraph, 0, parameter);
-            
-    		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
-	          //  objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-	          objectReferences.VisualizationObject.entanglementCaught(graphName);
+            graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
+            objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 

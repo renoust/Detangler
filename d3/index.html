@@ -3,6 +3,7 @@
         <link rel="stylesheet" href="local/jquery-ui.css" type="text/css"/>
         <link rel="stylesheet" href="local/jPicker-1.1.6.min.css" type="text/css"/>
         <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="css/menu.css" type="text/css">
 
         <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
@@ -10,6 +11,7 @@
         <script type="text/javascript" src="local/d3.v3.min.js"></script>
         <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
         <script type="text/javascript" src="local/colorbrewer.js"></script>
+        
         <script type="text/javascript" src="script-test.js"></script>
         <script type="text/javascript" src="assert.js"></script>
         <script type="text/javascript" src="import_class.js"></script>
@@ -28,14 +30,17 @@
                 else
                     return
             }
+            $.fn.jPicker.defaults.images.clientPath='images/';
         </script>
 
         <div id='header'>
-            <button id='undo'> Undo</button><button id='redo'> Redo</button>
-			<div id='header-logo'>TulipPosy</div>
-			<div id='header-input'>
-				<input id='files' type='file' value='Choose a file' class='input-browser'/>
-			</div>
+            <div id='header-content'>
+                <button id='undo'> Undo</button><button id='redo'> Redo</button>
+    			<div id='header-logo'>TulipPosy</div>
+    			<div id='header-input'>
+    				<input id='files' type='file' value='Choose a file' class='input-browser'/>
+    			</div>
+            </div>  
 		</div>
 
         <div id="wrap" class="nosidebar" >

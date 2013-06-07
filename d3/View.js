@@ -277,6 +277,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 	    //TP.Context().activeView = ID;
 	    //console.log('-->'+target);
+	    
 	
 	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=600; }
 	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
@@ -286,7 +287,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    /****  création du dialog ****/
 	    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
 	
-	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("#container");
+	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("html");
 	
 	    var dialog = $("[id=zone" + ID + "]");
 	    //console.log(dialog);
@@ -316,9 +317,14 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        TP.Context().stateStack[ID].executeCurrentState();
 	    });
 		        
+	    
+
 	    dialog.parent().click(function(){ 
 	        TP.Context().activeView = ID;
 	        console.log(TP.Context().activeView);
+	        TP.Context().InterfaceObject.interactionPane(bouton,'update')
+        	TP.Context().InterfaceObject.addInfoButton(__g__);
+        	/*
 	        var num = 0;
 	        $(".arrayButtons").remove();
 	
@@ -347,19 +353,19 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            })(i);
 	            num++;
 	        }
-	 		
+	 		*/
 	 		//var colorNode = TP.Context().tabNodeColor[target];
 	 		//var colorLink = TP.Context().tabLinkColor[target];
 	 		//var colorBg = TP.Context().tabBgColor[target];
 	 		//console.log(colorNode);
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
-	        
+	        console.log($.jPicker.List[0])
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
 
-	        TP.ObjectReferences().Interface().addInfoButton(ID);
+	        //TP.ObjectReferences().Interface().addInfoButton(ID);
 	    });
 	
 	    titlebar.dblclick(function() {
@@ -416,7 +422,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            
 	            if(typeView == "substrate"){
 	           		//objectReferences.InteractionObject.addZoom(target);
-	                TP.Interface().addEntanglementFeedback(ID);
+	                //TP.Interface().addEntanglementFeedback(ID);
 	           }
 	            TP.Context().stateStack[ID] = new TP.States();
 	            TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));

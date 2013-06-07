@@ -59,7 +59,7 @@
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
             // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
-            $("<div/>", {
+           /* $("<div/>", {
                 id:"entanglement",
                 style:"background-color: #fdd0a2;"
             }).appendTo("#menu-2");
@@ -69,7 +69,7 @@
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
                 "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p>";
 
-            
+            */
             /*var cGraph = null
             var svg = null
 
@@ -311,11 +311,14 @@
 
 
         this.addInfoButton = function (target) {
-            var cGraph = TP.Context().view[target].getGraph();
-            $("<div/>", {id:"infoView"}).appendTo("#menu-2");
-            $("#infoView")[0].innerHTML = "<p>Name: " + target + "</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.nodes().length + " nodes</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.links().length + " links</p>";
+            var cGraph = target.getGraph();
+             var zone = '#infoView'
+             document.getElementById('infoView').innerHTML = ''
+             $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
+            $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
+            $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
+
+            
 
             /*
             var cGraph = null
@@ -824,7 +827,7 @@
 
         // gestion du menu à gauche
         
-        this.createMenu = function(nbPane){
+        /*this.createMenu = function(nbPane){
             for(i=0; i<nbPane; i++)
                 this.addPane();
         }
@@ -845,14 +848,84 @@
                 style:"top:"+40*menuNum+"px;",
             }).appendTo("#menu-"+menuNum);
             
+        }*/
+
+        this.addPanelMenu = function(header){
+            menuNum =contxt.menuNum++;
+            $("<div/>", {
+                "class": "cont",
+                id: "menu-"+menuNum,
+            }).appendTo("#wrap");
+
+            $("<span/>", {
+                "class": "toggleButton",
+                id: "toggleBtn"+menuNum,
+                text: ">",
+                style:"top:"+40*menuNum+"px;",
+            }).appendTo("#menu-"+menuNum);
+
+            $('<div/>', {
+                class:'header-menu', 
+                text:header
+            }).appendTo('#menu-'+menuNum);
+
+            $('<div/>',{
+                id:'menu'+menuNum+'-content',
+                class:'menu-content',
+            }).appendTo('#menu-'+menuNum)
+            
+            return 'menu-'+menuNum;
+        }
+
+        this.interactionPane = function(buttons, mode){
+            var menu, content;
+            if(mode==='update'){
+                for(var i=0; i<contxt.menuNum;i++){
+                    if($('.header-menu').eq(i).text()==='Interactions'){
+                        menu = '#' + $('.header-menu').eq(i).parent().attr('id')
+                        content = $('.header-menu').eq(i).siblings('.menu-content')
+                        document.getElementById(content.attr('id')).innerHTML = ''
+                    }
+                }
+            }else if(mode==='create'){
+                menu = this.addPanelMenu('Interactions');
+                content = $("#"+menu +" .menu-content");
+                content.accordion({
+                    collapsible:true,
+                    active:false,
+                    heightStyle:'content'
+                });
+            }
+            this.createArrayButtons(buttons, content.attr('id'));
+        }
+
+        this.infoPane = function(){
+            var menu = this.addPanelMenu('Informations');
+            var content = $("#"+menu +" .menu-content");
+
+            $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
+
+
+            document.getElementById(menu).innerHTML += 
+                "<div id='entanglement-cont'>"+
+                    "<div id='bg'></div>"+
+                    "<div id='entanglement'><p>Entanglement:</br>" + 
+                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
+                "</div>"
+
+            //affichage par défaut
+            //this.addInfoButton(contxt.activeView);
         }
 
 
-        this.apiVisu = function(pane){
+        this.visuPane = function(pane){
+            var menu = this.addPanelMenu('');
+            var content = $("#"+menu +" .menu-content");
 
-            $("<div/>", {id: "visu", style:"padding:10"}).appendTo("#"+pane);
+      
 
-            var visu = $("#visu")[0];
+            var visu = content[0];
             var view = TP.Context().activeView;
             visu.innerHTML += 
                 "Nodes: </br>" +
@@ -861,8 +934,11 @@
                     "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
                 "Background: </br>" +
                     "<span id='colorBg'></span> <span id='test' ></span> </br>"+
-                     "<button id='apply'>Apply</button> </br>";
-            $.fn.jPicker.defaults.images.clientPath='images/';
+                     "<button id='apply'>Apply</button> </br>"/*+
+                "Labels: </br>" +
+                    "<span id='colorLabel'></span> </br>"+
+                     "<button id='apply'>Apply</button> </br>"*/;
+            
            $('#colorNode').jPicker({
                 window:{
                     expandable: true, 
@@ -882,8 +958,16 @@
                     position:{x:250, y:0},
                 }
             });
-           console.log("-->"+TP.Context().activeView);      
+           /*$('#colorLabel').jPicker({
+                window:{
+                    expandable: true,
+                    position:{x:250, y:0},
+                }
+            });  */  
             $('#apply').click(function(){
+                /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
+                console.log(contxt.labelColor)*/
+
                     TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));
@@ -894,6 +978,115 @@
             
 
         }
+
+        this.createElement = function(balise, attributes,  parentId, labelPrec, labelSuiv){
+            if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
+            var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
+            if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
+            return elem;
+        }
+        this.createForm = function(menuPane, id, title, tab, event){
+
+            if (tab!=''){
+                var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
+                this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
+                for (var i = 0; i < tab.length; i++) {
+                    this.createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
+                    this.createElement('br', null, '#'+id)
+                }
+
+                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
+                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
+
+            }else{
+                var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
+                elem.click(event.click)
+                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
+            }
+
+            $('#'+menuPane).accordion('refresh')
+        }
+
+        this.createArrayButtons = function(tab, pane){
+            for(var i=0; i<tab.length; i++){
+                this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
+            }
+                $( "#sizemap" ).slider({ 
+                    range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 3, 12 ],
+                    change: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    },
+                    slide: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    }
+                });
+        }
+
+        this.callbackMenu = function(param, event){
+        var res = {}
+        var key = null;
+        var val = null;
+        var btn = $(param);
+        // console.log(btn.siblings('input'))
+        // console.log(btn.siblings('input[type="text"]')[0].name)
+        // console.log(btn.siblings('input[type="text"]')[0].value)
+
+        var data = btn.siblings("input[type='radio']:checked")
+        data.each(function(){
+            key = btn.attr('name');
+            res[key] = btn.val();
+        })
+
+        data = btn.siblings('.ui-spinner')
+        data.each(function(){
+            key = btn.children('input').attr('name');       
+            val = btn.children('input')[0].value
+            res[key] = val;
+        })
+
+        data = btn.siblings("input[type='checkbox']:checked")
+        data.each(function(){
+
+            key = btn.attr('name');
+            if (res[key]==null)         
+                res[key] = btn.val();
+            else
+                res[key] += ", "+btn.val();
+        })
+
+        data = btn.siblings("input[type='text']")
+        for(var i=0; i<data.length; i++){
+            key = data[i].name;
+            val = data[i].value;
+            res[key] = val;
+        }
+
+        data = btn.siblings('.slider');
+        var data2 = btn.siblings('.slider');
+        console.log(data)
+        for(var i=0; i<data.length; i++){
+            key = 'valMin'+i
+            val = data.eq(i).slider("values",0);
+            res[key] = val;
+            key = 'valMax'+i
+            val = data.eq(i).slider("values",1);
+            res[key] = val;
+        }
+        //console.log(res)
+
+        event.call(res)
+        
+        }
+
         return __g__;
 
     }
