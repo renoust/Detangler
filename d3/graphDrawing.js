@@ -61,7 +61,11 @@
                 var rectTarget = dragTarget.select("rect.node");
                 var currentNode = dragTarget.data()[0]
 
-                var labelTarget = g.svg.select("text.node"+currentNode.baseID); 
+                var labelTarget = g.svg.select("text.node"+currentNode.baseID);
+
+                console.log("node num : " + currentNode.baseID + " : ")
+                console.log(labelTarget);
+
 
                 if(tabb[1] == null)
                 {
@@ -158,6 +162,7 @@
                         tab[2] = tab[0].data()[0].y;
                         tab[3] = tab[0].data()[0].currentX;
                         tab[4] = tab[0].data()[0].currentY;
+
                         undo = function(){console.log(tab); move(tab);} 
                   })
             .on("drag", function(d){
@@ -183,6 +188,7 @@
                   })
             .on("dragend", function(){
                         console.log("mouseDown, mouseDown");
+                        //g.arrangeLabels();
                         //if(saveUndo == 1){
                             
                             TP.Context().changeStack.addChange("moveSommet", undo, redo);
@@ -210,7 +216,7 @@
             })                
             .append("g")
             .attr("class", function (d) {
-                return d._type
+                return d._type;
             })
             .classed("glyph", true)
 
@@ -302,6 +308,9 @@
             //.attr('unselectable', 'on')
             //.on('selectstart', function(){return false;})
             			.text(function(d) { return d.label; });
+
+
+            g.arrangeLabels();
             
         }
         
@@ -315,7 +324,7 @@
 			return;
             //console.log("drawLabels " + g.svg.attr("id"));
 			
-            var labelNode = g.svg.selectAll("g.text")
+            var labelNode = g.svg.selectAll("text.node")
                 .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
                 .attr("class", function(d){return d._type})
                 .classed("text", true)
@@ -331,7 +340,9 @@
                 .style("stroke-width", 0.5)
                 .style("font-family", "Arial")
                 .style("font-size", 12)
-                .text(function(d) { return d.label; });         	
+                .text(function(d) { return d.label; });
+
+            g.arrangeLabels();     	
 		}
         
         
@@ -383,11 +394,6 @@
         			//console.log("res:", d.x, d.y)
         		}
         	);
-
-        	var data = {}
-        	data.nodes = g.cGraph.nodes();
-        	data.links = g.cGraph.links();
-        	//console.log("Graph data: " + data);
 
         	//g.rescaleGraph(contxt,data);
         	g.move(g.cGraph,0);
@@ -458,6 +464,9 @@
         // and associate 
         // the new x and y values (d3 does the transition) 
         g.move = function (_graph, dTime) {
+
+            assert(true, "que le move soit avec toi (maitre Yoda)");
+
             g.cGraph = _graph
 
             var node = g.svg.selectAll("g.node")
@@ -496,7 +505,7 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
-					assert(false, "edge does not match or isn't bounded")
+					//assert(false, "edge does not match or isn't bounded")
                     //console.log(d)                 	
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
@@ -903,7 +912,7 @@
             var link = g.svg.selectAll("g.link").data([])
             link.exit().remove()
                 
-            var label = g.svg.selectAll("g.text").data([])
+            var label = g.svg.selectAll("text").data([])
             label.exit().remove()
         }
 

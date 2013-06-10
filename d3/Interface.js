@@ -683,6 +683,7 @@
             cGraph = TP.Context().view[target].getGraph();
 
             function move() {
+
                 objectReferences.InterfaceObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
                 var currentPanel = dragTarget.data()[0]

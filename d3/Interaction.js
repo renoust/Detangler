@@ -550,14 +550,16 @@
 	            if (!target)
 	                 return
 	
-				var data_translation = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+				var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+				
+				data_translation = [translation_tab[0],translation_tab[1]]
 	                
 	            svg.call(d3.behavior.drag()
                     .on("drag", function (){
 					
 	                if (!TP.Context().view[target].getMoveMode())	           
                         return;
-	              	               
+	              	        
 	                data_translation[0] = d3.event.dx + data_translation[0];
 	                data_translation[1] = d3.event.dy + data_translation[1];
 	               
@@ -565,14 +567,53 @@
 	                
 	                nodeDatum.forEach(function (d) {
 	                    d.currentX = (d.x + data_translation[0]);
-	                    d.currentY = (d.y + data_translation[1]);
+	                    d.currentY = (d.y + data_translation[1]); 
 	                });
 	                
-	               svg.selectAll("g.node,g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
+	                
+	               svg.selectAll("rect")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("x", function(d){return d.currentX})
+	               .attr("y", function(d){return d.currentY})
+	               
+	               svg.selectAll("circle")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("cx", function(d){return d.currentX})
+	               .attr("cy", function(d){return d.currentY})
+	               
+	               svg.selectAll("text.node")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("dx", function(d){return d.currentX})
+	               .attr("dy", function(d){return d.currentY})	               
+	               
+	               
+	               svg.selectAll("g.link")
+                  	.data(cGraph.links(),function(d){return d.baseID})
+                   	.select("path")
+                    .attr("d", function(d) {
+                       	return "M"+d.source.currentX+" "+d.source.currentY+" L"+d.target.currentX+" "+d.target.currentY; 
+                    })
+	                
+	               //svg.selectAll("g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
 	               //eval("TP.Context().data_translation_"+target+" = data_translation;");
 	               //TP.tabDataTranslation[target] = data_translation;
-	               TP.Context().view[target].setDataTranslation(data_translation);
-                }));
+	               //TP.Context().view[target].setDataTranslation(data_translation);
+                })
+                .on("dragend", function(){
+					
+					assert(true, "tutu");
+					
+					var nodeDatum = svg.selectAll("g.node").data()
+	                
+	                nodeDatum.forEach(function (d) {
+	                   d.x = d.currentX;
+	                   d.y = d.currentY; 
+	                });
+	                
+	                data_translation = [0,0];
+				})
+                
+                );
        		}
 
        		
@@ -594,8 +635,10 @@
 				
 				var node = svg.selectAll("g.node")
                     .data(cGraph.nodes(),function(d){
-                   	    d.x = ((((d.x+data_translate[0])-mouseOrigin[0])*scale)+mouseOrigin[0])-data_translate[0];
-                        d.y = ((((d.y+data_translate[1])-mouseOrigin[1])*scale)+mouseOrigin[1])-data_translate[1];
+                    	d.x = d.currentX;
+                    	d.y = d.currentY;
+                   	    d.x = ((((d.x)-mouseOrigin[0])*scale)+mouseOrigin[0]);
+                        d.y = ((((d.y)-mouseOrigin[1])*scale)+mouseOrigin[1]);
                         d.currentX = d.x;
                    	    d.currentY = d.y;
                    	    return d.baseID;
@@ -604,16 +647,12 @@
                         			
                 node.select("circle")
                    	.attr("cx", function(d){
-                        d.currentX = d.x;
-                   		d.currentY = d.y;
                    		return d.x;
                     })
                    	.attr("cy", function(d){return d.y;})
                                 	
                 node.select("rect")
                    	.attr("x", function(d){
-                        d.currentX = d.x; 
-                		d.currentY = d.y;
                 		return d.x;
                     })
                     .attr("y", function(d){return d.y;})
@@ -628,22 +667,19 @@
                                 							
                 var label = svg.selectAll("text.node")
                 	.data(cGraph.nodes(),function(d){
-                        d.currentX = d.x; 
-                        d.currentY = d.y; 
                         return d.baseID;
                     })
                    	.transition().delay(time)
 
                //label.select("text")
                		.attr("dx", function(d){
-                        d.currentX = d.x; 
-                      	d.currentY = d.y;
                        	return d.x;
                     }) 
-                    .attr("dy", function(d){return d.y;})                    
+                    .attr("dy", function(d){return d.y;}) 
+                                      
                 event.preventDefault();
 			});	
-			svg.on("mousedown", movingZoom(target));
+			svg.on("drag", movingZoom(target));
 		}
 
 
