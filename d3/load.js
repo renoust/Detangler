@@ -30,11 +30,11 @@ document.getElementById('files').addEventListener('change', function (e) {
 
     xhr.onreadystatechange = function (e) {
         if (4 == this.readyState && this.status == 200) {
-            console.log(['xhr upload complete', e]);
+            console.log(['xhr upload complete', e]);/*
             remove("svg_substrate");
             remove("svg_combined");
             remove("svg_catalyst");
-            remove("svg_combined");
+            remove("svg_combined");*/
 
             TulipPosy({file: xhr.responseText})
         }

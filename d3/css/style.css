@@ -1,0 +1,130 @@
+/********************************* General ***********************************/
+*{
+	font-size: 1em;
+}
+
+body{
+	margin:0px;
+}
+
+/********************************** Body *************************************/
+#wrap{
+	overflow: hidden;
+	position: absolute;
+	height:97%;
+	width: 100%;
+	top:30px;
+}
+/********************************* Header ************************************/
+
+#header{
+	background: #3f3f3f;
+	border: 1px solid black;
+	height:30px;
+
+	color: white;
+}
+
+#header-content{
+	position: absolute;
+	left:30px;
+	right:0px;
+	height:28px;
+}
+
+#header-logo{
+	display:inline-block;
+	margin-right:12%;
+
+	font-family: "Caslon";
+	font-style: italic;
+	font-size:1.5em;
+}
+/*
+#menu-header{
+	display: inline-block;
+}
+.ui-menu{
+	width:100px;
+	font-size:12px;
+	min-height:22px;
+	
+}
+ul#menu{
+	width:500px; 
+}
+ul#menu > li {
+	width:100px; 
+	float:left; 
+}
+*/
+#header-input{
+	display:inline-block;
+}
+
+.input-browser {
+	width: 100%;
+	color:#332211;
+}
+
+
+/******************************** Workspace **********************************/
+#container {
+	padding-left: 15px;
+	height: 100%;
+	bottom: 0px;
+	border:1px solid #666666;
+	background:#F0F0F0;
+}
+
+
+/********************************** View *************************************/
+
+/* hide close button on the dialog window */
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
+
+.ui-dialog .ui-dialog-titlebar button {
+	height: 20;
+	font-size: 11px;
+	float:right;
+}
+/*.ui-widget .ui-widget{
+	font-size: 11px;
+	float:right;
+}*/
+.ui-dialog .ui-dialog-title {
+	width: auto ;
+	font-size: 12px
+}
+
+.ui-dialog{
+	padding: 1px;
+}
+
+.ui-dialog .ui-dialog-content{
+	padding:2px;
+}
+
+.ui-dialog .ui-dialog-titlebar{
+	padding:0 10 0 10;
+}
+.ui-dialog .ui-dialog-titlebar button{
+	height: 20;
+}
+
+/***************************** Information zone ******************************/
+
+
+
+@font-face {
+    font-family: 'EntypoRegular';
+    src: url('../font/entypo-webfont.eot');
+    src: url('../font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/entypo-webfont.woff') format('woff'),
+         url('../font/entypo-webfont.ttf') format('truetype'),
+         url('../font/entypo-webfont.svg#EntypoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
