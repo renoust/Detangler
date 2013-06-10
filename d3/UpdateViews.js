@@ -43,7 +43,9 @@
             cGraph.nodes(data.nodes, typeGraph);
             cGraph.links(data.links, typeGraph);
             cGraph.edgeBinding();
-            graph_drawing.move(cGraph, 0);
+            //graph_drawing.move(cGraph, 0);
+            graph_drawing.clear()
+            graph_drawing.draw();
             objectReferences.VisualizationObject.rescaleGraph(data);
 
             var newGraph = JSON.parse(data.data.graph);
@@ -143,12 +145,14 @@
 
         	var typeGraph = TP.Context().view[target].getType();
         	
-            TP.Context().tabGraph["graph_"+target].nodes(data.nodes, typeGraph) //substrate
-            TP.Context().tabGraph["graph_"+target].links(data.links, typeGraph) //substrate
-            TP.Context().tabGraph["graph_"+target].edgeBinding() //...
-            graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_"+target], TP.Context().view[target].getSvg(), target)
+            TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph) //substrate
+            TP.Context().view[target].getGraph().links(data.links, typeGraph) //substrate
+            TP.Context().view[target].getGraph().edgeBinding() //...
+            graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target)
             assert(true, "graphDrawing created") 
-            graph_drawing.move(TP.Context().tabGraph["graph_"+target], 0)
+            //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
+            graph_drawing.clear();
+            graph_drawing.draw();
             assert(true, "moved") 
 
 
@@ -199,7 +203,10 @@
             //graph.links(data.links, graphName);
             //graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
-            graph_drawing.move(graph, 0);
+            //graph_drawing.move(graph, 0);
+            graph_drawing.clear()
+            graph_drawing.draw()
+
         }
 
 
@@ -220,13 +227,19 @@
 
 
         this.applyFloatAlgorithmFromData = function (data, graphName) {
-
-
+			
+			window.toutou = data;
+			
+			console.log(data);
+			
 			//assert(true, "here");;
 			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
 			//assert(true, "there");
 			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
 			//assert(true, "again");
+			
+			console.log(TP.Context().view[graphName].getGraph().nodes());
+			
 
 			//data.nodes.forEach(function(d){console.log(d)});
 			//TP.Context().getViewGraph(graphName).nodes().forEach(function(d){console.log(d)});

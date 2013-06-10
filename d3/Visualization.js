@@ -105,6 +105,9 @@
 
 
             function move() {
+
+                assert(true, "toto = titi")
+
                 objectReferences.VisualizationObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
                 var currentPanel = dragTarget
@@ -117,6 +120,7 @@
                 var newX = parseInt(panelPos[0]) + posX
                 var newY = parseInt(panelPos[1]) + posY
 
+                console.log(panelPos);
 
                 dragTarget.attr("transform", function (d) {
                     d.panelPosX = newX;
@@ -310,11 +314,7 @@
                     return "visible";
                 });
                 svg.select('text.showHideLabels').text('hide labels');
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = false;
-                    return null;
-                })
-                .on("mouseout", null);
+                
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     if (d.selected || d.labelVisibility) {
@@ -326,21 +326,6 @@
                     }
                 });
                 svg.select('text.showhideLabels').text('show labels');
-
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = true;
-                    d3.select(this)
-                        .select("text.node")
-                        .attr("visibility", "visible");
-                })
-                .on("mouseout", function (d) {
-                    if (!d.labelVisibility) {
-                        d.mouseOver = false;
-                        d3.select(this)
-                            .select("text.node")
-                            .attr("visibility", "hidden");
-                    }
-                });
             }
         }
 

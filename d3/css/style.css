@@ -1,8 +1,8 @@
 /********************************* General ***********************************/
-*{
+/**{
 	font-size: 1em;
 }
-
+*/
 body{
 	margin:0px;
 }
@@ -94,6 +94,10 @@ ul#menu > li {
 	font-size: 11px;
 	float:right;
 }*/
+
+.ui-dialog{
+	font-size: 0.8em;
+}
 .ui-dialog .ui-dialog-title {
 	width: auto ;
 	font-size: 12px

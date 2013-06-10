@@ -95,7 +95,9 @@ var TulipPosy = function (originalJSON) {
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
         ['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
-        ['b16','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}]
+        ['b16','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}],
+        ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}],
+
     ]
 
     var combinedarray = [
