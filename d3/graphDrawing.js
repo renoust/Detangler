@@ -20,7 +20,7 @@
 	import_class('context.js', 'TP');
 	import_class('objectReferences.js', 'TP');
 	
-    var GraphDrawing = function (_graph, _svg) {
+    var GraphDrawing = function (_graph, _svg, target) {
 
         // g, the return variable
         // cGraph, the current graph
@@ -36,7 +36,8 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-            g.drawNodes()
+            
+            g.drawNodes(TP.Context().view[target].getViewNodes());
             g.drawLabels()
         }
 
@@ -47,7 +48,7 @@
         // mouseover, mouseout)
         // to each group are added an svg:circle (placed according to the node 
         // property x and y) and an svg:text printing the node property label
-        g.drawNodes = function () {
+        g.drawNodes = function (view_nodes) {
 
             var saveUndo = 0;
             var undo = null;
@@ -177,14 +178,14 @@
                     tab2[4] = tab2[0].data()[0].currentY;
                     
                     redo = function(){console.log(tab2); move(tab2);}           
-                    //contxt.changeStack.addChange("moveSommet", undo, redo);      
+                    //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
           
                   })
             .on("dragend", function(){
                         console.log("mouseDown, mouseDown");
                         //if(saveUndo == 1){
                             
-                            contxt.changeStack.addChange("moveSommet", undo, redo);
+                            TP.Context().changeStack.addChange("moveSommet", undo, redo);
                             undo = null;
                             redo = null;
                             saveUndo = 0;                   
@@ -214,13 +215,13 @@
             .classed("glyph", true)
 
 
-
+/*
             var glyphR = g.svg.selectAll("g.glyph.substrate")
                 .append("rect")
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("rect", true)
-                .style("fill", contxt.nodeColor_substrate)
+                .style("fill", TP.Context().tabNodeColor["substrate"])
                 .attr("x", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -237,7 +238,7 @@
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed("circle", true)
-                .style("fill", contxt.nodeColor_catalyst)
+                .style("fill", TP.Context().tabNodeColor["catalyst"])
                 .attr("cx", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -247,7 +248,43 @@
                     return d.currentY
                 })
                 .attr("r", 5)
+*/
 
+            //var glyphR = g.svg.selectAll("g.glyph."+target)
+            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().view[target].getType())
+                .append(view_nodes)
+                .attr("class", function (d) {return d._type})
+                .classed("node", true)
+                .classed(view_nodes, true)
+                .style("fill", TP.Context().view[target].getNodesColor())
+
+			if(view_nodes == "rect" && glyphR != null)
+			{
+				assert(true, "rect")
+				glyphR.attr("x", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                .attr("y", function (d) {
+                    d.currentY = d.y;
+                    return d.currentY
+                })
+                .attr("width", 2 * 5)
+                .attr("height", 2 * 5)		
+			}
+			if(view_nodes == "circle" && glyphR != null)
+			{
+				assert(true, "circle");
+                glyphR.attr("cx", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                .attr("cy", function (d) {
+                    d.currentY = d.y;
+                    return d.currentY
+                })
+                .attr("r", 5)												
+			}
                  
             var selection = g.svg.selectAll("text.node")
             //var selection = g.svg.selectAll("g.node")
@@ -409,7 +446,7 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", contxt.linkColor_catalyst)
+                .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
@@ -471,8 +508,10 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
-                    //assert(false, "edge does not match or isn't bounded")
-                    //console.log(d)
+
+					assert(false, "edge does not match or isn't bounded")
+                    //console.log(d)                 	
+
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -494,9 +533,10 @@
                 .attr("dy", function(d){return d.y});
              
              //console.log("arrangeLabels after GraphDrawing.move()");
-            //assert(true, "arranging labels")
-            g.arrangeLabels();
-            //assert(true, "OVER!")
+
+             //assert(true, "arranging labels")
+             g.arrangeLabels();
+
 
         }
 
@@ -514,7 +554,8 @@
 
 
         g.nodeSizeMap = function (_graph, dTime, params) {
-           g.cGraph = _graph
+            g.cGraph = _graph
+
 
             var scaleMin = 3.0
             var scaleMax = 12.0
@@ -523,8 +564,9 @@
             if(params.metric) parameter = params.metric;
             if(params.scaleMin) scaleMin = params.scaleMin;
             if(params.scaleMax) scaleMax = params.scaleMax;
-            if (parameter == "")
-                return
+
+            if (parameter == "") return
+
 
             var valMin = null
             var valMax = null
@@ -538,7 +580,8 @@
             });
 
             //linear
-            if (valMax == valMin || valMax - valMin < 0.0001) {scaleMin = 5} 
+           if (valMax == valMin || valMax - valMin < 0.0001) {scaleMin = 5}
+
 
             var dom = [valMin, valMax]
             var range = [scaleMin, scaleMax]
@@ -548,7 +591,8 @@
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
 
             node.select("circle.node").attr("r", function (d) {
-                return scale(eval('d.' + parameter))
+                return scale(eval('d.' + parameter));
+
             })
             node.select("rect.node")
                 .attr("width", function (d) {
@@ -559,7 +603,10 @@
                 })
 
             var link = g.svg.selectAll("g.link")
-                .data(g.cGraph.links(), function (d) {return d.baseID})
+
+                .data(g.cGraph.links(), function (d) {return d.baseID})               
+
+
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
         }
@@ -589,8 +636,6 @@
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
-                // .transition()
-                // .delay(dTime)
 
             node.select("g.glyph")
                 .select(".node")
@@ -601,8 +646,6 @@
 
             var link = g.svg.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {return d.baseID})
-                // .transition()
-                // .delay(dTime)
 
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
@@ -637,19 +680,22 @@
             }
         }
 /********************************** ON GOING ***********************************/
-
-		g.resetDrawing = function(){           
+		//never used. Then there is still "substrate", "catalyst" etc.
+		g.resetDrawing = function(){
+			
+			assert(true, "resetDrawing")
+			
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', contxt.nodeColor_catalyst)
+                .style('fill', TP.Context().view[target].getAsociated("catalyst")[0].getNodesColor())
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', contxt.nodeColor_substrate)
+                .style('fill', TP.Context().view[target].getAsociated("substrate")[0].getNodesColor())
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -663,13 +709,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_substrate)
+                .style("stroke", TP.Context().view[target].getAsociated("substrate")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_catalyst)
+                .style("stroke", TP.Context().view[target].getAsociated("catalyst")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
         }
 
@@ -693,36 +739,32 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph")
-                .select("circle.node")
-                .style('fill', contxt.nodeColor_catalyst)
-                .attr('r', 5)
+                .select(TP.Context().view[target].getViewNodes()+".node")
+                .style('fill', TP.Context().view[target].getNodesColor())
+                
+            if(TP.Context().view[target].getViewNodes() == "circle")
+            {                
+                node.attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
-
-            var node = g.svg.selectAll("g.node")
-                .select("g.glyph")
-                .select("rect.node")
-                .style('fill', contxt.nodeColor_substrate)
-                .attr('width', 2 * 5)
+			}
+			if(TP.Context().view[target].getViewNodes() == "rect")
+			{
+                node.attr('width', 2 * 5)
                 .attr('height', 2 * 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
+           }
 
             var node = g.svg.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "hidden")
-
+                               
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", contxt.linkColor_substrate)
+                .style("stroke", TP.Context().view[target].getLinksColor())
                 .style("stroke-width", function (d) {return 1;})
-
-            var link = g.svg.selectAll("g.link")
-                .style("opacity", .25)
-                .select("path.link")
-                .style("stroke", contxt.linkColor_catalyst)
-                .style("stroke-width", function(d) { return 1;})
 
             //we would like it better as a parameter
             var scaleMin = 3.0
@@ -756,20 +798,14 @@
             // assign the new data
             var node = g.svg.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                // .transition()
-                // .delay(500)
                 .style("opacity", 1)
 
             var link = g.svg.selectAll("g.link")
                 .data(_graph.links(), function (d) {return d.baseID})
-                // .transition()
-                // .delay(500)
                 .style("opacity", 1)
 
 			var label = g.svg.selectAll("g.text")
                 .data(_graph.nodes(), function (d) {return d.baseID})
-                // .transition()
-                // .delay(500)             
                 .style("opacity", 1)
 
             // update the nodes
@@ -866,8 +902,7 @@
                 return false;
             }
 
-            var labels = g.svg.selectAll("text.node")
-                .attr("visibility", "visible");
+            var labels = g.svg.selectAll("text.node").attr("visibility", "visible");
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")
@@ -899,10 +934,8 @@
                         ];
 
                         noChange = false;
-                        for (var iLabel2 = iLabel + 1; 
-                                iLabel2 < iterArray.length; iLabel2++) {
-                            if (labelsArray[iLabel2].attr("visibility") 
-                                    == "visible") {
+                        for (var iLabel2 = iLabel + 1; iLabel2 < iterArray.length; iLabel2++) {
+                            if (labelsArray[iLabel2].attr("visibility")  == "visible") {
                                 var bbox2 = iterArray[iLabel2];
                                 var polygon2 = [
                                     [bbox2.x - margin, bbox2.y - margin],
@@ -913,12 +946,9 @@
                                     [bbox2.x + bbox2.width + margin, bbox2.y 
                                         + bbox2.height + margin],
                                 ];
-                                for (var iPoint = 0; iPoint < polygon2.length
-                                     && !noChange; iPoint++) {
-                                    if (intersect([polygon[0], polygon[3]], 
-                                        polygon2[iPoint])) {
-                                        labelsArray[iLabel2].attr("visibility", 
-                                            "hidden");
+                                for (var iPoint = 0; iPoint < polygon2.length && !noChange; iPoint++) {
+                                    if (intersect([polygon[0], polygon[3]], polygon2[iPoint])) {
+                                        labelsArray[iLabel2].attr("visibility", "hidden");
                                         noChange = true;
                                         anyChange = true;
                                         break;
@@ -947,8 +977,8 @@
                 count++
             };
             //console.log("iterated: ", count);
+     
         }
-
 
         g.removeNodeOverlap = function () {
             //fast overlap removal in javascript...

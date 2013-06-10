@@ -45,18 +45,18 @@ body{
 	display: inline-block;
 }
 .ui-menu{
-					width:100px;
-					font-size:12px;
-					min-height:22px;
-					
-				}
-				ul#menu{
-					width:500px; 
-				}
-				ul#menu > li {
-					width:100px; 
-					float:left; 
-				}
+	width:100px;
+	font-size:12px;
+	min-height:22px;
+	
+}
+ul#menu{
+	width:500px; 
+}
+ul#menu > li {
+	width:100px; 
+	float:left; 
+}
 */
 #header-input{
 	display:inline-block;

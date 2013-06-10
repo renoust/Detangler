@@ -19,6 +19,7 @@
 
         this.nodes_array = [];
         this.links_array = [];
+        this.type;
 
         // setter/getter (with/without argument) of the node array 
         // x: an array of nodes
@@ -145,7 +146,6 @@
             for (i = 0; i < m; ++i) {
                 var l = g.links_array[i];
                 //assert(false, "edge")
-                //console.log("source", l.source, "target", l.target)
                 if (typeof l.source == "number") {
                     l.source = o[l._type][l.source];
                 }
