@@ -213,6 +213,7 @@ var TulipPosy = function (originalJSON) {
         var button = $(this);
         
         if(parent.className==='nosidebar'){
+            button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             button.text('<');
             parent.className='sidebar';
             $('.cont').each(function(){
@@ -224,6 +225,7 @@ var TulipPosy = function (originalJSON) {
         else if(parent.className==='sidebar'){
             if(menu.css('z-index')==102){
                 button.text('>');
+                button.css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 parent.className = 'nosidebar';
                 $('.cont').each(function(){
                     $(this).css('z-index',0)
@@ -231,10 +233,14 @@ var TulipPosy = function (originalJSON) {
                 })
             }
             else{
-                $('.toggleButton').each(function(){ $(this).text('>') })
+                $('.toggleButton').each(function(){ 
+                    $(this).text('>') 
+                    $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
+                })
                 $('.cont').each(function(){ $(this).css('z-index',101) })
                 menu.css('z-index',102);
                 button.text('<')
+                button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             }
         }
         else console.log('FAIL: toggle panel'); 
