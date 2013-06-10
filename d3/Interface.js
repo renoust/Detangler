@@ -15,9 +15,7 @@
 
     var Interface = function () {
         var __g__ = this;
-
         var contxt = TP.Context();
-
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
@@ -27,7 +25,7 @@
                 .append("xhtml:body")
                 .html("<form><input type=checkbox id=check /></form>")
                 .on("click", function (d, i) {
-                //console.log(svg.select("#check").node().checked);
+                    //console.log(svg.select("#check").node().checked);
                 });
             myinput = svg.append("foreignObject")
                 .attr("width", 300)
@@ -36,8 +34,7 @@
                 .attr("y", 200)
                 .append("xhtml:body")
                 .html("<form><input type=input id=input /></form>")
-
-            //console.log("input created", myinput);
+                //console.log("input created", myinput);
         }
 
 
@@ -49,19 +46,15 @@
             cGraph = TP.Context().view[target].getGraph();
 
             var coh = svg.selectAll(".interfaceButton")
-                .data([])
-                .exit()
-                .remove()
+                .data([]).exit().remove()
         }
 
 
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
-
             // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
-           /* $("<div/>", {
-
+            /* $("<div/>", {
                 id:"entanglement",
                 style:"background-color: #fdd0a2;"
             }).appendTo("#entanglement-cont");*/
@@ -161,7 +154,6 @@
                 .style("font-size", TP.Context().defaultTextSize)
                 */
         }
-
 
 
         // This function adds the graph interactor buttons (move and select) 
@@ -320,17 +312,12 @@
 
 
         this.addInfoButton = function (target) {
-
             var cGraph = target.getGraph();
-             var zone = '#infoView'
-             document.getElementById('infoView').innerHTML = ''
-             $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
+            var zone = '#infoView'
+            document.getElementById('infoView').innerHTML = ''
+            $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
             $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
             $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
-
-            
-
-            
             /*
             var cGraph = null
             var svg = null
@@ -427,9 +414,7 @@
                 .html(function (d) {
                     selectHTMLString = "<form><select id=weightPropSel>"
                     selectHTMLString += " <option value=\"\"><i>--</i></option>"
-
-                    nbElements = Object.keys(TP.Context().substrateProperties)
-                        .length
+                    nbElements = Object.keys(TP.Context().substrateProperties).length
                     Object.keys(TP.Context().substrateProperties)
                         .forEach(function (k, i) {
                             //console.log("props: ", k)
@@ -437,9 +422,7 @@
                                 selectHTMLString += " <option value=\"" + k + "\">" + k + "</option>"
                             }
                         });
-
                     selectHTMLString += "</select></form>"
-
                     return selectHTMLString
                 })
         }
@@ -455,23 +438,19 @@
         // interactors
         // target, the string value of the target svg view
         this.toggleSelectMove = function (target) {
-
-            if (!target)
-                return
+            if (!target) return
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 			
             //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
             //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
-           
             //TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
             //TP.Context().tabMoveMode[target] = !TP.Context().tabMoveMode[target];
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
-            
-            console.log(!TP.Context().view[target].getSelectMode())
-            console.log(!TP.Context().view[target].getMoveMode())
+            //console.log(!TP.Context().view[target].getSelectMode())
+            //console.log(!TP.Context().view[target].getMoveMode())
             
             //if(eval("TP.Context().select_mode_"+target)) {
             
@@ -495,7 +474,6 @@
 
         this.addSettingsButton = function (target) {
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
-
             svg = TP.Context().view[target].getSvg();
             posSettings_x = TP.Context().width - 30
             posSettings_y = 30
@@ -944,7 +922,7 @@
 
         }
 
-        this.infoPane = function(){
+       /** this.infoPane = function(){
             var menu = this.addPanelMenu('Informations');
             var content = $("#"+menu +" .menu-content");
 
@@ -952,7 +930,7 @@
             //affichage par défaut
             //this.addInfoButton(contxt.activeView);
 
-        }
+        }*/
         this.visuPane = function(pane){
             var menu = this.addPanelMenu('');
             var content = $("#"+menu +" .menu-content");
@@ -1132,6 +1110,16 @@
             event.call(res)
         
         }
+
+
+
+
+
+
+
+
+
+
 
         return __g__;
 
