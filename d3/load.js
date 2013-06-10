@@ -4,7 +4,7 @@
  * @created May 2012
  ***********************************************************************/
 
-var url = 'http://localhost:8085'
+var url = document.URL
 var xhr = new XMLHttpRequest();
 
 // uploads the file and send it to TulipPosy

@@ -104,10 +104,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         isArg = [True for a in args if a != ""]
         if uri == "" and not isArg:
             self.render(self.currentPath+"index.html")
-        
-        if uri == "favicon.ico" or arg == "favicon.ico":
-            print "ignoring icon"
-        
+                
         '''
         if uri in fileList:
             f = open(self.currentPath+uri, 'r')

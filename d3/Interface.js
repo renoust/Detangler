@@ -79,7 +79,6 @@
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
                 "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";*/
 
-            */
             /*var cGraph = null
             var svg = null
 
