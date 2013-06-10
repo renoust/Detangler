@@ -335,7 +335,7 @@
         }
 
 
-        this.syncLayouts = function (async) {
+        this.syncLayouts = function (currentGraph, async) {
         	
         	assert(true, "syncLayouts");
         	
@@ -356,7 +356,7 @@
                 parameters: params,
                 async:async,
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
-                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, "substrate")}
+                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)}
             });
         };
 

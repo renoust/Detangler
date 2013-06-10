@@ -1,4 +1,5 @@
 /************************************************************************
+ * @file updateViews.js
  * This module updates the graph views by drawing a new graph from a 
  * given set of data
  * @requires d3.js
@@ -22,52 +23,64 @@
         var objectReferences = TP.ObjectReferences();
 
 
-        this.syncLayoutsFromData = function (data, target) {
+        this.syncLayoutsFromData = function (data, viewID) {
         	
+        	var target = viewID;
         	assert(true, "syncLayoutsFromData");
         	
             var cGraph = null;
             var svg = null;
 
-            cGraph = TP.Context().view[target].getGraph(); //substrate before generic code
-            svg = TP.Context().view[target].getSvg(); //substrate...
+            cGraph = TP.Context().view[viewID].getGraph(); //substrate before generic code
+            svg = TP.Context().view[viewID].getSvg(); //substrate...
+
+
 
             // we need to rescale the graph so it will fit the current svg 
             //frame and wont overlap with the buttons
             //console.log("syncLayoutData: ", data.data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, target); //substrate before generic code
+            var graph_drawing = TP.GraphDrawing(cGraph, svg, viewID); //substrate before generic code
+
             //graph_drawing.rescaleGraph(contxt,data);
-            var typeGraph = TP.Context.view[target].getType();
+            var typeGraph = TP.Context().view[viewID].getType();
             
+
             cGraph.nodes(data.nodes, typeGraph);
             cGraph.links(data.links, typeGraph);
             cGraph.edgeBinding();
+
             graph_drawing.move(cGraph, 0);
             objectReferences.VisualizationObject.rescaleGraph(data);
+
 
             var newGraph = JSON.parse(data.data.graph);
             var newLinks = newGraph.links;
 			
 			
 			var combinedGraph = null;
-			
-			if(TP.Context().view[target].getAssociatedView("combined")[0].getGraph() != null){
-				var tmp = TP.Context().view[target].getAssociatedView("combined");
+
+			if(TP.Context().view[viewID].getAssociatedView("combined")[0].getGraph() != null){
+				var tmp = TP.Context().view[viewID].getAssociatedView("combined");
 				combinedGraph = tmp[0].getGraph();
 			}
 			
-            combinedGraph.nodes(TP.Context().tabGraph["graph_substrate"].nodes(), "substrate");
-            combinedGraph.addNodes(TP.Context().tabGraph["graph_catalyst"].nodes());
-            combinedGraph.links(newLinks);
-            combinedGraph.specialEdgeBinding("substrate", "catalyst");
-
-            var p1_s = data.data[target][0];
-            var p2_s = data.data[target][1];
+			if(combinedGraph)
+			{
+	            combinedGraph.nodes(TP.Context().tabGraph["graph_substrate"].nodes(), "substrate");
+	            combinedGraph.addNodes(TP.Context().tabGraph["graph_catalyst"].nodes());
+	            combinedGraph.links(newLinks);
+	            combinedGraph.specialEdgeBinding("substrate", "catalyst");
+			}
+			
+            var p1_s = data.data[viewID][0];
+            var p2_s = data.data[viewID][1];
             var p1prime_s;
             var p2prime_s;
 
-            TP.Context().tabGraph["graph_"+target].nodes().forEach(function (d) {
+
+
+            TP.Context().tabGraph["graph_"+viewID].nodes().forEach(function (d) {
                 if (d.baseID == p1_s.baseID) {
                     p1prime_s = d;
                 }
@@ -87,6 +100,7 @@
             var p2_c = data.data['catalyst'][1];
             var p1prime_c;
             var p2prime_c;
+			assert(false, "here 3")
 
 
             TP.Context().tabGraph["graph_catalyst"].nodes()
@@ -108,23 +122,25 @@
             //console.log("delta catalyst points: ", p2prime_c.y, p2_c.y)
             //console.log("delta catalyst: ",scaleX_c,scaleY_c,deltaX_c,deltaY_c)
 
-            TP.Context().tabGraph["graph_combined"].nodes()
-                .forEach(function (nprime) {
-                if (nprime._type == target) {
-                    var newX = ((nprime.x-deltaX_s)/scaleX_s)*scaleX_c+deltaX_c;
-                    nprime.x = newX;
-                    var newY = ((nprime.y-deltaY_s)/scaleY_s)*scaleY_c+deltaY_c;
-                    nprime.y = newY;
-                };
-            });
+			if(combinedGraph)
+			{
+	            TP.Context().tabGraph["graph_combined"].nodes()
+	                .forEach(function (nprime) {
+	                if (nprime._type == viewID) {
+	                    var newX = ((nprime.x-deltaX_s)/scaleX_s)*scaleX_c+deltaX_c;
+	                    nprime.x = newX;
+	                    var newY = ((nprime.y-deltaY_s)/scaleY_s)*scaleY_c+deltaY_c;
+	                    nprime.y = newY;
+	                };
+	            });
 
-            var graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_combined"], TP.Context().view["combined"].getSvg(), "combined");
-            graph_drawing.clear();
-            graph_drawing.draw();
-
+	            var graph_drawing = TP.GraphDrawing(TP.Context().tabGraph["graph_combined"], TP.Context().view["combined"].getSvg(), "combined");
+	            graph_drawing.clear();
+	            graph_drawing.draw();
+			}
+			
             TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
-            assert(true, "Arrange labels depuis la synchronisation des layouts")
-            TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(target);
+            TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
 			TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst"); 
         }
 
