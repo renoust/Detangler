@@ -350,22 +350,23 @@
         
         // This function rescales the graph data in order to fit the svg window
         // data, the graph data (modified during the function)
-        g.rescaleGraph = function(context,data){
+        g.rescaleGraph = function(graph){
 
+			var node = graph.nodes();
             //console.log("Rescaling the graphe, here is the data: ", data);
             var frame = 10.0
-            var w = context.width-(2*frame)
-            var h = context.height-(2*frame)
+            var w = TP.Context().width-(2*frame)
+            var h = TP.Context().height-(2*frame)
 
-            if (data.nodes.length<=0) 
+            if (node.length<=0) 
                 return
 
-            var Xminmax = d3.extent(data.nodes,function(d){return d.x;});
-       	    var Yminmax = d3.extent(data.nodes,function(d){return d.y;});
+            var Xminmax = d3.extent(node,function(d){return d.x;});
+       	    var Yminmax = d3.extent(node,function(d){return d.y;});
 
             var delta = 0.00000000000000000001 //to avoid division by 0
             scale = Math.min.apply(null, [w/(Xminmax[1]-Xminmax[0]+delta), h/(Yminmax[1]-Yminmax[0]+delta)])
-            data.nodes.forEach(function(d){
+            node.forEach(function(d){
            	    d.x = (d.x-Xminmax[0])*scale+frame; 
            	    d.y = (d.y-Yminmax[0])*scale+frame; 
            	    d.currentX = d.x; 
@@ -397,7 +398,7 @@
         		}
         	);
 
-        	//g.rescaleGraph(contxt,data);
+        	g.rescaleGraph(TP.Context().view[target].getGraph());
         	g.move(g.cGraph,0);
 		}
 

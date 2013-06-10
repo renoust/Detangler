@@ -21,7 +21,7 @@
 		this.viewMeter = 0;
 		
         Context.prototype._singletonInstance = this;
-        this.view = [];
+        this.view = {};
 
         // initialization of the communication address and port        
         // an additional default json file
