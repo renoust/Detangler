@@ -94,7 +94,7 @@ var TulipPosy = function (originalJSON) {
         ['b12','weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
-        ['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
+        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
         ['b16','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}],
         ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}],
 
@@ -205,6 +205,7 @@ var TulipPosy = function (originalJSON) {
 // Event toggle sidebars
 
     $('span.toggleButton').click(function(e){
+
         var src = event.srcElement.parentNode;
         var menuNum = src.id.split('-')[1];
         var menu = $('#menu-'+menuNum);

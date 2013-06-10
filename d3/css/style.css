@@ -79,45 +79,38 @@ ul#menu > li {
 
 
 /********************************** View *************************************/
+.ui-dialog{
+	padding: 1px;
+	font-size: 0.8em;
+}
+
+.ui-dialog .ui-dialog-titlebar{
+	padding:0 10 0 10;
+	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
+}
+
+.ui-dialog .ui-dialog-title {
+	width: auto ;
+	font-size: 12px;
+	
+}
+
+.ui-dialog .ui-dialog-titlebar button{
+	height: 20;
+	font-size: 11px;
+	float:right;
+}
 
 /* hide close button on the dialog window */
 .ui-dialog-titlebar-close {
   visibility: hidden;
 }
 
-.ui-dialog .ui-dialog-titlebar button {
-	height: 20;
-	font-size: 11px;
-	float:right;
-}
-/*.ui-widget .ui-widget{
-	font-size: 11px;
-	float:right;
-}*/
-
-.ui-dialog{
-	font-size: 0.8em;
-}
-.ui-dialog .ui-dialog-title {
-	width: auto ;
-	font-size: 12px
-}
-
-.ui-dialog{
-	padding: 1px;
-	font-size: 0.8em;
-}
-
 .ui-dialog .ui-dialog-content{
 	padding:2px;
 }
 
-.ui-dialog .ui-dialog-titlebar{
-	padding:0 10 0 10;
-}
-.ui-dialog .ui-dialog-titlebar button{
-	height: 20;
-}
+
 
 /***************************** Information zone ******************************/
 

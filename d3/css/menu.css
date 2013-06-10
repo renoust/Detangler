@@ -68,6 +68,7 @@ button.submit{
 }
 .ui-accordion .ui-accordion-header{
 	font-size: 11px;
+	background: url(smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
 }
 .ui-accordion .ui-accordion-content {
 	padding: 5px;

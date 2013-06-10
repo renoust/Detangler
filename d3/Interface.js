@@ -943,9 +943,9 @@
 
             visu.innerHTML += 
                 "Nodes: </br>" +
-                    "<span id='colorNode' ></span><button id='shapeNode'>shape</button></br>"+
+                    "<span id='colorNode' ></span><!--<button id='shapeNode'>shape</button>--></br>"+
                 "Links: </br>" +
-                    "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
+                    "<span id='colorLink'></span><!--<button id='shapeLink'>shape</button>--></br>"+
                 "Background: </br>" +
 
                     "<span id='colorBg'></span> <span id='test' ></span> </br>"+
