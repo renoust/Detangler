@@ -38,6 +38,7 @@
             importing[url] = "processing";
             // fetch content of the URL, should be synchronized
             content = fetch_js(url);
+            console.log('url: ',url)
             eval('var __s__ = ' + content); 
             // __s__ has content execution results now
             if (namespace) {

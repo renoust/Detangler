@@ -45,8 +45,8 @@
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
 
             var coh = svg.selectAll(".interfaceButton")
                 .data([])
@@ -58,9 +58,10 @@
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
-            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solution à voir
-            /*$("<div/>", {id:"entanglement-cont"}).appendTo('#menu-2')
-            $("<div/>", {
+
+            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
+           /* $("<div/>", {
+
                 id:"entanglement",
                 style:"background-color: #fdd0a2;"
             }).appendTo("#entanglement-cont");*/
@@ -78,13 +79,12 @@
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
                 "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";*/
 
-            
             /*var cGraph = null
             var svg = null
 
             //document.getElementById("").innerHTML = "<p>Name: " + target + "</p>";
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view(target).getSvg();
+            cGraph = TP.Context().getViewGraph(target);
 
             var coh = svg.selectAll("rect entanglement")
                 .data(["entanglement"])
@@ -110,8 +110,8 @@
                 .attr("dy", 15)
                 .text("Entanglement")
                 .style("fill", 'black')
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
 
             coh.append("text")
                 .attr('class', 'intensitylabel')
@@ -120,8 +120,8 @@
                 .attr("dy", 35)
                 .text("intensity:")
                 .style("fill", 'black')
-                .style("font-size", contxt.defaultTextSize)
-                .style("font-family", contxt.defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
+                .style("font-family", TP.Context().defaultTextFont)
 
             coh.append("text")
                 .attr('class', 'intensity')
@@ -129,11 +129,11 @@
                 .attr("dx", 110)
                 .attr("dy", 50)
                 .text(function (d) {
-                    return "" + contxt.entanglement_intensity
+                    return "" + TP.Context().entanglement_intensity
                 })
                 .style("fill", 'blue')
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
                 .style('text-anchor', 'end')
 
             coh.append("text")
@@ -142,9 +142,9 @@
                 .attr("dx", 10)
                 .attr("dy", 70)
                 .attr("width", 120)
-                .style("font-family", contxt.defaultTextFont)
+                .style("font-family", TP.Context().defaultTextFont)
                 .text('homogeneity:')
-                .style("font-size", contxt.defaultTextSize)
+                .style("font-size", TP.Context().defaultTextSize)
                 .style("fill", 'black')
                 
             coh.append("text")
@@ -153,12 +153,12 @@
                 .attr("dx", 110)
                 .attr("dy", 85)
                 .text(function (d) {                   
-                    return "" + contxt.entanglement_homogeneity
+                    return "" + TP.Context().entanglement_homogeneity
                 })
                 .style('text-anchor', 'end')
-                .style("font-family", contxt.defaultTextFont)
+                .style("font-family", TP.Context().defaultTextFont)
                 .style("fill", 'blue')
-                .style("font-size", contxt.defaultTextSize)
+                .style("font-size", TP.Context().defaultTextSize)
                 */
         }
 
@@ -174,14 +174,14 @@
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
 
             var btMove = svg.selectAll("rect.moveButton")
                 .data([{
                     text: "move",
-                    colorOver: contxt.defaultFillColor,
-                    colorOut: contxt.highlightFillColor
+                    colorOver: TP.Context().defaultFillColor,
+                    colorOut: TP.Context().highlightFillColor
                 }])
                 .enter()
                 .append('g')
@@ -195,16 +195,16 @@
                         .select("rect")
                         .style("fill", "yellow");
                     //objectReferences.InterfaceObject.toggleSelectMove(target);
-                    contxt.stateStack[target].executeCurrentState();
+                    TP.Context().stateStack[target].executeCurrentState();
                 })
                 .on("mouseover", function (d) {
-                    contxt.mouse_over_button = true;
-                    if (!eval("contxt.move_mode_" + target)) {
-                        d.colorOver = contxt.highlightFillColor;
-                        d.colorOut = contxt.defaultFillColor;
+                    TP.Context().mouse_over_button = true;
+                    if (!TP.Context().view[target].getMoveMode()) {
+                        d.colorOver = TP.Context().highlightFillColor;
+                        d.colorOut = TP.Context().defaultFillColor;
                     } else {
-                        d.colorOver = contxt.defaultFillColor;
-                        d.colorOut = contxt.highlightFillColor;
+                        d.colorOver = TP.Context().defaultFillColor;
+                        d.colorOut = TP.Context().highlightFillColor;
                     }  
                     d3.select(this)
                         .select("rect")
@@ -212,13 +212,13 @@
                 })
 
                 .on("mouseout", function (d) {
-                    contxt.mouse_over_button = false;
-                    if (!eval("contxt.move_mode_" + target)) {
-                        d.colorOver = contxt.highlightFillColor;
-                        d.colorOut = contxt.defaultFillColor;
+                    TP.Context().mouse_over_button = false;
+                    if (!TP.Context().view[target].getMoveMode()) {
+                        d.colorOver = TP.Context().highlightFillColor;
+                        d.colorOut = TP.Context().defaultFillColor;
                     } else {
-                        d.colorOver = contxt.defaultFillColor;
-                        d.colorOut = contxt.highlightFillColor;
+                        d.colorOver = TP.Context().defaultFillColor;
+                        d.colorOut = TP.Context().highlightFillColor;
                     }
                     d3.select(this)
                         .select("rect")
@@ -230,9 +230,9 @@
                 .classed("interfaceButton", 1)
                 .attr("width", 120)
                 .attr("height", 20)
-                .style("fill", contxt.highlightFillColor)
-                .style("stroke-width", contxt.defaultBorderWidth)
-                .style("stroke", contxt.defaultBorderColor)
+                .style("fill", TP.Context().highlightFillColor)
+                .style("stroke-width", TP.Context().defaultBorderWidth)
+                .style("stroke", TP.Context().defaultBorderColor)
 
             btMove.append("text")
                 .attr("class", "moveButton")
@@ -242,15 +242,15 @@
                 .text(function (d) {
                     return d.text
                 })
-                .style("font-family", contxt.defaultTextFont)
-                .style("fill", contxt.defaultTextColor)
-                .style("font-size", contxt.defaultTextSize)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-size", TP.Context().defaultTextSize)
 
             var btSelect = svg.selectAll("rect.selectButton")
                 .data([{
                     text: "select",
-                    colorOver: contxt.highlightFillColor,
-                    colorOut: contxt.defaultFillColor
+                    colorOver: TP.Context().highlightFillColor,
+                    colorOut: TP.Context().defaultFillColor
                 }])
                 .enter()
                 .append('g')
@@ -264,29 +264,33 @@
                         .select("rect")
                         .style("fill", "yellow");
                     //objectReferences.InterfaceObject.toggleSelectMove(target);
-                    contxt.stateStack[target].executeCurrentState();
+                    TP.Context().stateStack[target].executeCurrentState();
                 })
                 .on("mouseover", function (d) {
-                    contxt.mouse_over_button = true;
-                    if (!eval("contxt.select_mode_" + target)) {
-                        d.colorOver = contxt.highlightFillColor;
-                        d.colorOut = contxt.defaultFillColor;
+                    TP.Context().mouse_over_button = true;
+                    var select_mode = TP.Context().view[target].getSelectMode();
+                    //if (!eval("TP.Context().select_mode_" + target)) {
+                    if (!select_mode) {
+                        d.colorOver = TP.Context().highlightFillColor;
+                        d.colorOut = TP.Context().defaultFillColor;
                     } else {
-                        d.colorOver = contxt.defaultFillColor;
-                        d.colorOut = contxt.highlightFillColor;
+                        d.colorOver = TP.Context().defaultFillColor;
+                        d.colorOut = TP.Context().highlightFillColor;
                     }
                     d3.select(this)
                         .select("rect")
                         .style("fill", d.colorOver);
                 })
                 .on("mouseout", function (d) {
-                    contxt.mouse_over_button = false;
-                    if (!eval("contxt.select_mode_" + target)) {
-                        d.colorOver = contxt.highlightFillColor;
-                        d.colorOut = contxt.defaultFillColor;
+                    TP.Context().mouse_over_button = false;
+                    var select_mode = TP.Context().view[target].getSelectMode();
+                    //if (!eval("TP.Context().select_mode_" + target)) {
+                    if (!select_mode) {
+                        d.colorOver = TP.Context().highlightFillColor;
+                        d.colorOut = TP.Context().defaultFillColor;
                     } else {
-                        d.colorOver = contxt.defaultFillColor;
-                        d.colorOut = contxt.highlightFillColor;
+                        d.colorOver = TP.Context().defaultFillColor;
+                        d.colorOut = TP.Context().highlightFillColor;
                     }
                     d3.select(this)
                         .select("rect")
@@ -298,9 +302,9 @@
                 .classed("interfaceButton", 1)
                 .attr("width", 120)
                 .attr("height", 20)
-                .style("fill", contxt.defaultFillColor)
-                .style("stroke-width", contxt.defaultBorderWidth)
-                .style("stroke", contxt.defaultBorderColor)
+                .style("fill", TP.Context().defaultFillColor)
+                .style("stroke-width", TP.Context().defaultBorderWidth)
+                .style("stroke", TP.Context().defaultBorderColor)
             btSelect.append("text")
                 .attr("class", "selectButton")
                 .classed("interfaceButton", 1)
@@ -309,28 +313,31 @@
                 .text(function (d) {
                     return d.text
                 })
-                .style("fill", contxt.defaultTextColor)
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
         }
 
 
         this.addInfoButton = function (target) {
-            var cGraph = contxt.getViewGraph(target);
-            $("<div/>", {id:"infoView"}).appendTo("#menu-2");
-            $("#infoView")[0].innerHTML = "<p>Name: " + target + "</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.nodes().length + " nodes</p>";
-            $("#infoView")[0].innerHTML += "<p>" + cGraph.links().length + " links</p>";
+            var cGraph = target.getGraph();
+             var zone = '#infoView'
+             document.getElementById('infoView').innerHTML = ''
+             $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
+            $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
+            $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
+
+            
 
             /*
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().getViewGraph(target);
 
-            posInfo_x = contxt.width - 30
-            posInfo_y = contxt.height - 5
+            posInfo_x = TP.Context().width - 30
+            posInfo_y = TP.Context().height - 5
             var btInfo = svg.selectAll("g.info")
                 .data(["`"])
                 .enter()
@@ -378,9 +385,9 @@
                     .attr("class", "infoWindow")
                     .attr("width", 120)
                     .attr("height", 35)
-                    .style("fill", contxt.defaultFillColor)
-                    .style("stroke-width", contxt.defaultBorderWidth)
-                    .style("stroke", contxt.defaultBorderColor)
+                    .style("fill", TP.Context().defaultFillColor)
+                    .style("stroke-width", TP.Context().defaultBorderWidth)
+                    .style("stroke", TP.Context().defaultBorderColor)
 
                 sGroup.append("text")
                     .attr("class", "infoWindow")
@@ -389,9 +396,9 @@
                     .text(function () {
                         return "" + cGraph.nodes().length + " nodes"
                     })
-                    .style("font-family", contxt.defaultTextFont)
-                    .style("fill", contxt.defaultTextColor)
-                    .style("font-size", contxt.defaultTextSize)
+                    .style("font-family", TP.Context().defaultTextFont)
+                    .style("fill", TP.Context().defaultTextColor)
+                    .style("font-size", TP.Context().defaultTextSize)
 
                 sGroup.append("text")
                     .attr("class", "infoWindow")
@@ -401,9 +408,9 @@
                         return "" + cGraph.links()
                             .length + " links"
                     })
-                    .style("font-family", contxt.defaultTextFont)
-                    .style("fill", contxt.defaultTextColor)
-                    .style("font-size", contxt.defaultTextSize)
+                    .style("font-family", TP.Context().defaultTextFont)
+                    .style("fill", TP.Context().defaultTextColor)
+                    .style("font-size", TP.Context().defaultTextSize)
             })*/
         }
 
@@ -419,12 +426,12 @@
                     selectHTMLString = "<form><select id=weightPropSel>"
                     selectHTMLString += " <option value=\"\"><i>--</i></option>"
 
-                    nbElements = Object.keys(contxt.substrateProperties)
+                    nbElements = Object.keys(TP.Context().substrateProperties)
                         .length
-                    Object.keys(contxt.substrateProperties)
+                    Object.keys(TP.Context().substrateProperties)
                         .forEach(function (k, i) {
                             //console.log("props: ", k)
-                            if (contxt.substrateProperties[k] == "number") {
+                            if (TP.Context().substrateProperties[k] == "number") {
                                 selectHTMLString += " <option value=\"" + k + "\">" + k + "</option>"
                             }
                         });
@@ -451,18 +458,30 @@
                 return
 
             var svg = null
-            svg = contxt.getViewSVG(target);
-
-            eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
-            eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target); 
-            if(eval("TP.Context().select_mode_"+target)) {
+            svg = TP.Context().view[target].getSvg();
+			
+            //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
+            //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
+           
+            //TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
+            TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
+            //TP.Context().tabMoveMode[target] = !TP.Context().tabMoveMode[target];
+            TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
+            
+            console.log(!TP.Context().view[target].getSelectMode())
+            console.log(!TP.Context().view[target].getMoveMode())
+            
+            //if(eval("TP.Context().select_mode_"+target)) {
+            
+            if(TP.Context().view[target].getSelectMode()) {            	
                 svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor); 
                 objectReferences.InteractionObject.addLasso(target);
                 objectReferences.InteractionObject.removeZoom(target);
             }
 
-            if(eval("TP.Context().move_mode_"+target)) {
+            //if(eval("TP.Context().move_mode_"+target)) {
+            if(TP.Context().view[target].getMoveMode()) {
                 //svg.style("cursor", "all-scroll");
                 svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
@@ -472,11 +491,11 @@
         }
 
 
-        this.addSettingsButton = function () {
-            objectReferences.InterfaceObject.holdSVGInteraction("substrate")
+        this.addSettingsButton = function (target) {
+            objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
 
-            svg = contxt.svg_substrate
-            posSettings_x = contxt.width - 30
+            svg = TP.Context().view[target].getSvg();
+            posSettings_x = TP.Context().width - 30
             posSettings_y = 30
 
             var btSettings = svg.selectAll("g.settings")
@@ -517,9 +536,9 @@
                     .attr("class", "settingsWindow")
                     .attr("width", 120)
                     .attr("height", 120)
-                    .style("fill", contxt.defaultFillColor)
-                    .style("stroke-width", contxt.defaultBorderWidth)
-                    .style("stroke", contxt.defaultBorderColor)
+                    .style("fill", TP.Context().defaultFillColor)
+                    .style("stroke-width", TP.Context().defaultBorderWidth)
+                    .style("stroke", TP.Context().defaultBorderColor)
 
                 sGroup.append("text")
                     .attr("class", "settingsWindow")
@@ -528,9 +547,9 @@
                     .text(function () {
                         return "Weight property"
                     })
-                    .style("font-family", contxt.defaultTextFont)
-                    .style("fill", contxt.defaultTextColor)
-                    .style("font-size", contxt.defaultTextSize)
+                    .style("font-family", TP.Context().defaultTextFont)
+                    .style("fill", TP.Context().defaultTextColor)
+                    .style("font-size", TP.Context().defaultTextSize)
 
                 objectReferences.InterfaceObject.selectWeightProperty(sGroup);
 
@@ -545,7 +564,7 @@
                     .style("fill", "lightgray")
                     .style("font-size", 30)
                     .on("click", function () {
-                        contxt.substrateWeightProperty=svg.select("#weightPropSel")
+                        TP.Context().substrateWeightProperty=svg.select("#weightPropSel")
                             .node()
                             .value;
                         svg.selectAll(".settingsWindow")
@@ -573,8 +592,8 @@
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
 
             var bt = svg.selectAll("rect." + className)
                 .data([buttonLabel])
@@ -594,14 +613,14 @@
                 .on("mouseover", function () {
                     d3.select(this)
                         .select("rect")
-                        .style("fill", contxt.highlightFillColor);
-                    contxt.mouse_over_button = true;
+                        .style("fill", TP.Context().highlightFillColor);
+                    TP.Context().mouse_over_button = true;
                 })
                 .on("mouseout", function () {
                     d3.select(this)
                         .select("rect")
-                        .style("fill", contxt.defaultFillColor);
-                    contxt.mouse_over_button = false;
+                        .style("fill", TP.Context().defaultFillColor);
+                    TP.Context().mouse_over_button = false;
                 })
 
             bt.append("rect")
@@ -609,9 +628,9 @@
                 .classed("interfaceButton", 1)
                 .attr("width", 120)
                 .attr("height", 20)
-                .style("fill", contxt.defaultFillColor)
-                .style("stroke-width", contxt.defaultBorderWidth)
-                .style("stroke", contxt.defaultBorderColor)
+                .style("fill", TP.Context().defaultFillColor)
+                .style("stroke-width", TP.Context().defaultBorderWidth)
+                .style("stroke", TP.Context().defaultBorderColor)
 
 
             bt.append("text")
@@ -622,9 +641,9 @@
                 .text(function (d) {
                     return d
                 })
-                .style("fill", contxt.defaultTextColor)
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
         }
 
 
@@ -632,18 +651,20 @@
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
 
-            eval("contxt.node_information_" + target + " = !contxt.node_information_" + target);
+            //eval("TP.Context().node_information_" + target + " = !TP.Context().node_information_" + target);
+			//TP.Context().tabNodeInformation[target] = !TP.Context().tabNodeInformation[target];
+            TP.Context().view[target].setNodeInformation(!TP.Context().view[target].getNodeInformation());
 
-            if (!eval("contxt.node_information_" + target)) {
+            if (!TP.Context().view[target].getNodeInformation()) {
                 svg.selectAll("g.infoBox")
                     .on("mouseout", function () {
                         d3.select(this)
                             .select("rect.infoBox")
-                            .style("fill", contxt.defaultFillColor);
-                        contxt.mouse_over_button = false;
+                            .style("fill", TP.Context().defaultFillColor);
+                        TP.Context().mouse_over_button = false;
                     });
                 svg.selectAll("g.node").on("mouseover", null);
                 return
@@ -653,8 +674,8 @@
                 .on("mouseout", function () {
                     d3.select(this)
                         .select("rect.infoBox")
-                        .style("fill", contxt.highlightFillColor);
-                    contxt.mouse_over_button = false;
+                        .style("fill", TP.Context().highlightFillColor);
+                    TP.Context().mouse_over_button = false;
                 });
             svg.selectAll("g.node")
                 .on("mouseover", function (d) {
@@ -667,8 +688,8 @@
             var cGraph = null
             var svg = null
 
-            svg = contxt.getViewSVG(target);
-            cGraph = contxt.getViewGraph(target);
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
 
             function move() {
                 objectReferences.InterfaceObject.parentNode.appendChild(this);
@@ -715,18 +736,18 @@
                 .classed("nodeInfo", true)
                 .attr("width", 200)
                 .attr("height", 200)
-                .style("fill", contxt.defaultFillColor)
-                .style("stroke-width", contxt.defaultBorderWidth)
-                .style("stroke", contxt.defaultBorderColor)
+                .style("fill", TP.Context().defaultFillColor)
+                .style("stroke-width", TP.Context().defaultBorderWidth)
+                .style("stroke", TP.Context().defaultBorderColor)
 
             ib.append("text")
                 .classed("nodeInfo", true)
                 .text("node information")
                 .attr("dx", 5)
                 .attr("dy", 15)
-                .style("fill", contxt.defaultTextColor)
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
 
             ib.append("text")
                 .classed("nodeInfo", true)
@@ -735,9 +756,9 @@
                 })
                 .attr("dx", 5)
                 .attr("dy", 30)
-                .style("fill", contxt.defaultTextColor)
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
 
             ib.append("text")
                 .classed("nodeInfo", true)
@@ -746,9 +767,9 @@
                 })
                 .attr("dx", 5)
                 .attr("dy", 42)
-                .style("fill", contxt.defaultTextColor)
-                .style("font-family", contxt.defaultTextFont)
-                .style("font-size", contxt.defaultTextSize)
+                .style("fill", TP.Context().defaultTextColor)
+                .style("font-family", TP.Context().defaultTextFont)
+                .style("font-size", TP.Context().defaultTextSize)
 
             ib.append("text")
                 .classed("nodeInfo", true)
@@ -778,7 +799,7 @@
 
 
         this.setCombinedForeground = function (target) {
-            contxt.combined_foreground = target;
+            TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
                 toggleBtnText = "catalyst";
@@ -786,16 +807,16 @@
                 toggleBtnText = "substrate";
             }
 
-            //console.log("toggling: ", contxt.combined_foreground);
+            //console.log("toggling: ", TP.Context().combined_foreground);
 
-            contxt.svg_combined.selectAll("g.toggleCombinedForeground")
+            TP.Context().view["combined"].getSvg().selectAll("g.toggleCombinedForeground")
                 .select("text")
                 .text("g " + toggleBtnText)
 
-            contxt.svg_combined.selectAll("g.node")
-                .data(contxt.graph_combined.nodes(), function(d){return d.baseID}) 
+            TP.Context().view["combined"].getSvg().selectAll("g.node")
+                .data(TP.Context().tabGraph["graph_combined"].nodes(), function(d){return d.baseID}) 
                 .style("opacity", function (d) {
-                    if (d._type == contxt.combined_foreground) {
+                    if (d._type == TP.Context().combined_foreground) {
                         return 1;
                     } else {
                         return 0.5;
@@ -804,10 +825,10 @@
         }
 
 
-        this.toggleCombinedForeground = function () {
-            if (contxt.combined_foreground == "substrate") {
+        this.toggleCombinedForeground = function (target) {
+            if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
-            } else if (contxt.combined_foreground == "catalyst") {
+            } else if (TP.Context().combined_foreground == "catalyst") {
                 __g__.setCombinedForeground("substrate");
             }
         }
@@ -815,14 +836,14 @@
 
         // gestion du menu à gauche
         
-        this.createMenu = function(nbPane){
+        /*this.createMenu = function(nbPane){
             for(i=0; i<nbPane; i++)
                 this.addPane();
         }
 
 
         this.addPane = function(){
-            menuNum =contxt.menuNum++;
+            menuNum =TP.Context().menuNum++;
             $("<div/>", {
                 "class": "cont",
                 id: "menu-"+menuNum,
@@ -836,26 +857,98 @@
                 style:"top:"+40*menuNum+"px;",
             }).appendTo("#menu-"+menuNum);
             
+        }*/
+
+        this.addPanelMenu = function(header){
+            menuNum =contxt.menuNum++;
+            $("<div/>", {
+                "class": "cont",
+                id: "menu-"+menuNum,
+            }).appendTo("#wrap");
+
+            $("<span/>", {
+                "class": "toggleButton",
+                id: "toggleBtn"+menuNum,
+                text: ">",
+                style:"top:"+40*menuNum+"px;",
+            }).appendTo("#menu-"+menuNum);
+
+            $('<div/>', {
+                class:'header-menu', 
+                text:header
+            }).appendTo('#menu-'+menuNum);
+
+            $('<div/>',{
+                id:'menu'+menuNum+'-content',
+                class:'menu-content',
+            }).appendTo('#menu-'+menuNum)
+            
+            return 'menu-'+menuNum;
+        }
+
+        this.interactionPane = function(buttons, mode){
+            var menu, content;
+            if(mode==='update'){
+                for(var i=0; i<contxt.menuNum;i++){
+                    if($('.header-menu').eq(i).text()==='Interactions'){
+                        menu = '#' + $('.header-menu').eq(i).parent().attr('id')
+                        content = $('.header-menu').eq(i).siblings('.menu-content')
+                        document.getElementById(content.attr('id')).innerHTML = ''
+                    }
+                }
+            }else if(mode==='create'){
+                menu = this.addPanelMenu('Interactions');
+                content = $("#"+menu +" .menu-content");
+                content.accordion({
+                    collapsible:true,
+                    active:false,
+                    heightStyle:'content'
+                });
+            }
+            this.createArrayButtons(buttons, content.attr('id'));
+        }
+
+        this.infoPane = function(){
+            var menu = this.addPanelMenu('Informations');
+            var content = $("#"+menu +" .menu-content");
+
+            $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
+
+
+            document.getElementById(menu).innerHTML += 
+                "<div id='entanglement-cont'>"+
+                    "<div id='bg'></div>"+
+                    "<div id='entanglement'><p>Entanglement:</br>" + 
+                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
+                "</div>"
+
+            //affichage par défaut
+            //this.addInfoButton(contxt.activeView);
         }
 
 
-        this.apiVisu = function(pane){
+        this.visuPane = function(pane){
+            var menu = this.addPanelMenu('');
+            var content = $("#"+menu +" .menu-content");
 
-            $("<div/>", {id: "visu", style:"padding:10"}).appendTo("#"+pane);
+      
 
-            var visu = $("#visu")[0];
-            var view = contxt.activeView;
+            var visu = content[0];
+            var view = TP.Context().activeView;
             visu.innerHTML += 
                 "Nodes: </br>" +
                     "<span id='colorNode' ></span><button id='shapeNode'>shape</button></br>"+
                 "Links: </br>" +
                     "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
                 "Background: </br>" +
-                    "<span id='colorBg'></span> </br>"+
+
+                    "<span id='colorBg'></span> <span id='test' ></span> </br>"+
+                     "<button id='apply'>Apply</button> </br>"/*+
                 "Labels: </br>" +
                     "<span id='colorLabel'></span> </br>"+
-                     "<button id='apply'>Apply</button> </br>";
-            $.fn.jPicker.defaults.images.clientPath='images/';
+                     "<button id='apply'>Apply</button> </br>"*/;
+            
            $('#colorNode').jPicker({
                 window:{
                     expandable: true, 
@@ -875,39 +968,136 @@
                     position:{x:250, y:0},
                 }
             });
-           $('#colorLabel').jPicker({
+           /*$('#colorLabel').jPicker({
                 window:{
                     expandable: true,
                     position:{x:250, y:0},
+
                 }
-            });
-           //console.log("-->"+contxt.activeView);      
+            });  */  
             $('#apply').click(function(){
-                contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
-                console.log(contxt.labelColor)
-                
-                if (contxt.activeView==="substrate"){
-                    contxt.nodeColor_substrate = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.linkColor_substrate = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.bgColor_substrate = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("substrate", "node", contxt.nodeColor_substrate);
-                    objectReferences.VisualizationObject.changeColor("substrate", "link", contxt.linkColor_substrate);
-                    objectReferences.VisualizationObject.changeColor("substrate", "bg", contxt.bgColor_substrate);
-                    objectReferences.VisualizationObject.changeColor("substrate", "label", contxt.labelColor);
-                    
-                } else if (contxt.activeView==="catalyst") {
-                    contxt.nodeColor_catalyst = "#" + $.jPicker.List[0].color.active.val('hex');
-                    contxt.linkColor_catalyst = "#" + $.jPicker.List[1].color.active.val('hex');
-                    contxt.bgColor_catalyst = "#" + $.jPicker.List[2].color.active.val('hex');
-                    objectReferences.VisualizationObject.changeColor("catalyst", "node", contxt.nodeColor_catalyst);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "link", contxt.linkColor_catalyst);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "bg", contxt.bgColor_catalyst);
-                    objectReferences.VisualizationObject.changeColor("catalyst", "label", contxt.labelColor);
-                }
+                /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
+                console.log(contxt.labelColor)*/
+
+                    TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
+                    TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
+                    TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));
+                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "node", TP.Context().view[TP.Context().activeView].getNodesColor());
+                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "link", TP.Context().view[TP.Context().activeView].getLinksColor());
+                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "bg", TP.Context().view[TP.Context().activeView].getBgColor());
             });
             
 
         }
+
+        this.createElement = function(balise, attributes,  parentId, labelPrec, labelSuiv){
+            if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
+            var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
+            if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
+            return elem;
+        }
+        this.createForm = function(menuPane, id, title, tab, event){
+
+            if (tab!=''){
+                var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
+                this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
+                for (var i = 0; i < tab.length; i++) {
+                    this.createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
+                    this.createElement('br', null, '#'+id)
+                }
+
+                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
+                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
+
+            }else{
+                var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
+                elem.click(event.click)
+                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
+            }
+
+            $('#'+menuPane).accordion('refresh')
+        }
+
+        this.createArrayButtons = function(tab, pane){
+            for(var i=0; i<tab.length; i++){
+                this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
+            }
+                $( "#sizemap" ).slider({ 
+                    range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 3, 12 ],
+                    change: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    },
+                    slide: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    }
+                });
+        }
+
+        this.callbackMenu = function(param, event){
+        var res = {}
+        var key = null;
+        var val = null;
+        var btn = $(param);
+        // console.log(btn.siblings('input'))
+        // console.log(btn.siblings('input[type="text"]')[0].name)
+        // console.log(btn.siblings('input[type="text"]')[0].value)
+
+        var data = btn.siblings("input[type='radio']:checked")
+        data.each(function(){
+            key = btn.attr('name');
+            res[key] = btn.val();
+        })
+
+        data = btn.siblings('.ui-spinner')
+        data.each(function(){
+            key = btn.children('input').attr('name');       
+            val = btn.children('input')[0].value
+            res[key] = val;
+        })
+
+        data = btn.siblings("input[type='checkbox']:checked")
+        data.each(function(){
+
+            key = btn.attr('name');
+            if (res[key]==null)         
+                res[key] = btn.val();
+            else
+                res[key] += ", "+btn.val();
+        })
+
+        data = btn.siblings("input[type='text']")
+        for(var i=0; i<data.length; i++){
+            key = data[i].name;
+            val = data[i].value;
+            res[key] = val;
+        }
+
+        data = btn.siblings('.slider');
+        var data2 = btn.siblings('.slider');
+        console.log(data)
+        for(var i=0; i<data.length; i++){
+            key = 'valMin'+i
+            val = data.eq(i).slider("values",0);
+            res[key] = val;
+            key = 'valMax'+i
+            val = data.eq(i).slider("values",1);
+            res[key] = val;
+        }
+        //console.log(res)
+
+        event.call(res)
+        
+        }
+
         return __g__;
 
     }
