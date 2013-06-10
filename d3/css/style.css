@@ -101,6 +101,7 @@ ul#menu > li {
 
 .ui-dialog{
 	padding: 1px;
+	font-size: 0.8em;
 }
 
 .ui-dialog .ui-dialog-content{
