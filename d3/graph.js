@@ -58,7 +58,7 @@
 				for (var key in nodes[i])
 				{
 					if (updateExisting || !(key in d))
-					{
+					{									
 						d[key] = nodes[i][key]
 					} 	
 				}

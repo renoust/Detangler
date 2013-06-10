@@ -406,7 +406,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            else
 	            	viewNodes = "rect";
 	            				
-				DataTranslation = [0,0];            
+				DataTranslation = [0,0];           
 	    	    //TP.Context().tabNodeColor[target] = nodesC;
 		        //TP.Context().tabLinkColor[target] = linksC;
 		        //TP.Context().tabBgColor[target] = bgC;
