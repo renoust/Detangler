@@ -39,13 +39,13 @@ var TulipPosy = function (originalJSON) {
 	var target1 = ""+TP.Context().getIndiceView();
 	var target2 = ""+TP.Context().getIndiceView();
 	
-	assert(false, "target :")
-	console.log(target);
-	console.log(typeof(target));
+	// assert(false, "target :")
+	// console.log(target);
+	// console.log(typeof(target));
 	
-	assert(false, "target1 :")
-	console.log(target1);
-	console.log(typeof(target1))
+	// assert(false, "target1 :")
+	// console.log(target1);
+	// console.log(typeof(target1))
 	
 
 
@@ -213,7 +213,7 @@ var TulipPosy = function (originalJSON) {
         var menu = $('#menu-'+menuNum);
         var parent = src.parentNode;
         var button = $(this);
-        console.log(parent)
+        
         if(parent.className==='nosidebar'){
             button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             button.text('<');
