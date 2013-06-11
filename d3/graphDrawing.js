@@ -33,6 +33,8 @@
 
         // this function draws the graph, first the links then the nodes
         g.draw = function () {
+        	
+        	
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
@@ -313,6 +315,10 @@
 
             g.arrangeLabels();
             
+            if("viewMetric" in g.svg.select("g.node").data()[0]){
+            	g.resize(g.cGraph, 0);
+            }
+            
         }
         
         
@@ -402,7 +408,7 @@
         	);
 
         	g.rescaleGraph(TP.Context().view[target].getGraph());
-        	g.move(g.cGraph,0);
+        	g.changeLayout(g.cGraph,0);
 		}
 
 
@@ -469,7 +475,7 @@
         // we select each svg:g and its node from their identifier (baseID), 
         // and associate 
         // the new x and y values (d3 does the transition) 
-        g.move = function (_graph, dTime) {
+        g.changeLayout = function (_graph, dTime) {
 
             // assert(true, "que le move soit avec toi (maitre Yoda)");
 
@@ -630,6 +636,7 @@
             g.cGraph = _graph
               //console.log(g.cGraph);
             //we would like it better as a parameter
+            			assert(false, "turlututu");
             scaleMin = 3.0
             scaleMax = 12.0
 
@@ -773,6 +780,10 @@
             var node = g.svg.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "hidden")
+                
+            
+            g.svg.selectAll("text.node")
+                .style("opacity", 0.5)
                                
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
@@ -818,7 +829,7 @@
                 .data(_graph.links(), function (d) {return d.baseID})
                 .style("opacity", 1)
 
-			var label = g.svg.selectAll("g.text")
+			var label = g.svg.selectAll("text.node")
                 .data(_graph.nodes(), function (d) {return d.baseID})
                 .style("opacity", 1)
 
