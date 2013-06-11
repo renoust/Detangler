@@ -779,6 +779,10 @@
             var node = g.svg.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "hidden")
+                
+            
+            g.svg.selectAll("text.node")
+                .style("opacity", 0.5)
                                
                                
 /*
@@ -839,7 +843,7 @@
                 .data(_graph.links(), function (d) {return d.baseID})
                 .style("opacity", 1)
 
-			var label = g.svg.selectAll("g.text")
+			var label = g.svg.selectAll("text.node")
                 .data(_graph.nodes(), function (d) {return d.baseID})
                 .style("opacity", 1)
 
