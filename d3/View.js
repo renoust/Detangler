@@ -295,8 +295,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 	    dialog.dialog({
 	        height: TP.Context().dialogHeight,
-	        width: TP.Context().dialogWidth,
-	        minWidth:185,
+	        width: TP.Context().dialogWidth,    
 	        position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,/*{my: "center", at: "center", of: "#container"}*/
 	    }).parent().resizable({
 	        containment: "#container"
@@ -317,9 +316,12 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else                    { $(this).button("option", "label", "Move");}
 	        TP.Context().stateStack[ID].executeCurrentState();
 	    });
-		        
 	    
-	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x")}
+	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
+	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
+		dialog.dialog({minWidth:minWidth+ 20}) 
+	    
+	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
 
 	    dialog.parent().click(function(){ 
 	    	var oldID=TP.Context().activeView
@@ -330,7 +332,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
         	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){
         		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
-        	titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x")
+        	titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
         	/*
 	        var num = 0;
 	        $(".arrayButtons").remove();

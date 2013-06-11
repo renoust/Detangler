@@ -38,6 +38,10 @@ var TulipPosy = function (originalJSON) {
 	var target = ""+TP.Context().getIndiceView();
 	var target1 = ""+TP.Context().getIndiceView();
 	var target2 = ""+TP.Context().getIndiceView();
+
+    var path = $('#files').val().split('\\');
+    var name = path[path.length-1].split('.')[0];
+    
 	
 	// assert(false, "target :")
 	// console.log(target);
@@ -139,7 +143,7 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     */
 
-    TP.Context().view[target] = new TP.View(target, 1, subarray, new Array("svg", "graph", 960, 500, "svg_"+target), "toto", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    TP.Context().view[target] = new TP.View(target, 1, subarray, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 /*
@@ -166,7 +170,7 @@ var TulipPosy = function (originalJSON) {
     //TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
 	//TP.Context().view[target1].addView();
 	//TP.Context().view[target1].buildLinks();
-	tabCatalyst = new Array(target1, catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), "tutu", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
+	tabCatalyst = new Array(target1, catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), name+" - catalyst", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
 	/*
     var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground(target2)});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
