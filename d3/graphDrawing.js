@@ -315,6 +315,10 @@
 
             g.arrangeLabels();
             
+            if("viewMetric" in g.svg.select("g.node").data()[0]){
+            	g.resize(g.cGraph, 0);
+            }
+            
         }
         
         
@@ -616,6 +620,7 @@
             g.cGraph = _graph
               console.log(g.cGraph);
             //we would like it better as a parameter
+            			assert(false, "turlututu");
             scaleMin = 3.0
             scaleMax = 12.0
 
