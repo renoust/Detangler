@@ -49,7 +49,7 @@
 
 		this.updateNodes = function (nodes, updateExisting) {
 			var newArray = [];
-			nodes.sort(nodes, function(a,b){return a.baseID-b.baseID});
+			nodes.sort(function(a,b){return a.baseID-b.baseID});
 			if (nodes.length != g.nodes_array.length)
 			{
 				assert(false, "updateNodes, cannot match both arrays, what should I do?");
@@ -105,13 +105,14 @@
 		this.updateNodeAttributes = function (nodes, _attributes, updateExisting) {
 			//attributes should be of the form [{in:name_in, out:name_out}], out is optional
 			var newArray = []
-			nodes.sort(nodes, function(a,b){return a.baseID-b.baseID})
+			nodes.sort(function(a,b){return a.baseID-b.baseID})
 			if (nodes.length != g.nodes_array.length)
 			{
 				assert(false, "updateNodes, cannot match both arrays, what should I do?");
 			}	
 			
             g.nodes_array.forEach(function (d, i) {
+				//for safety maybe should we check the baseIDs of each part
 				for (var j = 0; j<_attributes.length; j++)//nodes[i])
 				{
 					var keys = _attributes[j];
@@ -139,7 +140,7 @@
 			//attributes should be of the form [{in:name_in, out:name_out}], out is optional
 
 			var newArray = []
-			links.sort(links, function(a,b){return a.baseID-b.baseID})
+			links.sort(function(a,b){return a.baseID-b.baseID})
 			if (links.length != g.links_array.length)
 			{
 				assert(false, "updateLinks, cannot match both arrays, what should I do?")
@@ -170,7 +171,7 @@
 
 		this.updateLinks = function (links, updateExisting) {
 			var newArray = []
-			links.sort(links, function(a,b){return a.baseID-b.baseID})
+			links.sort(function(a,b){return a.baseID-b.baseID})
 			if (links.length != g.links_array.length)
 			{
 				assert(false, "updateLinks, cannot match both arrays, what should I do?")
