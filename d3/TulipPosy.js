@@ -32,6 +32,8 @@ var TulipPosy = function (originalJSON) {
 	var target1 = 'tutu';
 	var target2 = 'titi';
 */
+	
+	TP.Context().clearInterface();
 
 	var target = ""+TP.Context().getIndiceView();
 	var target1 = ""+TP.Context().getIndiceView();

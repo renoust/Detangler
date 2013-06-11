@@ -21,7 +21,7 @@
 		this.viewMeter = 0;
 		
         Context.prototype._singletonInstance = this;
-        this.view = [];
+        this.view = {};
 
         // initialization of the communication address and port        
         // an additional default json file
@@ -83,6 +83,40 @@
         };
         
         this.GroupOfView = new Object();
+        
+        
+        this.clearInterface = function()
+        {
+        	if(this.menuNum != 1){
+	        		
+	        	d3.select(".ui-dialog").remove();
+	        	d3.selectAll(".cont").remove();
+	        	d3.selectAll(".jPicker").remove();
+	        	$('#wrap')[0].className='nosidebar';
+	
+	        	
+	        	for(var key in this.view){        		
+	        		this.view[key].remove();
+	        		this.view[key] = null;        		
+	        	}
+	        	
+	        	this.view = null;
+	        	this.view = {};
+	        	
+	        	this.substrateProperties = {};
+	        	this.viewMeter = 0;
+	        	this.menuNum=1;
+	        	this.tabGraph = null;
+	        	this.tabGraph = [];
+	        	this.substrateWeightProperty = null;
+	        	this.entanglement_intensity = 0.0;
+	        	this.entanglement_homogeneity = 0.0;
+	        	this.tabOperator = [];
+	        	this.changeStack = new TP.StatesChange();
+	        	this.stateStack = [];
+        	
+        	}
+        }
 
         return __g__;
     }
