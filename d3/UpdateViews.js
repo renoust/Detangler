@@ -245,23 +245,31 @@
         }
 
 
-        this.applyInducedSubGraphFromData = function (data, graphName) {
+        this.applyInducedSubGraphFromData = function (data, graphName, rescale) {
             var graph = null;
             var svg = null;
+            
+            if (!rescale)
+            	rescale = false
+            	
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().view[graphName].getGraph();
             
             var typeGraph = TP.Context().view[graphName].getType();
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
                         
-            graph.nodes(data.nodes, typeGraph);
-            graph.links(data.links, typeGraph);
-            
-            graph_drawing.rescaleGraph(graph);
-            
-            graph.edgeBinding();
+            graph.subsetNodes(data.nodes, typeGraph);
+            graph.subsetLinks(data.links, typeGraph);
+            //graph.edgeBinding();
             
             graph_drawing.exit(graph, 0);
+            
+            if (rescale)
+            {
+	            graph_drawing.rescaleGraph(graph);
+	            graph_drawing.clear()
+	            graph_drawing.draw()
+	        }
         }
 
 
