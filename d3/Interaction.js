@@ -34,7 +34,7 @@
             var myL = null
 
             svg = TP.Context().view[target].getSvg();
-            assert(false, "creerLAAALLAAAAASSSSSOOO")
+            //assert(false, "creerLAAALLAAAAASSSSSOOO")
             graph = TP.Context().view[target].getGraph();
 			/*
             if (target == "catalyst") {
@@ -703,12 +703,15 @@
         this.toggleCatalystSyncOperator = function (target) {
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
+                $('.ui-accordion-header').each(function(){if($(this).text()==='operator OR'){$(this).text('operator AND')}})
             } else {
                 TP.Context().tabOperator[target] = "OR"
+                $('.ui-accordion-header').each(function(){if($(this).text()==='operator AND'){$(this).text('operator OR')}})
             }
+            /*
             TP.Context().view[target].getSvg().selectAll("g.toggleCatalystOp")
                 .select("text")
-                .text("operator " + TP.Context().tabOperator[target])
+                .text("operator " + TP.Context().tabOperator[target])*/
         }
 
 

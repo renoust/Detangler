@@ -224,11 +224,11 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    elem = document.getElementById("bouton" + ID);
 	    if (elem) elem.parentNode.removeChild(elem);
 	    elem = $("div[aria-describedby='zone" + ID + "']");
-	     console.log(elem)
+	     //console.log(elem)
 	    if (elem!=[])elem.remove();
 	
 	    
-	    console.log($("div[aria-describedby='zone"+ID+"']"))
+	    //console.log($("div[aria-describedby='zone"+ID+"']"))
 	    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
 	   
 	    //if (elem!=[])elem.remove();
@@ -367,7 +367,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorNode);
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
-	        console.log($.jPicker.List[0])
+	        //console.log($.jPicker.List[0])
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
@@ -382,10 +382,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 	        var fullheight = $('#container').height()-10;
 	        var fullwidth = $('#container').width()-10;
-	        console.log(dialog.parent().width() + " - " + fullwidth);
-	        console.log(dialog.parent());
+	        //console.log(dialog.parent().width() + " - " + fullwidth);
+	        //console.log(dialog.parent());
 	        if(dialog.parent().width()!=fullwidth){
-	            console.log(1);
+	            //console.log(1);
 	            dialog.dialog({
 	                width:fullwidth, 
 	                height:fullheight,
@@ -393,14 +393,14 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            });
 	        }
 	        else{
-	            console.log(2);
+	            //console.log(2);
 	            dialog.dialog({
 	                width:TP.Context().dialogWidth, 
 	                height:TP.Context().dialogHeight,
 	                position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,
 	            });
 	        }
-	        console.log(TP.Context().dialogTop);
+	        //console.log(TP.Context().dialogTop);
 	
 	            //$(this).height()=fullheight;
 	    });

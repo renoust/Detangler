@@ -92,7 +92,7 @@ var TulipPosy = function (originalJSON) {
         ['b8','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}],
         ['b9','hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}],
         ['b10','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
-        ['b11','operator ' + contxt.catalyst_sync_operator,'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator()}}],
+        ['b11','operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}],
         ['b12','weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],

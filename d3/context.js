@@ -70,7 +70,8 @@
         //number of pane for the menu
         this.menuNum=1;
         
-		this.tabOperator["catalyst"] = "AND";
+		this.tabOperator["catalyst"] = "OR";
+        this.tabOperator[1] = "OR";
 
         this.getViewGraph = function (viewID) {
                 return __g__.tabGraph["graph_"+viewID];
