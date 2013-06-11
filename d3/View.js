@@ -493,6 +493,56 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		           	
 		     }
 	     }
+	     
+	     this.remove = function() {
+	     	
+	     	d3.select("#zone"+ID).remove();
+	     	
+		    tabDataSvg = null;
+		    viewGroup = null;
+		    //TP.Context().view[target] = __g__;
+		    
+		    controller = null;
+		    svg = null;
+		    nodesColor = null;
+		    linksColor = null;
+		    bgColor = null;
+		    viewNodes = null;
+		    lasso = null;
+		    DataTranslation = null;
+		    
+			selectMode = null;
+			moveMode = null;
+			showLabels = null;
+			showLinks = null;
+			nodeInformation = null; 
+		    
+		    metric_BC = null;
+		    metric_SP = null;
+		    combined_foreground = null;
+		    
+		    typeView = null;
+		    acceptedGraph = null;
+		    tabLinks = null;
+		    name = null;
+		    
+		    graph = null;
+		    viewInitialized = null;
+		    
+		   	ID = null;
+		   	
+		   	id = null; 
+		   	groupe = null; 
+		   	bouton = null; 
+		   	svgs = null; 
+		   	target = null; 
+		   	nodesC = null; 
+		   	linksC = null; 
+		   	bgC = null; 
+		   	view_nodes = null; 
+		   	type = null; 
+		   	idAssociation = null;	     	
+	     }
 		
 
 //utilisé pour test nombre View

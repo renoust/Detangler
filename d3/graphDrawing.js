@@ -910,6 +910,10 @@
             var link = g.svg.selectAll("g.link")
                 .data(_graph.links(), function (d) {return d.baseID})
             link.exit().remove()
+            
+            var label = g.svg.selectAll("text.node")
+                .data(_graph.nodes(), function (d) {return d.baseID})
+            label.exit().remove()
         }
 
 
