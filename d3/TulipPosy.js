@@ -39,13 +39,13 @@ var TulipPosy = function (originalJSON) {
 	var target1 = ""+TP.Context().getIndiceView();
 	var target2 = ""+TP.Context().getIndiceView();
 	
-	assert(false, "target :")
-	console.log(target);
-	console.log(typeof(target));
+	// assert(false, "target :")
+	// console.log(target);
+	// console.log(typeof(target));
 	
-	assert(false, "target1 :")
-	console.log(target1);
-	console.log(typeof(target1))
+	// assert(false, "target1 :")
+	// console.log(target1);
+	// console.log(typeof(target1))
 	
 
 
@@ -92,7 +92,7 @@ var TulipPosy = function (originalJSON) {
         ['b8','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}],
         ['b9','hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}],
         ['b10','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
-        ['b11','operator ' + contxt.catalyst_sync_operator,'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator()}}],
+        ['b11','operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}],
         ['b12','weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
@@ -213,7 +213,7 @@ var TulipPosy = function (originalJSON) {
         var menu = $('#menu-'+menuNum);
         var parent = src.parentNode;
         var button = $(this);
-        console.log(parent)
+        
         if(parent.className==='nosidebar'){
             button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             button.text('<');

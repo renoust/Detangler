@@ -158,10 +158,11 @@ input[type=spinner]{
 /******************************** Entanglement **********************************/
 
 #entanglement-cont{
-	margin:5;
+	
 	border: 1px solid #666666;
     position: relative;
     height: 70px;
+    margin-bottom: 5px;
 
 }
 #bg  {

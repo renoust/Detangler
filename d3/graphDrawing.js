@@ -266,7 +266,7 @@
 
 			if(view_nodes == "rect" && glyphR != null)
 			{
-				assert(true, "rect")
+				// assert(true, "rect")
 				glyphR.attr("x", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -280,7 +280,7 @@
 			}
 			if(view_nodes == "circle" && glyphR != null)
 			{
-				assert(true, "circle");
+				// assert(true, "circle");
                 glyphR.attr("cx", function (d) {
                     d.currentX = d.x;
                     return d.currentX
@@ -471,7 +471,7 @@
         // the new x and y values (d3 does the transition) 
         g.move = function (_graph, dTime) {
 
-            assert(true, "que le move soit avec toi (maitre Yoda)");
+            // assert(true, "que le move soit avec toi (maitre Yoda)");
 
             g.cGraph = _graph
 
@@ -697,7 +697,7 @@
 		//never used. Then there is still "substrate", "catalyst" etc.
 		g.resetDrawing = function(){
 			
-			assert(true, "resetDrawing")
+			// assert(true, "resetDrawing")
 			
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)

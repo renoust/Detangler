@@ -917,17 +917,17 @@
         this.infoPane = function(){
             var menu = this.addPanelMenu('Informations');
             var content = $("#"+menu +" .menu-content");
-
+            
+            
+            $('<div/>', {id:'entanglement-cont'}).appendTo('#'+content.attr('id'))
             $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
 
 
-            document.getElementById(menu).innerHTML += 
-                "<div id='entanglement-cont'>"+
+            document.getElementById('entanglement-cont').innerHTML += 
                     "<div id='bg'></div>"+
                     "<div id='entanglement'><p>Entanglement:</br>" + 
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
-                "</div>";
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";
 
             $('<div/>', {id:'infoNodes'}).appendTo('#'+content.attr('id'));
             $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
