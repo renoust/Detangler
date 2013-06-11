@@ -220,10 +220,11 @@
         this.resetView = function (target) {
             var cGraph = null
             var svg = null
-
+			
+			
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
+			/*
             nodeDatum = svg.selectAll("g.node").data()
             // strangely the matrix that should be applied by transform is 
             //squared?! so we adapt the nodes values
@@ -236,10 +237,16 @@
                 .attr("transform", "translate(" + 0 + "," + 0 + ") scale(" + 1 + ")")
             svg.selectAll("text.node").style("font-size", function () {
                 return 12;
-            });
+            });*/
             
     		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+	         
+	       	var graph_drawing = TP.GraphDrawing(cGraph, svg, target);
+	        graph_drawing.rescaleGraph(cGraph);
+	        	        
+	        graph_drawing.changeLayout(cGraph,0);
+	        
 	            
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }

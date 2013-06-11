@@ -33,6 +33,8 @@
 
         // this function draws the graph, first the links then the nodes
         g.draw = function () {
+        	
+        	
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
@@ -399,7 +401,7 @@
         	);
 
         	g.rescaleGraph(TP.Context().view[target].getGraph());
-        	g.move(g.cGraph,0);
+        	g.changeLayout(g.cGraph,0);
 		}
 
 
@@ -466,7 +468,7 @@
         // we select each svg:g and its node from their identifier (baseID), 
         // and associate 
         // the new x and y values (d3 does the transition) 
-        g.move = function (_graph, dTime) {
+        g.changeLayout = function (_graph, dTime) {
 
             assert(true, "que le move soit avec toi (maitre Yoda)");
 
