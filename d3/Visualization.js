@@ -369,12 +369,14 @@
             var scaleMax = null
             if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
+
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
             objectReferences.VisualizationObject.entanglementCaught(graphName);
+
         };
 
 
@@ -396,8 +398,7 @@
 
 
         this.drawBarChart = function(target, smell){
-
-    	    
+ 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
@@ -414,7 +415,7 @@
             {
                tabClick[""+metric[i]+""] = 0;
             }
-            
+
             //console.log("mettttrrrrrrrriiiiiiicccccc : ");
             //console.log(tabClick);
             

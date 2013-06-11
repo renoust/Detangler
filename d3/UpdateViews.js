@@ -156,6 +156,7 @@
             //console.log("the session sid has just been affected: ", TP.Context().sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
             
+
             //TP.GraphDrawing(TP.Context().getViewGraph("substrate"),TP.Context().getViewSVG("substrate")).rescaleGraph(contxt,data);
 
         	var typeGraph = TP.Context().view[target].getType();
@@ -179,6 +180,7 @@
             assert(true, "moved")
             
             
+
 
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
@@ -300,11 +302,13 @@
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);      
             graph_drawing.resize(graph, 0);
 
+
             var pileCentrality = new TP.Metric();
             
             /*
             var char = d3.selectAll("g.node.substrate");
             char.attr("x", function(d){ console.log("viewMetric : "+ d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
+
           
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/

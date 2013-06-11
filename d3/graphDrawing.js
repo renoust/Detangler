@@ -518,8 +518,11 @@
                 .delay(dTime)*/
                 .select("path")
                 .attr("d", function (d) {
+
 					//assert(false, "edge does not match or isn't bounded")
+
                     //console.log(d)                 	
+
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             
@@ -541,8 +544,10 @@
                 .attr("dy", function(d){return d.y});
              
              //console.log("arrangeLabels after GraphDrawing.move()");
-             assert(true, "arranging labels")
+
+             //assert(true, "arranging labels")
              g.arrangeLabels();
+
 
         }
 
@@ -562,6 +567,7 @@
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph
 
+
             var scaleMin = 3.0
             var scaleMax = 12.0
 
@@ -569,13 +575,15 @@
             if(params.metric) parameter = params.metric;
             if(params.scaleMin) scaleMin = params.scaleMin;
             if(params.scaleMax) scaleMax = params.scaleMax;
+
             if (parameter == "") return
+
 
             var valMin = null
             var valMax = null
             g.cGraph.nodes()
                 .forEach(function (n) {
-                    val = eval("n." + parameter);
+                   val = eval("n." + parameter);
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -585,14 +593,17 @@
             //linear
            if (valMax == valMin || valMax - valMin < 0.0001) {scaleMin = 5}
 
+
             var dom = [valMin, valMax]
             var range = [scaleMin, scaleMax]
             var scale = d3.scale.linear().domain(dom).range(range)
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {return d.baseID})
+
             node.select("circle.node").attr("r", function (d) {
                 return scale(eval('d.' + parameter));
+
             })
             node.select("rect.node")
                 .attr("width", function (d) {
@@ -603,7 +614,9 @@
                 })
 
             var link = g.svg.selectAll("g.link")
+
                 .data(g.cGraph.links(), function (d) {return d.baseID})               
+
 
             link.select("path.link")
                 .style("stroke-width", function (d) {return 1;})
@@ -612,7 +625,7 @@
 
         g.nodeColorMap = function (_graph, dTime, parameter) {
             g.cGraph = _graph
-              console.log(g.cGraph);
+              //console.log(g.cGraph);
             //we would like it better as a parameter
             scaleMin = 3.0
             scaleMax = 12.0
@@ -733,26 +746,6 @@
             // redraw the previous nodes to the default values
             //g.arrangeLabels();
             //g.resetDrawing();
-            /*
-            var node = g.svg.selectAll("g.node")
-                .style("opacity", .5)
-                .select("g.glyph")
-                .select("circle.node")
-                .style('fill', TP.Context().tabNodeColor["catalyst"])
-                .attr('r', 5)
-                .style("stroke-width", 0)
-                .style("stroke", "black")
-
-            var node = g.svg.selectAll("g.node")
-                .select("g.glyph")
-                .select("rect.node")
-                .style('fill', TP.Context().tabNodeColor["substrate"])
-                .attr('width', 2 * 5)
-                .attr('height', 2 * 5)
-                .style("stroke-width", 0)
-                .style("stroke", "black")*/
-               
-            //assert(true, "dans le show show show");
             
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
@@ -778,21 +771,6 @@
                 .select("text.node")
                 .attr("visibility", "hidden")
                                
-                               
-/*
-            var link = g.svg.selectAll("g.link")
-                .style("opacity", .25)
-                .select("path.link")
-                .style("stroke", TP.Context().tabLinkColor["substrate"])
-                .style("stroke-width", function (d) {return 1;})
-
-            var link = g.svg.selectAll("g.link")
-                .style("opacity", .25)
-                .select("path.link")
-                .style("stroke", TP.Context().tabLinkColor["catalyst"])
-                .style("stroke-width", function(d) { return 1;})
-*/
-
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
@@ -939,8 +917,7 @@
                 return false;
             }
 
-            var labels = g.svg.selectAll("text.node")
-                .attr("visibility", "visible");
+            var labels = g.svg.selectAll("text.node").attr("visibility", "visible");
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")
@@ -972,10 +949,8 @@
                         ];
 
                         noChange = false;
-                        for (var iLabel2 = iLabel + 1; 
-                                iLabel2 < iterArray.length; iLabel2++) {
-                            if (labelsArray[iLabel2].attr("visibility") 
-                                    == "visible") {
+                        for (var iLabel2 = iLabel + 1; iLabel2 < iterArray.length; iLabel2++) {
+                            if (labelsArray[iLabel2].attr("visibility")  == "visible") {
                                 var bbox2 = iterArray[iLabel2];
                                 var polygon2 = [
                                     [bbox2.x - margin, bbox2.y - margin],
@@ -986,12 +961,9 @@
                                     [bbox2.x + bbox2.width + margin, bbox2.y 
                                         + bbox2.height + margin],
                                 ];
-                                for (var iPoint = 0; iPoint < polygon2.length
-                                     && !noChange; iPoint++) {
-                                    if (intersect([polygon[0], polygon[3]], 
-                                        polygon2[iPoint])) {
-                                        labelsArray[iLabel2].attr("visibility", 
-                                            "hidden");
+                                for (var iPoint = 0; iPoint < polygon2.length && !noChange; iPoint++) {
+                                    if (intersect([polygon[0], polygon[3]], polygon2[iPoint])) {
+                                        labelsArray[iLabel2].attr("visibility", "hidden");
                                         noChange = true;
                                         anyChange = true;
                                         break;
@@ -1020,8 +992,8 @@
                 count++
             };
             //console.log("iterated: ", count);
+     
         }
-
 
         g.removeNodeOverlap = function () {
             //fast overlap removal in javascript...

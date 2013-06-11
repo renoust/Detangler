@@ -37,6 +37,7 @@
         // initialization of the svg frames
 		this.tabGraph = [];
 
+        //substrate by default
         this.activeView = "substrate";
 
         this.stateStack = [];

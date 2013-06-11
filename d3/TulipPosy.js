@@ -22,9 +22,9 @@ import_class('objectReferences.js', 'TP');
 import_class('View.js', 'TP');
 
 var TulipPosy = function (originalJSON) {
+
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
-
 
     //assert(new testView(5, 3), "test réusssie"); //test nombre view
 /*
@@ -70,8 +70,8 @@ var TulipPosy = function (originalJSON) {
         ['b10','reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}],
         ['b11','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}],
         ['b12','hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}],
-        ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target)}}],
-        ['b14','sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}],
+        // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
+        ['b14','sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts()}}],
         ['b15','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}],
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
         ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}],
@@ -96,7 +96,7 @@ var TulipPosy = function (originalJSON) {
         ['b12','weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
-        ['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
+        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
         ['b16','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}],
         ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}],
 
@@ -199,19 +199,23 @@ var TulipPosy = function (originalJSON) {
 
 
 
+
     $('#undo').click(function(){TP.Context().changeStack.undo();});
     $('#redo').click(function(){TP.Context().changeStack.redo();});    
 
 
 // Event toggle sidebars
+
     $('span.toggleButton').click(function(e){
+
         var src = event.srcElement.parentNode;
         var menuNum = src.id.split('-')[1];
         var menu = $('#menu-'+menuNum);
         var parent = src.parentNode;
         var button = $(this);
-        
+        console.log(parent)
         if(parent.className==='nosidebar'){
+            button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             button.text('<');
             parent.className='sidebar';
             $('.cont').each(function(){
@@ -223,6 +227,7 @@ var TulipPosy = function (originalJSON) {
         else if(parent.className==='sidebar'){
             if(menu.css('z-index')==102){
                 button.text('>');
+                button.css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 parent.className = 'nosidebar';
                 $('.cont').each(function(){
                     $(this).css('z-index',0)
@@ -230,14 +235,19 @@ var TulipPosy = function (originalJSON) {
                 })
             }
             else{
-                $('.toggleButton').each(function(){ $(this).text('>') })
+                $('.toggleButton').each(function(){ 
+                    $(this).text('>') 
+                    $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
+                })
                 $('.cont').each(function(){ $(this).css('z-index',101) })
                 menu.css('z-index',102);
                 button.text('<')
+                button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             }
         }
         else console.log('FAIL: toggle panel'); 
     });
+
 
     $('.submit').click(function(){
         res = {}
@@ -278,28 +288,35 @@ var TulipPosy = function (originalJSON) {
 
     /*var wrap = $('#wrap')[0];
 
-    // Variables
-    var objMain = $('#wrap');
 
-    // Show sidebar
-    function showSidebar(menuNum){
-        objMain[0].className="sidebar-"+menuNum;
-        $('#menu-'+menuNum)[0].style.cssText='z-index:101;'; 
-    }
 
-    // Hide sidebar
-    function hideSidebar(menuNum){
-        objMain[0].className="nosidebar";
-        $('#menu-'+menuNum)[0].style.cssText='left:-231; z-index:0;'; 
-    }
 
-    $('span.toggleButton').click(function(e){
-        var menu = event.srcElement.parentNode;
-        var menuNum = menu.id.split('-')[1];
-        if(menu.parentNode.className==='nosidebar'){
-            showSidebar(menuNum);
-        } else {hideSidebar(menuNum)}
-    });
+    $('.submit').click(function(){
+        res = {}
+        var key = null;
+        var val = null;
+
+        var data = $(this).siblings("input[type='radio']:checked")
+        data.each(function(){
+            key = $(this).attr('name');
+            res[key] = $(this).val();
+        })
+
+        data = $(this).siblings('.ui-spinner')
+        data.each(function(){
+            key = $(this).children('input').attr('name');       
+            val = $(this).children('input')[0].value
+            res[key] = val;
+        })
+
+        data = $(this).siblings("input[type='checkbox']:checked")
+        data.each(function(){
+            key = $(this).attr('name');
+            if (res[key]==null)         
+                res[key] = $(this).val();
+            else
+                res[key] += ", "+$(this).val();
+        })
 
 
      $("#zonetoto").parent().appendTo("#container")
@@ -308,14 +325,17 @@ var TulipPosy = function (originalJSON) {
      
 */
 
+
     // This is the tricky part, because the json given to the function can be of many shapes.
     // If it is a query, we call tulip to perform the search
     // if it is a given file we load it normally
     // other wise we load the default function
 
+
        //objectReferences.InterfaceObject.toggleSelectMove('substrate');
        //objectReferences.InterfaceObject.toggleSelectMove('catalyst'); 
 	
+
     if (originalJSON != null && originalJSON != "") {
         console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {
@@ -327,5 +347,5 @@ var TulipPosy = function (originalJSON) {
         } else objectReferences.ClientObject.loadData(null, target);
     }
 
-        
+    
 };
