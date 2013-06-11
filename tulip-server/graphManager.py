@@ -199,10 +199,17 @@ class graphManager():
         #        self.graph.addEdge(e)
         #self.graph = g
         
-        if target == 'catalyst':
-            self.catalyst = g
-        else:
-            self.substrate = g
+        gNodeList = [n for n in g.getNodes()]
+        gEdgeList = [e for e in g.getEdges()]
+        
+        if graph.numberOfNodes() != len(gNodeList):
+            for n in graph.getNodes():
+                if n not in gNodeList:
+                    graph.delNode(n)
+        if graph.numberOfEdges() != len(gEdgeList):
+            for e in graph.getEdges():
+                if e not in gEdgeList:
+                    graph.delEdge(e)
         
         return graph
 

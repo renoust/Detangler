@@ -352,6 +352,9 @@
         // data, the graph data (modified during the function)
         g.rescaleGraph = function(graph){
 
+			if (!graph)
+				graph = g.cGraph
+
 			var node = graph.nodes();
             //console.log("Rescaling the graphe, here is the data: ", data);
             var frame = 10.0

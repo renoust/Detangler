@@ -67,6 +67,41 @@
             
 		}
 		
+		this.subsetNodes = function (nodes, type) {
+			var newArray = [];
+			var baseIDArray = [];
+			nodes.forEach(function(n){baseIDArray.push(n.baseID);})
+			
+            g.nodes_array.forEach(function (d, i) {
+				if (baseIDArray.indexOf(d.baseID) != -1)
+				{
+					if(d._type == type)
+						newArray.push(d);
+				}
+            });
+            
+            g.nodes_array = newArray;
+            return g.nodes_array;            
+		}
+
+
+		this.subsetLinks = function (links, type) {
+			var newArray = [];
+			var baseIDArray = [];
+			links.forEach(function(n){baseIDArray.push(n.baseID);})
+			
+            g.links_array.forEach(function (d, i) {
+				if (baseIDArray.indexOf(d.baseID) != -1)
+				{
+					if(d._type == type)
+						newArray.push(d);
+				}
+            });
+            
+            g.links_array = newArray;
+            return g.links_array;            
+		}		
+		
 		this.updateNodeAttributes = function (nodes, _attributes, updateExisting) {
 			//attributes should be of the form [{in:name_in, out:name_out}], out is optional
 			var newArray = []
