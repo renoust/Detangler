@@ -160,15 +160,25 @@
 
         	var typeGraph = TP.Context().view[target].getType();
         	
-            TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph) //substrate
-            TP.Context().view[target].getGraph().links(data.links, typeGraph) //substrate
-            TP.Context().view[target].getGraph().edgeBinding() //...
-            graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target)
+        	var graph = TP.Context().view[target].getGraph();
+        	
+            graph_drawing = TP.GraphDrawing(graph, TP.Context().view[target].getSvg(), target);
+        	        	
+        	
+            graph.nodes(data.nodes, typeGraph) //substrate
+            graph.links(data.links, typeGraph) //substrate
+            
+            graph_drawing.rescaleGraph(graph);
+            
+            graph.edgeBinding() //...   
+            
             assert(true, "graphDrawing created") 
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             graph_drawing.clear();
             graph_drawing.draw();
-            assert(true, "moved") 
+            assert(true, "moved")
+            
+            
 
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
@@ -178,16 +188,24 @@
         this.applySubstrateAnalysisFromData = function (data, target) { //catalyst at bingin of project, without generic programmation
             //console.log("received data after analysis:")
             //console.log(data);
-            TP.GraphDrawing(TP.Context().view[target].getGraph(),TP.Context().view[target].getSvg(), target).rescaleGraph(contxt,data);
+            //TP.GraphDrawing(TP.Context().view[target].getGraph(),TP.Context().view[target].getSvg(), target).rescaleGraph(data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
             
             var typeGraph = TP.Context().view[target].getType();
             
-            TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph); //catalyst
-            TP.Context().view[target].getGraph().links(data.links, typeGraph); //catalyst
+            var graph = TP.Context().view[target].getGraph();
+            
+            graph_drawing = TP.GraphDrawing(graph, TP.Context().view[target].getSvg(), target);
+            //graph_drawing.rescaleGraph(data);
+            
+            graph.nodes(data.nodes, typeGraph); //catalyst
+            graph.links(data.links, typeGraph); //catalyst
+            
+            graph_drawing.rescaleGraph(graph);
+            
             TP.Context().view[target].getGraph().edgeBinding();
-            graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target)
+
             graph_drawing.clear()
             graph_drawing.draw()
             TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity']
@@ -195,7 +213,7 @@
     		
     		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
-	            objectReferences.VisualizationObject.entanglementCaught(target);
+	        objectReferences.VisualizationObject.entanglementCaught(target);
         }
 
 
@@ -211,12 +229,13 @@
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().view[graphName].getGraph();
 
-			TP.GraphDrawing(graph,svg,graphName).rescaleGraph(contxt,data);
+			//TP.GraphDrawing(graph,svg,graphName).rescaleGraph(contxt,data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
             //graph.nodes(data.nodes, graphName);
             //graph.links(data.links, graphName);
             //graph.edgeBinding();
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
+            graph_drawing.rescaleGraph(graph);
             //graph_drawing.move(graph, 0);
             graph_drawing.clear()
             graph_drawing.draw()
@@ -231,11 +250,15 @@
             graph = TP.Context().view[graphName].getGraph();
             
             var typeGraph = TP.Context().view[graphName].getType();
-            
+            var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
+                        
             graph.nodes(data.nodes, typeGraph);
             graph.links(data.links, typeGraph);
+            
+            graph_drawing.rescaleGraph(graph);
+            
             graph.edgeBinding();
-            var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
+            
             graph_drawing.exit(graph, 0);
         }
 
@@ -256,8 +279,6 @@
 			TP.Context().view[graphName].getGraph().updateLinks(data.links, [{'in':"viewMetric", 'out':attributeName}], true);
 			//assert(true, "again");
 			
-			console.log(TP.Context().view[graphName].getGraph().nodes());
-			
 
 			//data.nodes.forEach(function(d){console.log(d)});
 			//TP.Context().getViewGraph(graphName).nodes().forEach(function(d){console.log(d)});
@@ -269,14 +290,14 @@
             graph = TP.Context().view[graphName].getGraph();
 
 
-            TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data, graphName);
+            //TP.GraphDrawing(graph,svg).rescaleGraph(contxt,data, graphName);
             
             //objectReferences.VisualizationObject.rescaleGraph(data);
             //graph.nodes(data.nodes, graphName);
             //graph.links(data.links, graphName);
             //graph.edgeBinding();
             
-            var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
+            var graph_drawing = TP.GraphDrawing(graph, svg, graphName);      
             graph_drawing.resize(graph, 0);
 
             var pileCentrality = new TP.Metric();
@@ -296,7 +317,7 @@
 
     		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-	            objectReferences.VisualizationObject.entanglementCaught(graphName);
+	        objectReferences.VisualizationObject.entanglementCaught(graphName);
         }
 
 

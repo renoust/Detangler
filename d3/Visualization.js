@@ -266,6 +266,7 @@
             cGraph = TP.Context().view[target].getGraph();
 
             graph_drawing = TP.GraphDrawing(cGraph, svg, target)
+    
             graph_drawing.rotate(target,5)
         }
         
@@ -317,13 +318,10 @@
                 
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
-                    if (d.selected || d.labelVisibility) {
-                        d.labelVisibility = true;
-                        return "visible";
-                    } else {
+
                         d.labelVisibility = false;
                         return "hidden";
-                    }
+
                 });
                 svg.select('text.showhideLabels').text('show labels');
             }
