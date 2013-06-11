@@ -71,7 +71,7 @@ var TulipPosy = function (originalJSON) {
         ['b11','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}],
         ['b12','hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}],
         // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
-        ['b14','sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts()}}],
+        ['b14','sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}],
         ['b15','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}],
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
         ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}],

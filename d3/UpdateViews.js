@@ -26,14 +26,13 @@
         this.syncLayoutsFromData = function (data, viewID) {
         	
         	var target = viewID;
-        	assert(true, "syncLayoutsFromData");
         	
             var cGraph = null;
             var svg = null;
 
             cGraph = TP.Context().view[viewID].getGraph(); //substrate before generic code
-            svg = TP.Context().view[viewID].getSvg(); //substrate...
 
+            svg = TP.Context().view[viewID].getSvg(); //substrate...
 
 
             // we need to rescale the graph so it will fit the current svg 
@@ -45,11 +44,10 @@
             //graph_drawing.rescaleGraph(contxt,data);
             var typeGraph = TP.Context().view[viewID].getType();
             
+            //cGraph.nodes(data.nodes, typeGraph);
+            cGraph.updateNodeAttributes(data.nodes, [{'in':'x'}, {'in':'y'}], true);
 
-            cGraph.nodes(data.nodes, typeGraph);
-            cGraph.links(data.links, typeGraph);
-            cGraph.edgeBinding();
-            //graph_drawing.move(cGraph, 0);
+            graph_drawing.rescaleGraph();
             graph_drawing.clear()
             graph_drawing.draw();
 
@@ -75,6 +73,8 @@
 	            combinedGraph.specialEdgeBinding("substrate", "catalyst");
 			}
 			
+			/*********** TO BE REDONE
+
             var p1_s = data.data[viewID][0];
             var p2_s = data.data[viewID][1];
             var p1prime_s;
@@ -140,10 +140,13 @@
 	            graph_drawing.clear();
 	            graph_drawing.draw();
 			}
+			*/
 			
+
             TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
             TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
 			TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst"); 
+
         }
 
 
@@ -173,11 +176,9 @@
             
             graph.edgeBinding() //...   
             
-            assert(true, "graphDrawing created") 
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             graph_drawing.clear();
             graph_drawing.draw();
-            assert(true, "moved")
             
             
 
