@@ -68,7 +68,7 @@ var TulipPosy = function (originalJSON) {
         ['b10','reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}],
         ['b11','hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}],
         ['b12','hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}],
-        ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target)}}],
+        // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
         ['b14','sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts()}}],
         ['b15','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}],
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
@@ -211,7 +211,7 @@ var TulipPosy = function (originalJSON) {
         var menu = $('#menu-'+menuNum);
         var parent = src.parentNode;
         var button = $(this);
-        
+        console.log(parent)
         if(parent.className==='nosidebar'){
             button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
             button.text('<');
@@ -345,5 +345,5 @@ var TulipPosy = function (originalJSON) {
         } else objectReferences.ClientObject.loadData(null, target);
     }
 
-        
+    
 };

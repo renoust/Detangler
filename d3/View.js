@@ -326,7 +326,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        console.log(TP.Context().activeView);
 	        TP.Context().InterfaceObject.interactionPane(bouton,'update')
         	TP.Context().InterfaceObject.addInfoButton(__g__);
-
+        	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){
         		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
         	titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x")
@@ -421,7 +421,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		        moveMode = true;
 		        showLabels = true;
 		        showLinks = true;
-		        nodeInformation = false;           
+		        nodeInformation = true;           
 	           
 	            TP.Interaction().createLasso(ID);
 	            TP.Interaction().addZoom(ID);

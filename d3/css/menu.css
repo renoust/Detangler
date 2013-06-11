@@ -141,6 +141,20 @@ input[type=spinner]{
 	font-weight:bold;
 }
 
+#infoNodes {
+	/*margin: 5 5 5 5;*/
+	padding: 5px;
+	font-family:arial;
+	font-size:12px;
+	font-weight:bold;
+
+	border: 1px solid #666666;
+}
+
+#infoNodes p{
+	margin: 2px;
+}
+
 /******************************** Entanglement **********************************/
 
 #entanglement-cont{

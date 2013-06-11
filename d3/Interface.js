@@ -313,11 +313,16 @@
 
         this.addInfoButton = function (target) {
             var cGraph = target.getGraph();
+
+            var path = $('#files').val().split('\\');
+            var file = path[path.length-1];
+
             var zone = '#infoView'
             document.getElementById('infoView').innerHTML = ''
-            $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
-            $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
-            $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
+            $('<p/>', {text:'File:  '+ file}).appendTo(zone)
+            $('<p/>', {text:'View:  '+ target.getName()}).appendTo(zone);
+            $('<p/>', {text:' - '+ cGraph.nodes().length+' nodes'}).appendTo(zone);
+            $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);
             /*
             var cGraph = null
             var svg = null
@@ -627,8 +632,8 @@
         }
 
 
-        this.attachInfoBox = function (target) {
-            var cGraph = null
+        this.attachInfoBox = function () {
+            /*var cGraph = null
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
@@ -656,18 +661,23 @@
                         .select("rect.infoBox")
                         .style("fill", TP.Context().highlightFillColor);
                     TP.Context().mouse_over_button = false;
-                });
-            svg.selectAll("g.node")
+                });*/
+            d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    objectReferences.InterfaceObject.addInfoBox(target, d)
+                    objectReferences.InterfaceObject.addInfoBox(d)
                 });
         }
 
 
-        this.addInfoBox = function (target, node) {
+        this.addInfoBox = function (node) {
+            document.getElementById('infoNodes').innerHTML = "<p>Node Informations: </p>"
+            $('<p/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
+            $('<p/>', {text:node.label}).appendTo('#infoNodes')
+            
+            /*
             var cGraph = null
             var svg = null
-
+            
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
 
@@ -698,7 +708,7 @@
             };
 
             nbInfoBox = svg.selectAll("g.nodeInfo")[0].length
-            //console.log("the current node", node);
+            console.log("the current node", node);
 
             ib = svg.selectAll("g.nodeInfo" + node.baseID)
                 .data([node])
@@ -729,6 +739,7 @@
                 .style("fill", TP.Context().defaultTextColor)
                 .style("font-family", TP.Context().defaultTextFont)
                 .style("font-size", TP.Context().defaultTextSize)
+
 
             ib.append("text")
                 .classed("nodeInfo", true)
@@ -775,7 +786,7 @@
                         .style("fill", "lightgray")
                 })
 
-            //console.log("node info appended", ib)
+            //console.log("node info appended", ib)*/
         }
 
 
@@ -916,7 +927,10 @@
                     "<div id='entanglement'><p>Entanglement:</br>" + 
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
                 "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
-                "</div>"
+                "</div>";
+
+            $('<div/>', {id:'infoNodes'}).appendTo('#'+content.attr('id'));
+            $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
 
             //affichage par défaut
             //this.addInfoButton(contxt.activeView);
