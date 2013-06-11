@@ -78,7 +78,9 @@ var TulipPosy = function (originalJSON) {
         ['b18','BarChart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}],
         ['b19','BarChart_rotate','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}],
         ['b20','ScatterPlot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}],
-        ['b21','Size Map',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}]
+        ['b21','Size Map',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}],
+        ['b22','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target, 120, [TP.Context().width/2,TP.Context().height/2])}}],
+        ['b23','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}]
     ]
 
     var catalystarray = [
@@ -96,9 +98,11 @@ var TulipPosy = function (originalJSON) {
         ['b12','weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         ['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
-        ['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
+        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
         ['b16','arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}],
         ['b17','rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}],
+        ['b18','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}],
+        ['b19','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}]
 
     ]
 
