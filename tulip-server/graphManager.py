@@ -198,6 +198,12 @@ class graphManager():
         #for e in g.getEdges():
         #        self.graph.addEdge(e)
         #self.graph = g
+        
+        if target == 'catalyst':
+            self.catalyst = g
+        else:
+            self.substrate = g
+        
         return graph
 
     def updateLayout(self, jsonGraph, target):

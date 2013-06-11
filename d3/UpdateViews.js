@@ -201,9 +201,9 @@
 
         this.applyLayoutFromData = function (data, graphName) {
             //assert(true, "here");;
-			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [{'in':'x'},{'in':'y'}], true);
 			//assert(true, "there");
-			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
+			//TP.Context().view[graphName].getGraph().updateLinkAttributes(data.links, true);
 			//assert(true, "again");
 
 			var graph = null;
@@ -240,16 +240,20 @@
         }
 
 
-        this.applyFloatAlgorithmFromData = function (data, graphName) {
+        this.applyFloatAlgorithmFromData = function (data, graphName, attributeName) {
 			
+			//wtf?
 			window.toutou = data;
+			
+			if (! attributeName)
+				attributeName = "viewMetric"
 			
 			console.log(data);
 			
 			//assert(true, "here");;
-			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [{'in':"viewMetric", 'out':attributeName}], true);
 			//assert(true, "there");
-			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
+			TP.Context().view[graphName].getGraph().updateLinks(data.links, [{'in':"viewMetric", 'out':attributeName}], true);
 			//assert(true, "again");
 			
 			console.log(TP.Context().view[graphName].getGraph().nodes());
