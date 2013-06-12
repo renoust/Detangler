@@ -283,7 +283,7 @@
 	                        .style('stroke', catalystView.getLinksColor());
 
 						
-	                    objectReferences.VisualizationObject.resetSize(catalystName);
+	                    //objectReferences.VisualizationObject.resetSize(catalystName);
 	                    catalystSvg.selectAll("text.node").style("opacity", 1)
 	                    objectReferences.VisualizationObject.arrangeLabels(catalystName);
 
@@ -316,7 +316,7 @@
 	                        .style('stroke', substrateView.getLinksColor());
 
 	                    
-	                    objectReferences.VisualizationObject.resetSize(substrateName);
+	                    //objectReferences.VisualizationObject.resetSize(substrateName);
 	                    substrateSvg.selectAll("text.node").style("opacity", 1)
 	                    objectReferences.VisualizationObject.arrangeLabels(substrateName);
 
@@ -358,7 +358,7 @@
 	                        .style('stroke', combinedNodeColor);
 
 						
-						objectReferences.VisualizationObject.resetSize(combinedName);
+						//objectReferences.VisualizationObject.resetSize(combinedName);
 						combinedSvg.selectAll("text.node").style("opacity", 1)
 												
 					}
