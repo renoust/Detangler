@@ -33,8 +33,6 @@
 
         // this function draws the graph, first the links then the nodes
         g.draw = function () {
-        	
-        	
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
@@ -286,6 +284,7 @@
 			            .classed("node", true).classed("text", true)
 			            .attr("dx", function(d){d.currentX = d.x; return d.currentX})
 			            .attr("dy", function(d){d.currentY = d.y; return d.currentY})
+
             //.attr('unselectable', 'on')
             //.on('selectstart', function(){return false;})
             			.text(function(d) { return d.label; });
@@ -605,8 +604,8 @@
                 .data(g.cGraph.links(), function (d) {return d.baseID})               
 
 
-            /*link.select("path.link")
-                .style("stroke-width", function (d) {return 1;})*/
+            link.select("path.link")
+                .style("stroke-width", function (d) {return 1;})
         }
 
 

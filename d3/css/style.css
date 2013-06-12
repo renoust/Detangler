@@ -1,8 +1,10 @@
 /********************************* General ***********************************/
-/**{
-	font-size: 1em;
+*{
+	/*font-size: 1em;*/
+	font-size: 11px;
+	font-family: Verdana,Arial,sans-serif;
 }
-*/
+
 body{
 	margin:0px;
 }
@@ -111,11 +113,6 @@ ul#menu > li {
 	padding:2px;
 }
 
-/*.style("stroke", "black")
-                        .style('color',contxt.labelColor)
-			            .style("stroke-width", 0.5)
-			            .style("font-family", "Arial")
-			            .style("font-size", 12)*/
 .node.text, .snippet{
 	stroke: black;
 	color: black;

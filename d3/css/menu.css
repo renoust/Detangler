@@ -72,8 +72,8 @@ button.submit{
 }
 .ui-accordion .ui-accordion-content {
 	padding: 5px;
-	font-size: 1em;
-	font-family: Arial
+	font-size: 11px;
+	font-family: Verdana,Arial,sans-serif;
 }
 
 .buttonMenu .ui-icon { display: none; }
