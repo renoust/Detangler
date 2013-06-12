@@ -307,8 +307,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    /****   en-tête du dialog   ****/
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
-	    $("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        
-	    $("<button/>", {id: "toggle"+ID, text:"Move"}).appendTo(titlebar); 
+	    /*$("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        */
+	    $("<button/>", {id: "toggle"+ID, text:"Move", style:'right:15px'}).appendTo(titlebar); 
 	
 	    $('#toggle' + ID).button().click (function(event){
 	        var interact = $(this).button("option","label");
@@ -319,7 +319,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 
 	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
 	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
-		dialog.dialog({minWidth:minWidth+ 20}) 
+		dialog.dialog({minWidth:minWidth+ 25}) 
 	    
 	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
 
