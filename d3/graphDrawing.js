@@ -60,26 +60,19 @@
                 var circleTarget = dragTarget.select("circle.node");
                 var rectTarget = dragTarget.select("rect.node");
                 var currentNode = dragTarget.data()[0]
-
                 var labelTarget = g.svg.select("text.node"+currentNode.baseID);
-
-                console.log("node num : " + currentNode.baseID + " : ")
-                console.log(labelTarget);
-
 
                 if(tabb[1] == null)
                 {
                     var posX = d3.event.dx
                     var posY = d3.event.dy
-                    console.log("first");                   
+                    // console.log("first");                   
                     currentNode.x += posX
                     currentNode.y += posY
                     currentNode.currentX += posX
                     currentNode.currentY += posY
-                
-                }
-                else{
-                    console.log("second");
+                }else{
+                    // console.log("second");
                     currentNode.x = tabb[1]
                     currentNode.y = tabb[2]
                     currentNode.currentX = tabb[3]
@@ -99,23 +92,17 @@
                         .attr("x", function(){return currentNode.x})
                         .attr("y", function(){return currentNode.y});
                 }
-
                 labelTarget
                     .attr("dx", function(){return currentNode.x})
                     .attr("dy", function(){return currentNode.y});
 
-                //console.log("current svg:", g.svg, g.cGraph.links());
-                var links = g.svg.selectAll("g.link").data(g.cGraph.links(), function (d) {
-                    return d.baseID
-                })
-                .select("path.link")
-                .attr("d", function (d) {
+                // console.log("current svg:", g.svg, g.cGraph.links());
+                var links = g.svg.selectAll("g.link").data(g.cGraph.links(), function (d) {return d.baseID})
+                    .select("path.link")
+                    .attr("d", function (d) {
                     //console.log("updating the graph");
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
-                })
-                .style("stroke-width", function (d) {
-                    return 1;
-                })
+                        return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    })
             };
 
             function showHideLabel() {
@@ -156,36 +143,35 @@
             })
             .call(d3.behavior.drag()
             .on("dragstart", function(d){
-                        var tab = []
-                        tab[0] = d3.select(this);
-                        tab[1] = tab[0].data()[0].x;
-                        tab[2] = tab[0].data()[0].y;
-                        tab[3] = tab[0].data()[0].currentX;
-                        tab[4] = tab[0].data()[0].currentY;
+                var tab = []
+                tab[0] = d3.select(this);
+                tab[1] = tab[0].data()[0].x;
+                tab[2] = tab[0].data()[0].y;
+                tab[3] = tab[0].data()[0].currentX;
+                tab[4] = tab[0].data()[0].currentY;
 
-                        undo = function(){console.log(tab); move(tab);} 
-                  })
+                undo = function(){console.log(tab); move(tab);} 
+            })
             .on("drag", function(d){
-                    
-                    var tab1 = []
-                    tab1[0] = d3.select(this);
-                    tab1[1] = null;
-                    tab1[2] = null;                 
-                    
-                    move(tab1);
-                    
-                    //save for redo
-                    var tab2 = []
-                    tab2[0] = d3.select(this);
-                    tab2[1] = tab2[0].data()[0].x;
-                    tab2[2] = tab2[0].data()[0].y;
-                    tab2[3] = tab2[0].data()[0].currentX;
-                    tab2[4] = tab2[0].data()[0].currentY;
-                    
-                    redo = function(){console.log(tab2); move(tab2);}           
-                    //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
-          
-                  })
+                var tab1 = []
+                tab1[0] = d3.select(this);
+                tab1[1] = null;
+                tab1[2] = null;                 
+                
+                move(tab1);
+                
+                //save for redo
+                var tab2 = []
+                tab2[0] = d3.select(this);
+                tab2[1] = tab2[0].data()[0].x;
+                tab2[2] = tab2[0].data()[0].y;
+                tab2[3] = tab2[0].data()[0].currentX;
+                tab2[4] = tab2[0].data()[0].currentY;
+                
+                redo = function(){console.log(tab2); move(tab2);}           
+                //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
+      
+              })
             .on("dragend", function(){
                         console.log("mouseDown, mouseDown");
                         //g.arrangeLabels();
@@ -200,15 +186,12 @@
             .on("click", showHideLabel)
             .on("mouseover", function(d){
                 //console.log("appending a snippet");
+                
                 g.svg.selectAll("text.snippet").data([d]).enter()
                     .append("text")
                     .attr("dx", function(dd){return dd.currentX})
                     .attr("dy", function(dd){return dd.currentY})
                     .classed("snippet", true)
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .style("font-family", "Arial")
-                    .style("font-size", 12)
                     .text(function(dd){return dd.label}); 
             })
             .on("mouseout",function(){
@@ -301,11 +284,6 @@
 			            .classed("node", true).classed("text", true)
 			            .attr("dx", function(d){d.currentX = d.x; return d.currentX})
 			            .attr("dy", function(d){d.currentY = d.y; return d.currentY})
-			            .style("stroke", "black")
-                        .style('color',contxt.labelColor)
-			            .style("stroke-width", 0.5)
-			            .style("font-family", "Arial")
-			            .style("font-size", 12)
             //.attr('unselectable', 'on')
             //.on('selectstart', function(){return false;})
             			.text(function(d) { return d.label; });
@@ -339,9 +317,9 @@
                 .attr("dy", function(d){return d.currentY})
                 //.style("stroke", "black")
                 // .style("stroke", context.labelColor)
-                .style("stroke-width", 0.5)
-                .style("font-family", "Arial")
-                .style("font-size", 12)
+                // .style("stroke-width", 0.5)
+                // .style("font-family", "Arial")
+                // .style("font-size", 12)
                 .text(function(d) { return d.label; });
 
             g.arrangeLabels();     	
@@ -456,8 +434,8 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
-                .style("stroke-width", function (d) {return 1;})
+                // .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
+                // .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
         }
@@ -621,8 +599,8 @@
                 .data(g.cGraph.links(), function (d) {return d.baseID})               
 
 
-            link.select("path.link")
-                .style("stroke-width", function (d) {return 1;})
+            /*link.select("path.link")
+                .style("stroke-width", function (d) {return 1;})*/
         }
 
 
@@ -695,7 +673,7 @@
         }
 /********************************** ON GOING ***********************************/
 		//never used. Then there is still "substrate", "catalyst" etc.
-		g.resetDrawing = function(){
+		/*g.resetDrawing = function(){
 			
 			// assert(true, "resetDrawing")
 			
@@ -731,7 +709,7 @@
                 .select("path.link")
                 .style("stroke", TP.Context().view[target].getAsociated("catalyst")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
-        }
+        }*/
 
 
 

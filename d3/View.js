@@ -316,7 +316,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else                    { $(this).button("option", "label", "Move");}
 	        TP.Context().stateStack[ID].executeCurrentState();
 	    });
-	    
+
 	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
 	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
 		dialog.dialog({minWidth:minWidth+ 20}) 

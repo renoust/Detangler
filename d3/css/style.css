@@ -99,17 +99,34 @@ ul#menu > li {
 	height: 20;
 	font-size: 11px;
 	float:right;
+	
 }
 
 /* hide close button on the dialog window */
-.ui-dialog-titlebar-close {
+/*.ui-dialog-titlebar-close {
   visibility: hidden;
-}
+}*/
 
 .ui-dialog .ui-dialog-content{
 	padding:2px;
 }
 
+/*.style("stroke", "black")
+                        .style('color',contxt.labelColor)
+			            .style("stroke-width", 0.5)
+			            .style("font-family", "Arial")
+			            .style("font-size", 12)*/
+.node.text, .snippet{
+	stroke: black;
+	color: black;
+	stroke-width: 0.5;
+	font-family: Arial;
+	font-size: 12;
+}
+.link{
+	stroke: #808080;
+	stroke-width:1px;
+}
 
 
 /***************************** Information zone ******************************/
