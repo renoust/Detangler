@@ -26,7 +26,7 @@
         // initialization of the communication address and port        
         // an additional default json file
         this.tulip_address = document.URL;
-        this.json_address = "./cluster1.json";
+        this.json_address = "./data/cluster1.json";
 
         // initialization of the default svg parameters
         this.dialogWidth = 460;

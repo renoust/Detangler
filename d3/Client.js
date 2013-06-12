@@ -44,7 +44,8 @@
                     objectReferences.ToolObject.addBaseID(data, "id")
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
-                    this.createTulipGraph(jsonData, target)
+                    console.log(data);
+                    TP.Client().createTulipGraph(jsonData, target);
                     //this.analyseGraph(target)
                 });
             } else {
@@ -54,6 +55,7 @@
 
                 objectReferences.ToolObject.loadJSON(data, target)
                 //console.log("I am creating the graph in Tulip")
+                console.log(data);
                 this.createTulipGraph(json, target)
                 //console.log("I should now analyse the graph",contxt.sessionSid)
                 //this.analyseGraph(target)

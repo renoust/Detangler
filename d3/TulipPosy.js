@@ -39,6 +39,11 @@ var TulipPosy = function (originalJSON) {
 	var target1 = ""+TP.Context().getIndiceView();
 	var target2 = ""+TP.Context().getIndiceView();
 	
+	var targetMap = new Object();
+	var target1Map = new Object();
+	var target2Map = new Object();
+	
+	
 	// assert(false, "target :")
 	// console.log(target);
 	// console.log(typeof(target));
@@ -56,15 +61,21 @@ var TulipPosy = function (originalJSON) {
         //['input',{type:'text', name:'valMax', value:''},'max: '],
         ['div',{id:'sizemap',class:'slider'}, 'scale: ']
     ]
-
-    var subarray = [
-        ['b1','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}],
+	
+	var array1 = [
+	
+	    ['b1','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}],
         ['b2','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}],
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
         ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],
         ['b6','Reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}],
-        ['b7','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}],
+        ['b7','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}]
+        	
+	]
+
+	var array2 = [
+	
         ['b8','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}],
         ['b9','Analyse','',{click:function(){objectReferences.ClientObject.analyseGraph(target, tabCatalyst)}}],
         ['b10','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}],
@@ -72,7 +83,11 @@ var TulipPosy = function (originalJSON) {
         ['b12','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}],
         // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
         ['b14','Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}],
-        ['b15','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}],
+        ['b15','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}]
+	
+	]
+	
+	var array3 = [
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
         ['b17','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}],
         ['b18','BarChart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}],
@@ -80,10 +95,17 @@ var TulipPosy = function (originalJSON) {
         ['b20','ScatterPlot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}],
         ['b21','Size Map',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}],
         ['b22','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target, 120, [TP.Context().width/2,TP.Context().height/2])}}],
-        ['b23','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}]
-    ]
-
-    var catalystarray = [
+        ['b23','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}]	
+	
+	]
+	
+	targetMap["type1"] = array1;
+	targetMap["type2"] = array2;
+	targetMap["type3"] = array3;
+	
+	
+	var array4 = [
+	
         ['b1','force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}],
         ['b2','Update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}],
         // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
@@ -93,27 +115,47 @@ var TulipPosy = function (originalJSON) {
         ['b6','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', target1)}}],
         ['b7','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}],
         ['b8','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}],
+	
+	]	
+
+	var array5 = [	
+
         ['b9','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}],
         ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
         ['b11','Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}],
         ['b12','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','Ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
         //['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
+	
+	]	
+
+	var array6 = [	
+
         //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
         ['b16','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}],
         ['b17','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}],
         ['b18','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}],
         ['b19','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}]
+	
+	]	
 
 
-    ]
+	target1Map["type1"] = array4;
+	target1Map["type2"] = array5;
+	target1Map["type3"] = array6;
+	
+	
+	var array7 = [
 
-    var combinedarray = [
         ['b1','fg ' + contxt.combined_foreground,'',{click:function(){objectReferences.InterfaceObject.toggleCombinedForeground()}}],
         ['b12','arrange labels' + contxt.combined_foreground,'',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target2)}}]
-    ]
+	
+	]	
+	
+	target2Map["type3"] = array7;
 
-	TP.ObjectReferences().InterfaceObject.interactionPane(subarray,'create');
+
+	TP.ObjectReferences().InterfaceObject.interactionPane(targetMap,'create');
     TP.ObjectReferences().InterfaceObject.infoPane();
     TP.ObjectReferences().InterfaceObject.visuPane();
 
@@ -145,7 +187,7 @@ var TulipPosy = function (originalJSON) {
     var subarray = new Array(s1, s2, s3, s5, s7, s8, s9, s10, s11, s12, s13, s14, s16, s17, s18, s19);
     */
 
-    TP.Context().view[target] = new TP.View(target, 1, subarray, new Array("svg", "graph", 960, 500, "svg_"+target), "toto", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    TP.Context().view[target] = new TP.View(target, 1, targetMap, new Array("svg", "graph", 960, 500, "svg_"+target), "toto", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 /*
@@ -172,7 +214,7 @@ var TulipPosy = function (originalJSON) {
     //TP.Context().view[target1] = new TP.View(catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), target1, "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst", target);
 	//TP.Context().view[target1].addView();
 	//TP.Context().view[target1].buildLinks();
-	tabCatalyst = new Array(target1, catalystarray, new Array("svg", "graph", 960, 500, "svg_"+target1), "tutu", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
+	tabCatalyst = new Array(target1, target1Map, new Array("svg", "graph", 960, 500, "svg_"+target1), "tutu", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
 	/*
     var co1 = new Array(2, "fg " + TP.Context().combined_foreground, function () {objectReferences.InterfaceObject.toggleCombinedForeground(target2)});
     var co2 = new Array(3, "arrange labels", function () {objectReferences.VisualizationObject.arrangeLabels(target2)});
@@ -351,6 +393,10 @@ var TulipPosy = function (originalJSON) {
         } else if ('file' in originalJSON) {
             objectReferences.ClientObject.loadData(originalJSON.file, target);
         } else objectReferences.ClientObject.loadData(null, target);
+    }
+    else
+    {
+    	objectReferences.ClientObject.loadData(null, target)
     }
 
     

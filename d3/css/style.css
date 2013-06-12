@@ -1,8 +1,9 @@
 /********************************* General ***********************************/
-/**{
-	font-size: 1em;
+*{
+	font-size: 11px;
+	font-family: Verdana,Arial,sans-serif;
 }
-*/
+
 body{
 	margin:0px;
 }
