@@ -32,6 +32,13 @@ var TulipPosy = function (originalJSON) {
 	var target1 = 'tutu';
 	var target2 = 'titi';
 */
+
+	var nav = (navigator.userAgent).toLowerCase().indexOf("chrome");
+	
+	if(nav == -1){
+		//notification
+	}
+	
 	
 	TP.Context().clearInterface();
 
