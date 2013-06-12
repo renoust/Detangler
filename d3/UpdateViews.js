@@ -26,14 +26,13 @@
         this.syncLayoutsFromData = function (data, viewID) {
         	
         	var target = viewID;
-        	assert(true, "syncLayoutsFromData");
         	
             var cGraph = null;
             var svg = null;
 
             cGraph = TP.Context().view[viewID].getGraph(); //substrate before generic code
-            svg = TP.Context().view[viewID].getSvg(); //substrate...
 
+            svg = TP.Context().view[viewID].getSvg(); //substrate...
 
 
             // we need to rescale the graph so it will fit the current svg 
@@ -45,11 +44,10 @@
             //graph_drawing.rescaleGraph(contxt,data);
             var typeGraph = TP.Context().view[viewID].getType();
             
+            //cGraph.nodes(data.nodes, typeGraph);
+            cGraph.updateNodeAttributes(data.nodes, [{'in':'x'}, {'in':'y'}], true);
 
-            cGraph.nodes(data.nodes, typeGraph);
-            cGraph.links(data.links, typeGraph);
-            cGraph.edgeBinding();
-            //graph_drawing.move(cGraph, 0);
+            graph_drawing.rescaleGraph();
             graph_drawing.clear()
             graph_drawing.draw();
 
@@ -75,6 +73,8 @@
 	            combinedGraph.specialEdgeBinding("substrate", "catalyst");
 			}
 			
+			/*********** TO BE REDONE
+
             var p1_s = data.data[viewID][0];
             var p2_s = data.data[viewID][1];
             var p1prime_s;
@@ -140,10 +140,13 @@
 	            graph_drawing.clear();
 	            graph_drawing.draw();
 			}
+			*/
 			
+
             TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
             TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
 			TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst"); 
+
         }
 
 
@@ -156,6 +159,7 @@
             //console.log("the session sid has just been affected: ", TP.Context().sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
             
+
             //TP.GraphDrawing(TP.Context().getViewGraph("substrate"),TP.Context().getViewSVG("substrate")).rescaleGraph(contxt,data);
 
         	var typeGraph = TP.Context().view[target].getType();
@@ -172,13 +176,12 @@
             
             graph.edgeBinding() //...   
             
-            assert(true, "graphDrawing created") 
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             graph_drawing.clear();
             graph_drawing.draw();
-            assert(true, "moved")
             
             
+
 
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
@@ -219,9 +222,9 @@
 
         this.applyLayoutFromData = function (data, graphName) {
             //assert(true, "here");;
-			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [{'in':'x'},{'in':'y'}], true);
 			//assert(true, "there");
-			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
+			//TP.Context().view[graphName].getGraph().updateLinkAttributes(data.links, true);
 			//assert(true, "again");
 
 			var graph = null;
@@ -243,36 +246,48 @@
         }
 
 
-        this.applyInducedSubGraphFromData = function (data, graphName) {
+        this.applyInducedSubGraphFromData = function (data, graphName, rescale) {
             var graph = null;
             var svg = null;
+            
+            if (!rescale)
+            	rescale = false
+            	
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().view[graphName].getGraph();
             
             var typeGraph = TP.Context().view[graphName].getType();
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);
                         
-            graph.nodes(data.nodes, typeGraph);
-            graph.links(data.links, typeGraph);
-            
-            graph_drawing.rescaleGraph(graph);
-            
-            graph.edgeBinding();
+            graph.subsetNodes(data.nodes, typeGraph);
+            graph.subsetLinks(data.links, typeGraph);
+            //graph.edgeBinding();
             
             graph_drawing.exit(graph, 0);
+            
+            if (rescale)
+            {
+	            graph_drawing.rescaleGraph(graph);
+	            graph_drawing.clear()
+	            graph_drawing.draw()
+	        }
         }
 
 
-        this.applyFloatAlgorithmFromData = function (data, graphName) {
+        this.applyFloatAlgorithmFromData = function (data, graphName, attributeName) {
 			
+			//wtf?
 			window.toutou = data;
+			
+			if (! attributeName)
+				attributeName = "viewMetric"
 			
 			console.log(data);
 			
 			//assert(true, "here");;
-			TP.Context().view[graphName].getGraph().updateNodes(data.nodes, true);
+			TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [{'in':"viewMetric", 'out':attributeName}], true);
 			//assert(true, "there");
-			TP.Context().view[graphName].getGraph().updateLinks(data.links, true);
+			TP.Context().view[graphName].getGraph().updateLinks(data.links, [{'in':"viewMetric", 'out':attributeName}], true);
 			//assert(true, "again");
 			
 
@@ -296,11 +311,13 @@
             var graph_drawing = TP.GraphDrawing(graph, svg, graphName);      
             graph_drawing.resize(graph, 0);
 
+
             var pileCentrality = new TP.Metric();
             
             /*
             var char = d3.selectAll("g.node.substrate");
             char.attr("x", function(d){ console.log("viewMetric : "+ d.viewMetric); pileCentrality.addMetric(d.viewMetric, d); return d.x; });
+
           
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
