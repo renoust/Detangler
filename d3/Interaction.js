@@ -539,12 +539,6 @@
 
 this.runZoom = function(target, deltaZoom, mousePos){
      
-     console.log("runzoom, runzoom, runzoom");
-     
-     console.log(target);
-     console.log(deltaZoom);
-     console.log(mousePos);
-     
 	 if (!TP.Context().view[target].getMoveMode())            
 	     return;
 	     
@@ -622,7 +616,7 @@ this.runZoom = function(target, deltaZoom, mousePos){
 	          .attr("dx", function(d){
 	               return d.x;
 	          }) 
-	          .attr("dy", function(d){return d.y;}) 
+	          .attr("dy", function(d){return d.y;})
 	                                      
 	 event.preventDefault();
 
@@ -698,8 +692,6 @@ this.runZoom = function(target, deltaZoom, mousePos){
 	               //TP.Context().view[target].setDataTranslation(data_translation);
                 })
                 .on("dragend", function(){
-					
-					assert(true, "tutu");
 					
 					var nodeDatum = svg.selectAll("g.node").data()
 	                
