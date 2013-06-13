@@ -44,7 +44,7 @@
                     objectReferences.ToolObject.addBaseID(data, "id")
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
-                    this.createTulipGraph(jsonData, target)
+                    TP.Client().createTulipGraph(jsonData, target)
                     //this.analyseGraph(target)
                 });
             } else {

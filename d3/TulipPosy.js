@@ -95,7 +95,7 @@ var TulipPosy = function (originalJSON) {
         ['b7','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}],
         ['b8','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}],
         ['b9','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}],
-        ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
+        // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
         ['b11','Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}],
         ['b12','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}],
         ['b13','Ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}],
@@ -349,7 +349,7 @@ var TulipPosy = function (originalJSON) {
         } else if ('file' in originalJSON) {
             objectReferences.ClientObject.loadData(originalJSON.file, target);
         } else objectReferences.ClientObject.loadData(null, target);
-    }
+    }else objectReferences.ClientObject.loadData(null, target);
 
     
 };

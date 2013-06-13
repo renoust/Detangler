@@ -36,7 +36,6 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-            
             g.drawNodes(TP.Context().view[target].getViewNodes());
             g.drawLabels()
         }
@@ -49,7 +48,6 @@
         // to each group are added an svg:circle (placed according to the node 
         // property x and y) and an svg:text printing the node property label
         g.drawNodes = function (view_nodes) {
-
             var saveUndo = 0;
             var undo = null;
             var redo = null;
@@ -103,7 +101,10 @@
                     //console.log("updating the graph");
                         return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                     })
-            };
+                    .style("stroke-width", function (d) {
+                        return 1;
+                    }) 
+                };
 
             function showHideLabel() {
                 var dragTarget = d3.select(this);
@@ -299,15 +300,9 @@
         }
         
         
-        /**************************************************************************/
-       //modif a continuer//
-       /**************************************************************************/
-        
-        
         g.drawLabels = function(){	
-			return;
+			return;                  // return???
             //console.log("drawLabels " + g.svg.attr("id"));
-			
             var labelNode = g.svg.selectAll("text.node")
                 .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
                 .attr("class", function(d){return d._type})
@@ -326,8 +321,8 @@
                 // .style("font-family", "Arial")
                 // .style("font-size", 12)
                 .text(function(d) { return d.label; });
+            g.arrangeLabels();     
 
-            g.arrangeLabels();     	
 		}
         
         
@@ -439,8 +434,8 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                // .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
-                // .style("stroke-width", function (d) {return 1;})
+                 .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
+                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
         }

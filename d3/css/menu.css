@@ -168,7 +168,7 @@ input[type=spinner]{
 
 }
 #bg  {
-    background: #fdd0a2;
+    /*background: #fdd0a2;*/
     opacity: 0.5; 
     position: absolute;
     height: 100%; width:100%;

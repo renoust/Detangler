@@ -32,40 +32,48 @@
             }
 
             $.fn.jPicker.defaults.images.clientPath='css/jPicker/';
-
         </script>
 
         <div id='header'>
             <div id='header-content'>
-
-<!--                 <button id='undo'> Undo</button><button id='redo'> Redo</button>
- -->    			<div id='header-logo'>TulipPosy</div>
-    			<div id='header-input'>
-    				<input id='files' type='file' value='Choose a file' class='input-browser'/>
-    			</div>
-            </div>  
-
-		</div>
+<!--            <button id='undo'> Undo</button><button id='redo'> Redo</button>--> 
+    			<div id='header-logo'>TulipPosy</div>
+                <ul id='menu'>
+                    <li><a href="#">File</a>
+                        <ul>
+                            <li><a href="#" id='opfile'>Open File</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>  
 
         <div id="wrap" class="nosidebar" >
-            <div id="container"></div></div> 
+            <div id="container"></div>
+        </div> 
+           
+        <div style="opacity:0;display:none;">
+            <input id="files" type="file">
+        </div>
+        
         <script>
+
+            $('#opfile').click(function(e){
+                $('#files').click();
+            });
+
             $("#menu").menu({
                 position:{using:positionnerSousMenu}
             });
 
-            //remplace la flèche droite par la flèche bas pour les menus de premier niveau 
             $("#menu > li > a > span.ui-icon-carat-1-e").removeClass("ui-icon-carat-1-e").addClass("ui-icon-carat-1-s");
+
             function positionnerSousMenu(position,elements){
                 var options = { of:elements.target.element };
                 if(elements.element.element.parent().parent().attr("id")==="menu"){
-                    //le menu à positionner est de niveau 2:
-                    //on va superposer le point central du haut du menu sur le point central bas du menu parent 
                     options.my="center top";
                     options.at="center bottom";
                 } else {
-                    // le menu à positionner est de niveau >  2
-                    //le positionnement reste celui par défaut : on va superposer le coin haut gauche et le coin haut droit du menu parent 
                     options.my="left top";
                     options.at ="right top";
                 }

@@ -9,8 +9,9 @@ var xhr = new XMLHttpRequest();
 
 // uploads the file and send it to TulipPosy
 var file_object;
+console.log(url)
 
-
+TulipPosy()
 document.getElementById('files').addEventListener('change', function (e) {
     var file = this.files[0];
     console.log('logging file before sending: ', this.files[0])
