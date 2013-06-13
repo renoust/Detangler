@@ -67,6 +67,7 @@ ul#menu > li {
 ul .ui-menu.ui-widget-content{
 	z-index: 150;
 	background: white;
+	width: 120px;
 }
 
 #header-input{

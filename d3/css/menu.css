@@ -5,6 +5,8 @@
 	height: 100%;
 	top: 0px;
 	margin-left: 0px; 
+
+	z-index: 101;
 	
 	background-color: white;
 	border:1px solid #666666;

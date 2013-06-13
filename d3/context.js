@@ -93,8 +93,8 @@
 	        	d3.selectAll(".ui-dialog").remove();
 	        	d3.selectAll(".cont").remove();
 	        	d3.selectAll(".jPicker").remove();
-	        	$('#wrap')[0].className='nosidebar';
-	
+	        	$('#wrap')[0].className='sidebar';
+                $.jPicker.List.splice(0,3)
 	        	
 	        	for(var key in this.view){        		
 	        		this.view[key].remove();

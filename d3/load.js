@@ -38,7 +38,10 @@ document.getElementById('files').addEventListener('change', function (e) {
             remove("svg_combined");*/
 
             TulipPosy({file: xhr.responseText})
+                    
         }
+
+
     };
 
     xhr.open('post', url, true);

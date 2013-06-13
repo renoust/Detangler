@@ -905,6 +905,10 @@
                 }
             }else if(mode==='create'){
                 menu = this.addPanelMenu('Interactions');
+                $('#'+menu).css('z-index', 102)
+                $('#'+menu).find('.toggleButton').text('<')
+                $('#'+menu).find('.toggleButton').css('background','url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x')
+                console.log($('#'+menu+' .toggleBtn'))
                 content = $("#"+menu +" .menu-content");
                 content.accordion({
                     collapsible:true,
@@ -952,7 +956,9 @@
             var menu = this.addPanelMenu('');
             var content = $("#"+menu +" .menu-content");
 
-      
+            /*$.jPicker.List[0]=null
+            $.jPicker.List[1]=null
+            $.jPicker.List[2]=null*/
 
             var visu = content[0];
             var view = TP.Context().activeView;
@@ -1002,7 +1008,7 @@
             $('#apply').click(function(){
                 /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
                 console.log(contxt.labelColor)*/
-
+                    console.log(TP.Context().view[TP.Context().activeView].getNodesColor(), $.jPicker.List[0].color.active.val('hex'))
                     TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));

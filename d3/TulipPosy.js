@@ -26,6 +26,8 @@ var TulipPosy = function (originalJSON) {
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
 
+    $.fn.jPicker.defaults.images.clientPath='css/jPicker/';
+
     //assert(new testView(5, 3), "test réusssie"); //test nombre view
 /*
 	var target = 'toto';
@@ -256,10 +258,16 @@ var TulipPosy = function (originalJSON) {
 	console.log(TP.Context().tabAssociationInverted[target1]);	
 	assert(true, "tabAssociationInverted de "+target2);
 	console.log(TP.Context().tabAssociationInverted[target2]);*/	
-	
-
-
-
+	if(!originalJSON){
+        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
+        objectReferences.ClientObject.syncLayouts(target)
+    }
+    if($('#analyse:checked')){
+        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
+    }
+    if($('#sync:checked')){
+        objectReferences.ClientObject.syncLayouts(target)
+    }
 
 
 
