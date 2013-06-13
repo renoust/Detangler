@@ -221,6 +221,32 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 
 	this.addView = function() {
 		
+		var hashButton = new Object();
+		
+		if(bouton != null){
+			for(var p = 0; p < bouton.length; p++)
+			{
+				console.log(bouton[p][4]);
+				
+				if(hashButton[bouton[p][4]] != null){
+					hashButton[bouton[p][4]].push(bouton[p]);
+				}
+				else{
+					hashButton[bouton[p][4]] = [];
+					hashButton[bouton[p][4]].push(bouton[p]);
+				}
+				
+			}
+		}
+		
+		
+		if(type === "substrate")
+		{
+			TP.ObjectReferences().InterfaceObject.interactionPane(hashButton,'create');
+	    	TP.ObjectReferences().InterfaceObject.infoPane();
+	    	TP.ObjectReferences().InterfaceObject.visuPane();		
+		}
+		
 	    elem = document.getElementById("bouton" + ID);
 	    if (elem) elem.parentNode.removeChild(elem);
 	    elem = $("div[aria-describedby='zone" + ID + "']");
@@ -234,42 +260,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    //if (elem!=[])elem.remove();
 	
 		//$("#container").empty();
-	
-	    /**************************
-	     * Application
-	     **************************/
-	    controller = Em.Application.create();
-	
-	    /**************************
-	     * Models
-	     **************************/
-	
-	    controller.Boutton = Em.Object.extend({
-	        idButton: '',
-	        fonction: ''
-	    });
-	
-	
-	    /**************************
-	     * Controllers
-	     **************************/
-	
-	    controller.testArrayController = Em.ArrayController.create({
-	        content: [],
-	
-	        loadFunction: function (propName, value) {
-	            var obj = this.findProperty(propName, value);
-	            obj.fonction();
-	        },
-	
-	        addFunction: function (object) {
-	            var obj = this.findProperty("idButton", object.idButton);
-	            if (obj == null) {
-	                this.pushObject(object);
-	                //console.log("ajout bouton");
-	            }
-	        }
-	    });
 	
 	
 	    /**************************
@@ -329,7 +319,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    	var oldID=TP.Context().activeView
 	        TP.Context().activeView = ID;
 
-	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(bouton,'update')}
+	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(hashButton,'update')}
         	TP.Context().InterfaceObject.addInfoButton(__g__);
         	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){

@@ -425,7 +425,6 @@
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
             new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
             
-            assert(false, "tu fais chier")
             console.log(TP.Context().view[id]);
             
             TP.Context().view[id].addView();			
