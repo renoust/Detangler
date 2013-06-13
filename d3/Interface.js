@@ -316,11 +316,13 @@
 
             var path = $('#files').val().split('\\');
             var file = path[path.length-1];
+            var view = target.getName().split('-')
+            var type = view[view.length-1]
 
             var zone = '#infoView'
             document.getElementById('infoView').innerHTML = ''
             $('<p/>', {text:'File:  '+ file}).appendTo(zone)
-            $('<p/>', {text:'View:  '+ target.getName()}).appendTo(zone);
+            $('<p/>', {text:'View:  '+ type}).appendTo(zone);
             $('<p/>', {text:' - '+ cGraph.nodes().length+' nodes'}).appendTo(zone);
             $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);
             /*

@@ -1,8 +1,10 @@
 /********************************* General ***********************************/
-/**{
-	font-size: 1em;
+*{
+	/*font-size: 1em;*/
+	font-size: 11px;
+	font-family: Verdana,Arial,sans-serif;
 }
-*/
+
 body{
 	margin:0px;
 }
@@ -38,9 +40,9 @@ body{
 
 	font-family: "Caslon";
 	font-style: italic;
-	font-size:1.5em;
+	font-size:2em;
 }
-/*
+
 #menu-header{
 	display: inline-block;
 }
@@ -48,16 +50,26 @@ body{
 	width:100px;
 	font-size:12px;
 	min-height:22px;
+	background: #3f3f3f;
 	
 }
 ul#menu{
+	display: inline-block;
 	width:500px; 
+	height: 20px;
+	border: none;
 }
 ul#menu > li {
-	width:100px; 
+	width:60px; 
 	float:left; 
+	background: white;
+	border-radius: 3px;
 }
-*/
+ul .ui-menu.ui-widget-content{
+	z-index: 150;
+	background: white;
+}
+
 #header-input{
 	display:inline-block;
 }
@@ -99,17 +111,29 @@ ul#menu > li {
 	height: 20;
 	font-size: 11px;
 	float:right;
+	
 }
 
 /* hide close button on the dialog window */
-.ui-dialog-titlebar-close {
+/*.ui-dialog-titlebar-close {
   visibility: hidden;
-}
+}*/
 
 .ui-dialog .ui-dialog-content{
 	padding:2px;
 }
 
+.node.text, .snippet{
+	stroke: black;
+	color: black;
+	stroke-width: 0.5;
+	font-family: Arial;
+	font-size: 12;
+}
+.link{
+	stroke: #808080;
+	stroke-width:1px;
+}
 
 
 /***************************** Information zone ******************************/

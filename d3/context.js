@@ -26,7 +26,7 @@
         // initialization of the communication address and port        
         // an additional default json file
         this.tulip_address = document.URL;
-        this.json_address = "./cluster1.json";
+        this.json_address = "./data/cluster1.json";
 
         // initialization of the default svg parameters
         this.dialogWidth = 460;
@@ -90,7 +90,7 @@
         {
         	if(this.menuNum != 1){
 	        		
-	        	d3.select(".ui-dialog").remove();
+	        	d3.selectAll(".ui-dialog").remove();
 	        	d3.selectAll(".cont").remove();
 	        	d3.selectAll(".jPicker").remove();
 	        	$('#wrap')[0].className='nosidebar';
@@ -113,6 +113,7 @@
 	        	this.entanglement_intensity = 0.0;
 	        	this.entanglement_homogeneity = 0.0;
 	        	this.tabOperator = [];
+                this.tabOperator['catalyst'] = 'OR';
 	        	this.changeStack = new TP.StatesChange();
 	        	this.stateStack = [];
         	

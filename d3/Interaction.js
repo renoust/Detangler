@@ -80,8 +80,7 @@
             // once the selection is made, it applies the synchronization 
             // function syncGraph() to the selected nodes
             // selection colors are hardcoded but this should be changed
-            myL.checkIntersect = function () {
-            	
+            myL.checkIntersect = function () {            	
                 var __g = this
                 var selList = []
                 var e = window.event
@@ -313,6 +312,7 @@
 	                    substrateSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
+	                        .style('stroke-width',1)
 	                        .style('stroke', substrateView.getLinksColor());
 
 	                    
@@ -701,12 +701,13 @@
 
 
         this.toggleCatalystSyncOperator = function (target) {
+        	console.log(target)
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
-                $('.ui-accordion-header').each(function(){if($(this).text()==='operator OR'){$(this).text('operator AND')}})
+                $('.ui-accordion-header').each(function(){if($(this).text()==='Operator OR'){$(this).text('Operator AND')}})
             } else {
                 TP.Context().tabOperator[target] = "OR"
-                $('.ui-accordion-header').each(function(){if($(this).text()==='operator AND'){$(this).text('operator OR')}})
+                $('.ui-accordion-header').each(function(){if($(this).text()==='Operator AND'){$(this).text('Operator OR')}})
             }
             /*
             TP.Context().view[target].getSvg().selectAll("g.toggleCatalystOp")
