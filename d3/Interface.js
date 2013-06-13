@@ -15,9 +15,7 @@
 
     var Interface = function () {
         var __g__ = this;
-
         var contxt = TP.Context();
-
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
@@ -27,7 +25,7 @@
                 .append("xhtml:body")
                 .html("<form><input type=checkbox id=check /></form>")
                 .on("click", function (d, i) {
-                //console.log(svg.select("#check").node().checked);
+                    //console.log(svg.select("#check").node().checked);
                 });
             myinput = svg.append("foreignObject")
                 .attr("width", 300)
@@ -36,8 +34,7 @@
                 .attr("y", 200)
                 .append("xhtml:body")
                 .html("<form><input type=input id=input /></form>")
-
-            //console.log("input created", myinput);
+                //console.log("input created", myinput);
         }
 
 
@@ -49,19 +46,15 @@
             cGraph = TP.Context().view[target].getGraph();
 
             var coh = svg.selectAll(".interfaceButton")
-                .data([])
-                .exit()
-                .remove()
+                .data([]).exit().remove()
         }
 
 
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
-
             // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
-           /* $("<div/>", {
-
+            /* $("<div/>", {
                 id:"entanglement",
                 style:"background-color: #fdd0a2;"
             }).appendTo("#entanglement-cont");*/
@@ -161,7 +154,6 @@
                 .style("font-size", TP.Context().defaultTextSize)
                 */
         }
-
 
 
         // This function adds the graph interactor buttons (move and select) 
@@ -321,14 +313,16 @@
 
         this.addInfoButton = function (target) {
             var cGraph = target.getGraph();
-             var zone = '#infoView'
-             document.getElementById('infoView').innerHTML = ''
-             $('<p/>', {style:'text-align:center', text:'Name: '+target.getName()}).appendTo(zone);
-            $('<p/>', {text:cGraph.nodes().length+' nodes'}).appendTo(zone);
-            $('<p/>', {text:cGraph.links().length+' links'}).appendTo(zone);
 
-            
+            var path = $('#files').val().split('\\');
+            var file = path[path.length-1];
 
+            var zone = '#infoView'
+            document.getElementById('infoView').innerHTML = ''
+            $('<p/>', {text:'File:  '+ file}).appendTo(zone)
+            $('<p/>', {text:'View:  '+ target.getName()}).appendTo(zone);
+            $('<p/>', {text:' - '+ cGraph.nodes().length+' nodes'}).appendTo(zone);
+            $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);
             /*
             var cGraph = null
             var svg = null
@@ -425,9 +419,7 @@
                 .html(function (d) {
                     selectHTMLString = "<form><select id=weightPropSel>"
                     selectHTMLString += " <option value=\"\"><i>--</i></option>"
-
-                    nbElements = Object.keys(TP.Context().substrateProperties)
-                        .length
+                    nbElements = Object.keys(TP.Context().substrateProperties).length
                     Object.keys(TP.Context().substrateProperties)
                         .forEach(function (k, i) {
                             //console.log("props: ", k)
@@ -435,9 +427,7 @@
                                 selectHTMLString += " <option value=\"" + k + "\">" + k + "</option>"
                             }
                         });
-
                     selectHTMLString += "</select></form>"
-
                     return selectHTMLString
                 })
         }
@@ -453,23 +443,19 @@
         // interactors
         // target, the string value of the target svg view
         this.toggleSelectMove = function (target) {
-
-            if (!target)
-                return
+            if (!target) return
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 			
             //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
             //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
-           
             //TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
             //TP.Context().tabMoveMode[target] = !TP.Context().tabMoveMode[target];
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
-            
-            console.log(!TP.Context().view[target].getSelectMode())
-            console.log(!TP.Context().view[target].getMoveMode())
+            //console.log(!TP.Context().view[target].getSelectMode())
+            //console.log(!TP.Context().view[target].getMoveMode())
             
             //if(eval("TP.Context().select_mode_"+target)) {
             
@@ -493,7 +479,6 @@
 
         this.addSettingsButton = function (target) {
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
-
             svg = TP.Context().view[target].getSvg();
             posSettings_x = TP.Context().width - 30
             posSettings_y = 30
@@ -647,8 +632,8 @@
         }
 
 
-        this.attachInfoBox = function (target) {
-            var cGraph = null
+        this.attachInfoBox = function () {
+            /*var cGraph = null
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
@@ -676,22 +661,28 @@
                         .select("rect.infoBox")
                         .style("fill", TP.Context().highlightFillColor);
                     TP.Context().mouse_over_button = false;
-                });
-            svg.selectAll("g.node")
+                });*/
+            d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    objectReferences.InterfaceObject.addInfoBox(target, d)
+                    objectReferences.InterfaceObject.addInfoBox(d)
                 });
         }
 
 
-        this.addInfoBox = function (target, node) {
+        this.addInfoBox = function (node) {
+            document.getElementById('infoNodes').innerHTML = "<p>Node Informations: </p>"
+            $('<p/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
+            $('<p/>', {text:node.label}).appendTo('#infoNodes')
+            
+            /*
             var cGraph = null
             var svg = null
-
+            
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
 
             function move() {
+
                 objectReferences.InterfaceObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
                 var currentPanel = dragTarget.data()[0]
@@ -717,7 +708,7 @@
             };
 
             nbInfoBox = svg.selectAll("g.nodeInfo")[0].length
-            //console.log("the current node", node);
+            console.log("the current node", node);
 
             ib = svg.selectAll("g.nodeInfo" + node.baseID)
                 .data([node])
@@ -748,6 +739,7 @@
                 .style("fill", TP.Context().defaultTextColor)
                 .style("font-family", TP.Context().defaultTextFont)
                 .style("font-size", TP.Context().defaultTextSize)
+
 
             ib.append("text")
                 .classed("nodeInfo", true)
@@ -794,7 +786,7 @@
                         .style("fill", "lightgray")
                 })
 
-            //console.log("node info appended", ib)
+            //console.log("node info appended", ib)*/
         }
 
 
@@ -835,6 +827,7 @@
 
 
         // gestion du menu à gauche
+
         
         /*this.createMenu = function(nbPane){
             for(i=0; i<nbPane; i++)
@@ -844,10 +837,10 @@
 
         this.addPane = function(){
             menuNum =TP.Context().menuNum++;
+
             $("<div/>", {
                 "class": "cont",
                 id: "menu-"+menuNum,
-                style:"left:-231; z-index:0;",
             }).appendTo("#wrap");
 
             $("<span/>", {
@@ -856,7 +849,18 @@
                 text: ">",
                 style:"top:"+40*menuNum+"px;",
             }).appendTo("#menu-"+menuNum);
+
+            $('<div/>', {
+                class:'header-menu', 
+                text:header
+            }).appendTo('#menu-'+menuNum);
+
+            $('<div/>',{
+                id:'menu'+menuNum+'-content',
+                class:'menu-content',
+            }).appendTo('#menu-'+menuNum)
             
+
         }*/
 
         this.addPanelMenu = function(header){
@@ -883,6 +887,7 @@
                 class:'menu-content',
             }).appendTo('#menu-'+menuNum)
             
+
             return 'menu-'+menuNum;
         }
 
@@ -906,28 +911,41 @@
                 });
             }
             this.createArrayButtons(buttons, content.attr('id'));
+
         }
 
         this.infoPane = function(){
             var menu = this.addPanelMenu('Informations');
             var content = $("#"+menu +" .menu-content");
-
+            
+            
+            $('<div/>', {id:'entanglement-cont'}).appendTo('#'+content.attr('id'))
             $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
 
 
-            document.getElementById(menu).innerHTML += 
-                "<div id='entanglement-cont'>"+
+            document.getElementById('entanglement-cont').innerHTML += 
                     "<div id='bg'></div>"+
                     "<div id='entanglement'><p>Entanglement:</br>" + 
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
-                "</div>"
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";
+
+            $('<div/>', {id:'infoNodes'}).appendTo('#'+content.attr('id'));
+            $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
 
             //affichage par défaut
             //this.addInfoButton(contxt.activeView);
+
         }
 
+       /** this.infoPane = function(){
+            var menu = this.addPanelMenu('Informations');
+            var content = $("#"+menu +" .menu-content");
 
+            $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
+            //affichage par défaut
+            //this.addInfoButton(contxt.activeView);
+
+        }*/
         this.visuPane = function(pane){
             var menu = this.addPanelMenu('');
             var content = $("#"+menu +" .menu-content");
@@ -936,24 +954,26 @@
 
             var visu = content[0];
             var view = TP.Context().activeView;
+
             visu.innerHTML += 
                 "Nodes: </br>" +
-                    "<span id='colorNode' ></span><button id='shapeNode'>shape</button></br>"+
+                    "<span id='colorNode' ></span><!--<button id='shapeNode'>shape</button>--></br>"+
                 "Links: </br>" +
-                    "<span id='colorLink'></span><button id='shapeLink'>shape</button></br>"+
+                    "<span id='colorLink'></span><!--<button id='shapeLink'>shape</button>--></br>"+
                 "Background: </br>" +
 
                     "<span id='colorBg'></span> <span id='test' ></span> </br>"+
                      "<button id='apply'>Apply</button> </br>"/*+
                 "Labels: </br>" +
                     "<span id='colorLabel'></span> </br>"+
+
                      "<button id='apply'>Apply</button> </br>"*/;
+
             
            $('#colorNode').jPicker({
                 window:{
                     expandable: true, 
                     position:{x:250, y:0},   
-
                 },
             });
            $('#colorLink').jPicker({
@@ -974,7 +994,9 @@
                     position:{x:250, y:0},
 
                 }
+
             });  */  
+
             $('#apply').click(function(){
                 /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
                 console.log(contxt.labelColor)*/
@@ -990,10 +1012,12 @@
 
         }
 
+
         this.createElement = function(balise, attributes,  parentId, labelPrec, labelSuiv){
             if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
             var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
             if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
+
             return elem;
         }
         this.createForm = function(menuPane, id, title, tab, event){
@@ -1020,7 +1044,9 @@
 
         this.createArrayButtons = function(tab, pane){
             for(var i=0; i<tab.length; i++){
+
                 this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
+
             }
                 $( "#sizemap" ).slider({ 
                     range: true,
@@ -1043,60 +1069,72 @@
         }
 
         this.callbackMenu = function(param, event){
-        var res = {}
-        var key = null;
-        var val = null;
-        var btn = $(param);
-        // console.log(btn.siblings('input'))
-        // console.log(btn.siblings('input[type="text"]')[0].name)
-        // console.log(btn.siblings('input[type="text"]')[0].value)
+            var res = {}
+            var key = null;
+            var val = null;
+            var btn = $(param);
+            // console.log(btn.siblings('input'))
+            // console.log(btn.siblings('input[type="text"]')[0].name)
+            // console.log(btn.siblings('input[type="text"]')[0].value)
 
-        var data = btn.siblings("input[type='radio']:checked")
-        data.each(function(){
-            key = btn.attr('name');
-            res[key] = btn.val();
-        })
-
-        data = btn.siblings('.ui-spinner')
-        data.each(function(){
-            key = btn.children('input').attr('name');       
-            val = btn.children('input')[0].value
-            res[key] = val;
-        })
-
-        data = btn.siblings("input[type='checkbox']:checked")
-        data.each(function(){
-
-            key = btn.attr('name');
-            if (res[key]==null)         
+            var data = btn.siblings("input[type='radio']:checked")
+            data.each(function(){
+                key = btn.attr('name');
                 res[key] = btn.val();
-            else
-                res[key] += ", "+btn.val();
-        })
+            })
 
-        data = btn.siblings("input[type='text']")
-        for(var i=0; i<data.length; i++){
-            key = data[i].name;
-            val = data[i].value;
-            res[key] = val;
-        }
+            data = btn.siblings('.ui-spinner')
+            data.each(function(){
+                key = btn.children('input').attr('name');       
+                val = btn.children('input')[0].value
+                res[key] = val;
+            })
 
-        data = btn.siblings('.slider');
-        var data2 = btn.siblings('.slider');
-        console.log(data)
-        for(var i=0; i<data.length; i++){
-            key = 'valMin'+i
-            val = data.eq(i).slider("values",0);
-            res[key] = val;
-            key = 'valMax'+i
-            val = data.eq(i).slider("values",1);
-            res[key] = val;
-        }
-        //console.log(res)
+            data = btn.siblings("input[type='checkbox']:checked")
+            data.each(function(){
 
-        event.call(res)
+                key = btn.attr('name');
+                if (res[key]==null)         
+                    res[key] = btn.val();
+                else
+                    res[key] += ", "+btn.val();
+            })
+
+            data = btn.siblings("input[type='text']")
+            for(var i=0; i<data.length; i++){
+                key = data[i].name;
+                val = data[i].value;
+                res[key] = val;
+            }
+
+            data = btn.siblings('.slider');
+            var data2 = btn.siblings('.slider');
+            console.log(data)
+            for(var i=0; i<data.length; i++){
+                key = 'valMin'+i
+                val = data.eq(i).slider("values",0);
+                res[key] = val;
+                key = 'valMax'+i
+                val = data.eq(i).slider("values",1);
+                res[key] = val;
+            }
+
+            //console.log(res)
+
+
+            event.call(res)
         
         }
+
+
+
+
+
+
+
+
+
+
 
         return __g__;
 

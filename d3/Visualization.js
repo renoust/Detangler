@@ -14,29 +14,25 @@
 
     var Visualization = function () {
         var __g__ = this;
-
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
 
         this.showhideLinks = function (target) {
 
-            if (!target)
-                return
+            if (!target)return
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
-            //eval("TP.Context().show_links_" + target + " = ! TP.Context().show_links_" + target);
-			//TP.Context().tabShowLinks[target] = !TP.Context().tabShowLinks[target];
             TP.Context().view[target].setShowLinks(!TP.Context().view[target].getShowLinks());
 
             if (TP.Context().view[target].getShowLinks()) {
                 svg.selectAll('g.link').attr("visibility", "visible");
-                svg.select('text.showHideLinks').text('hide links');
+                $('.ui-accordion-header').each(function(){if($(this).text()==='show links'){$(this).text('hide links')} })
             } else {
+                $('.ui-accordion-header').each(function(){if($(this).text()==='hide links'){$(this).text('show links')} })
                 svg.selectAll('g.link').attr("visibility", "hidden");
-                svg.select('text.showhideLinks').text('show links');
             }
         }
 
@@ -46,13 +42,6 @@
         //following a Brewer's scale (www.colorbrewer2.org).
         this.entanglementCaught = function (CurrentViewID) {
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
-            /*TP.Context().svg_substrate.selectAll("text.homogeneity").text(function (d) {
-                return "" + objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5)
-            });*/
-			
-			//var target_dest = tabTarget["catalyst"];
-			//var target_source = tabTarget["substrate"];
-
 			var target_source = CurrentViewID;
 			
             $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
@@ -105,6 +94,9 @@
 
 
             function move() {
+
+                assert(true, "toto = titi")
+
                 objectReferences.VisualizationObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
                 var currentPanel = dragTarget
@@ -117,6 +109,7 @@
                 var newX = parseInt(panelPos[0]) + posX
                 var newY = parseInt(panelPos[1]) + posY
 
+                console.log(panelPos);
 
                 dragTarget.attr("transform", function (d) {
                     d.panelPosX = newX;
@@ -216,10 +209,11 @@
         this.resetView = function (target) {
             var cGraph = null
             var svg = null
-
+			
+			
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
+			/*
             nodeDatum = svg.selectAll("g.node").data()
             // strangely the matrix that should be applied by transform is 
             //squared?! so we adapt the nodes values
@@ -232,10 +226,16 @@
                 .attr("transform", "translate(" + 0 + "," + 0 + ") scale(" + 1 + ")")
             svg.selectAll("text.node").style("font-size", function () {
                 return 12;
-            });
+            });*/
             
     		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+	         
+	       	var graph_drawing = TP.GraphDrawing(cGraph, svg, target);
+	        graph_drawing.rescaleGraph(cGraph);
+	        	        
+	        graph_drawing.changeLayout(cGraph,0);
+	        
 	            
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }
@@ -262,6 +262,7 @@
             cGraph = TP.Context().view[target].getGraph();
 
             graph_drawing = TP.GraphDrawing(cGraph, svg, target)
+    
             graph_drawing.rotate(target,5)
         }
         
@@ -309,38 +310,15 @@
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     return "visible";
                 });
-                svg.select('text.showHideLabels').text('hide labels');
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = false;
-                    return null;
-                })
-                .on("mouseout", null);
+                $('.ui-accordion-header').each(function(){if($(this).text()==='show labels'){$(this).text('hide labels')} })                
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
-                    if (d.selected || d.labelVisibility) {
-                        d.labelVisibility = true;
-                        return "visible";
-                    } else {
+
                         d.labelVisibility = false;
                         return "hidden";
-                    }
-                });
-                svg.select('text.showhideLabels').text('show labels');
 
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = true;
-                    d3.select(this)
-                        .select("text.node")
-                        .attr("visibility", "visible");
-                })
-                .on("mouseout", function (d) {
-                    if (!d.labelVisibility) {
-                        d.mouseOver = false;
-                        d3.select(this)
-                            .select("text.node")
-                            .attr("visibility", "hidden");
-                    }
                 });
+                $('.ui-accordion-header').each(function(){if($(this).text()==='hide labels'){$(this).text('show labels')} })
             }
         }
 
@@ -386,12 +364,14 @@
             var scaleMax = null
             if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
+
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
             var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
             graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
             objectReferences.VisualizationObject.entanglementCaught(graphName);
+
         };
 
 
@@ -413,8 +393,7 @@
 
 
         this.drawBarChart = function(target, smell){
-
-    	    
+ 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
@@ -431,7 +410,7 @@
             {
                tabClick[""+metric[i]+""] = 0;
             }
-            
+
             //console.log("mettttrrrrrrrriiiiiiicccccc : ");
             //console.log(tabClick);
             

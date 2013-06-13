@@ -184,7 +184,6 @@
                				TP.Context().view[tabCatalyst[0]].buildLinks();
                 			TP.Context().view[tabCatalyst[0]].addView();
                 	}
-              
                 	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());             	
                 }
             });
@@ -239,6 +238,7 @@
             __g__.sendQuery({
                 parameters: params,
                 success: function (data) {
+                	
                     objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);
                 
                     //var redo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);}
@@ -325,17 +325,13 @@
                 parameters: params,
                 async: false,
                 success: function (data) {
-                	//assert(true, "selection :")
-                	//console.log(selection);
-                	assert(true, "data :")
-                	console.log(data);
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
         }
 
 
-        this.syncLayouts = function (async) {
+        this.syncLayouts = function (currentGraph, async) {
         	
         	assert(true, "syncLayouts");
         	
@@ -356,7 +352,7 @@
                 parameters: params,
                 async:async,
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
-                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, "substrate")}
+                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)}
             });
         };
 

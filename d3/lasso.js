@@ -42,22 +42,22 @@
 
         //console.log('creating a lasso object with', svg);
         var __g = this;
-        this.cSvg = svg;
+        __g.cSvg = svg;
 
-        this.started = false;
-        this.canMove = false;
-        this.moveLasso = false;
-        this.isResizing = false;
+        __g.started = false;
+        __g.canMove = false;
+        __g.moveLasso = false;
+        __g.isResizing = false;
 
-        this.group = null;
-        this.prevMovePoint = [];
-        this.pointList = [];
-        this.resizeDirection = "none";
+        __g.group = null;
+        __g.prevMovePoint = [];
+        __g.pointList = [];
+        __g.resizeDirection = "none";
 
-        this.totalDistanceAlongDrag = 0.0;
-        this.distanceFromStartToEnd = 0.0;
+        __g.totalDistanceAlongDrag = 0.0;
+        __g.distanceFromStartToEnd = 0.0;
 
-        this.fillColor = 'black';
+        __g.fillColor = 'black';
         // This method is called internally to update both the total distance 
         // along drag and
         // the distance from start to end given a new point, the point is 
@@ -66,7 +66,7 @@
         // cPoint, the point to add
         //
         // do we really need to measure the sq. root?
-        this.updateDistance = function (cPoint) {
+        __g.updateDistance = function (cPoint) {
             if (__g.pointList.length > 0) {
                 fPoint = __g.pointList[0]
                 lPoint = __g.pointList[__g.pointList.length - 1]
@@ -88,7 +88,7 @@
         // This method checks if the brush has a shape of a lasso or not, 
         // depending on the ratio of the distance along drag and the distance 
         // from start to end
-        this.isLasso = function () {
+        __g.isLasso = function () {
             return (__g.totalDistanceAlongDrag/__g.distanceFromStartToEnd)>1.5;
         }
 
@@ -101,7 +101,7 @@
         // We first initiate the useful variables to draw the lasso, then 
         // create the group element and its behaviors (mouseover, mouseout, 
         //mousedown, mousemove, mouseup)
-        this.mouseDown = function (e) {
+        __g.mouseDown = function (e) {
             if (__g.started || __g.canMove || __g.isResizing)
                 return;
 
@@ -237,7 +237,7 @@
         // to the last section, distances are updated, all brush rectangles are
         // removed from the scene, and if the brush still matches to a 
         //rectangle shape, then a new one is constructed
-        this.mouseMove = function (e) {
+        __g.mouseMove = function (e) {
             if (__g.isResizing) {
 
                 var p0 = __g.pointList[0];
@@ -299,7 +299,7 @@
         // it's a rectangle as previously describbed.
         // Any intersection is finally checked and the starting flag is turned 
         // off, useless path and rect are cleaned.
-        this.mouseUp = function (e) {
+        __g.mouseUp = function (e) {
             if (__g.isResizing) __g.isResizing = false;
             if (!__g.started || __g.canMove) return;
             var prevPoint = __g.pointList[__g.pointList.length - 1];
@@ -421,7 +421,7 @@
         // without overlap. On mousedown, each rectangle triggers a flag for 
         // the resize direction.
 
-        this.drawResizeRectangles = function (p0, p1) {
+        __g.drawResizeRectangles = function (p0, p1) {
 
             var resizeGroup = __g.cSvg.append("g").attr("class", "resize")
             resizeGroup.data([1]).enter()
@@ -590,7 +590,7 @@
         // Corners apply each adjacent directions recursively. A negative
         // direction applies the opposite resize direction recursively.
 
-        this.resizeRectangleEvent = function (current, p0, p1) {
+        __g.resizeRectangleEvent = function (current, p0, p1) {
 
             if (__g.isResizing) {
                 console.log('we are resizing the rectangle: ', this.resizeDirection)
@@ -725,7 +725,7 @@
         // is inside the polygon shape (which can have holes), if an odd
         // number of flip is applied, the point is either outside the polygon 
         // or in a hole.
-        this.intersect = function (polygon, x, y) {
+        __g.intersect = function (polygon, x, y) {
             var i = 0
             var j = 0
             var c = 0;
@@ -736,14 +736,14 @@
             }
             return c;
         }
-        return this
+        return __g;
 
 
         // This function needs to be reimplemented to perform the desired 
         // selection.
         // In this implementation, it checks if any svg:circle on the scene 
         // intersects with the brush.
-        this.checkIntersect = function () {
+        __g.checkIntersect = function () {
             __g.cSvg.selectAll("circle").style('fill', function () {
                 var x = d3.select(this).attr('cx');
                 var y = d3.select(this).attr('cy');

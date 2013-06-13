@@ -16,7 +16,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
 
-
     var tabDataSvg = svgs;
     var viewGroup = groupe;
     //TP.Context().view[target] = __g__;
@@ -53,6 +52,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     this.getGroup = function()
     {    	
     	return viewGroup;    	
+
     }
     
     this.viewInitialized = function()
@@ -218,16 +218,17 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		nodeInformation = value;		
 	}		
 
+
 	this.addView = function() {
 		
 	    elem = document.getElementById("bouton" + ID);
 	    if (elem) elem.parentNode.removeChild(elem);
 	    elem = $("div[aria-describedby='zone" + ID + "']");
-	     console.log(elem)
+	     //console.log(elem)
 	    if (elem!=[])elem.remove();
 	
 	    
-	    console.log($("div[aria-describedby='zone"+ID+"']"))
+	    //console.log($("div[aria-describedby='zone"+ID+"']"))
 	    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
 	   
 	    //if (elem!=[])elem.remove();
@@ -318,12 +319,18 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    });
 		        
 	    
+	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x")}
 
 	    dialog.parent().click(function(){ 
+	    	var oldID=TP.Context().activeView
 	        TP.Context().activeView = ID;
-	        console.log(TP.Context().activeView);
-	        TP.Context().InterfaceObject.interactionPane(bouton,'update')
+
+	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(bouton,'update')}
         	TP.Context().InterfaceObject.addInfoButton(__g__);
+        	TP.Context().InterfaceObject.attachInfoBox()
+        	$('.ui-dialog-titlebar').each(function(){
+        		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
+        	titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x")
         	/*
 	        var num = 0;
 	        $(".arrayButtons").remove();
@@ -360,7 +367,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorNode);
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
-	        console.log($.jPicker.List[0])
+	        //console.log($.jPicker.List[0])
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
@@ -375,10 +382,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 	        var fullheight = $('#container').height()-10;
 	        var fullwidth = $('#container').width()-10;
-	        console.log(dialog.parent().width() + " - " + fullwidth);
-	        console.log(dialog.parent());
+	        //console.log(dialog.parent().width() + " - " + fullwidth);
+	        //console.log(dialog.parent());
 	        if(dialog.parent().width()!=fullwidth){
-	            console.log(1);
+	            //console.log(1);
 	            dialog.dialog({
 	                width:fullwidth, 
 	                height:fullheight,
@@ -386,14 +393,14 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            });
 	        }
 	        else{
-	            console.log(2);
+	            //console.log(2);
 	            dialog.dialog({
 	                width:TP.Context().dialogWidth, 
 	                height:TP.Context().dialogHeight,
 	                position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,
 	            });
 	        }
-	        console.log(TP.Context().dialogTop);
+	        //console.log(TP.Context().dialogTop);
 	
 	            //$(this).height()=fullheight;
 	    });
@@ -406,7 +413,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            else
 	            	viewNodes = "rect";
 	            				
-				DataTranslation = [0,0];            
+				DataTranslation = [0,0];           
 	    	    //TP.Context().tabNodeColor[target] = nodesC;
 		        //TP.Context().tabLinkColor[target] = linksC;
 		        //TP.Context().tabBgColor[target] = bgC;
@@ -415,7 +422,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		        moveMode = true;
 		        showLabels = true;
 		        showLinks = true;
-		        nodeInformation = false;           
+		        nodeInformation = true;           
 	           
 	            TP.Interaction().createLasso(ID);
 	            TP.Interaction().addZoom(ID);
@@ -492,6 +499,56 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		
 		            		           	
 		     }
+	     }
+	     
+	     this.remove = function() {
+	     	
+	     	d3.select("#zone"+ID).remove();
+	     	
+		    tabDataSvg = null;
+		    viewGroup = null;
+		    //TP.Context().view[target] = __g__;
+		    
+		    controller = null;
+		    svg = null;
+		    nodesColor = null;
+		    linksColor = null;
+		    bgColor = null;
+		    viewNodes = null;
+		    lasso = null;
+		    DataTranslation = null;
+		    
+			selectMode = null;
+			moveMode = null;
+			showLabels = null;
+			showLinks = null;
+			nodeInformation = null; 
+		    
+		    metric_BC = null;
+		    metric_SP = null;
+		    combined_foreground = null;
+		    
+		    typeView = null;
+		    acceptedGraph = null;
+		    tabLinks = null;
+		    name = null;
+		    
+		    graph = null;
+		    viewInitialized = null;
+		    
+		   	ID = null;
+		   	
+		   	id = null; 
+		   	groupe = null; 
+		   	bouton = null; 
+		   	svgs = null; 
+		   	target = null; 
+		   	nodesC = null; 
+		   	linksC = null; 
+		   	bgC = null; 
+		   	view_nodes = null; 
+		   	type = null; 
+		   	idAssociation = null;	     	
 	     }
 		
 

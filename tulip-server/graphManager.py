@@ -198,6 +198,19 @@ class graphManager():
         #for e in g.getEdges():
         #        self.graph.addEdge(e)
         #self.graph = g
+        
+        gNodeList = [n for n in g.getNodes()]
+        gEdgeList = [e for e in g.getEdges()]
+        
+        if graph.numberOfNodes() != len(gNodeList):
+            for n in graph.getNodes():
+                if n not in gNodeList:
+                    graph.delNode(n)
+        if graph.numberOfEdges() != len(gEdgeList):
+            for e in graph.getEdges():
+                if e not in gEdgeList:
+                    graph.delEdge(e)
+        
         return graph
 
     def updateLayout(self, jsonGraph, target):
