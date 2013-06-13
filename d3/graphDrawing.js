@@ -20,7 +20,7 @@
 	import_class('context.js', 'TP');
 	import_class('objectReferences.js', 'TP');
 	
-    var GraphDrawing = function (_graph, _svg, target) {
+    var GraphDrawing = function (_graph, _svg, currentViewID) {
 
         // g, the return variable
         // cGraph, the current graph
@@ -39,7 +39,7 @@
                 g.drawLinks()
             }
             
-            g.drawNodes(TP.Context().view[target].getViewNodes());
+            g.drawNodes(TP.Context().view[currentViewID].getViewNodes());
             g.drawLabels()
         }
 
@@ -259,12 +259,12 @@
 */
 
             //var glyphR = g.svg.selectAll("g.glyph."+target)
-            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().view[target].getType())
+            var glyphR = g.svg.selectAll("g.glyph."+TP.Context().view[currentViewID].getType())
                 .append(view_nodes)
                 .attr("class", function (d) {return d._type})
                 .classed("node", true)
                 .classed(view_nodes, true)
-                .style("fill", TP.Context().view[target].getNodesColor())
+                .style("fill", TP.Context().view[currentViewID].getNodesColor())
 
 			if(view_nodes == "rect" && glyphR != null)
 			{
@@ -386,7 +386,7 @@
         }
         
 
-        g.rotate = function(target, valeur){
+        g.rotate = function(currentViewID, valeur){
         	var x_minx,y_minx, x_center, y_center;
         	var x_tmp,y_tmp;
         	
@@ -407,7 +407,7 @@
         		}
         	);
 
-        	g.rescaleGraph(TP.Context().view[target].getGraph());
+        	g.rescaleGraph(TP.Context().view[currentViewID].getGraph());
         	g.changeLayout(g.cGraph,0);
 		}
 
@@ -462,7 +462,7 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-                .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
+                .style("stroke", TP.Context().view[currentViewID].getLinksColor()) //before, there was catalyst
                 .style("stroke-width", function (d) {return 1;})
 
             link.attr("transform", transform);
@@ -709,14 +709,14 @@
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
                 .select("g.glyph").select("circle.node")
-                .style('fill', TP.Context().view[target].getAsociated("catalyst")[0].getNodesColor())
+                .style('fill', TP.Context().view[currentViewID].getAsociated("catalyst")[0].getNodesColor())
                 .attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 
             var node = g.svg.selectAll("g.node")
                 .select("g.glyph").select("rect.node")
-                .style('fill', TP.Context().view[target].getAsociated("substrate")[0].getNodesColor())
+                .style('fill', TP.Context().view[currentViewID].getAsociated("substrate")[0].getNodesColor())
                 .attr('width', 2*5)
                 .attr('height', 2*5)
                 .style("stroke-width", 0)
@@ -730,13 +730,13 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view[target].getAsociated("substrate")[0].getLinksColor())
+                .style("stroke", TP.Context().view[currentViewID].getAsociated("substrate")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
 
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view[target].getAsociated("catalyst")[0].getLinksColor())
+                .style("stroke", TP.Context().view[currentViewID].getAsociated("catalyst")[0].getLinksColor())
                 .style("stroke-width", function(d) { return 1;})
         }
 
@@ -757,25 +757,33 @@
             //g.arrangeLabels();
             //g.resetDrawing();
             
+            currentView = TP.Context().view[currentViewID]
+            currentGlyph = currentView.getViewNodes()
+            currentGlyphClass = currentGlyph +".node"
+            
             var node = g.svg.selectAll("g.node")
                 .style("opacity", .5)
-                .select("g.glyph")
-                .select(TP.Context().view[target].getViewNodes()+".node")
-                .style('fill', TP.Context().view[target].getNodesColor())
+            
+            
+            var glyphG = node.select("g.glyph")
+            var glyph = glyphG.select(currentGlyphClass)
+                		.style('fill', currentView.getNodesColor())
+            
                 
-            if(TP.Context().view[target].getViewNodes() == "circle")
+            if(currentGlyph == "circle")
             {                
-                node.attr('r', 5)
+                glyph.attr('r', 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
 			}
-			if(TP.Context().view[target].getViewNodes() == "rect")
+			if(currentGlyph == "rect")
 			{
-                node.attr('width', 2 * 5)
+                glyph.attr('width', 2 * 5)
                 .attr('height', 2 * 5)
                 .style("stroke-width", 0)
                 .style("stroke", "black")
            }
+
 
             var node = g.svg.selectAll("g.node")
                 .select("text.node")
@@ -788,7 +796,7 @@
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
-                .style("stroke", TP.Context().view[target].getLinksColor())
+                .style("stroke", currentView.getLinksColor())
                 .style("stroke-width", function (d) {return 1;})
 
             //we would like it better as a parameter
@@ -802,6 +810,7 @@
             _graph.nodes()
                 .forEach(function (n) {
                     val = eval("n." + parameter);
+                    //val = n[parameter]
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -838,6 +847,7 @@
             node.select("circle.node")
                 .attr("r", function (d) {
                     r = eval("d." + parameter + "*factor+scaleMin");
+                    //r = d[parameter] * factor + scaleMin
                     if (!r || equalScales) {r = scaleMin;}
                     return r;
                 })
@@ -847,11 +857,14 @@
             node.select("rect.node")
                 .attr("width", function (d) {
                     r = eval("d." + parameter + "*factor+scaleMin");
+                    //r = d[parameter] * factor + scaleMin
                     if (!r || equalScales) {r = scaleMin;}
                     return 2 * r;
                 })
                 .attr("height", function (d) {
                     r = eval("d." + parameter + "*factor+scaleMin");
+                    //r = d[parameter] * factor + scaleMin
+
                     if (!r || equalScales) {r = scaleMin;}
                     return 2 * r;
                 })

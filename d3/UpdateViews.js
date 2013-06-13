@@ -340,18 +340,21 @@
         	
             var graph = null
             var svg = null
+            var targetView = null;
             
             var find = false;
             
             var typeGraph = TP.Context().view[graphName].getType();
             console.log("type de "+graphName+" = "+typeGraph);
-            
+             
             if (typeGraph == 'substrate' && TP.Context().view[graphName].getAssociatedView("catalyst") != null) {
             	//if(TP.Context().view[graphName].getAssociatedView("catalyst")[0].viewInitialized() == 1){
                		var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
                 	graph = tmp[0].getGraph();
                 	svg = tmp[0].getSvg();
                 	find = true;
+		            //quick fix since w<'re not amanging multiple views yet
+                	targetView = tmp[0].getID();
                //}
             }
             
@@ -361,6 +364,7 @@
                 	graph = tmp[0].getGraph();
                 	svg = tmp[0].getSvg();
                 	find = true;
+                	targetView = tmp[0].getID();
               // }
             }
 
@@ -383,6 +387,7 @@
             var tempGraph = new TP.Graph()
             tempGraph.nodes(data.nodes, typeGraph)
             tempGraph.links(data.links, typeGraph)
+            tempGraph.edgeBinding();
 			
 			
 			
@@ -395,10 +400,8 @@
                 TP.Context().syncNodes = undefined;
             }
 			
-            tempGraph.edgeBinding();
 
-            var graph_drawing = TP.GraphDrawing(graph, svg, graphName)
-
+            var graph_drawing = TP.GraphDrawing(graph, svg, targetView)
             graph_drawing.show(tempGraph)
 
             if (typeGraph == 'combined') {
