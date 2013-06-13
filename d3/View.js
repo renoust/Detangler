@@ -235,42 +235,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 		//$("#container").empty();
 	
-	    /**************************
-	     * Application
-	     **************************/
-	    controller = Em.Application.create();
-	
-	    /**************************
-	     * Models
-	     **************************/
-	
-	    controller.Boutton = Em.Object.extend({
-	        idButton: '',
-	        fonction: ''
-	    });
-	
-	
-	    /**************************
-	     * Controllers
-	     **************************/
-	
-	    controller.testArrayController = Em.ArrayController.create({
-	        content: [],
-	
-	        loadFunction: function (propName, value) {
-	            var obj = this.findProperty(propName, value);
-	            obj.fonction();
-	        },
-	
-	        addFunction: function (object) {
-	            var obj = this.findProperty("idButton", object.idButton);
-	            if (obj == null) {
-	                this.pushObject(object);
-	                //console.log("ajout bouton");
-	            }
-	        }
-	    });
-	
 	
 	    /**************************
 	     * Views
