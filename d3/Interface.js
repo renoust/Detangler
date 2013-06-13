@@ -1045,11 +1045,18 @@
         }
 
         this.createArrayButtons = function(tab, pane){
+        	/*
             for(var i=0; i<tab.length; i++){
 
                 this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
 
-            }
+            }*/
+           for(var key in tab){
+	       	   for(var i=0; i<tab[key].length; i++){	
+	               this.createForm(pane, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])	
+	           }
+           }
+           
                 $( "#sizemap" ).slider({ 
                     range: true,
                     min: 0,

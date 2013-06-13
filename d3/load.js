@@ -46,4 +46,5 @@ document.getElementById('files').addEventListener('change', function (e) {
     xhr.setRequestHeader("X-File-Name",encodeURIComponent(this.files[0].name));
     xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(xhr.file)
-}, false);
+    
+}, false); 

@@ -307,8 +307,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    /****   en-tête du dialog   ****/
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
+
 	    /*$("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        */
 	    $("<button/>", {id: "toggle"+ID, text:"Move", style:'right:15px'}).appendTo(titlebar); 
+
 	
 	    $('#toggle' + ID).button().click (function(event){
 	        var interact = $(this).button("option","label");

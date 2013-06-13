@@ -279,8 +279,9 @@
 	                    catalystSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke', catalystView.getLinksColor());
-
+	                        .style('stroke', catalystView.getLinksColor())
+							.style('stroke-width', 1)
+							
 						
 	                    //objectReferences.VisualizationObject.resetSize(catalystName);
 	                    catalystSvg.selectAll("text.node").style("opacity", 1)
@@ -312,8 +313,9 @@
 	                    substrateSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke-width',1)
-	                        .style('stroke', substrateView.getLinksColor());
+	                        .style('stroke', substrateView.getLinksColor())
+	                        .style('stroke-width', 1)
+
 
 	                    
 	                    //objectReferences.VisualizationObject.resetSize(substrateName);
@@ -355,8 +357,8 @@
 	                    combinedSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke', combinedNodeColor);
-
+	                        .style('stroke', combinedNodeColor)
+							.style('stroke-width', 1)
 						
 						//objectReferences.VisualizationObject.resetSize(combinedName);
 						combinedSvg.selectAll("text.node").style("opacity", 1)
@@ -534,10 +536,100 @@
             
 
         }
+        
+
+
+this.runZoom = function(target, deltaZoom, mousePos){
+     
+	 if (!TP.Context().view[target].getMoveMode())            
+	     return;
+	     
+	 var cible = d3.select("#svg_"+target)[0][0]
+	 
+	 var cGraph = TP.Context().view[target].getGraph();
+	 var svg = TP.Context().view[target].getSvg();
+	 var time = 0;
+	 
+	 var delta = null;
+	 
+	 if(deltaZoom == null)
+	 	delta = event.wheelDelta;
+	 else
+	 	delta = deltaZoom;
+
+	 
+	 var mouseOrigin = [];
+	 
+	 if(mousePos == null)
+		 mouseOrigin = d3.mouse(cible);
+	 else{
+	 	 mouseOrigin[0] = mousePos[0];
+	 	 mouseOrigin[1] = mousePos[1];
+	 }
+	 
+	 var scale = 0;
+					
+	 if (delta > 0)
+	 scale = 1.1;
+	 else
+	 scale = 0.9;
+
+	 var data_translate = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target]//eval("TP.Context().data_translation_"+target);
+				
+	 var node = svg.selectAll("g.node")
+	 .data(cGraph.nodes(),function(d){
+		 d.x = d.currentX;
+		 d.y = d.currentY;
+		 d.x = ((((d.x)-mouseOrigin[0])*scale)+mouseOrigin[0]);
+		 d.y = ((((d.y)-mouseOrigin[1])*scale)+mouseOrigin[1]);
+	     d.currentX = d.x;
+	     d.currentY = d.y;
+	     return d.baseID;
+	 })
+	 .transition().delay(time)    
+	                     			
+	 node.select("circle")	 
+	 .attr("cx", function(d){
+	       return d.x;
+	 })
+	 .attr("cy", function(d){return d.y;})
+            	
+	 node.select("rect")
+	 .attr("x", function(d){
+	       return d.x;
+	 })
+	 .attr("y", function(d){return d.y;})
+
+	 var link = svg.selectAll("g.link")
+	      .data(cGraph.links(),function(d){return d.baseID})
+	      .transition().delay(time)
+	      .select("path")
+	      .attr("d", function(d) {
+	             return "M"+d.source.x+" "+d.source.y+" L"+d.target.x+" "+d.target.y; 
+	      })
+             							
+	      var label = svg.selectAll("text.node")
+	          .data(cGraph.nodes(),function(d){
+	                return d.baseID;
+	          })
+	          .transition().delay(time)
+	
+	               //label.select("text")
+	          .attr("dx", function(d){
+	               return d.x;
+	          }) 
+	          .attr("dy", function(d){return d.y;})
+	                                      
+	 event.preventDefault();
+
+}        
+        
+        
+        
         // Adds a zoom interactor to a specific svg target as callbacks to its 
         //mouse events.       
         this.addZoom = function(target){
-
+        	
 			if (!target)
                return
 
@@ -548,6 +640,7 @@
 			cGraph = TP.Context().view[target].getGraph();
 				
 			function movingZoom(target){
+				
 	            if (!target)
 	                 return
 	
@@ -602,8 +695,6 @@
                 })
                 .on("dragend", function(){
 					
-					assert(true, "tutu");
-					
 					var nodeDatum = svg.selectAll("g.node").data()
 	                
 	                nodeDatum.forEach(function (d) {
@@ -618,70 +709,26 @@
        		}
 
        		
-			svg.on("mousewheel", function(){               
-                if (!TP.Context().view[target].getMoveMode())            
-                    return;
-            
-				var time = 0;
-				var delta = event.wheelDelta;
-				var mouseOrigin = d3.mouse(this);
-				var scale = 0;
-				
-				if (delta > 0)
-					scale = 1.1;
-				else
-					scale = 0.9;
-					
-				var data_translate = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target]//eval("TP.Context().data_translation_"+target);
-				
-				var node = svg.selectAll("g.node")
-                    .data(cGraph.nodes(),function(d){
-                    	d.x = d.currentX;
-                    	d.y = d.currentY;
-                   	    d.x = ((((d.x)-mouseOrigin[0])*scale)+mouseOrigin[0]);
-                        d.y = ((((d.y)-mouseOrigin[1])*scale)+mouseOrigin[1]);
-                        d.currentX = d.x;
-                   	    d.currentY = d.y;
-                   	    return d.baseID;
-                   })
-                   .transition().delay(time)
-                        			
-                node.select("circle")
-                   	.attr("cx", function(d){
-                   		return d.x;
-                    })
-                   	.attr("cy", function(d){return d.y;})
-                                	
-                node.select("rect")
-                   	.attr("x", function(d){
-                		return d.x;
-                    })
-                    .attr("y", function(d){return d.y;})
-                    
-                var link = svg.selectAll("g.link")
-                  	.data(cGraph.links(),function(d){return d.baseID})
-                   	.transition().delay(time)
-                   	.select("path")
-                    .attr("d", function(d) {
-                       	return "M"+d.source.x+" "+d.source.y+" L"+d.target.x+" "+d.target.y; 
-                    })
-                                							
-                var label = svg.selectAll("text.node")
-                	.data(cGraph.nodes(),function(d){
-                        return d.baseID;
-                    })
-                   	.transition().delay(time)
-
-               //label.select("text")
-               		.attr("dx", function(d){
-                       	return d.x;
-                    }) 
-                    .attr("dy", function(d){return d.y;}) 
-                                      
-                event.preventDefault();
+			svg.on("mousewheel", function(){
+					TP.Context().Interaction().runZoom(target, null, null);
 			});	
 			svg.on("drag", movingZoom(target));
-		}
+			
+			/*
+			svg.on("keydown", function(){
+					console.log(d3.event.keyCode);
+				
+				 switch (d3.event.keyCode) {
+					case 8: {console.log("space");}
+					case 46: { // delete
+						console.log("delete");
+					}
+				}
+				
+				
+			})*/
+			
+}
 
 
         // Removes the lasso interactor from a specific svg target's callbacks 
