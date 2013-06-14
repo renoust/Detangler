@@ -45,6 +45,7 @@
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
                     TP.Client().createTulipGraph(jsonData, target);
+                    
 
                     //this.analyseGraph(target)
                 });
