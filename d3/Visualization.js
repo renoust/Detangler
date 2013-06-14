@@ -57,7 +57,9 @@
                 .style("fill", brewerSeq[index])*/
             d3.selectAll("rect.view").style("fill", brewerSeq[index])
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
-            d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+            //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+                                
+            d3.select("#svg_"+CurrentViewID).select("g.brush").select("polygon").style('fill', brewerSeq[index]);
             
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
