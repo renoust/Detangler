@@ -40,16 +40,26 @@
         //entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
-        this.entanglementCaught = function (CurrentViewID) {
+        this.entanglementCaught = function (CurrentViewID, nothing) {
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
 			var target_source = CurrentViewID;
-			
-            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
-            $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
  
-            
-            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-            $('#bg')[0].style.cssText="background-color:"+ brewerSeq[index]; 
+            if(nothing == null){
+            	
+            	$('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);            	
+            	          
+	            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
+	        	$('#bg')[0].style.cssText="background-color:"+ brewerSeq[index];	           
+	        }
+	        else{
+	        	
+	            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            		
+	        	$('#bg')[0].style.cssText="background-color:white";
+	        
+	        }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
                 .transition()
@@ -58,8 +68,6 @@
             d3.selectAll("rect.view").style("fill", brewerSeq[index])
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
             //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
-                                
-            d3.select("#svg_"+CurrentViewID).select("g.brush").select("polygon").style('fill', brewerSeq[index]);
             
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]

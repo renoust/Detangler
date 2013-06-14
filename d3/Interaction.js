@@ -377,6 +377,7 @@
                    assert(true, "15");
                                    	
                 	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
+                	TP.Visualization().entanglementCaught(target, 1);
                 	
                     //console.log("warning: the selection list is empty");
 
@@ -386,7 +387,7 @@
                     
                     //assert(true, "arrangeLabels appele depuis le lasso");    
                     //objectReferences.VisualizationObject.arrangeLabels("substrate");
-                    //objectReferences.VisualizationObject.arrangeLabels("catalyst"); 
+                    //objectReferences.VisualizationObject.arrangeLabels("catalyst");
                 }
             }
         }
