@@ -226,7 +226,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		if(bouton != null){
 			for(var p = 0; p < bouton.length; p++)
 			{
-				console.log(bouton[p][4]);
+				//console.log(bouton[p][4]);
 				
 				if(hashButton[bouton[p][4]] != null){
 					hashButton[bouton[p][4]].push(bouton[p]);
@@ -319,8 +319,11 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    	var oldID=TP.Context().activeView
 	        TP.Context().activeView = ID;
 
-	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(hashButton,'update')}
-        	TP.Context().InterfaceObject.addInfoButton(__g__);
+	        if (oldID!=TP.Context().activeView){
+	        	TP.Context().InterfaceObject.interactionPane(hashButton,'update');
+	        	TP.Context().InterfaceObject.addInfoButton(__g__);
+	        }
+        	
         	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){
         		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
@@ -362,7 +365,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
 	        //console.log($.jPicker.List[0])
-	        console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
+	        //console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);

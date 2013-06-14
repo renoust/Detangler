@@ -14,18 +14,19 @@
 
 
     var Interface = function () {
+        assert(false,'Interface')
         var __g__ = this;
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
+            assert(false,'Interface -> includeFormParam')
             myinput = svg.append("foreignObject")
                 .attr("width", 100)
                 .attr("height", 100)
                 .append("xhtml:body")
                 .html("<form><input type=checkbox id=check /></form>")
                 .on("click", function (d, i) {
-                    //console.log(svg.select("#check").node().checked);
                 });
             myinput = svg.append("foreignObject")
                 .attr("width", 300)
@@ -34,11 +35,11 @@
                 .attr("y", 200)
                 .append("xhtml:body")
                 .html("<form><input type=input id=input /></form>")
-                //console.log("input created", myinput);
         }
 
 
         this.eraseAllInterface = function (target) {
+            assert(false,'Interface -> eraseAllInterface')
             var cGraph = null
             var svg = null
 
@@ -53,6 +54,7 @@
         // This function adds a small frame that displays the entanglement informations while they are updated
         // target, the string of the svg interface to draw the frame in
         this.addEntanglementFeedback = function (target) {
+            assert(false,'Interface -> addEntanglementFeedback')
             // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
             /* $("<div/>", {
                 id:"entanglement",
@@ -163,6 +165,7 @@
         // One button triggers the other one on or off, and refers to the 
         // global mode variable 'move_mode' or 'select_mode'
         this.addGraphInteractorButtons = function (target, positionNumber) {
+            assert(false,'Interface ->addGraphInteractorButtons')
             var cGraph = null
             var svg = null
 
@@ -312,6 +315,7 @@
 
 
         this.addInfoButton = function (target) {
+            assert(false,'Interface -> addInfoButton')
             var cGraph = target.getGraph();
 
             var path = $('#files').val().split('\\');
@@ -412,6 +416,7 @@
 
 
         this.selectWeightProperty = function (group) {
+            assert(false,'Interface -> selectWeightProperty')
             group.append("foreignObject")
                 .attr("x", 10)
                 .attr("y", 20)
@@ -436,6 +441,7 @@
 
 
         this.holdSVGInteraction = function (target) {
+            assert(false,'Interface -> holdSVGInteraction')
             objectReferences.InteractionObject.removeZoom(target);
             objectReferences.InteractionObject.removeLasso(target);
         }
@@ -445,6 +451,7 @@
         // interactors
         // target, the string value of the target svg view
         this.toggleSelectMove = function (target) {
+            //assert(true,'Interface -> toggleSelectMove')
             if (!target) return
 
             var svg = null
@@ -480,6 +487,7 @@
 
 
         this.addSettingsButton = function (target) {
+            assert(false,'Interface -> addSettingsButton')
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
             svg = TP.Context().view[target].getSvg();
             posSettings_x = TP.Context().width - 30
@@ -576,6 +584,7 @@
         // className, the name of the class assigned to the button
         // callback, the callback function associated to the button click        
         this.addButton = function(target,positionNumber,buttonLabel,className,callback){
+            assert(false,'Interface -> addInfoButton')
             var cGraph = null
             var svg = null
 
@@ -635,6 +644,7 @@
 
 
         this.attachInfoBox = function () {
+            assert(false,'Interface -> attachInfoBox')
             /*var cGraph = null
             var svg = null
 
@@ -672,127 +682,17 @@
 
 
         this.addInfoBox = function (node) {
-            document.getElementById('infoNodes').innerHTML = "<p>Node Informations: </p>"
+            //assert(false,'Interface -> addInfoBox')
+            $('#infoNodes').empty()
+            $('#infoNodes').css('border', '1px solid #666666')
+            $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
             $('<p/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
             $('<p/>', {text:node.label}).appendTo('#infoNodes')
-            
-            /*
-            var cGraph = null
-            var svg = null
-            
-            svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().view[target].getGraph();
-
-            function move() {
-
-                objectReferences.InterfaceObject.parentNode.appendChild(this);
-                var dragTarget = d3.select(this);
-                var currentPanel = dragTarget.data()[0]
-                var posX = d3.event.dx
-                var posY = d3.event.dy
-
-                var newX = 0
-                var newY = 0
-
-                if (currentPanel.panelPosX || currentPanel.panelPosY) {
-                    newX = currentPanel.panelPosX + posX
-                    newY = currentPanel.panelPosY + posY
-                } else {
-                    newX = currentPanel.x + posX
-                    newY = currentPanel.y + posY
-                }
-
-                dragTarget.attr("transform", function (d) {
-                    d.panelPosX = newX;
-                    d.panelPosY = newY;
-                    return "translate(" + newX + "," + newY + ")"
-                });
-            };
-
-            nbInfoBox = svg.selectAll("g.nodeInfo")[0].length
-            console.log("the current node", node);
-
-            ib = svg.selectAll("g.nodeInfo" + node.baseID)
-                .data([node])
-                .enter()
-                .append("g")
-                .attr("class", function (d) {
-                    return "nodeInfo" + d.baseID
-                })
-                .attr("transform", function (d) {
-                    return "translate(" + d.currentX + "," + d.currentY + ")";
-                })
-                .call(d3.behavior.drag()
-                .on("drag", objectReferences.InterfaceObject.move))
-
-            ib.append("rect")
-                .classed("nodeInfo", true)
-                .attr("width", 200)
-                .attr("height", 200)
-                .style("fill", TP.Context().defaultFillColor)
-                .style("stroke-width", TP.Context().defaultBorderWidth)
-                .style("stroke", TP.Context().defaultBorderColor)
-
-            ib.append("text")
-                .classed("nodeInfo", true)
-                .text("node information")
-                .attr("dx", 5)
-                .attr("dy", 15)
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-
-
-            ib.append("text")
-                .classed("nodeInfo", true)
-                .text(function (d) {
-                    return ("ID " + d.baseID)
-                })
-                .attr("dx", 5)
-                .attr("dy", 30)
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-
-            ib.append("text")
-                .classed("nodeInfo", true)
-                .text(function (d) {
-                    return d.label
-                })
-                .attr("dx", 5)
-                .attr("dy", 42)
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-
-            ib.append("text")
-                .classed("nodeInfo", true)
-                .text("X")
-                .attr("dx", 186)
-                .attr("dy", 18)
-                .style("fill", "lightgray")
-                .style("font-family", "EntypoRegular")
-                .style("font-size", 30)
-                .on("click", function (d) {
-                    svg.selectAll("g.nodeInfo" + node.baseID)
-                        .data([])
-                        .exit()
-                        .remove();
-                })
-                .on("mouseover", function () {
-                    d3.select(this)
-                        .style("fill", "black")
-                })
-                .on("mouseout", function () {
-                    d3.select(this)
-                        .style("fill", "lightgray")
-                })
-
-            //console.log("node info appended", ib)*/
         }
 
 
         this.setCombinedForeground = function (target) {
+            assert(false,'Interface -> setCombinedForeground')
             TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
@@ -820,6 +720,7 @@
 
 
         this.toggleCombinedForeground = function (target) {
+            assert(false,'Interface -> toggleCombinedForeground')
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -866,61 +767,65 @@
         }*/
 
         this.addPanelMenu = function(header){
+            //assert(true,'Interface -> addPanelMenu')
             menuNum =contxt.menuNum++;
-            $("<div/>", {
-                "class": "cont",
-                id: "menu-"+menuNum,
-            }).appendTo("#wrap");
-
-            $("<span/>", {
-                "class": "toggleButton",
-                id: "toggleBtn"+menuNum,
-                text: ">",
-                style:"top:"+40*menuNum+"px;",
-            }).appendTo("#menu-"+menuNum);
-
-            $('<div/>', {
-                class:'header-menu', 
-                text:header
-            }).appendTo('#menu-'+menuNum);
-
-            $('<div/>',{
-                id:'menu'+menuNum+'-content',
-                class:'menu-content',
-            }).appendTo('#menu-'+menuNum)
-            
-
+            $("<div/>", {class:'cont',id:'menu-'+menuNum}).appendTo("#wrap");
+            $("<div/>",{class:'toggleButton',id:'toggleBtn'+menuNum,text:'>',style:'top:'+40*menuNum+'px;'}).appendTo('#menu-'+menuNum);
+            $('<div/>', {class:'header-menu',text:header}).appendTo('#menu-'+menuNum);
+            $('<div/>', {class:'menu-content',id:'menu'+menuNum+'-content',}).appendTo('#menu-'+menuNum)
             return 'menu-'+menuNum;
         }
 
         this.interactionPane = function(buttons, mode){
+            //assert(true,'Interface -> interactionPane')
             var menu, content;
             if(mode==='update'){
                 for(var i=0; i<contxt.menuNum;i++){
                     if($('.header-menu').eq(i).text()==='Interactions'){
-                        menu = '#' + $('.header-menu').eq(i).parent().attr('id')
                         content = $('.header-menu').eq(i).siblings('.menu-content')
                         document.getElementById(content.attr('id')).innerHTML = ''
                     }
                 }
             }else if(mode==='create'){
                 menu = this.addPanelMenu('Interactions');
-                $('#'+menu).css('z-index', 102)
-                $('#'+menu).find('.toggleButton').text('<')
-                $('#'+menu).find('.toggleButton').css('background','url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x')
-                console.log($('#'+menu+' .toggleBtn'))
+                $('#'+menu).css('z-index', 101)
+                $('#'+menu).find('.toggleButton').text('<').addClass('open')
+                //$('#'+menu).find('.toggleButton').css('background','url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x')
                 content = $("#"+menu +" .menu-content");
                 content.accordion({
                     collapsible:true,
                     active:false,
-                    heightStyle:'content'
                 });
             }
-            this.createArrayButtons(buttons, content.attr('id'));
+            for(var key in buttons){
+                this.createElement('p', {class:'header-form', text:key}, '#'+content.attr('id'))
+                var cnt = this.createElement('div', {data:key, class:"accordion"}, '#'+content.attr('id'))
+                content.accordion('refresh')
+                this.createElement('div', {id:key+'-content'}, '#'+cnt.attr('id'))
+                $('#'+key+'-content').accordion({
+                    collapsible:true,
+                    active:false,
+                })
 
+                this.createArrayButtons(buttons[key], key+'-content');
+            }
+            //this.createArrayButtons(buttons, content.attr('id'));
+
+            for(var key in buttons){
+                $('#'+key+'-content').accordion({
+                    collapsible:true,
+                    active:false,
+                    heightStyle:'content'
+                })
+            }
+            content.accordion({collapsible:true,
+                    active:false,
+                    heightStyle:'content'})
+            
         }
 
         this.infoPane = function(){
+            //assert(true,'Interface -> infoPane')
             var menu = this.addPanelMenu('Informations');
             var content = $("#"+menu +" .menu-content");
             
@@ -936,7 +841,7 @@
                 "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";
 
             $('<div/>', {id:'infoNodes'}).appendTo('#'+content.attr('id'));
-            $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
+            
 
             //affichage par défaut
             //this.addInfoButton(contxt.activeView);
@@ -953,6 +858,7 @@
 
         }*/
         this.visuPane = function(pane){
+            //assert(true,'Interface -> visuPane')
             var menu = this.addPanelMenu('');
             var content = $("#"+menu +" .menu-content");
 
@@ -1008,7 +914,7 @@
             $('#apply').click(function(){
                 /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
                 console.log(contxt.labelColor)*/
-                    console.log(TP.Context().view[TP.Context().activeView].getNodesColor(), $.jPicker.List[0].color.active.val('hex'))
+                    //console.log(TP.Context().view[TP.Context().activeView].getNodesColor(), $.jPicker.List[0].color.active.val('hex'))
                     TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
                     TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));
@@ -1022,6 +928,7 @@
 
 
         this.createElement = function(balise, attributes,  parentId, labelPrec, labelSuiv){
+            //assert(true,'Interface -> createElement')
             if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
             var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
             if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
@@ -1029,7 +936,7 @@
             return elem;
         }
         this.createForm = function(menuPane, id, title, tab, event){
-
+            //assert(true,'Interface -> createForm')
             if (tab!=''){
                 var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
                 this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
@@ -1044,46 +951,64 @@
             }else{
                 var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
                 elem.click(event.click)
-                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
+                this.createElement('div', {/*class:"button-collapsed"*/}, '#'+menuPane)
             }
 
             $('#'+menuPane).accordion('refresh')
         }
 
         this.createArrayButtons = function(tab, pane){
-        	/*
+            //assert(true,'Interface -> createArrayButtons')
             for(var i=0; i<tab.length; i++){
-
                 this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
-
+            }
+            /*for(var key in tab){
+            	   for(var i=0; i<tab[key].length; i++){	
+                   this.createForm(pane, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])	
+               }
             }*/
-           for(var key in tab){
-	       	   for(var i=0; i<tab[key].length; i++){	
-	               this.createForm(pane, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])	
-	           }
-           }
            
-                $( "#sizemap" ).slider({ 
-                    range: true,
-                    min: 0,
-                    max: 99,
-                    values: [ 3, 12 ],
-                    change: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    },
-                    slide: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    }
-                });
+            $( "#sizemap" ).slider({ 
+                range: true,
+                min: 0,
+                max: 99,
+                values: [ 3, 12 ],
+                change: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                },
+                slide: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                }
+            });
         }
+        // [id,title,[params],{event}, family],
+        /*this.createArrayButtons = function(tab, pane){
+
+            for(var key in tab){
+                this.createElement('p', {class:'header-form', text:key}, '#'+pane)
+                var cnt = this.createElement('div', {toto:key, class:"accordion"}, '#'+pane)
+
+
+                                console.log('TOTO')
+                console.log(tab[key])
+                for(var i=0; i<tab[key].length; i++){  
+                    console.log(tab[key][i][0]) 
+                    this.createForm(key, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])    
+               }
+//                $('<p/>',{class:'header-form', text:'TOTO'}).appendTo(pane)
+                //this.createForm(pane, key, '', '', tab[key][i][3])
+            }
+            $('#'+pane).accordion('refresh')
+        }*/
 
         this.callbackMenu = function(param, event){
+            assert(false,'Interface -> call')
             var res = {}
             var key = null;
             var val = null;
@@ -1124,7 +1049,7 @@
 
             data = btn.siblings('.slider');
             var data2 = btn.siblings('.slider');
-            console.log(data)
+            //console.log(data)
             for(var i=0; i<data.length; i++){
                 key = 'valMin'+i
                 val = data.eq(i).slider("values",0);

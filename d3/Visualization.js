@@ -95,7 +95,7 @@
 
             function move() {
 
-                assert(true, "toto = titi")
+                //assert(true, "toto = titi")
 
                 objectReferences.VisualizationObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
@@ -109,7 +109,7 @@
                 var newX = parseInt(panelPos[0]) + posX
                 var newY = parseInt(panelPos[1]) + posY
 
-                console.log(panelPos);
+                //console.log(panelPos);
 
                 dragTarget.attr("transform", function (d) {
                     d.panelPosX = newX;
@@ -416,11 +416,11 @@
             
             //console.log("metric[0] : " + tabClick[""+metric[0]+""])
             
-            assert(true, "erreur1");
+            //assert(true, "erreur1");
             
             var id = ""+TP.Context().getIndiceView();
             
-            console.log("iddddddddddddddddddddddd : "+id)
+            //console.log("iddddddddddddddddddddddd : "+id)
             
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
             new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
@@ -430,7 +430,7 @@
             TP.Context().view[id].addView();			
 			TP.Context().view[id].buildLinks();
 			
-			assert(true, "erreur2");
+			//assert(true, "erreur2");
 			
             var chart;
             

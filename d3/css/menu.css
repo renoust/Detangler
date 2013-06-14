@@ -24,8 +24,13 @@
 	text-align: center; 
 	right: -17px;
 	border:1px solid #666666;
+	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+
 }
 
+.toggleButton.open{
+	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
+}
 .header-menu{
 	height: 30px;
 	/*border:1px solid #666666;*/
@@ -152,7 +157,7 @@ input[type=spinner]{
 	font-size:12px;
 	font-weight:bold;
 
-	border: 1px solid #666666;
+	/*border: 1px solid #666666;*/
 }
 
 #infoNodes p{
