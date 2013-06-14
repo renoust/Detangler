@@ -258,7 +258,7 @@
             graph.subsetLinks(data.links, typeGraph);
             //graph.edgeBinding();
             
-            graph_drawing.exit(graph, 0);
+            TP.Context().view[graphName].getGraphDrawing().exit(graph, 0);
             
             if (rescale)
             {

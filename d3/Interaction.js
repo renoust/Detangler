@@ -373,7 +373,7 @@
                     prevSelList = selList.slice(0);
                     
                     if(catalystSvg != null)
-                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);   
+                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);  
                    assert(true, "15");
                                    	
                 	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
