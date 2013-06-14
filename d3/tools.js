@@ -130,9 +130,9 @@
             TP.Context().view[target].getGraph().edgeBinding();
             //console.log("loading JSON", TP.Context().graph_substrate.nodes(), TP.Context().graph_catalyst.nodes());
 
-            var graph_drawing = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target);
-            graph_drawing.draw();
-            objectReferences.VisualizationObject.rescaleGraph(data);
+            TP.Context().view[target].getGraphDrawing().draw();
+            //objectReferences.VisualizationObject.rescaleGraph(data);
+            
             return
         }
 

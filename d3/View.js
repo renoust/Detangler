@@ -48,11 +48,19 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     var viewInitialized = null;
     
    	var ID = id;
+   	
+   	var graphDrawing = null;
+   	
+   	
+    this.getGraphDrawing = function()
+    {    	
+    	return graphDrawing;
+    }
+      	
     
     this.getGroup = function()
     {    	
-    	return viewGroup;    	
-
+    	return viewGroup;
     }
     
     this.viewInitialized = function()
@@ -467,7 +475,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		
 	     $("#zone"+ID).parent().appendTo("#container")
 	     
-     	viewInitialized = 1;
+     	 viewInitialized = 1;
+     	 
+     	 if(typeView === "substrate" || typeView === "catalyst" || typeView === "combined" )
+     	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
 	}
 	
 	     this.buildLinks = function(){
@@ -475,7 +486,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		
 		            		if(typeView !== "combined"){
 		            			var tmp = TP.Context().view[idAssociation];
-		            			tmp.setAssociatedView(typeView, __g__);        		
+		            			tmp.setAssociatedView(typeView, __g__);       		
 		            			__g__.setAssociatedView(tmp.getType(), tmp);
 		            		}
 		            		else
@@ -543,7 +554,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		   	bgC = null; 
 		   	view_nodes = null; 
 		   	type = null; 
-		   	idAssociation = null;	     	
+		   	idAssociation = null;
+		   	graphDrawing = null;	     	
 	     }
 		
 

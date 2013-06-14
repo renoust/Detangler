@@ -174,6 +174,8 @@
                 //success: objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData                
                 success: function(data){
                 	
+                	console.log(data);
+                	
                 	if(TP.Context().view[target].getAssociatedView("catalyst") == null && tabCatalyst.length != null){
                 			
                 			assert(false, tabCatalyst[0])
