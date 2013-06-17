@@ -9,7 +9,9 @@ var xhr = new XMLHttpRequest();
 
 // uploads the file and send it to TulipPosy
 var file_object;
+console.log(url)
 
+TulipPosy()
 
 document.getElementById('files').addEventListener('change', function (e) {
     var file = this.files[0];
@@ -37,7 +39,10 @@ document.getElementById('files').addEventListener('change', function (e) {
             remove("svg_combined");*/
 
             TulipPosy({file: xhr.responseText})
+                    
         }
+
+
     };
 
     xhr.open('post', url, true);
@@ -45,4 +50,5 @@ document.getElementById('files').addEventListener('change', function (e) {
     xhr.setRequestHeader("X-File-Name",encodeURIComponent(this.files[0].name));
     xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(xhr.file)
-}, false);
+    
+}, false); 

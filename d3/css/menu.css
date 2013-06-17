@@ -5,6 +5,8 @@
 	height: 100%;
 	top: 0px;
 	margin-left: 0px; 
+
+	z-index: 101;
 	
 	background-color: white;
 	border:1px solid #666666;
@@ -68,9 +70,12 @@ button.submit{
 }
 .ui-accordion .ui-accordion-header{
 	font-size: 11px;
+	background: url(smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x;
 }
 .ui-accordion .ui-accordion-content {
 	padding: 5px;
+	font-size: 11px;
+	font-family: Verdana,Arial,sans-serif;
 }
 
 .buttonMenu .ui-icon { display: none; }
@@ -140,17 +145,32 @@ input[type=spinner]{
 	font-weight:bold;
 }
 
+#infoNodes {
+	/*margin: 5 5 5 5;*/
+	padding: 5px;
+	font-family:arial;
+	font-size:12px;
+	font-weight:bold;
+
+	border: 1px solid #666666;
+}
+
+#infoNodes p{
+	margin: 2px;
+}
+
 /******************************** Entanglement **********************************/
 
 #entanglement-cont{
-	margin:5;
+	
 	border: 1px solid #666666;
     position: relative;
     height: 70px;
+    margin-bottom: 5px;
 
 }
 #bg  {
-    background: #fdd0a2;
+    /*background: #fdd0a2;*/
     opacity: 0.5; 
     position: absolute;
     height: 100%; width:100%;

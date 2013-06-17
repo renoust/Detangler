@@ -44,7 +44,9 @@
                     objectReferences.ToolObject.addBaseID(data, "id")
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
-                    this.createTulipGraph(jsonData, target)
+                    TP.Client().createTulipGraph(jsonData, target);
+                    
+
                     //this.analyseGraph(target)
                 });
             } else {
@@ -54,6 +56,7 @@
 
                 objectReferences.ToolObject.loadJSON(data, target)
                 //console.log("I am creating the graph in Tulip")
+                console.log(data);
                 this.createTulipGraph(json, target)
                 //console.log("I should now analyse the graph",contxt.sessionSid)
                 //this.analyseGraph(target)
@@ -160,7 +163,7 @@
         		return;
         	}
         	
-        	assert(true, "analyseGraph");
+        	//assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
@@ -184,7 +187,6 @@
                				TP.Context().view[tabCatalyst[0]].buildLinks();
                 			TP.Context().view[tabCatalyst[0]].addView();
                 	}
-              
                 	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());             	
                 }
             });
@@ -239,6 +241,7 @@
             __g__.sendQuery({
                 parameters: params,
                 success: function (data) {
+                	
                     objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);
                 
                     //var redo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data, graphName);}
@@ -305,7 +308,7 @@
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
         	
-        	assert(true, "syncGraph : "+graphName);
+        	//assert(true, "syncGraph : "+graphName);
 			
             var syncTarget = TP.Context().view[graphName].getType();
 
@@ -325,17 +328,13 @@
                 parameters: params,
                 async: false,
                 success: function (data) {
-                	//assert(true, "selection :")
-                	//console.log(selection);
-                	assert(true, "data :")
-                	console.log(data);
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
         }
 
 
-        this.syncLayouts = function (async) {
+        this.syncLayouts = function (currentGraph, async) {
         	
         	assert(true, "syncLayouts");
         	
@@ -356,7 +355,7 @@
                 parameters: params,
                 async:async,
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
-                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, "substrate")}
+                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)}
             });
         };
 
@@ -372,18 +371,18 @@
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
             
-            assert(false, ""+graphName);
+            //assert(false, ""+graphName);
             
-            var u = svg.selectAll("g.node.selected").data();
+            var nodeS = svg.selectAll("g.node.selected").data();
 			
-			console.log(u);
+			//console.log(u);
 			
             var toStringify = {};
             toStringify.nodes = new Array();
 
-            for (i = 0; i < u.length; i++) {
+            for (i = 0; i < nodeS.length; i++) {
                 var node = {};
-                node.baseID = u[i].baseID;
+                node.baseID = nodeS[i].baseID;
                 toStringify.nodes.push(node);
             }
             return JSON.stringify(toStringify);

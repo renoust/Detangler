@@ -14,29 +14,25 @@
 
     var Visualization = function () {
         var __g__ = this;
-
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
 
         this.showhideLinks = function (target) {
 
-            if (!target)
-                return
+            if (!target)return
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
-            //eval("TP.Context().show_links_" + target + " = ! TP.Context().show_links_" + target);
-			//TP.Context().tabShowLinks[target] = !TP.Context().tabShowLinks[target];
             TP.Context().view[target].setShowLinks(!TP.Context().view[target].getShowLinks());
 
             if (TP.Context().view[target].getShowLinks()) {
                 svg.selectAll('g.link').attr("visibility", "visible");
-                svg.select('text.showHideLinks').text('hide links');
+                $('.ui-accordion-header').each(function(){if($(this).text()==='show links'){$(this).text('hide links')} })
             } else {
+                $('.ui-accordion-header').each(function(){if($(this).text()==='hide links'){$(this).text('show links')} })
                 svg.selectAll('g.link').attr("visibility", "hidden");
-                svg.select('text.showhideLinks').text('show links');
             }
         }
 
@@ -44,23 +40,26 @@
         //entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
-        this.entanglementCaught = function (CurrentViewID) {
+        this.entanglementCaught = function (CurrentViewID, nothing) {
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
-            /*TP.Context().svg_substrate.selectAll("text.homogeneity").text(function (d) {
-                return "" + objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5)
-            });*/
-			
-			//var target_dest = tabTarget["catalyst"];
-			//var target_source = tabTarget["substrate"];
-
 			var target_source = CurrentViewID;
-			
-            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
-            $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
  
-            
-            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-            $('#bg')[0].style.cssText="background-color:"+ brewerSeq[index]; 
+            if(nothing == null){
+            	
+            	$('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);            	
+            	          
+	            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
+	        	$('#bg')[0].style.cssText="background-color:"+ brewerSeq[index];	           
+	        }
+	        else{
+	        	
+	            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            		
+	        	$('#bg')[0].style.cssText="background-color:white";
+	        
+	        }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
                 .transition()
@@ -68,7 +67,7 @@
                 .style("fill", brewerSeq[index])*/
             d3.selectAll("rect.view").style("fill", brewerSeq[index])
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
-            d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+            //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
             
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
@@ -105,6 +104,9 @@
 
 
             function move() {
+
+                assert(true, "toto = titi")
+
                 objectReferences.VisualizationObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
                 var currentPanel = dragTarget
@@ -117,6 +119,7 @@
                 var newX = parseInt(panelPos[0]) + posX
                 var newY = parseInt(panelPos[1]) + posY
 
+                console.log(panelPos);
 
                 dragTarget.attr("transform", function (d) {
                     d.panelPosX = newX;
@@ -161,7 +164,7 @@
                         .data([])
                         .exit()
                         .remove();
-                    gD = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target).draw()
+                    gD = TP.Context().view[target].getGraphDrawing().draw()
                 })
                 .on("mouseover", function () {
                     d3.select(this).style("fill", "black")
@@ -216,10 +219,11 @@
         this.resetView = function (target) {
             var cGraph = null
             var svg = null
-
+			
+			
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
+			/*
             nodeDatum = svg.selectAll("g.node").data()
             // strangely the matrix that should be applied by transform is 
             //squared?! so we adapt the nodes values
@@ -232,10 +236,15 @@
                 .attr("transform", "translate(" + 0 + "," + 0 + ") scale(" + 1 + ")")
             svg.selectAll("text.node").style("font-size", function () {
                 return 12;
-            });
+            });*/
             
     		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+
+	        TP.Context().view[target].getGraphDrawing().rescaleGraph(cGraph);
+	        	        
+	        TP.Context().view[target].getGraphDrawing().changeLayout(cGraph,0);
+	        
 	            
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }
@@ -250,8 +259,8 @@
             cGraph.nodes().forEach(function (d) {
                 d.viewMetric = 3;
             })
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
-            graph_drawing.resize(cGraph, 0)
+            
+            TP.Context().view[target].getGraphDrawing().resize(cGraph, 0)
         }
 
 		this.rotateGraph = function (target) {
@@ -260,9 +269,8 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
-            graph_drawing.rotate(target,5)
+    
+            TP.Context().view[target].getGraphDrawing().rotate(target,5)
         }
         
         this.arrangeLabels = function (target) {
@@ -271,10 +279,9 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target);
             //assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
             //console.log(target, svg, cGraph);
-            graph_drawing.arrangeLabels();
+            TP.Context().view[target].getGraphDrawing().arrangeLabels();
         }
 
         this.bringLabelsForward = function (target) {
@@ -286,9 +293,8 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
-            var gD = TP.GraphDrawing(cGraph, svg, target);
-            gD.bringLabelsForward();
+            
+            TP.Context().view[target].getGraphDrawing().bringLabelsForward();
         }
 
 
@@ -309,38 +315,15 @@
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     return "visible";
                 });
-                svg.select('text.showHideLabels').text('hide labels');
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = false;
-                    return null;
-                })
-                .on("mouseout", null);
+                $('.ui-accordion-header').each(function(){if($(this).text()==='show labels'){$(this).text('hide labels')} })                
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
-                    if (d.selected || d.labelVisibility) {
-                        d.labelVisibility = true;
-                        return "visible";
-                    } else {
+
                         d.labelVisibility = false;
                         return "hidden";
-                    }
-                });
-                svg.select('text.showhideLabels').text('show labels');
 
-                svg.selectAll('g.node').on("mouseover", function (d) {
-                    d.mouseOver = true;
-                    d3.select(this)
-                        .select("text.node")
-                        .attr("visibility", "visible");
-                })
-                .on("mouseout", function (d) {
-                    if (!d.labelVisibility) {
-                        d.mouseOver = false;
-                        d3.select(this)
-                            .select("text.node")
-                            .attr("visibility", "hidden");
-                    }
                 });
+                $('.ui-accordion-header').each(function(){if($(this).text()==='hide labels'){$(this).text('show labels')} })
             }
         }
 
@@ -386,12 +369,13 @@
             var scaleMax = null
             if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
+
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
+            TP.Context().view[graphName].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
             objectReferences.VisualizationObject.entanglementCaught(graphName);
+
         };
 
 
@@ -403,8 +387,7 @@
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.nodeColorMap(cGraph, 0, parameter);
+            TP.Context().view[graphName].getGraphDrawing().nodeColorMap(cGraph, 0, parameter);
 
     		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
@@ -413,8 +396,7 @@
 
 
         this.drawBarChart = function(target, smell){
-
-    	    
+ 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
@@ -431,7 +413,7 @@
             {
                tabClick[""+metric[i]+""] = 0;
             }
-            
+
             //console.log("mettttrrrrrrrriiiiiiicccccc : ");
             //console.log(tabClick);
             
@@ -446,7 +428,6 @@
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
             new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
             
-            assert(false, "tu fais chier")
             console.log(TP.Context().view[id]);
             
             TP.Context().view[id].addView();			
@@ -904,8 +885,7 @@
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.changeColor(graphName, cGraph, elem, newcolor);
+            TP.Context().view[graphName].getGraphDrawing().changeColor(graphName, cGraph, elem, newcolor);
 
         }
 /********************************** ON GOING ***********************************/

@@ -43,33 +43,135 @@
                     d._type = type;
                 g.nodes_array.push(jQuery.extend(true, {}, d));
             });
+            g.nodes_array.sort(function(a,b){return a.baseID-b.baseID})			
             return g.nodes_array;
         };
 
 		this.updateNodes = function (nodes, updateExisting) {
-			var newArray = []
-			nodes.sort(nodes, function(a,b){return a.baseID-b.baseID})
+			var newArray = [];
+			nodes.sort(function(a,b){return a.baseID-b.baseID});
 			if (nodes.length != g.nodes_array.length)
 			{
-				assert(false, "updateNodes, cannot match both arrays, what should I do?")
+				assert(false, "updateNodes, cannot match both arrays, what should I do?");
 			}	
 			
             g.nodes_array.forEach(function (d, i) {
 				for (var key in nodes[i])
 				{
 					if (updateExisting || !(key in d))
-					{
-						d[key] = nodes[i][key]
+					{									
+						d[key] = nodes[i][key];
 					} 	
 				}
             });
             
 		}
 		
+		this.subsetNodes = function (nodes, type) {
+			var newArray = [];
+			var baseIDArray = [];
+			nodes.forEach(function(n){baseIDArray.push(n.baseID);})
+			
+            g.nodes_array.forEach(function (d, i) {
+				if (baseIDArray.indexOf(d.baseID) != -1)
+				{
+					if(d._type == type)
+						newArray.push(d);
+				}
+            });
+            
+            g.nodes_array = newArray;
+            return g.nodes_array;            
+		}
+
+
+		this.subsetLinks = function (links, type) {
+			var newArray = [];
+			var baseIDArray = [];
+			links.forEach(function(n){baseIDArray.push(n.baseID);})
+			
+            g.links_array.forEach(function (d, i) {
+				if (baseIDArray.indexOf(d.baseID) != -1)
+				{
+					if(d._type == type)
+						newArray.push(d);
+				}
+            });
+            
+            g.links_array = newArray;
+            return g.links_array;            
+		}		
 		
+		this.updateNodeAttributes = function (nodes, _attributes, updateExisting) {
+			//attributes should be of the form [{in:name_in, out:name_out}], out is optional
+			var newArray = []
+			nodes.sort(function(a,b){return a.baseID-b.baseID})
+			if (nodes.length != g.nodes_array.length)
+			{
+				assert(false, "updateNodes, cannot match both arrays, what should I do?");
+			}	
+			
+            g.nodes_array.forEach(function (d, i) {
+				//for safety maybe should we check the baseIDs of each part
+				for (var j = 0; j<_attributes.length; j++)//nodes[i])
+				{
+					var keys = _attributes[j];
+					//assert(true, "attributes");
+					//console.log(keys, _attributes)
+					var keyIn = keys["in"];
+					if (keyIn in nodes[i])
+					{
+						var keyOut = keyIn
+						if ("out" in keys)
+							keyOut = keys["out"];
+							
+						if (updateExisting || !(keyOut in d))
+						{									
+							d[keyOut] = nodes[i][keyIn]
+						}
+					}
+				}
+            });
+            
+		}
+		
+		
+		this.updateLinkAttributes = function (links, _attributes, updateExisting) {
+			//attributes should be of the form [{in:name_in, out:name_out}], out is optional
+
+			var newArray = []
+			links.sort(function(a,b){return a.baseID-b.baseID})
+			if (links.length != g.links_array.length)
+			{
+				assert(false, "updateLinks, cannot match both arrays, what should I do?")
+			}	
+			
+            g.links_array.forEach(function (d, i) {
+				for (var j = 0; j<_attributes.length; j++)//nodes[i])
+				{
+					var keys = _attributes[j]
+					var keyIn = keys["in"];
+					if (keyIn in links[i])
+					{
+						var keyOut = keyIn
+						if ("out" in keys)
+							keyOut = keys["out"];
+							
+						if (keyOut != "source" && keyOut!= "target" && (updateExisting || !(keyOut in d)))
+						{									
+							d[keyOut] = links[i][keyIn]
+						}
+					} 	
+				}
+
+            });
+            
+		}
+
+
 		this.updateLinks = function (links, updateExisting) {
 			var newArray = []
-			links.sort(links, function(a,b){return a.baseID-b.baseID})
+			links.sort(function(a,b){return a.baseID-b.baseID})
 			if (links.length != g.links_array.length)
 			{
 				assert(false, "updateLinks, cannot match both arrays, what should I do?")
@@ -86,6 +188,7 @@
             });
             
 		}
+
 
 
         // setter/getter (with/without argument) of the link array
@@ -121,6 +224,7 @@
                 d.target = d.target.baseID;
                 g.links_array.push(jQuery.extend(true, {}, d));
             });
+            g.links_array.sort(function(a,b){return a.baseID-b.baseID})			
             return g.links_array;
         };
 

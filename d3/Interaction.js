@@ -34,7 +34,7 @@
             var myL = null
 
             svg = TP.Context().view[target].getSvg();
-            assert(false, "creerLAAALLAAAAASSSSSOOO")
+            //assert(false, "creerLAAALLAAAAASSSSSOOO")
             graph = TP.Context().view[target].getGraph();
 			/*
             if (target == "catalyst") {
@@ -80,8 +80,7 @@
             // once the selection is made, it applies the synchronization 
             // function syncGraph() to the selected nodes
             // selection colors are hardcoded but this should be changed
-            myL.checkIntersect = function () {
-            	
+            myL.checkIntersect = function () {            	
                 var __g = this
                 var selList = []
                 var e = window.event
@@ -168,18 +167,15 @@
                         if (i != iMax) {
                             prevSelList.length = 0
                             prevSelList = selList.slice(0);
-                            assert(true, "ttttttttttttttttt111111111111111111111111111111111")
                             objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                         }
                     } else {
                         prevSelList.length = 0
                         prevSelList = selList.slice(0);
-                        assert(true, "ttttttttttttttttt222222222222222222222222222222")
                         objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                     }
                 } else {
-					
-					assert(true, "1");
+
 					
 					var combinedSvg = null;
 					var catalystSvg = null;
@@ -193,26 +189,23 @@
 					var catalystName = null;
 					var substrateName = null;
 					
-					assert(true, "2");	
 					
-					if(TP.Context().view[target].getAssociatedView("catalyst") != null  || TP.Context().view[target].getType() == "catalyst"){
+					if(TP.Context().view[target].getAssociatedView("catalyst") != null || TP.Context().view[target].getType() == "catalyst")
+					{
 						catalystName = (TP.Context().view[target].getType() == "catalyst") ? target : TP.Context().view[target].getAssociatedView("catalyst")[0].getID();
 						catalystView = TP.Context().view[catalystName];
 						catalystSvg = (TP.Context().view[target].getType() == "catalyst") ? svg : catalystView.getSvg();
 					}
 
-					assert(true, "3");
 					
-					
-					if(TP.Context().view[target].getAssociatedView("substrate") != null  || TP.Context().view[target].getType() == "substrate"){
+					if(TP.Context().view[target].getAssociatedView("substrate") != null || TP.Context().view[target].getType() == "substrate"){
 						substrateName = (TP.Context().view[target].getType() == "substrate") ? target : TP.Context().view[target].getAssociatedView("substrate")[0].getID();;
 						substrateView = TP.Context().view[substrateName];
 						substrateSvg = (TP.Context().view[target].getType() == "substrate") ? svg : substrateView.getSvg();
 					}
-					
-					assert(true, "4");
 
-					if(TP.Context().view[target].getAssociatedView("combined") != null  || TP.Context().view[target].getType() == "combined"){
+
+					if(TP.Context().view[target].getAssociatedView("combined") != null || TP.Context().view[target].getType() == "combined"){
 						combinedName = (TP.Context().view[target].getType() == "combined") ? target : TP.Context().view[target].getAssociatedView("combined")[0].getID();
 						combinedView = TP.Context().view[combinedName];
 						combinedSvg = (TP.Context().view[target].getType() == "combined") ? svg : combinedView.getSvg();
@@ -220,16 +213,12 @@
 					/*
 					var result1 = TP.Context().view[target].getAssociatedView("catalyst") != null;
 					var result2 = TP.Context().view[target].getType() == "catalyst";
-					
-					
+										
 					
 					catalystName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("catalyst")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("catalyst")[0].getID() : null) : target;
 					catalystView = (catalystName != null) ? TP.Context().view[catalystName] : null;
 					catalystSvg =  (catalystView != null) ? catalystView.getSvg() : null;
-					
-					assert(true, catalystName);
-					assert(true, catalystView);
-					assert(true, catalystSvg);
+
 					
 					result1 = TP.Context().view[target].getAssociatedView("substrate") != null;
 					result2 = TP.Context().view[target].getType() == "substrate";
@@ -238,9 +227,6 @@
 					substrateView = (substrateName != null) ? TP.Context().view[substrateName] : null;
 					substrateSvg =  (substrateView != null) ? substrateView.getSvg() : null;
 
-					assert(true, substrateName);
-					assert(true, substrateView);
-					assert(true, substrateSvg);		
 
 					result1 = TP.Context().view[target].getAssociatedView("combined") != null;
 					result2 = TP.Context().view[target].getType() == "combined";
@@ -249,10 +235,6 @@
 					combinedName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("combined")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("combined")[0].getID() : null) : target;
 					combinedView = (combinedName != null) ? TP.Context().view[combinedName] : null;
 					combinedSvg =  (combinedView != null) ? combinedView.getSvg() : null;
-
-					assert(true, combinedName);
-					assert(true, combinedView);
-					assert(true, combinedSvg);
 					
 					*/
 					if(catalystSvg != null){						
@@ -280,10 +262,11 @@
 	                    catalystSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke', catalystView.getLinksColor());
-
+	                        .style('stroke', catalystView.getLinksColor())
+							.style('stroke-width', 1)
+							
 						
-	                    objectReferences.VisualizationObject.resetSize(catalystName);
+	                    //objectReferences.VisualizationObject.resetSize(catalystName);
 	                    catalystSvg.selectAll("text.node").style("opacity", 1)
 	                    objectReferences.VisualizationObject.arrangeLabels(catalystName);
 
@@ -313,10 +296,12 @@
 	                    substrateSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke', substrateView.getLinksColor());
+	                        .style('stroke', substrateView.getLinksColor())
+	                        .style('stroke-width', 1)
+
 
 	                    
-	                    objectReferences.VisualizationObject.resetSize(substrateName);
+	                    //objectReferences.VisualizationObject.resetSize(substrateName);
 	                    substrateSvg.selectAll("text.node").style("opacity", 1)
 	                    objectReferences.VisualizationObject.arrangeLabels(substrateName);
 
@@ -355,10 +340,10 @@
 	                    combinedSvg.selectAll("g.link")
 	                        .style('opacity', 1.0)
 	                        .select("path.link")
-	                        .style('stroke', combinedNodeColor);
-
+	                        .style('stroke', combinedNodeColor)
+							.style('stroke-width', 1)
 						
-						objectReferences.VisualizationObject.resetSize(combinedName);
+						//objectReferences.VisualizationObject.resetSize(combinedName);
 						combinedSvg.selectAll("text.node").style("opacity", 1)
 												
 					}
@@ -370,8 +355,11 @@
                     prevSelList = selList.slice(0);
                     
                     if(catalystSvg != null)
-                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);   
-                   assert(true, "15");
+                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
+                                   	
+                	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
+                	TP.Visualization().entanglementCaught(target, 1);
+                	
                     //console.log("warning: the selection list is empty");
 
                     //TP.Context().view["catalyst"].getSvg().selectAll("text.node").style("opacity", 1)
@@ -380,7 +368,7 @@
                     
                     //assert(true, "arrangeLabels appele depuis le lasso");    
                     //objectReferences.VisualizationObject.arrangeLabels("substrate");
-                    //objectReferences.VisualizationObject.arrangeLabels("catalyst"); 
+                    //objectReferences.VisualizationObject.arrangeLabels("catalyst");
                 }
             }
         }
@@ -509,9 +497,10 @@
            
            	myL = TP.Context().view[target].getLasso();
            
-            mySvg.on("mouseup", function (d) {myL.canMouseUp(d3.mouse(this))});
-            mySvg.on("mousedown", function (d) {myL.canMouseDown(d3.mouse(this))});
-            mySvg.on("mousemove", function (d) {myL.canMouseMove(d3.mouse(this))});
+           
+            mySvg.on("mouseup", function (d) { myL.canMouseUp(d3.mouse(this))});
+            mySvg.on("mousedown", function (d) { myL.canMouseDown(d3.mouse(this))});
+            mySvg.on("mousemove", function (d) { myL.canMouseMove(d3.mouse(this))});
         }
 
 
@@ -534,10 +523,100 @@
             
 
         }
+        
+
+
+this.runZoom = function(target, deltaZoom, mousePos){
+     
+	 if (!TP.Context().view[target].getMoveMode())            
+	     return;
+	     
+	 var cible = d3.select("#svg_"+target)[0][0]
+	 
+	 var cGraph = TP.Context().view[target].getGraph();
+	 var svg = TP.Context().view[target].getSvg();
+	 var time = 0;
+	 
+	 var delta = null;
+	 
+	 if(deltaZoom == null)
+	 	delta = event.wheelDelta;
+	 else
+	 	delta = deltaZoom;
+
+	 
+	 var mouseOrigin = [];
+	 
+	 if(mousePos == null)
+		 mouseOrigin = d3.mouse(cible);
+	 else{
+	 	 mouseOrigin[0] = mousePos[0];
+	 	 mouseOrigin[1] = mousePos[1];
+	 }
+	 
+	 var scale = 0;
+					
+	 if (delta > 0)
+	 scale = 1.1;
+	 else
+	 scale = 0.9;
+
+	 var data_translate = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target]//eval("TP.Context().data_translation_"+target);
+				
+	 var node = svg.selectAll("g.node")
+	 .data(cGraph.nodes(),function(d){
+		 d.x = d.currentX;
+		 d.y = d.currentY;
+		 d.x = ((((d.x)-mouseOrigin[0])*scale)+mouseOrigin[0]);
+		 d.y = ((((d.y)-mouseOrigin[1])*scale)+mouseOrigin[1]);
+	     d.currentX = d.x;
+	     d.currentY = d.y;
+	     return d.baseID;
+	 })
+	 .transition().delay(time)    
+	                     			
+	 node.select("circle")	 
+	 .attr("cx", function(d){
+	       return d.x;
+	 })
+	 .attr("cy", function(d){return d.y;})
+            	
+	 node.select("rect")
+	 .attr("x", function(d){
+	       return d.x;
+	 })
+	 .attr("y", function(d){return d.y;})
+
+	 var link = svg.selectAll("g.link")
+	      .data(cGraph.links(),function(d){return d.baseID})
+	      .transition().delay(time)
+	      .select("path")
+	      .attr("d", function(d) {
+	             return "M"+d.source.x+" "+d.source.y+" L"+d.target.x+" "+d.target.y; 
+	      })
+             							
+	      var label = svg.selectAll("text.node")
+	          .data(cGraph.nodes(),function(d){
+	                return d.baseID;
+	          })
+	          .transition().delay(time)
+	
+	               //label.select("text")
+	          .attr("dx", function(d){
+	               return d.x;
+	          }) 
+	          .attr("dy", function(d){return d.y;})
+	                                      
+	 event.preventDefault();
+
+}        
+        
+        
+        
         // Adds a zoom interactor to a specific svg target as callbacks to its 
         //mouse events.       
         this.addZoom = function(target){
-
+        	
 			if (!target)
                return
 
@@ -548,17 +627,20 @@
 			cGraph = TP.Context().view[target].getGraph();
 				
 			function movingZoom(target){
+				
 	            if (!target)
 	                 return
 	
-				var data_translation = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+				var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+				
+				data_translation = [translation_tab[0],translation_tab[1]]
 	                
 	            svg.call(d3.behavior.drag()
                     .on("drag", function (){
 					
 	                if (!TP.Context().view[target].getMoveMode())	           
                         return;
-	              	               
+	              	        
 	                data_translation[0] = d3.event.dx + data_translation[0];
 	                data_translation[1] = d3.event.dy + data_translation[1];
 	               
@@ -566,86 +648,74 @@
 	                
 	                nodeDatum.forEach(function (d) {
 	                    d.currentX = (d.x + data_translation[0]);
-	                    d.currentY = (d.y + data_translation[1]);
+	                    d.currentY = (d.y + data_translation[1]); 
 	                });
 	                
-	               svg.selectAll("g.node,g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
+	                
+	               svg.selectAll("rect")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("x", function(d){return d.currentX})
+	               .attr("y", function(d){return d.currentY})
+	               
+	               svg.selectAll("circle")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("cx", function(d){return d.currentX})
+	               .attr("cy", function(d){return d.currentY})
+	               
+	               svg.selectAll("text.node")
+	               .data(nodeDatum, function(d){return d.baseID;})
+	               .attr("dx", function(d){return d.currentX})
+	               .attr("dy", function(d){return d.currentY})	               
+	               
+	               
+	               svg.selectAll("g.link")
+                  	.data(cGraph.links(),function(d){return d.baseID})
+                   	.select("path")
+                    .attr("d", function(d) {
+                       	return "M"+d.source.currentX+" "+d.source.currentY+" L"+d.target.currentX+" "+d.target.currentY; 
+                    })
+	                
+	               //svg.selectAll("g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
 	               //eval("TP.Context().data_translation_"+target+" = data_translation;");
 	               //TP.tabDataTranslation[target] = data_translation;
-	               TP.Context().view[target].setDataTranslation(data_translation);
-                }));
+	               //TP.Context().view[target].setDataTranslation(data_translation);
+                })
+                .on("dragend", function(){
+					
+					var nodeDatum = svg.selectAll("g.node").data()
+	                
+	                nodeDatum.forEach(function (d) {
+	                   d.x = d.currentX;
+	                   d.y = d.currentY; 
+	                });
+	                
+	                data_translation = [0,0];
+				})
+                
+                );
        		}
 
        		
-			svg.on("mousewheel", function(){               
-                if (!TP.Context().view[target].getMoveMode())            
-                    return;
-            
-				var time = 0;
-				var delta = event.wheelDelta;
-				var mouseOrigin = d3.mouse(this);
-				var scale = 0;
-				
-				if (delta > 0)
-					scale = 1.1;
-				else
-					scale = 0.9;
-					
-				var data_translate = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target]//eval("TP.Context().data_translation_"+target);
-				
-				var node = svg.selectAll("g.node")
-                    .data(cGraph.nodes(),function(d){
-                   	    d.x = ((((d.x+data_translate[0])-mouseOrigin[0])*scale)+mouseOrigin[0])-data_translate[0];
-                        d.y = ((((d.y+data_translate[1])-mouseOrigin[1])*scale)+mouseOrigin[1])-data_translate[1];
-                        d.currentX = d.x;
-                   	    d.currentY = d.y;
-                   	    return d.baseID;
-                   })
-                   .transition().delay(time)
-                        			
-                node.select("circle")
-                   	.attr("cx", function(d){
-                        d.currentX = d.x;
-                   		d.currentY = d.y;
-                   		return d.x;
-                    })
-                   	.attr("cy", function(d){return d.y;})
-                                	
-                node.select("rect")
-                   	.attr("x", function(d){
-                        d.currentX = d.x; 
-                		d.currentY = d.y;
-                		return d.x;
-                    })
-                    .attr("y", function(d){return d.y;})
-                    
-                var link = svg.selectAll("g.link")
-                  	.data(cGraph.links(),function(d){return d.baseID})
-                   	.transition().delay(time)
-                   	.select("path")
-                    .attr("d", function(d) {
-                       	return "M"+d.source.x+" "+d.source.y+" L"+d.target.x+" "+d.target.y; 
-                    })
-                                							
-                var label = svg.selectAll("text.node")
-                	.data(cGraph.nodes(),function(d){
-                        d.currentX = d.x; 
-                        d.currentY = d.y; 
-                        return d.baseID;
-                    })
-                   	.transition().delay(time)
-
-               //label.select("text")
-               		.attr("dx", function(d){
-                        d.currentX = d.x; 
-                      	d.currentY = d.y;
-                       	return d.x;
-                    }) 
-                    .attr("dy", function(d){return d.y;})                    
-                event.preventDefault();
+			svg.on("mousewheel", function(){
+					TP.Context().Interaction().runZoom(target, null, null);
 			});	
-			svg.on("mousedown", movingZoom(target));
-		}
+			svg.on("drag", movingZoom(target));
+			
+			/*
+			svg.on("keydown", function(){
+					console.log(d3.event.keyCode);
+				
+				 switch (d3.event.keyCode) {
+					case 8: {console.log("space");}
+					case 46: { // delete
+						console.log("delete");
+					}
+				}
+				
+				
+			})*/
+			
+}
 
 
         // Removes the lasso interactor from a specific svg target's callbacks 
@@ -665,14 +735,18 @@
 
 
         this.toggleCatalystSyncOperator = function (target) {
+        	console.log(target)
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
+                $('.ui-accordion-header').each(function(){if($(this).text()==='Operator OR'){$(this).text('Operator AND')}})
             } else {
                 TP.Context().tabOperator[target] = "OR"
+                $('.ui-accordion-header').each(function(){if($(this).text()==='Operator AND'){$(this).text('Operator OR')}})
             }
+            /*
             TP.Context().view[target].getSvg().selectAll("g.toggleCatalystOp")
                 .select("text")
-                .text("operator " + TP.Context().tabOperator[target])
+                .text("operator " + TP.Context().tabOperator[target])*/
         }
 
 

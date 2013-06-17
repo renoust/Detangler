@@ -7,11 +7,10 @@
 
         <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
         <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
-        <script type="text/javascript" src="local/ember-1.0.0.js"></script>
         <script type="text/javascript" src="local/d3.v3.min.js"></script>
         <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
         <script type="text/javascript" src="local/colorbrewer.js"></script>
-        
+
         <script type="text/javascript" src="script-test.js"></script>
         <script type="text/javascript" src="assert.js"></script>
         <script type="text/javascript" src="import_class.js"></script>
@@ -30,23 +29,59 @@
                 else
                     return
             }
-            $.fn.jPicker.defaults.images.clientPath='css/jPicker/';
+
+            
         </script>
 
         <div id='header'>
             <div id='header-content'>
-                <button id='undo'> Undo</button><button id='redo'> Redo</button>
+<!--            <button id='undo'> Undo</button><button id='redo'> Redo</button>--> 
     			<div id='header-logo'>TulipPosy</div>
-    			<div id='header-input'>
-    				<input id='files' type='file' value='Choose a file' class='input-browser'/>
-    			</div>
-            </div>  
-		</div>
+                <ul id='menu'>
+                    <li><a href="#">File</a>
+                        <ul>
+                            <li><a href="#" id='opfile'>Open File</a></li>
+                            <li><a href="#" >Analyse <input id='analyse' type='checkbox'></input></a></li>
+                            <li><a href="#" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>  
 
-        <div id="wrap" class="nosidebar" >
-            <div id="container"></div>    
+        <div id="wrap" class="sidebar" >
+            <div id="container"></div>
         </div> 
+           
+        <div style="opacity:0;display:none;">
+            <input id="files" type="file">
+        </div>
         
+        <script>
+
+            $('#opfile').click(function(e){
+                $('#files').click();
+            });
+
+            $("#menu").menu({
+                position:{using:positionnerSousMenu}
+            });
+
+            $("#menu > li > a > span.ui-icon-carat-1-e").removeClass("ui-icon-carat-1-e").addClass("ui-icon-carat-1-s");
+
+            function positionnerSousMenu(position,elements){
+                var options = { of:elements.target.element };
+                if(elements.element.element.parent().parent().attr("id")==="menu"){
+                    options.my="center top";
+                    options.at="center bottom";
+                } else {
+                    options.my="left top";
+                    options.at ="right top";
+                }
+                elements.element.element.position(options);
+            };
+
+        </script>
     	<script type="text/javascript" src="load.js"></script>
     </body>
 </html>

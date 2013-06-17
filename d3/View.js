@@ -16,7 +16,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
 
-
     var tabDataSvg = svgs;
     var viewGroup = groupe;
     //TP.Context().view[target] = __g__;
@@ -49,10 +48,19 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     var viewInitialized = null;
     
    	var ID = id;
+   	
+   	var graphDrawing = null;
+   	
+   	
+    this.getGraphDrawing = function()
+    {    	
+    	return graphDrawing;
+    }
+      	
     
     this.getGroup = function()
     {    	
-    	return viewGroup;    	
+    	return viewGroup;
     }
     
     this.viewInitialized = function()
@@ -218,57 +226,48 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		nodeInformation = value;		
 	}		
 
+
 	this.addView = function() {
+		
+		var hashButton = new Object();
+		
+		if(bouton != null){
+			for(var p = 0; p < bouton.length; p++)
+			{
+				console.log(bouton[p][4]);
+				
+				if(hashButton[bouton[p][4]] != null){
+					hashButton[bouton[p][4]].push(bouton[p]);
+				}
+				else{
+					hashButton[bouton[p][4]] = [];
+					hashButton[bouton[p][4]].push(bouton[p]);
+				}
+				
+			}
+		}
+		
+		
+		if(type === "substrate")
+		{
+			TP.ObjectReferences().InterfaceObject.interactionPane(hashButton,'create');
+	    	TP.ObjectReferences().InterfaceObject.infoPane();
+	    	TP.ObjectReferences().InterfaceObject.visuPane();		
+		}
 		
 	    elem = document.getElementById("bouton" + ID);
 	    if (elem) elem.parentNode.removeChild(elem);
 	    elem = $("div[aria-describedby='zone" + ID + "']");
-	     console.log(elem)
+	     //console.log(elem)
 	    if (elem!=[])elem.remove();
 	
 	    
-	    console.log($("div[aria-describedby='zone"+ID+"']"))
+	    //console.log($("div[aria-describedby='zone"+ID+"']"))
 	    //console.log($("div[aria-describedby='zoneBarChart_substrate']"))
 	   
 	    //if (elem!=[])elem.remove();
 	
 		//$("#container").empty();
-	
-	    /**************************
-	     * Application
-	     **************************/
-	    controller = Em.Application.create();
-	
-	    /**************************
-	     * Models
-	     **************************/
-	
-	    controller.Boutton = Em.Object.extend({
-	        idButton: '',
-	        fonction: ''
-	    });
-	
-	
-	    /**************************
-	     * Controllers
-	     **************************/
-	
-	    controller.testArrayController = Em.ArrayController.create({
-	        content: [],
-	
-	        loadFunction: function (propName, value) {
-	            var obj = this.findProperty(propName, value);
-	            obj.fonction();
-	        },
-	
-	        addFunction: function (object) {
-	            var obj = this.findProperty("idButton", object.idButton);
-	            if (obj == null) {
-	                this.pushObject(object);
-	                //console.log("ajout bouton");
-	            }
-	        }
-	    });
 	
 	
 	    /**************************
@@ -279,7 +278,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    //console.log('-->'+target);
 	    
 	
-	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=600; }
+	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=400; }
 	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
 	
@@ -294,8 +293,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	
 	    dialog.dialog({
 	        height: TP.Context().dialogHeight,
-	        width: TP.Context().dialogWidth,
-	        minWidth:185,
+	        width: TP.Context().dialogWidth,    
 	        position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,/*{my: "center", at: "center", of: "#container"}*/
 	    }).parent().resizable({
 	        containment: "#container"
@@ -307,8 +305,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    /****   en-tête du dialog   ****/
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
-	    $("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        
-	    $("<button/>", {id: "toggle"+ID, text:"Move"}).appendTo(titlebar); 
+
+	    /*$("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        */
+	    $("<button/>", {id: "toggle"+ID, text:"Move", style:'right:15px'}).appendTo(titlebar); 
+
 	
 	    $('#toggle' + ID).button().click (function(event){
 	        var interact = $(this).button("option","label");
@@ -316,14 +316,23 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else                    { $(this).button("option", "label", "Move");}
 	        TP.Context().stateStack[ID].executeCurrentState();
 	    });
-		        
+
+	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
+	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
+		dialog.dialog({minWidth:minWidth+ 25}) 
 	    
+	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
 
 	    dialog.parent().click(function(){ 
+	    	var oldID=TP.Context().activeView
 	        TP.Context().activeView = ID;
-	        console.log(TP.Context().activeView);
-	        TP.Context().InterfaceObject.interactionPane(bouton,'update')
+
+	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(hashButton,'update')}
         	TP.Context().InterfaceObject.addInfoButton(__g__);
+        	TP.Context().InterfaceObject.attachInfoBox()
+        	$('.ui-dialog-titlebar').each(function(){
+        		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
+        	titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
         	/*
 	        var num = 0;
 	        $(".arrayButtons").remove();
@@ -360,7 +369,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorNode);
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
-	        console.log($.jPicker.List[0])
+	        //console.log($.jPicker.List[0])
+	        console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
 	        $.jPicker.List[0].color.active.val('hex', nodesColor);
 	        $.jPicker.List[1].color.active.val('hex', linksColor);
 	        $.jPicker.List[2].color.active.val('hex', bgColor);
@@ -373,27 +383,27 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else if(typeView ==="catalyst"){ TP.Context().dialogTop=26;  TP.Context().dialogRight=100; }
 	        else                        { TP.Context().dialogTop=240; TP.Context().dialogRight=260; }
 	
-	        var fullheight = $('#container').height()-10;
-	        var fullwidth = $('#container').width()-10;
-	        console.log(dialog.parent().width() + " - " + fullwidth);
-	        console.log(dialog.parent());
+	        var fullheight = $('#container').height()-2;
+	        var fullwidth = $('#container').width()-3;
+	        //console.log(dialog.parent().width() + " - " + fullwidth);
+	        //console.log(dialog.parent());
 	        if(dialog.parent().width()!=fullwidth){
-	            console.log(1);
+	            //console.log(1);
 	            dialog.dialog({
 	                width:fullwidth, 
 	                height:fullheight,
-	                position: ["left+"+15, "top+"+27] ,
+	                position: ["left+"+8, "top+"+16] ,
 	            });
 	        }
 	        else{
-	            console.log(2);
+	            //console.log(2);
 	            dialog.dialog({
 	                width:TP.Context().dialogWidth, 
 	                height:TP.Context().dialogHeight,
 	                position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,
 	            });
 	        }
-	        console.log(TP.Context().dialogTop);
+	        //console.log(TP.Context().dialogTop);
 	
 	            //$(this).height()=fullheight;
 	    });
@@ -406,7 +416,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            else
 	            	viewNodes = "rect";
 	            				
-				DataTranslation = [0,0];            
+				DataTranslation = [0,0];           
 	    	    //TP.Context().tabNodeColor[target] = nodesC;
 		        //TP.Context().tabLinkColor[target] = linksC;
 		        //TP.Context().tabBgColor[target] = bgC;
@@ -415,7 +425,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		        moveMode = true;
 		        showLabels = true;
 		        showLinks = true;
-		        nodeInformation = false;           
+		        nodeInformation = true;           
 	           
 	            TP.Interaction().createLasso(ID);
 	            TP.Interaction().addZoom(ID);
@@ -465,7 +475,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		
 	     $("#zone"+ID).parent().appendTo("#container")
 	     
-     	viewInitialized = 1;
+     	 viewInitialized = 1;
+     	 
+     	 if(typeView === "substrate" || typeView === "catalyst" || typeView === "combined" )
+     	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
 	}
 	
 	     this.buildLinks = function(){
@@ -473,7 +486,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		
 		            		if(typeView !== "combined"){
 		            			var tmp = TP.Context().view[idAssociation];
-		            			tmp.setAssociatedView(typeView, __g__);        		
+		            			tmp.setAssociatedView(typeView, __g__);       		
 		            			__g__.setAssociatedView(tmp.getType(), tmp);
 		            		}
 		            		else
@@ -492,6 +505,57 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		
 		            		           	
 		     }
+	     }
+	     
+	     this.remove = function() {
+	     	
+	     	d3.select("#zone"+ID).remove();
+	     	
+		    tabDataSvg = null;
+		    viewGroup = null;
+		    //TP.Context().view[target] = __g__;
+		    
+		    controller = null;
+		    svg = null;
+		    nodesColor = null;
+		    linksColor = null;
+		    bgColor = null;
+		    viewNodes = null;
+		    lasso = null;
+		    DataTranslation = null;
+		    
+			selectMode = null;
+			moveMode = null;
+			showLabels = null;
+			showLinks = null;
+			nodeInformation = null; 
+		    
+		    metric_BC = null;
+		    metric_SP = null;
+		    combined_foreground = null;
+		    
+		    typeView = null;
+		    acceptedGraph = null;
+		    tabLinks = null;
+		    name = null;
+		    
+		    graph = null;
+		    viewInitialized = null;
+		    
+		   	ID = null;
+		   	
+		   	id = null; 
+		   	groupe = null; 
+		   	bouton = null; 
+		   	svgs = null; 
+		   	target = null; 
+		   	nodesC = null; 
+		   	linksC = null; 
+		   	bgC = null; 
+		   	view_nodes = null; 
+		   	type = null; 
+		   	idAssociation = null;
+		   	graphDrawing = null;	     	
 	     }
 		
 
