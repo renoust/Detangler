@@ -177,7 +177,8 @@
                         objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                     }
                 } else {
-					
+
+				
 					assert(true, "1");
 					
 					var combinedSvg = null;
@@ -372,8 +373,12 @@
                     prevSelList = selList.slice(0);
                     
                     if(catalystSvg != null)
-                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);   
+                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);  
                    assert(true, "15");
+                                   	
+                	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
+                	TP.Visualization().entanglementCaught(target, 1);
+                	
                     //console.log("warning: the selection list is empty");
 
                     //TP.Context().view["catalyst"].getSvg().selectAll("text.node").style("opacity", 1)
@@ -382,7 +387,7 @@
                     
                     //assert(true, "arrangeLabels appele depuis le lasso");    
                     //objectReferences.VisualizationObject.arrangeLabels("substrate");
-                    //objectReferences.VisualizationObject.arrangeLabels("catalyst"); 
+                    //objectReferences.VisualizationObject.arrangeLabels("catalyst");
                 }
             }
         }

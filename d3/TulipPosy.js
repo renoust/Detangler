@@ -135,7 +135,9 @@ var TulipPosy = function (originalJSON) {
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 
+
 	tabCatalyst = new Array(target1, array2, new Array("svg", "graph", 960, 500, "svg_"+target1), name+" - catalyst", "#4682b4", "#808080", "#FFFFFF", "circle", "catalyst");
+
 
 
 
@@ -250,6 +252,7 @@ var TulipPosy = function (originalJSON) {
     	objectReferences.ClientObject.loadData(null, target)
     }
 
+
     if($('#analyse').is(':checked')){
         objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
     }
@@ -264,5 +267,6 @@ var TulipPosy = function (originalJSON) {
         objectReferences.ClientObject.syncLayouts(target)
     }
 */
+
     
 };
