@@ -232,11 +232,10 @@ var TulipPosy = function (originalJSON) {
 	console.log(TP.Context().tabAssociationInverted[target1]);	
 	assert(true, "tabAssociationInverted de "+target2);
 	console.log(TP.Context().tabAssociationInverted[target2]);*/	
-	/*
-	if(!originalJSON){
-        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
-        objectReferences.ClientObject.syncLayouts(target)
-    }*/
+
+
+
+
 
 
 
@@ -390,6 +389,7 @@ var TulipPosy = function (originalJSON) {
     {
     	objectReferences.ClientObject.loadData(null, target)
     }
+
     
     
     if($('#analyse').is(':checked')){
@@ -398,5 +398,15 @@ var TulipPosy = function (originalJSON) {
     if($('#sync').is(':checked')){
         objectReferences.ClientObject.syncLayouts(target)
     }
+
+
+/*
+    if(originalJSON==null){
+        console.log('TOTO')
+        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
+        objectReferences.ClientObject.syncLayouts(target)
+    }
+*/
+
     
 };

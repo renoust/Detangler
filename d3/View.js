@@ -383,8 +383,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else if(typeView ==="catalyst"){ TP.Context().dialogTop=26;  TP.Context().dialogRight=100; }
 	        else                        { TP.Context().dialogTop=240; TP.Context().dialogRight=260; }
 	
-	        var fullheight = $('#container').height()-10;
-	        var fullwidth = $('#container').width()-10;
+	        var fullheight = $('#container').height()-2;
+	        var fullwidth = $('#container').width()-3;
 	        //console.log(dialog.parent().width() + " - " + fullwidth);
 	        //console.log(dialog.parent());
 	        if(dialog.parent().width()!=fullwidth){
@@ -392,7 +392,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            dialog.dialog({
 	                width:fullwidth, 
 	                height:fullheight,
-	                position: ["left+"+15, "top+"+27] ,
+	                position: ["left+"+8, "top+"+16] ,
 	            });
 	        }
 	        else{
