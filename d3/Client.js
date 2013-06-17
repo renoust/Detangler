@@ -45,6 +45,7 @@
                     jsonData = JSON.stringify(data)
                     objectReferences.ToolObject.loadJSON(data, target)
                     TP.Client().createTulipGraph(jsonData, target);
+                    
 
                     //this.analyseGraph(target)
                 });
@@ -162,7 +163,7 @@
         		return;
         	}
         	
-        	assert(true, "analyseGraph");
+        	//assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
@@ -307,7 +308,7 @@
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
         	
-        	assert(true, "syncGraph : "+graphName);
+        	//assert(true, "syncGraph : "+graphName);
 			
             var syncTarget = TP.Context().view[graphName].getType();
 
@@ -370,18 +371,18 @@
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
             
-            assert(false, ""+graphName);
+            //assert(false, ""+graphName);
             
-            var u = svg.selectAll("g.node.selected").data();
+            var nodeS = svg.selectAll("g.node.selected").data();
 			
-			console.log(u);
+			//console.log(u);
 			
             var toStringify = {};
             toStringify.nodes = new Array();
 
-            for (i = 0; i < u.length; i++) {
+            for (i = 0; i < nodeS.length; i++) {
                 var node = {};
-                node.baseID = u[i].baseID;
+                node.baseID = nodeS[i].baseID;
                 toStringify.nodes.push(node);
             }
             return JSON.stringify(toStringify);

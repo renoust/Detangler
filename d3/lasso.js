@@ -102,7 +102,9 @@
         // create the group element and its behaviors (mouseover, mouseout, 
         //mousedown, mousemove, mouseup)
         __g.mouseDown = function (e) {
-            if (__g.started || __g.canMove || __g.isResizing)
+        	console.log("mouseDown8")
+        	
+            if (__g.started || __g.canMove /*|| __g.isResizing*/)
                 return;
 
             // initalizations and clean the svg of any other brush    
@@ -134,6 +136,7 @@
             })
             // enter the 'moving' mode, and stores the first point
             .on("mousedown", function (d) {
+            	console.log("mouseDown9")
                 var p = d3.mouse(this);
                 __g.prevMovePoint = [p[0], p[1]];
                 __g.moveLasso = true;
@@ -265,16 +268,23 @@
 
             __g.updateDistance(newPoint)
 
-            __g.group.selectAll("rect.brush")
-                .data([1])
-                .exit()
-                .remove()
+
+			__g.group.selectAll("rect.brush")
+                	.data([])
+                	.exit()
+                	.remove()            	
+            	
+                
             if (!__g.isLasso()) {
+            	
+            	assert(false, "should be drawing the rectangle")
                 var p0 = __g.pointList[0]
                 var p1 = __g.pointList[__g.pointList.length - 1]
 
-                __g.group.append("rect")
-                    .data([1])
+                __g.group.selectAll("rect.brush")
+                	.data([1])
+                	.enter()
+                	.append("rect")                    
                     .attr("class", "brush")
                     .attr("x", Math.min(p0[0], p1[0]))
                     .attr("y", Math.min(p0[1], p1[1]))
@@ -402,7 +412,7 @@
             __g.started = false;
 
             __g.group.selectAll("rect.brush")
-                .data([1])
+                .data([])
                 .exit()
                 .remove()
             __g.cSvg.selectAll("path.brush")
@@ -438,6 +448,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "w-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown1")
                     __g.isResizing = true;
                     __g.resizeDirection = "west";
                 })
@@ -457,6 +468,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "e-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown2")
                     __g.isResizing = true;
                     __g.resizeDirection = "east";
                 })
@@ -476,6 +488,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "n-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown3")
                     __g.isResizing = true;
                     __g.resizeDirection = "north";
                 })
@@ -496,6 +509,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "s-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown3")
                     __g.isResizing = true;
                     __g.resizeDirection = "south";
                 })
@@ -515,6 +529,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "nw-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown4")
                     __g.isResizing = true;
                     __g.resizeDirection = "north_west";
                 })
@@ -534,6 +549,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "sw-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown5")
                     __g.isResizing = true;
                     __g.resizeDirection = "south_west";
                 })
@@ -553,6 +569,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "se-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown6")
                     __g.isResizing = true;
                     __g.resizeDirection = "south_east";
                 })
@@ -572,6 +589,7 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "ne-resize")
                 .on("mousedown", function () {
+                	console.log("mouseDown7")
                     __g.isResizing = true;
                     __g.resizeDirection = "north_east";
                 })
@@ -592,10 +610,10 @@
 
         __g.resizeRectangleEvent = function (current, p0, p1) {
 
-            if (__g.isResizing) {
+            /*if (__g.isResizing) {
                 console.log('we are resizing the rectangle: ', this.resizeDirection)
                 console.log("mouse: ", current)
-            }
+            }*/
 
             if (__g.resizeDirection == "north") {
                 maxP = p0[1] > p1[1] ? p0 : p1

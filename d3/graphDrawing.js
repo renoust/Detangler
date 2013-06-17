@@ -156,7 +156,7 @@
                 tab[3] = tab[0].data()[0].currentX;
                 tab[4] = tab[0].data()[0].currentY;
 
-                undo = function(){console.log(tab); move(tab);} 
+                undo = function(){/*console.log(tab);*/ move(tab);} 
             })
             .on("drag", function(d){
                 var tab1 = []
@@ -174,7 +174,7 @@
                 tab2[3] = tab2[0].data()[0].currentX;
                 tab2[4] = tab2[0].data()[0].currentY;
                 
-                redo = function(){console.log(tab2); move(tab2);}           
+                redo = function(){/*console.log(tab2);*/ move(tab2);}           
                 //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
       
               })

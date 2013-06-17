@@ -48,11 +48,19 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     var viewInitialized = null;
     
    	var ID = id;
+   	
+   	var graphDrawing = null;
+   	
+   	
+    this.getGraphDrawing = function()
+    {    	
+    	return graphDrawing;
+    }
+      	
     
     this.getGroup = function()
     {    	
-    	return viewGroup;    	
-
+    	return viewGroup;
     }
     
     this.viewInitialized = function()
@@ -375,8 +383,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        else if(typeView ==="catalyst"){ TP.Context().dialogTop=26;  TP.Context().dialogRight=100; }
 	        else                        { TP.Context().dialogTop=240; TP.Context().dialogRight=260; }
 	
-	        var fullheight = $('#container').height()-10;
-	        var fullwidth = $('#container').width()-10;
+	        var fullheight = $('#container').height()-2;
+	        var fullwidth = $('#container').width()-3;
 	        //console.log(dialog.parent().width() + " - " + fullwidth);
 	        //console.log(dialog.parent());
 	        if(dialog.parent().width()!=fullwidth){
@@ -384,7 +392,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	            dialog.dialog({
 	                width:fullwidth, 
 	                height:fullheight,
-	                position: ["left+"+15, "top+"+27] ,
+	                position: ["left+"+8, "top+"+16] ,
 	            });
 	        }
 	        else{
@@ -467,7 +475,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		
 	     $("#zone"+ID).parent().appendTo("#container")
 	     
-     	viewInitialized = 1;
+     	 viewInitialized = 1;
+     	 
+     	 if(typeView === "substrate" || typeView === "catalyst" || typeView === "combined" )
+     	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
 	}
 	
 	     this.buildLinks = function(){
@@ -475,7 +486,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		            		
 		            		if(typeView !== "combined"){
 		            			var tmp = TP.Context().view[idAssociation];
-		            			tmp.setAssociatedView(typeView, __g__);        		
+		            			tmp.setAssociatedView(typeView, __g__);       		
 		            			__g__.setAssociatedView(tmp.getType(), tmp);
 		            		}
 		            		else
@@ -543,7 +554,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		   	bgC = null; 
 		   	view_nodes = null; 
 		   	type = null; 
-		   	idAssociation = null;	     	
+		   	idAssociation = null;
+		   	graphDrawing = null;	     	
 	     }
 		
 

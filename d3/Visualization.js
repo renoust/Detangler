@@ -40,16 +40,26 @@
         //entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
-        this.entanglementCaught = function (CurrentViewID) {
+        this.entanglementCaught = function (CurrentViewID, nothing) {
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
 			var target_source = CurrentViewID;
-			
-            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
-            $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
  
-            
-            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-            $('#bg')[0].style.cssText="background-color:"+ brewerSeq[index]; 
+            if(nothing == null){
+            	
+            	$('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);            	
+            	          
+	            var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
+	        	$('#bg')[0].style.cssText="background-color:"+ brewerSeq[index];	           
+	        }
+	        else{
+	        	
+	            $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            	$('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
+            		
+	        	$('#bg')[0].style.cssText="background-color:white";
+	        
+	        }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
                 .transition()
@@ -57,7 +67,7 @@
                 .style("fill", brewerSeq[index])*/
             d3.selectAll("rect.view").style("fill", brewerSeq[index])
             d3.selectAll("rect.brush").style("fill", brewerSeq[index])
-            d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
+            //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
             
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
@@ -154,7 +164,7 @@
                         .data([])
                         .exit()
                         .remove();
-                    gD = TP.GraphDrawing(TP.Context().view[target].getGraph(), TP.Context().view[target].getSvg(), target).draw()
+                    gD = TP.Context().view[target].getGraphDrawing().draw()
                 })
                 .on("mouseover", function () {
                     d3.select(this).style("fill", "black")
@@ -230,11 +240,10 @@
             
     		//if(TP.Context().view[target].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
-	         
-	       	var graph_drawing = TP.GraphDrawing(cGraph, svg, target);
-	        graph_drawing.rescaleGraph(cGraph);
+
+	        TP.Context().view[target].getGraphDrawing().rescaleGraph(cGraph);
 	        	        
-	        graph_drawing.changeLayout(cGraph,0);
+	        TP.Context().view[target].getGraphDrawing().changeLayout(cGraph,0);
 	        
 	            
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
@@ -250,8 +259,8 @@
             cGraph.nodes().forEach(function (d) {
                 d.viewMetric = 3;
             })
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
-            graph_drawing.resize(cGraph, 0)
+            
+            TP.Context().view[target].getGraphDrawing().resize(cGraph, 0)
         }
 
 		this.rotateGraph = function (target) {
@@ -260,10 +269,8 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target)
     
-            graph_drawing.rotate(target,5)
+            TP.Context().view[target].getGraphDrawing().rotate(target,5)
         }
         
         this.arrangeLabels = function (target) {
@@ -272,10 +279,9 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-            graph_drawing = TP.GraphDrawing(cGraph, svg, target);
             //assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
             //console.log(target, svg, cGraph);
-            graph_drawing.arrangeLabels();
+            TP.Context().view[target].getGraphDrawing().arrangeLabels();
         }
 
         this.bringLabelsForward = function (target) {
@@ -287,9 +293,8 @@
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-
-            var gD = TP.GraphDrawing(cGraph, svg, target);
-            gD.bringLabelsForward();
+            
+            TP.Context().view[target].getGraphDrawing().bringLabelsForward();
         }
 
 
@@ -368,8 +373,7 @@
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
+            TP.Context().view[graphName].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
             objectReferences.VisualizationObject.entanglementCaught(graphName);
 
         };
@@ -383,8 +387,7 @@
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.nodeColorMap(cGraph, 0, parameter);
+            TP.Context().view[graphName].getGraphDrawing().nodeColorMap(cGraph, 0, parameter);
 
     		//if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)      
 	            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
@@ -882,8 +885,7 @@
             svg = TP.Context().view[graphName].getSvg();
             cGraph = TP.Context().view[graphName].getGraph();
 
-            var graph_drawing = TP.GraphDrawing(cGraph, svg, graphName);
-            graph_drawing.changeColor(graphName, cGraph, elem, newcolor);
+            TP.Context().view[graphName].getGraphDrawing().changeColor(graphName, cGraph, elem, newcolor);
 
         }
 /********************************** ON GOING ***********************************/
