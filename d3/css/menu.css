@@ -81,6 +81,7 @@ button.submit{
 	padding: 5px;
 	font-size: 11px;
 	font-family: Verdana,Arial,sans-serif;
+	/*height: auto !important;*/
 }
 
 .buttonMenu .ui-icon { display: none; }

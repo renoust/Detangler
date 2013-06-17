@@ -50,13 +50,10 @@ var TulipPosy = function (originalJSON) {
 	var path = $('#files').val().split('\\');
     var name = path[path.length-1].split('.')[0];
 
-	var type1 = "toto";
-	var type2 = "titi";
-	var type3 = "tata";
-	var type4 = "tutu";
-	var type5 = "tete";
-	var type6 = "tyty";
-	var type7 = "tt";
+	var type1 = "Layout";
+	var type2 = "Measures";
+	var type3 = "Vizualisation";
+	var type4 = "Others";
 	
 
     var paramSizeMap = [
@@ -64,58 +61,57 @@ var TulipPosy = function (originalJSON) {
     ]
 	
 	var array1 = [
-	    ['b1','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, type1],
-        ['b2','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, type1],
-        // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
-        ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, type1],
-        // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],
-        ['b6','Reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}, type1],
-        ['b7','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}, type1],	
-        ['b8','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}, type2],
-        ['b9','Analyse','',{click:function(){objectReferences.ClientObject.analyseGraph(target, tabCatalyst)}}, type2],
-        ['b10','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}, type2],
-        ['b11','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}, type2],
-        ['b12','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}, type2],
-        // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
-        ['b14','Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, type2],
-        ['b15','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}, type2],
-        // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
-        ['b17','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}, type3],
-        ['b18','BarChart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}, type3],
-        ['b19','BarChart_rotate','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}, type3],
-        ['b20','ScatterPlot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}, type3],
-        ['b21','Size Map',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}, type3],
-        ['b22','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target, 120, [TP.Context().width/2,TP.Context().height/2])}}, type3],
-        ['b23','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}, type3]	
+        ['b1','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, "Layout"],
+        ['b2','Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
+
+	    ['b3','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, "Selection"],
+        ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, "Selection"],
+
+        ['b5','Center view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}, "View"],
+        ['b6','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}, "View"],
+        ['b7','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}, "View"],
+        ['b8','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}, "View"],
+        ['b9','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}, "View"],
+        ['b10','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}, "View"],
+        ['b11','Size mapping',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}, "View"],
+        ['b12','Zoom in','', {click:function(){objectReferences.InteractionObject.runZoom(target, 120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
+        ['b13','Zoom out','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
+
+        ['b14','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}, "Measure"],	
+        ['b15','Betweenness centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}, "Measure"],
+
+        ['b16','Bipartite analysis','',{click:function(){objectReferences.ClientObject.analyseGraph(target, tabCatalyst)}}, "Open View"],
+        ['b17','Horizontal barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}, "Open View"],
+        ['b18','Barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}, "Open View"],
+        ['b19','Scatter plot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}, "Open View"]
 	]
 	
 	
 	var array2 = [
-        ['b1','force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, type4],
-        ['b2','Update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, type4],
-        // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
-        // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target1)}}],
-        ['b5','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target1)}}, type4],
-        ['b6','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', target1)}}, type4],
-        ['b7','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}, type4],
-        ['b8','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}, type4],
-        ['b9','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}, type5],
-        // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
-        ['b11','Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}, type5],
-        ['b12','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}, type5],
-        ['b13','Ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}, type5],
-        //['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
-        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
-        ['b16','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}, type6],
-        ['b17','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}, type6],
-        ['b18','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}, type6],
-        ['b19','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}, type6]
+        ['b1','Force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, "Layout"],
+        ['b2','Server update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, "Layout"],
+
+        ['b3','Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}, "Selection"],
+
+        ['b4','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}, "View"],
+        ['b5','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}, "View"],
+        ['b6','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}, "View"],
+        ['b7','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}, "View"],
+        ['b8','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}, "View"],
+        ['b9','Zoom in','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
+        ['b10','Zoom out','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
+        ['b21','Size mapping',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}, "View"],
+        
+        ['b11','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target1)}}, "Measure"],
+        ['b12','Betweenness centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', target1)}}, "Measure"],
+        ['b13','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}, "Measure"],
+        ['b14','Entanglement mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}, "Measure"],
 	]
 	
 	
 	var array3 = [
-        ['b1','fg ' + contxt.combined_foreground,'',{click:function(){objectReferences.InterfaceObject.toggleCombinedForeground()}}, type7],
-        ['b12','arrange labels' + contxt.combined_foreground,'',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target2)}}, type7]
+        ['b1','fg ' + contxt.combined_foreground,'',{click:function(){objectReferences.InterfaceObject.toggleCombinedForeground()}}, type3],
+        ['b12','arrange labels' + contxt.combined_foreground,'',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target2)}}, type3]
 	]
 	
 

@@ -788,39 +788,54 @@
                 }
             }else if(mode==='create'){
                 menu = this.addPanelMenu('Interactions');
-                $('#'+menu).css('z-index', 101)
+                $('#'+menu).css('z-index', 102)
                 $('#'+menu).find('.toggleButton').text('<').addClass('open')
-                //$('#'+menu).find('.toggleButton').css('background','url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x')
                 content = $("#"+menu +" .menu-content");
                 content.accordion({
                     collapsible:true,
                     active:false,
+                    heightStyle:'content'
                 });
             }
+            var i=0;
             for(var key in buttons){
                 this.createElement('p', {class:'header-form', text:key}, '#'+content.attr('id'))
                 var cnt = this.createElement('div', {data:key, class:"accordion"}, '#'+content.attr('id'))
                 content.accordion('refresh')
-                this.createElement('div', {id:key+'-content'}, '#'+cnt.attr('id'))
-                $('#'+key+'-content').accordion({
+                this.createElement('div', {id:'content'+i}, '#'+cnt.attr('id'))
+                $('#content'+i).accordion({
                     collapsible:true,
                     active:false,
+                    heightStyle:'content'
                 })
-
-                this.createArrayButtons(buttons[key], key+'-content');
+                
+                this.createArrayButtons(buttons[key], 'content'+i);
+                i++;
             }
             //this.createArrayButtons(buttons, content.attr('id'));
 
-            for(var key in buttons){
-                $('#'+key+'-content').accordion({
+            for(var i=0;i<buttons.length;i++){//} in buttons){
+                $('#content'+i).accordion({
                     collapsible:true,
                     active:false,
                     heightStyle:'content'
                 })
             }
-            content.accordion({collapsible:true,
-                    active:false,
-                    heightStyle:'content'})
+            content.accordion({
+                collapsible:true,
+                active:false,
+                heightStyle:'content'
+            })
+
+            /*$(".accordion").each(
+                function () {
+                    $(this).accordion( {
+                        active:false,
+                        collapsible: true,
+                        heightStyle: "content"
+                    })
+                }
+            );*/
             
         }
 
@@ -951,7 +966,7 @@
             }else{
                 var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
                 elem.click(event.click)
-                this.createElement('div', {/*class:"button-collapsed"*/}, '#'+menuPane)
+                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
             }
 
             $('#'+menuPane).accordion('refresh')
