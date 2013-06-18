@@ -156,6 +156,7 @@
                     });
 
                 selList.sort()
+                TP.Context().view[target].setSourceSelection(selList);
                 //console.log("selection list: ", selList, " with length ", selList.length)
 
                 if (selList.length > 0) {
@@ -372,6 +373,45 @@
                 }
             }
         }
+
+        
+		this.toggleSelection = function(_currentViewID)
+		{
+            //console.log(this);
+            var cView = TP.Context().view[_currentViewID];
+			var cGraph = cView.getGraph();
+			var cSvg = cView.getSvg();
+			var typeGraph = cView.getType();
+			var associatedSelection = null;
+			var associatedViews = null;
+			if (typeGraph == "substrate")
+				associatedViews = cView.getAssociatedView("catalyst");
+			if (typeGraph == "catalyst")
+				associatedViews = cView.getAssociatedView("substrate");
+			if (!associatedViews) return;
+            //console.log("the current type: ",typeGraph);
+            //assert("true", "we have the associated view!");
+			//console.log(associatedViews[0].getType());
+			var cAssociatedView = associatedViews[0];
+			associatedSelection = cAssociatedView.getTargetSelection();
+
+			//console.log(associatedSelection);
+			if (!associatedSelection) return;
+
+            //assert(true, "the associated selection");
+            //console.log(associatedSelection)
+			
+			var associatedGraph = cAssociatedView.getGraph();
+			var associatedSvg = cAssociatedView.getSvg();
+			
+			var graph_drawing = cAssociatedView.getGraphDrawing();//TP.GraphDrawing(associatedGraph, associatedSvg, currentViewID);
+			graph_drawing.resetSelection();
+			graph_drawing.setSelection(associatedSelection);
+            //console.log("target json");
+            //console.log(objectReferences.ClientObject.getSelection(cAssociatedView.getID()));
+			objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(cAssociatedView.getID()), cAssociatedView.getID())
+		}
+
 
 
         // This function associate a d3.svg.brush element to select nodes in a 

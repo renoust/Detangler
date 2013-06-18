@@ -94,6 +94,7 @@ var TulipPosy = function (originalJSON) {
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
         ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, type1],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],
+        ['b5','Toggle selection','',{click:function(){objectReferences.InteractionObject.toggleSelection(target)}}, type1],
         ['b6','Reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}, type1],
         ['b7','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}, type1],	
         ['b8','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}, type2],
@@ -115,14 +116,15 @@ var TulipPosy = function (originalJSON) {
 	
 	]
 	
+    
 	
-	var array2 = [
+	var array2 =  [
 	
         ['b1','force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, type4],
         ['b2','Update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, type4],
         // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
         // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target1)}}],
-
+        ['b4','Toggle selection','',{click:function(){objectReferences.InteractionObject.toggleSelection(target1)}}, type4],
         ['b5','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target1)}}, type4],
         ['b6','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', target1)}}, type4],
         ['b7','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}, type4],
@@ -139,7 +141,33 @@ var TulipPosy = function (originalJSON) {
         ['b18','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}, type6],
         ['b19','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}, type6]
 	
-	]
+	];
+
+    /*
+    var array2 = (function(_graphID){ return [
+	
+        ['b1','force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',_graphID)}}, type4],
+        ['b2','Update layout','',{click:function(){objectReferences.ClientObject.updateLayout(_graphID)}}, type4],
+        // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',_graphID)}}],
+        // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(_graphID)}}],
+        ['b4','Toggle ma selection','',{click:function(){objectReferences.InteractionObject.toggleSelection("tourdeballe")}}, type4],
+        ['b5','Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', _graphID)}}, type4],
+        ['b6','Btw. centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', _graphID)}}, type4],
+        ['b7','Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(_graphID)}}, type4],
+        ['b8','Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(_graphID)}}, type4],
+        ['b9','Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(_graphID)}}, type5],
+        // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(_graphID)}}],
+        ['b11','Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(_graphID)}}, type5],
+        ['b12','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', _graphID)}}, type5],
+        ['b13','Ent. mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', _graphID)}}, type5],
+        //['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', _graphID)}}],
+        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
+        ['b16','Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(_graphID)}}, type6],
+        ['b17','Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(_graphID)}}, type6],
+        ['b18','zoomIn','', {click:function(){objectReferences.InteractionObject.runZoom(_graphID, 120, [TP.Context().width/2,TP.Context().height/2])}}, type6],
+        ['b19','zoomOut','', {click:function(){objectReferences.InteractionObject.runZoom(_graphID, -120, [TP.Context().width/2,TP.Context().height/2])}}, type6]
+	
+	];})(target1)*/
 	
 	
 	var array3 = [
