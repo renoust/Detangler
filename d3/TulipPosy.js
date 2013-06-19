@@ -91,6 +91,7 @@ var TulipPosy = function (originalJSON) {
 	
 	    ['b1','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, type1],
         ['b2','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, type1],
+        ['b2','MDS layout', '',{click:function(){objectReferences.ClientObject.callLayout('MDS', target)}}, type1],
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
         ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, type1],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],
