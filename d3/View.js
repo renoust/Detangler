@@ -329,8 +329,9 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 
 	        if (oldID!=TP.Context().activeView){
 	        	TP.Context().InterfaceObject.interactionPane(hashButton,'update');
-	        	TP.Context().InterfaceObject.addInfoButton(__g__);
+	        	
 	        }
+	        TP.Context().InterfaceObject.addInfoButton(__g__);
         	
         	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){
