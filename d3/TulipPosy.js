@@ -90,7 +90,7 @@ var TulipPosy = function (originalJSON) {
 	
     
 	
-<<<<<<< HEAD
+
 	var array2 = [
         ['b1','Force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, "Layout"],
         ['b2','Server update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, "Layout"],
