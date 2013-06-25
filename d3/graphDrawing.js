@@ -156,7 +156,7 @@
                 tab[3] = tab[0].data()[0].currentX;
                 tab[4] = tab[0].data()[0].currentY;
 
-                undo = function(){console.log(tab); move(tab);} 
+                undo = function(){/*console.log(tab);*/ move(tab);} 
             })
             .on("drag", function(d){
                 var tab1 = []
@@ -174,7 +174,7 @@
                 tab2[3] = tab2[0].data()[0].currentX;
                 tab2[4] = tab2[0].data()[0].currentY;
                 
-                redo = function(){console.log(tab2); move(tab2);}           
+                redo = function(){/*console.log(tab2);*/ move(tab2);}           
                 //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
       
               })
@@ -936,7 +936,18 @@
                 iterArray.push(d.getBBox());
             });
             
-     
+            /*
+            function sortPoints(xA, xB, yA, yB)
+    		{
+    			var diffX = xA - xB
+    			if (diffX != 0) return diffX;
+    			var diffY = yA - yB
+    			return diffY;    			
+    		}     
+
+            labelsArray.sort(function(b,a){ return sortPoints(a.currentX, b.currentX, a.currentY, b.currentY)})            
+     		iterArray.sort(function(b,a){ return sortPoints(a.x, b.x, a.y, b.y)}) 
+            */
 
             var margin = 1;
 
@@ -945,6 +956,7 @@
                     noChange = false;
                 //We should reduce the complexity of this algo!!
                 for (var iLabel = 0; iLabel < iterArray.length - 1; iLabel++) {
+                //for (var iLabel = iterArray.length - 2; iLabel >= 0; iLabel--) {
                     var bbox = iterArray[iLabel];
 
                     if (labelsArray[iLabel].attr("visibility") == "visible") {
@@ -959,6 +971,8 @@
 
                         noChange = false;
                         for (var iLabel2 = iLabel + 1; iLabel2 < iterArray.length; iLabel2++) {
+                        //for (var iLabel2 = iterArray.length - 1; iLabel2 >= iLabel + 1; iLabel2--) {
+                        
                             if (labelsArray[iLabel2].attr("visibility")  == "visible") {
                                 var bbox2 = iterArray[iLabel2];
                                 var polygon2 = [
@@ -1012,6 +1026,69 @@
         g.bringLabelsForward = function () {
             g.delLabels();
             g.addLabels();
+        }
+
+        
+
+        g.resetSelection = function()
+        {
+					
+			var nodeColor = TP.Context().view[currentViewID].getNodesColor();
+			var linkColor = TP.Context().view[currentViewID].getLinksColor();
+
+            g.svg.selectAll("g.node")
+            	.classed("selected", false)
+                .style('opacity', 1.0)
+                .select("circle.node")
+                .style('fill', nodeColor)	                        
+                .style("stroke-width", 0);
+            g.svg.selectAll("g.node")
+                .select("text.node")
+                .attr("visibility", "visible");
+            g.svg.selectAll("g.node")
+                .select("rect.node")
+                .style('fill',nodeColor)
+                .style("stroke-width", 0);
+            g.svg.selectAll("g.link")
+                .style('opacity', 1.0)
+                .select("path.link")
+                .style('stroke', linkColor)
+				.style('stroke-width', 1)
+			
+			g.cGraph.nodes().forEach(function(d){d.selected = false;})	
+			
+            //objectReferences.VisualizationObject.resetSize(catalystName);
+            g.svg.selectAll("text.node").style("opacity", 1)
+            //objectReferences.VisualizationObject.arrangeLabels(catalystName);
+        }
+        
+        g.setSelection = function(nodeIDList)
+        {
+        	nodeList = []
+			
+			//appends to the actual node list and set the "selected" flag to true
+        	g.cGraph.nodes().forEach(function(d){if(nodeIDList.indexOf(d.baseID) != -1) {d.selected = true; nodeList.push(d)}})
+            //assert(true, "the node list");
+            //console.log(nodeList);
+           	var nodes = g.svg.selectAll("g.node")
+            //console.log(nodes);
+        		//does the selection work with only the array of baseID?
+        		//.data(nodeList, function(d){return d.baseID;})
+        		//should we reassign the data each time to access the data?
+        	//nodes.data(g.cGraph, function(d){return d.baseID;})
+            g.svg.selectAll("g.node")
+        		.classed("selected", function(d){return d.selected;})
+                .select(".node")
+                .style('fill', function(d){
+                        //console.log(d);
+                    	if(d.selected)
+                    		return "red";
+                    	else
+                    		return TP.Context().view[currentViewID].getNodesColor();
+                    })
+                    
+        	//g.svg.selectAll("g.node")
+        	//	.data(g.cGraph, function(d){return d.baseID;})	
         }
 
         return g;

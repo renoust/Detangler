@@ -63,8 +63,9 @@ var TulipPosy = function (originalJSON) {
 	var array1 = [
         ['b1','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, "Layout"],
         ['b2','Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
+	['b20','MDS layout', '',{click:function(){objectReferences.ClientObject.callLayout('MDS', target)}}, "Layout"],
 
-	    ['b3','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, "Selection"],
+	['b3','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, "Selection"],
         ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, "Selection"],
 
         ['b5','Center view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}, "View"],
@@ -84,9 +85,12 @@ var TulipPosy = function (originalJSON) {
         ['b17','Horizontal barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}, "Open View"],
         ['b18','Barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}, "Open View"],
         ['b19','Scatter plot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}, "Open View"]
+
 	]
 	
+    
 	
+<<<<<<< HEAD
 	var array2 = [
         ['b1','Force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, "Layout"],
         ['b2','Server update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, "Layout"],
@@ -107,6 +111,7 @@ var TulipPosy = function (originalJSON) {
         ['b13','Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}, "Measure"],
         ['b14','Entanglement mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}, "Measure"],
 	]
+
 	
 	
 	var array3 = [

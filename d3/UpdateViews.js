@@ -170,7 +170,7 @@
             
             TP.Context().view[target].getGraphDrawing().rescaleGraph(graph);
             
-            graph.edgeBinding() //...   
+            graph.edgeBinding() //...
             
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             TP.Context().view[target].getGraphDrawing().clear();
@@ -236,8 +236,9 @@
 
             TP.Context().view[graphName].getGraphDrawing().rescaleGraph(graph);
             //graph_drawing.move(graph, 0);
-            TP.Context().view[graphName].getGraphDrawing().clear();
-            TP.Context().view[graphName].getGraphDrawing().draw();
+            //TP.Context().view[graphName].getGraphDrawing().clear();
+            //TP.Context().view[graphName].getGraphDrawing().draw();
+            TP.Context().view[graphName].getGraphDrawing().changeLayout(graph, 0);
 
         }
 
@@ -271,13 +272,8 @@
 
         this.applyFloatAlgorithmFromData = function (data, graphName, attributeName) {
 			
-			//wtf?
-			window.toutou = data;
-			
 			if (! attributeName)
 				attributeName = "viewMetric"
-			
-			console.log(data);
 			
 			//assert(true, "here");;
 			TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [{'in':"viewMetric", 'out':attributeName}], true);
@@ -316,9 +312,9 @@
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
            
-           var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
-           char.attr("x", function(d){ 
-           		assert(false,d.viewMetric); 
+           var _char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
+           _char.attr("x", function(d){ 
+           		//assert(false,d.viewMetric); 
            		pileCentrality.addMetric(d.viewMetric, d); 
            		return d.x; 
            	});
@@ -335,7 +331,7 @@
 
         this.syncGraphRequestFromData = function (data, selection, graphName) {
         	
-        	assert(true, "syncGraphRequestFromData");
+        	//assert(true, "syncGraphRequestFromData");
         	
             var graph = null
             var svg = null
@@ -344,7 +340,6 @@
             var find = false;
             
             var typeGraph = TP.Context().view[graphName].getType();
-            console.log("type de "+graphName+" = "+typeGraph);
              
             if (typeGraph == 'substrate' && TP.Context().view[graphName].getAssociatedView("catalyst") != null) {
             	//if(TP.Context().view[graphName].getAssociatedView("catalyst")[0].viewInitialized() == 1){
@@ -352,7 +347,7 @@
                 	graph = tmp[0].getGraph();
                 	svg = tmp[0].getSvg();
                 	find = true;
-		            //quick fix since w<'re not amanging multiple views yet
+		            //quick fix since we're not amanging multiple views yet
                 	targetView = tmp[0].getID();
                //}
             }
@@ -399,6 +394,14 @@
                 TP.Context().syncNodes = undefined;
             }
 			
+            //sets the target view selection as a list of nodes 
+			//(later we might want it to be graph)
+			nodeList = []
+			data.nodes.forEach(function(d){nodeList.push(d.baseID);})
+            //assert(true, "SETTING VIEW TARGET SELECTION");
+            //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
+			TP.Context().view[targetView].setTargetSelection(nodeList);
+
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
 
             if (typeGraph == 'combined') {
@@ -441,7 +444,7 @@
 	                tempCombined.addNodes(nodeSelection, graphName);
 	                var tempLinks = [];
 
-	                tmp[0].getGraph().links().forEach(function (d) {
+	                tmp[0].getGraph().links().forEach(function (d) {	                        
 	                        if (!d.source.baseID || !d.target.baseID) console.log(d);
 	                        if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
 	                            console.log("selected:", d, d.source, d.target);

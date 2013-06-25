@@ -156,6 +156,7 @@
                     });
 
                 selList.sort()
+                TP.Context().view[target].setSourceSelection(selList);
                 //console.log("selection list: ", selList, " with length ", selList.length)
 
                 if (selList.length > 0) {
@@ -167,19 +168,15 @@
                         if (i != iMax) {
                             prevSelList.length = 0
                             prevSelList = selList.slice(0);
-                            assert(true, "ttttttttttttttttt111111111111111111111111111111111")
                             objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                         }
                     } else {
                         prevSelList.length = 0
                         prevSelList = selList.slice(0);
-                        assert(true, "ttttttttttttttttt222222222222222222222222222222")
                         objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                     }
                 } else {
 
-				
-					assert(true, "1");
 					
 					var combinedSvg = null;
 					var catalystSvg = null;
@@ -193,26 +190,23 @@
 					var catalystName = null;
 					var substrateName = null;
 					
-					assert(true, "2");	
 					
-					if(TP.Context().view[target].getAssociatedView("catalyst") != null  || TP.Context().view[target].getType() == "catalyst"){
+					if(TP.Context().view[target].getAssociatedView("catalyst") != null || TP.Context().view[target].getType() == "catalyst")
+					{
 						catalystName = (TP.Context().view[target].getType() == "catalyst") ? target : TP.Context().view[target].getAssociatedView("catalyst")[0].getID();
 						catalystView = TP.Context().view[catalystName];
 						catalystSvg = (TP.Context().view[target].getType() == "catalyst") ? svg : catalystView.getSvg();
 					}
 
-					assert(true, "3");
 					
-					
-					if(TP.Context().view[target].getAssociatedView("substrate") != null  || TP.Context().view[target].getType() == "substrate"){
+					if(TP.Context().view[target].getAssociatedView("substrate") != null || TP.Context().view[target].getType() == "substrate"){
 						substrateName = (TP.Context().view[target].getType() == "substrate") ? target : TP.Context().view[target].getAssociatedView("substrate")[0].getID();;
 						substrateView = TP.Context().view[substrateName];
 						substrateSvg = (TP.Context().view[target].getType() == "substrate") ? svg : substrateView.getSvg();
 					}
-					
-					assert(true, "4");
 
-					if(TP.Context().view[target].getAssociatedView("combined") != null  || TP.Context().view[target].getType() == "combined"){
+
+					if(TP.Context().view[target].getAssociatedView("combined") != null || TP.Context().view[target].getType() == "combined"){
 						combinedName = (TP.Context().view[target].getType() == "combined") ? target : TP.Context().view[target].getAssociatedView("combined")[0].getID();
 						combinedView = TP.Context().view[combinedName];
 						combinedSvg = (TP.Context().view[target].getType() == "combined") ? svg : combinedView.getSvg();
@@ -220,16 +214,12 @@
 					/*
 					var result1 = TP.Context().view[target].getAssociatedView("catalyst") != null;
 					var result2 = TP.Context().view[target].getType() == "catalyst";
-					
-					
+										
 					
 					catalystName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("catalyst")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("catalyst")[0].getID() : null) : target;
 					catalystView = (catalystName != null) ? TP.Context().view[catalystName] : null;
 					catalystSvg =  (catalystView != null) ? catalystView.getSvg() : null;
-					
-					assert(true, catalystName);
-					assert(true, catalystView);
-					assert(true, catalystSvg);
+
 					
 					result1 = TP.Context().view[target].getAssociatedView("substrate") != null;
 					result2 = TP.Context().view[target].getType() == "substrate";
@@ -238,9 +228,6 @@
 					substrateView = (substrateName != null) ? TP.Context().view[substrateName] : null;
 					substrateSvg =  (substrateView != null) ? substrateView.getSvg() : null;
 
-					assert(true, substrateName);
-					assert(true, substrateView);
-					assert(true, substrateSvg);		
 
 					result1 = TP.Context().view[target].getAssociatedView("combined") != null;
 					result2 = TP.Context().view[target].getType() == "combined";
@@ -249,10 +236,6 @@
 					combinedName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("combined")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("combined")[0].getID() : null) : target;
 					combinedView = (combinedName != null) ? TP.Context().view[combinedName] : null;
 					combinedSvg =  (combinedView != null) ? combinedView.getSvg() : null;
-
-					assert(true, combinedName);
-					assert(true, combinedView);
-					assert(true, combinedSvg);
 					
 					*/
 					if(catalystSvg != null){						
@@ -373,8 +356,7 @@
                     prevSelList = selList.slice(0);
                     
                     if(catalystSvg != null)
-                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);  
-                   assert(true, "15");
+                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
                                    	
                 	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
                 	TP.Visualization().entanglementCaught(target, 1);
@@ -391,6 +373,45 @@
                 }
             }
         }
+
+        
+		this.toggleSelection = function(_currentViewID)
+		{
+            //console.log(this);
+            var cView = TP.Context().view[_currentViewID];
+			var cGraph = cView.getGraph();
+			var cSvg = cView.getSvg();
+			var typeGraph = cView.getType();
+			var associatedSelection = null;
+			var associatedViews = null;
+			if (typeGraph == "substrate")
+				associatedViews = cView.getAssociatedView("catalyst");
+			if (typeGraph == "catalyst")
+				associatedViews = cView.getAssociatedView("substrate");
+			if (!associatedViews) return;
+            //console.log("the current type: ",typeGraph);
+            //assert("true", "we have the associated view!");
+			//console.log(associatedViews[0].getType());
+			var cAssociatedView = associatedViews[0];
+			associatedSelection = cAssociatedView.getTargetSelection();
+
+			//console.log(associatedSelection);
+			if (!associatedSelection) return;
+
+            //assert(true, "the associated selection");
+            //console.log(associatedSelection)
+			
+			var associatedGraph = cAssociatedView.getGraph();
+			var associatedSvg = cAssociatedView.getSvg();
+			
+			var graph_drawing = cAssociatedView.getGraphDrawing();//TP.GraphDrawing(associatedGraph, associatedSvg, currentViewID);
+			graph_drawing.resetSelection();
+			graph_drawing.setSelection(associatedSelection);
+            //console.log("target json");
+            //console.log(objectReferences.ClientObject.getSelection(cAssociatedView.getID()));
+			objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(cAssociatedView.getID()), cAssociatedView.getID())
+		}
+
 
 
         // This function associate a d3.svg.brush element to select nodes in a 
@@ -516,9 +537,10 @@
            
            	myL = TP.Context().view[target].getLasso();
            
-            mySvg.on("mouseup", function (d) {myL.canMouseUp(d3.mouse(this))});
-            mySvg.on("mousedown", function (d) {myL.canMouseDown(d3.mouse(this))});
-            mySvg.on("mousemove", function (d) {myL.canMouseMove(d3.mouse(this))});
+           
+            mySvg.on("mouseup", function (d) { myL.canMouseUp(d3.mouse(this))});
+            mySvg.on("mousedown", function (d) { myL.canMouseDown(d3.mouse(this))});
+            mySvg.on("mousemove", function (d) { myL.canMouseMove(d3.mouse(this))});
         }
 
 
