@@ -1,12 +1,11 @@
 /********************************* General ***********************************/
-*{
-	font-size: 11px;
-	font-family: Verdana,Arial,sans-serif;
-}
+*{font-family: Verdana,Arial,sans-serif;}
 
-body{
-	margin:0px;
-}
+body{margin:0px;}
+
+li{list-style-type:none}
+
+p{font-weight:bold;}
 
 /********************************** Body *************************************/
 #wrap{
@@ -19,74 +18,92 @@ body{
 /********************************* Header ************************************/
 
 #header{
-	background: #3f3f3f;
+	background: url(myTheme/test-header.png) repeat-x;
 	border: 1px solid black;
 	height:30px;
-
 	color: white;
 }
-
 #header-content{
 	position: absolute;
 	left:30px;
 	right:0px;
 	height:28px;
+	z-index: 200;
 }
-
 #header-logo{
 	display:inline-block;
 	margin-right:12%;
-
 	font-family: "Caslon";
 	font-style: italic;
-	font-size:2em;
+	font-size:1.6em;
+	vertical-align: top;
 }
-
 #menu-header{
 	display: inline-block;
 }
-.ui-menu{
-	width:100px;
-	font-size:12px;
-	min-height:22px;
-	background: #3f3f3f;
+#menu {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background: #000;
+	color: #fff;
+	width: 130px;
+	font: 0.8em "Trebuchet MS", sans-serif;
+	border-radius: 10px;
+}
+#menu a{
+	display: block;
+	padding: 4px 10px;
+	color: #fff;
+	text-decoration: none;
+	min-height: 21px;
+	background: url(myTheme/test-header.png) left bottom repeat-x;
+
+}
+#menu .hmenu a, {
+	
+/*	background-image: url(myTheme/state-default.png);*/
+}
+#menu .open a,{
+	border-radius: 10px;
+	/*background-image: url(menu-item-enroule.png);*/
+}
+#menu a:hover, #menu a:focus, #menu a:active {
+	text-decoration: underline;
 	
 }
-ul#menu{
-	display: inline-block;
-	width:500px; 
-	height: 20px;
-	border: none;
-}
-ul#menu > li {
-	width:60px; 
-	float:left; 
-	background: white;
-	border-radius: 3px;
-}
-ul .ui-menu.ui-widget-content{
-	z-index: 150;
-	background: white;
-	width: 120px;
-}
 
-#header-input{
-	display:inline-block;
+#menu .submenu {
+	font-size: .8em;
+	/*background: #ccc url(subMenu.png) 0 0 repeat-x;*/
+	font-size: .9em;
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #666;
+	border-radius: 10px;
+	
 }
-
-.input-browser {
-	width: 100%;
-	color:#332211;
+#menu .submenu li{
+	border-radius: 10px
 }
-
+#menu ul.submenu a {
+	background: none;
+	padding: 3px 10px;
+	border-radius: 10px;
+}
+#header-content button{
+	float:right;
+}
 
 /******************************** Workspace **********************************/
 #container {
-	padding-left: 15px;
+	padding-left: 20px;
 	height: 100%;
 	bottom: 0px;
 	border:1px solid #666666;
 	background:#F0F0F0;
+	
 }
 
 
@@ -137,8 +154,6 @@ ul .ui-menu.ui-widget-content{
 
 
 /***************************** Information zone ******************************/
-
-
 
 @font-face {
     font-family: 'EntypoRegular';

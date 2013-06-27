@@ -258,7 +258,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		if(bouton != null){
 			for(var p = 0; p < bouton.length; p++)
 			{
-				console.log(bouton[p][4]);
+				//console.log(bouton[p][4]);
 				
 				if(hashButton[bouton[p][4]] != null){
 					hashButton[bouton[p][4]].push(bouton[p]);

@@ -64,9 +64,9 @@
             document.getElementById('menu-2').innerHTML += 
                 "<div id='entanglement-cont'>"+
                     "<div id='bg'></div>"+
-                    "<div id='entanglement'><p>Entanglement:</br>" + 
+                    "<div id='entanglement'><span>Entanglement:</br>" + 
                 "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>"+
+                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></span></div>"+
                 "</div>"
 
             /*if ($("#entanglement")[0].innerHTML!=="") {$("#entanglement")[0].innerHTML=""};
@@ -183,7 +183,7 @@
                 .attr("class", "moveButton")
                 .classed("interfaceButton", 1)
                 .attr("transform", function (d) {
-                    return "translate(" + 10 + "," + (10+25*positionNumber) + ")";
+                    return "translate(" + 10 + "," + (10+25*positionNumber) + ")";Entan
                 })
                 .on("click", function (d) {
                     d3.select(this)
@@ -325,10 +325,20 @@
 
             var zone = '#infoView'
             document.getElementById('infoView').innerHTML = ''
-            $('<p/>', {text:'File:  '+ file}).appendTo(zone)
+            /*$('<p/>', {text:'GLOBAL INFORMATIONS:'}).appendTo(zone);
+            $('<p/>', {text:'File:  '+ file}).appendTo(zone);
             $('<p/>', {text:'View:  '+ type}).appendTo(zone);
             $('<p/>', {text:' - '+ cGraph.nodes().length+' nodes'}).appendTo(zone);
-            $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);
+            $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);*/
+
+            document.getElementById('infoView').innerHTML +=
+                "<p> GLOBAL INFORMATIONS: </p>" +
+                "<ul>" +
+                    "<li> File : "+ file + "</li>"+
+                    "<li> View : "+ type + "</li>"+
+                    "<li> - " + cGraph.nodes().length + " nodes </li>"+ 
+                    "<li> - " + cGraph.links().length + " links </li>" +
+                "</ul>";
             /*
             var cGraph = null
             var svg = null
@@ -684,10 +694,17 @@
         this.addInfoBox = function (node) {
             //assert(false,'Interface -> addInfoBox')
             $('#infoNodes').empty()
-            $('#infoNodes').css('border', '1px solid #666666')
-            $('<span/>', {style:'font-weight=bold', text:'Node Information: '}).appendTo('#infoNodes');
-            $('<p/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
-            $('<p/>', {text:node.label}).appendTo('#infoNodes')
+            //$('#infoNodes').css('border', '1px solid #666666')
+            document.getElementById('infoNodes').innerHTML +=
+                "<p> NODE INFORMATIONS: </p>" +
+                "<ul>" +
+                    "<li> ID: "+node.baseID+ "</li>"+
+                    "<li> "+ node.label+" </li>"+
+                "</ul>";
+            // $('<p/>', {style:'font-weight=bold', text:'NODE INFORMATIONS: '}).appendTo('#infoNodes');
+            // $('<span/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
+            // $('<br/>').appendTo('#infoNodes')
+            // $('<span/>', {style:'padding-left:15px', text:node.label}).appendTo('#infoNodes')
         }
 
 
@@ -768,19 +785,21 @@
 
         this.addPanelMenu = function(header){
             //assert(true,'Interface -> addPanelMenu')
+
             menuNum =contxt.menuNum++;
             $("<div/>", {class:'cont',id:'menu-'+menuNum}).appendTo("#wrap");
-            $("<div/>",{class:'toggleButton',id:'toggleBtn'+menuNum,text:'>',style:'top:'+40*menuNum+'px;'}).appendTo('#menu-'+menuNum);
+            $("<div/>",{class:'toggleButton',id:'toggleBtn'+menuNum,/*text:'>',*/style:'top:'+[40+104*(menuNum-1)]+'px;'}).appendTo('#menu-'+menuNum);
             $('<div/>', {class:'header-menu',text:header}).appendTo('#menu-'+menuNum);
             $('<div/>', {class:'menu-content',id:'menu'+menuNum+'-content',}).appendTo('#menu-'+menuNum)
             return 'menu-'+menuNum;
         }
 
         this.interactionPane = function(buttons, mode){
-            //assert(true,'Interface -> interactionPane')
-            var menu, content;
+            var menu, tgbutton, content, fam;
+            var i=0;
+
             if(mode==='update'){
-                for(var i=0; i<contxt.menuNum;i++){
+                for(i=0; i<contxt.menuNum;i++){
                     if($('.header-menu').eq(i).text()==='Interactions'){
                         content = $('.header-menu').eq(i).siblings('.menu-content')
                         document.getElementById(content.attr('id')).innerHTML = ''
@@ -789,93 +808,134 @@
             }else if(mode==='create'){
                 menu = this.addPanelMenu('Interactions');
                 $('#'+menu).css('z-index', 102)
-                $('#'+menu).find('.toggleButton').text('<').addClass('open')
+                tgbutton = $('#'+menu).find('.toggleButton')
+                tgbutton.addClass('open')
+                $('<h3/>',{text:'Interactions'}).appendTo(tgbutton);
                 content = $("#"+menu +" .menu-content");
-                content.accordion({
-                    collapsible:true,
-                    active:false,
-                    heightStyle:'content'
-                });
             }
-            var i=0;
+            content.css('margin',0)
+
+            i=0;
+            $('<ul/>', {id:'nav'}).appendTo(content);
             for(var key in buttons){
-                this.createElement('p', {class:'header-form', text:key}, '#'+content.attr('id'))
-                var cnt = this.createElement('div', {data:key, class:"accordion"}, '#'+content.attr('id'))
-                content.accordion('refresh')
-                this.createElement('div', {id:'content'+i}, '#'+cnt.attr('id'))
-                $('#content'+i).accordion({
-                    collapsible:true,
-                    active:false,
-                    heightStyle:'content'
-                })
-                
-                this.createArrayButtons(buttons[key], 'content'+i);
+                fam = $('<li/>',{ class:'tglFamily'}).appendTo('#nav');
+                $('<a/>',{text:key}).appendTo(fam)
+                $('<ul/>',{id:'family-'+i, class:'family'}).appendTo(fam);
+                this.createArrayButtons2(buttons[key], 'family-'+i);
                 i++;
             }
-            //this.createArrayButtons(buttons, content.attr('id'));
 
-            for(var i=0;i<buttons.length;i++){//} in buttons){
-                $('#content'+i).accordion({
-                    collapsible:true,
-                    active:false,
-                    heightStyle:'content'
-                })
-            }
-            content.accordion({
-                collapsible:true,
-                active:false,
-                heightStyle:'content'
-            })
-
-            /*$(".accordion").each(
-                function () {
-                    $(this).accordion( {
-                        active:false,
-                        collapsible: true,
-                        heightStyle: "content"
-                    })
+            $("ul.family:not('.open_at_load')").hide();
+            $("li.tglFamily > a").click( function () {
+                if ($(this).next("ul.family:visible").length != 0) {
+                    $(this).next("ul.family").slideUp("normal", function () { $(this).parent().removeClass("open") } );
                 }
-            );*/
-            
+                else {
+                    $("ul.family").slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                    $(this).next("ul.family").slideDown("normal", function () { $(this).parent().addClass("open") } );
+                }
+                return false;
+            });
+
+            $("div.formParam:not('open_at_load')").hide();
+
+            $("li.form > a").click(function(){
+                //console.log(this)
+                if($(this).parent().hasClass('tglForm')){
+                    if ($(this).next("div.formParam:visible").length != 0) {
+                        $(this).next("div.formParam").slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                    }
+                    // Si le sous-menu est cache, on ferme les autres et on l'affiche :
+                    else {
+                        $("div.formParam").slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                        $(this).next("div.formParam").slideDown("normal", function () { $(this).parent().addClass("open") } );
+                    }
+                }
+                return false;
+
+            });
+
         }
+
+        this.createArrayButtons2 = function(tab, pane){
+            //assert(true,'Interface -> createArrayButtons')
+            for(var i=0; i<tab.length; i++){
+                this.createForm2(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
+            }
+
+            $( "#sizemap" ).slider({ 
+                range: true,
+                min: 0,
+                max: 99,
+                values: [ 3, 12 ],
+                change: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                },
+                slide: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                }
+            });
+        }
+
+        this.createForm2 = function(menuPane, id, title, tab, event){
+            //assert(true,'Interface -> createForm')
+            if (tab!=''){
+                fam = $('<li/>',{class:'form tglForm'}).appendTo('#'+menuPane);
+                $('<a/>',{text:title}).appendTo(fam)
+                var param = $('<div/>', {class:'formParam'}).appendTo(fam)
+                console.log(id)
+                for (var i = 0; i < tab.length; i++) {
+                    this.createElement(tab[i][0], tab[i][1], param, tab[i][2], tab[i][3])
+                    this.createElement('br', null, '#'+id)
+                }
+                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, param)
+                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
+            }
+            else{
+                fam = $('<li/>', {class:'form'}).appendTo('#'+menuPane);
+                var button = $('<a/>',{text:title}).appendTo(fam)
+                $(button).click(event.click);
+            }
+        }
+
 
         this.infoPane = function(){
             //assert(true,'Interface -> infoPane')
             var menu = this.addPanelMenu('Informations');
             var content = $("#"+menu +" .menu-content");
-            
+            var tgbutton = $('#'+menu).find('.toggleButton')
+            $('<h3/>',{text:'Informations'}).appendTo(tgbutton);
             
             $('<div/>', {id:'entanglement-cont'}).appendTo('#'+content.attr('id'))
             $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
 
 
             document.getElementById('entanglement-cont').innerHTML += 
-                    "<div id='bg'></div>"+
-                    "<div id='entanglement'><p>Entanglement:</br>" + 
-                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";
+                "<div id='bg'></div>"+
+                "<div id='entanglement'>" +
+                    "<p>ENTANGLEMENT:</br>" + 
+                        "<ul type='none' style:'margin-top:2px'>" +
+                            "<li>Intensity: <text id='intensity'></text></br></li>" + 
+                            "<li>Homogeneity: <text id='homogeneity'></text></li>" +
+                        "</ul>" +
+                    "</p>" +
+                "</div>";
 
             $('<div/>', {id:'infoNodes'}).appendTo('#'+content.attr('id'));
-            
-
-            //affichage par défaut
-            //this.addInfoButton(contxt.activeView);
-
         }
 
-       /** this.infoPane = function(){
-            var menu = this.addPanelMenu('Informations');
-            var content = $("#"+menu +" .menu-content");
-
-            $('<div/>', {id:'infoView'}).appendTo('#'+content.attr('id'));
-            //affichage par défaut
-            //this.addInfoButton(contxt.activeView);
-
-        }*/
         this.visuPane = function(pane){
             //assert(true,'Interface -> visuPane')
             var menu = this.addPanelMenu('');
             var content = $("#"+menu +" .menu-content");
+            var tgbutton = $('#'+menu).find('.toggleButton')
+            $('<h3/>',{}).appendTo(tgbutton);
 
             /*$.jPicker.List[0]=null
             $.jPicker.List[1]=null
@@ -914,7 +974,9 @@
            $('#colorBg').jPicker({
                 window:{
                     expandable: true,
-                    position:{x:250, y:0},
+                    position:{x:100, y:0},
+                    title:null,
+
                 }
             });
            /*$('#colorLabel').jPicker({
@@ -1002,25 +1064,7 @@
                 }
             });
         }
-        // [id,title,[params],{event}, family],
-        /*this.createArrayButtons = function(tab, pane){
 
-            for(var key in tab){
-                this.createElement('p', {class:'header-form', text:key}, '#'+pane)
-                var cnt = this.createElement('div', {toto:key, class:"accordion"}, '#'+pane)
-
-
-                                console.log('TOTO')
-                console.log(tab[key])
-                for(var i=0; i<tab[key].length; i++){  
-                    console.log(tab[key][i][0]) 
-                    this.createForm(key, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])    
-               }
-//                $('<p/>',{class:'header-form', text:'TOTO'}).appendTo(pane)
-                //this.createForm(pane, key, '', '', tab[key][i][3])
-            }
-            $('#'+pane).accordion('refresh')
-        }*/
 
         this.callbackMenu = function(param, event){
             assert(false,'Interface -> call')

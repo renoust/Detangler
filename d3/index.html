@@ -30,19 +30,42 @@
                     return
             }
 
+            $(document).ready( function (e) {
+                $(".submenu:not('.open_at_load')").hide();
+                $("li.hmenu > a").click( function (e) {
+                    if ($(this).next("ul.submenu:visible").length != 0) {
+                        $(this).next("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                    }
+                    else {
+                        $("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                        console.log()
+                        $(this).next("ul.submenu").slideDown("normal", function () { $(this).parent().addClass("open") } );
+                    }
+                    e.preventDefault();
+                });
+                /*$('ul.submenu').mouseout(function(){
+                    $(this).slideUp("normal", function () { $(this).parent().removeClass("open") } );
+
+                })*/
+                $('#opfile').click(function(e){
+                    $('#files').click();
+                    e.preventDefault();
+                })
+
+            }); 
             
         </script>
 
         <div id='header'>
             <div id='header-content'>
-<!--            <button id='undo'> Undo</button><button id='redo'> Redo</button>--> 
+            <button id='redo'> Redo</button> <button id='refresh'> Refresh</button><button id='undo'> Undo</button>
     			<div id='header-logo'>TulipPosy</div>
                 <ul id='menu'>
-                    <li><a href="#">File</a>
-                        <ul>
-                            <li><a href="#" id='opfile'>Open File</a></li>
-                            <li><a href="#" >Analyse <input id='analyse' type='checkbox'></input></a></li>
-                            <li><a href="#" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
+                    <li class='hmenu'><a href="">File</a>
+                        <ul class='submenu'>
+                            <li><a  href="" id='opfile'>Open File</a></li>
+                            <li><a href="" >Analyse <input id='analyse' type='checkbox'></input></a></li>
+                            <li><a href="" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -57,31 +80,7 @@
             <input id="files" type="file">
         </div>
         
-        <script>
 
-            $('#opfile').click(function(e){
-                $('#files').click();
-            });
-
-            $("#menu").menu({
-                position:{using:positionnerSousMenu}
-            });
-
-            $("#menu > li > a > span.ui-icon-carat-1-e").removeClass("ui-icon-carat-1-e").addClass("ui-icon-carat-1-s");
-
-            function positionnerSousMenu(position,elements){
-                var options = { of:elements.target.element };
-                if(elements.element.element.parent().parent().attr("id")==="menu"){
-                    options.my="center top";
-                    options.at="center bottom";
-                } else {
-                    options.my="left top";
-                    options.at ="right top";
-                }
-                elements.element.element.position(options);
-            };
-
-        </script>
     	<script type="text/javascript" src="load.js"></script>
     </body>
 </html>

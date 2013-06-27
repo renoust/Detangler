@@ -29,9 +29,9 @@
 
             if (TP.Context().view[target].getShowLinks()) {
                 svg.selectAll('g.link').attr("visibility", "visible");
-                $('.ui-accordion-header').each(function(){if($(this).text()==='show links'){$(this).text('hide links')} })
+                $('li.form > a').each(function(){if($(this).text()==='Show links'){$(this).text('Hide links')} })
             } else {
-                $('.ui-accordion-header').each(function(){if($(this).text()==='hide links'){$(this).text('show links')} })
+               $('li.form > a').each(function(){if($(this).text()==='Hide links'){$(this).text('Show links')} })
                 svg.selectAll('g.link').attr("visibility", "hidden");
             }
         }
@@ -315,7 +315,7 @@
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     return "visible";
                 });
-                $('.ui-accordion-header').each(function(){if($(this).text()==='show labels'){$(this).text('hide labels')} })                
+                $('li.form > a').each(function(){if($(this).text()==='Show labels'){$(this).text('Hide labels')} })                
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
 
@@ -323,7 +323,7 @@
                         return "hidden";
 
                 });
-                $('.ui-accordion-header').each(function(){if($(this).text()==='hide labels'){$(this).text('show labels')} })
+                $('li.form > a').each(function(){if($(this).text()==='Hide labels'){$(this).text('Show labels')} })
             }
         }
 

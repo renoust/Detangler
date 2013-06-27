@@ -63,7 +63,7 @@ var TulipPosy = function (originalJSON) {
 	var array1 = [
         ['b1','Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, "Layout"],
         ['b2','Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
-	['b20','MDS layout', '',{click:function(){objectReferences.ClientObject.callLayout('MDS', target)}}, "Layout"],
+        // ['b20','MDS layout', '',{click:function(){objectReferences.ClientObject.callLayout('MDS', target)}}, "Layout"],
 
 	['b3','Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, "Selection"],
         ['b4','Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, "Selection"],
@@ -149,21 +149,24 @@ var TulipPosy = function (originalJSON) {
     $('#undo').click(function(){TP.Context().changeStack.undo();});
     $('#redo').click(function(){TP.Context().changeStack.redo();});    
 
-
+    
+    
 // Event toggle sidebars
-
+   
     $('div.toggleButton').click(function(e){
-
-        var src = event.srcElement.parentNode;
+        var src = event.srcElement.parentNode.parentNode;
+        console.log(src)
         var menuNum = src.id.split('-')[1];
         var menu = $('#menu-'+menuNum);
+        console.log(menu)
+        console.log($(src))
         var parent = src.parentNode;
         var button = $(this);
         if(parent.className==='nosidebar'){
-            console.log('TOTO')
             button.eq(0).toggleClass('open')
-            button.text('<');
-            parent.className='sidebar';
+            /*button.text('<');*/
+            $(parent).eq(0).toggleClass('nosidebar sidebar')
+            //parent.className='sidebar';
             $('.cont').each(function(){
                 $(this).css('left',0)
             })
@@ -172,26 +175,27 @@ var TulipPosy = function (originalJSON) {
         else if(parent.className==='sidebar'){
             
             if(menu.css('z-index')==102){
-                console.log('TATA')
-                button.text('>');
+                /*button.text('>');*/
                 button.eq(0).toggleClass('open')
-                parent.className = 'nosidebar';
+                
+                //console.log($(parent))
+                $(parent).eq(0).toggleClass('nosidebar sidebar')
+  //              parent.className = 'nosidebar';
                 $('.cont').each(function(){
                     $(this).css('z-index',0)
                     $(this).css('left',-252)
                 })
             }
             else{
-                console.log('TUTU')
                 $('.toggleButton').each(function(){ 
-                    $(this).text('>') 
+                    /*$(this).text('>') */
 
                     console.log($(this).eq(0).className)
                     $(this).eq(0).removeClass('open')
                 })
                 $('.cont').each(function(){ $(this).css('z-index',101) })
                 menu.css('z-index',102);
-                button.text('<')
+                /*button.text('<')*/
                 button.eq(0).toggleClass('open')
                 //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
 

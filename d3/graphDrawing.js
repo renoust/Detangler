@@ -557,7 +557,7 @@
 
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph
-
+            console.log(params)
 
             var scaleMin = 3.0
             var scaleMax = 12.0
@@ -596,8 +596,10 @@
                 return scale(eval('d.' + parameter));
 
             })
+            //error: d n'a plus de ViewMetric par défaut...
             node.select("rect.node")
                 .attr("width", function (d) {
+                    console.log(d)
                     return 2 * scale(eval('d.' + parameter))
                 })
                 .attr("height", function (d) {
