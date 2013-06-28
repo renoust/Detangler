@@ -10,9 +10,12 @@
 import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
+import_class('Controller.js','TP');
+import_class('StateTree.js', 'TP')
 
 var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
-
+	
+	var tabTypeEvent = [];
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
 
@@ -51,6 +54,34 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
    	
    	var graphDrawing = null;
    	
+
+   	//var tmpPosX = null;
+   	//var tmpPosY = null;
+   	//var posX = null;
+   	//var posY = null;
+   	//var typeEvent = null;
+   	
+   	/*
+   	this.getPosition = function (x, y, typeEvt)
+   	{
+	   	tmpPosX = posX;
+	   	tmpPosY = posY;
+	   	posX = x;
+	   	posY = y;
+	   	
+	   	var typeEvent = typeEvt;
+	   	
+	   	console.log("In view : " + posX + " , " + posY + " type : "+ typeEvent);
+	   	//console.log(posX);
+	   	//console.log(posY);
+   	}*/
+   	
+   	
+   	
+	this.setTypeEvent = function(name, typeEvent)
+	{
+		tabTypeEvent[name] = typeEvent;
+	}   	
    	
     this.getGraphDrawing = function()
     {    	
@@ -227,12 +258,21 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	}		
 
 
-	this.addView = function() {
+	this.addView = function() {		
+		     	 	
+     	 controller = new TP.Controller();
+     	 if(controller != null)
+     	 	controller.initListener(ID, "view");
+		
+		//TP.Context().setStypeEventByDefault(ID);
 		
 		var hashButton = new Object();
 		
 		if(bouton != null){
-			for(var p = 0; p < bouton.length; p++)
+			
+			var end = bouton.length;
+			
+			for(var p = 0; p < end; p++)
 			{
 				console.log(bouton[p][4]);
 				
@@ -292,6 +332,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    //console.log(dialog);
 	
 	    dialog.dialog({
+	    	id:"btn-cancel",
 	        height: TP.Context().dialogHeight,
 	        width: TP.Context().dialogWidth,    
 	        position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,/*{my: "center", at: "center", of: "#container"}*/
@@ -314,14 +355,22 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        var interact = $(this).button("option","label");
 	        if (interact=="Move")   { $(this).button("option", "label", "Select");}
 	        else                    { $(this).button("option", "label", "Move");}
-	        TP.Context().stateStack[ID].executeCurrentState();
+	        //TP.Context().stateStack[ID].executeCurrentState();
+	        TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
 	    });
+	    
+	    
+	    $('#toggle' + ID).attr("idView", ID);
+	    
+	    //$("#toggle"+ID).click(function(event){event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase:event.data}, event]);})
+	    
+	    
 
 	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
 	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
 		dialog.dialog({minWidth:minWidth+ 25}) 
 	    
-	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
+	    if (typeView === "substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
 
 	    dialog.parent().click(function(){ 
 	    	var oldID=TP.Context().activeView
@@ -447,7 +496,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	                .append("svg")
 	                .attr("width", "100%")
 	                .attr("height", "100%")
-	                .attr("id", tabDataSvg[4]);
+	                .attr("id", tabDataSvg[4])
+	         		.attr("idView", ID);
+	         
+	         	
 
 	                //.attr("viewBox", "0 0 500 600");
 	                
@@ -479,6 +531,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
      	 
      	 if(typeView === "substrate" || typeView === "catalyst" || typeView === "combined" )
      	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
+     	 
+
+//     	 d3.select("#zone"+ID)[0][0].addEventListener("mousedown", function(){TP.Context().getViewEvent(this.id.split("zone")[1]);}, false);
+//     	 d3.select("#zone"+ID)[0][0].addEventListener("mouseup", function(){TP.Context().delSelectionView();}, false);
 	}
 	
 	     this.buildLinks = function(){
@@ -510,6 +566,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	     this.remove = function() {
 	     	
 	     	d3.select("#zone"+ID).remove();
+	     	controller.remove();
 	     	
 		    tabDataSvg = null;
 		    viewGroup = null;
