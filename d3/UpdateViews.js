@@ -143,8 +143,10 @@
 			
 
             TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
-            TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
-			TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst"); 
+            //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
+            TP.Controller().sendMessage("arrangeLabels", null, viewID, viewID);
+			//TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst");
+			TP.Controller().sendMessage("arrangeLabels", null, "catalyst", "catalyst");
 
         }
 

@@ -18,8 +18,10 @@
         var objectReferences = TP.ObjectReferences();
 
 
-        this.showhideLinks = function (target) {
-
+        this.showhideLinks = function (event) {
+			
+			var target = event.associatedData.source;
+			
             if (!target)return
 
             var svg = null
@@ -72,7 +74,7 @@
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
         }
-
+/*
         this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code
             var matrixData = [];
             nbNodes = TP.Context().view[target].getGraph().nodes().length;
@@ -213,10 +215,13 @@
                 })
             })
         }
+*/
 
 
-
-        this.resetView = function (target) {
+        this.resetView = function (event) {
+        	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 			
@@ -249,7 +254,13 @@
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }
 
-        this.resetSize = function (target) {
+
+
+
+        this.resetSize = function (event) {
+        	        	       	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 
@@ -263,7 +274,13 @@
             TP.Context().view[target].getGraphDrawing().resize(cGraph, 0)
         }
 
-		this.rotateGraph = function (target) {
+
+
+
+		this.rotateGraph = function (event) {
+			
+			var target = event.associatedData.source;
+			
             var cGraph = null
             var svg = null
 
@@ -273,7 +290,10 @@
             TP.Context().view[target].getGraphDrawing().rotate(target,5)
         }
         
-        this.arrangeLabels = function (target) {
+        this.arrangeLabels = function (event) {
+        	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 
@@ -299,8 +319,10 @@
 
 
 
-        this.showhideLabels = function (target) {
-
+        this.showhideLabels = function (event) {
+			
+			var target = event.associatedData.source;
+			
             if (!target)
                 return
 
@@ -362,7 +384,12 @@
 
 
 
-        this.sizeMapping = function (parameter, graphName, scales) {
+        this.sizeMapping = function (event) {
+        	
+        	var parameter = event.associatedData.parameter;
+        	var idView = event.associatedData.idView;
+        	var scales = event.associatedData.scales;
+        	
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
@@ -370,11 +397,11 @@
             if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
 
-            svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().view[graphName].getGraph();
+            svg = TP.Context().view[idView].getSvg();
+            cGraph = TP.Context().view[idView].getGraph();
 
-            TP.Context().view[graphName].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
-            objectReferences.VisualizationObject.entanglementCaught(graphName);
+            TP.Context().view[idView].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
+            objectReferences.VisualizationObject.entanglementCaught(idView);
 
         };
 
@@ -395,7 +422,91 @@
         };
 
 
-        this.drawBarChart = function(target, smell){
+		this.mouseoverBarChartRect = function(event)
+		{
+		   var targetView = event.associatedData.targetView
+		   var obj = event.associatedData.obj
+		   var svg = event.associatedData.svg		   
+		   
+           obj.style('fill','red');
+           //if(click == 0){
+                            
+           //console.log(d3.select(this).data()[0]);
+           var value = obj.data()[0];
+                      
+           //console.log(value[1]);
+                            
+           var node = svg.selectAll("g.node")
+                      .select("g."+TP.Context().view[targetView].getType())
+                      .select(/*"rect"*/TP.Context().view[targetView].getViewNodes())                
+                      .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
+                      .style("fill", "red");
+                      //.enter()
+                            
+              //console.log(node);            
+            //}			
+		}
+
+		this.mouseoutBarChartRect = function(event)
+		{
+			
+		   var targetView = event.associatedData.targetView;
+		   var obj = event.associatedData.obj;
+		   var svg = event.associatedData.svg;
+		   var tabClick = event.associatedData.tabClick;
+			
+			var value = obj.data()[0];
+                            
+            // console.log(value[2]);
+            // console.log("tableau : "+tabClick[""+value[2]]);
+                            
+            if(tabClick[""+value[2]] == 0){
+                obj.style('fill',"#4682b4");
+               	               
+           		var node = svg.selectAll("g.node")
+                 			.select("g."+TP.Context().view[targetView].getType())
+                            .select(TP.Context().view[targetView].getViewNodes())                
+                            .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
+                            .style("fill", TP.Context().view[targetView].getNodesColor());   
+                                
+            }			
+			
+		}
+
+
+		this.mouseclickBarChartRect = function(event)
+		{
+			
+		    var obj = event.associatedData.obj;
+		    var tabClick = event.associatedData.tabClick;
+			
+            //click = 1;
+            var value = obj.data()[0];
+                        
+            //console.log(value[2]);
+            //console.log("tableau1 : "+tabClick[""+value[2]]);
+                        
+            if(tabClick[""+value[2]] == 1){
+                  tabClick[""+value[2]] = 0;
+            }
+            else {
+                 if(tabClick[""+value[2]] == 0){
+                      tabClick[""+value[2]] = 1;
+                 }
+            }
+                  
+            //console.log("tableau2 : "+tabClick[""+value[2]]);
+            obj.style('fill','red');
+            
+		}
+		
+
+        this.drawBarChart = function(event){
+        	
+        	
+        	var target = event.associatedData.source;
+        	var smell = event.associatedData.smell;
+        	
  
             var svg = null
             svg = TP.Context().view[target].getSvg();
@@ -408,8 +519,9 @@
                         
             var tabClick = [];            
             
-            
-            for (i = 0; i < metric.length; i++)
+            var end = metric.length;
+                        
+            for (i = 0; i < end; i++)
             {
                tabClick[""+metric[i]+""] = 0;
             }
@@ -595,68 +707,151 @@
                         
                 chart.selectAll("rect")                     
                     .on('mouseover', function(d,i) {
-                            d3.select(this).style('fill','red');
-                            //if(click == 0){
-                            
-                            //console.log(d3.select(this).data()[0]);
-                            var value = d3.select(this).data()[0];
-                            
-                            //console.log(value[1]);
-                            
-                            var node = svg.selectAll("g.node")
-                                .select("g."+TP.Context().view[target].getType())
-                                .select("rect")                
-                                .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                .style("fill", "red");
-                                //.enter()
-                            
-                            //console.log(node);            
-                        //}
+						TP.Context().view[id].getController().sendMessage("mouseoverBarChartRect", {obj:d3.select(this), targetView:target, svg:svg})
                     })
-                   .on('mouseout', function(d,i) {
-                    
-                            var value = d3.select(this).data()[0];
-                            
-                            // console.log(value[2]);
-                            // console.log("tableau : "+tabClick[""+value[2]]);
-                            
-                            if(tabClick[""+value[2]] == 0){
-                                
-                                d3.select(this).style('fill',"#4682b4");
-                                
-                                
-                                var node = svg.selectAll("g.node")
-                                    .select("g."+TP.Context().view[target].getType())
-                                    .select("rect")                
-                                    .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                    .style("fill", TP.Context().view[target].getNodesColor());   
-                                
-                            }               
-    
+                   .on('mouseout', function(d,i) {               
+    					TP.Context().view[id].getController().sendMessage("mouseoutBarChartRect", {obj:d3.select(this), targetView:target, svg:svg, tabClick:tabClick})
                     })
                     .on('click', function(d,i) {
-                        //click = 1;
-                        var value = d3.select(this).data()[0];
-                        
-                        //console.log(value[2]);
-                        //console.log("tableau1 : "+tabClick[""+value[2]]);
-                        
-                        if(tabClick[""+value[2]] == 1){
-                            tabClick[""+value[2]] = 0;
-                        }
-                        else {
-                            if(tabClick[""+value[2]] == 0){
-                                tabClick[""+value[2]] = 1;
-                            }       
-                        }           
-                        //console.log("tableau2 : "+tabClick[""+value[2]]);
-                        d3.select(this).style('fill','red');                    
+                    	TP.Context().view[id].getController().sendMessage("mouseclickBarChartRect", {obj:d3.select(this), tabClick:tabClick})               
                     });
               
         }
         
         
-        this.drawScatterPlot = function(target){
+        this.mouseoverScatterPlot = function(event)
+        {
+        	
+        	var selection = event.associatedData.obj;
+        	var targetView = event.associatedData.targetView;
+        	var scatter = event.associatedData.scatter;
+        	var svg = event.associatedData.svg;
+        	var id = event.associatedData.id;
+        	var x = event.associatedData.x;
+        	var y = event.associatedData.y;
+            
+            selection.style('fill','red');
+            
+            var valeurx = selection[0][0].cx.animVal.value;
+
+            var tab = selection.data()[0];
+
+            // var svgbis = d3.select("scatterPlotsubstrate");
+            var dataTab = [[tab[0], tab[1]]];
+                      
+            //console.log(scatterP);
+                      
+            scatter.selectAll("text.scatterPlot"+id)
+                   .data(dataTab)
+                   .enter()
+                   .append("text")
+                   .classed("scatterPlot"+id, true)
+                   .style("fill", "red")                       
+                   .text(function(d) {
+                         //console.log("titi : "+d[0]);
+                         return "x : "+d[0]+", y : "+d[1];
+                   })
+                   .attr("x", function(d) {
+                        //console.log(d[0]);
+                        return x(d[0]);
+                   })
+                   .attr("y", function(d) {
+                        //console.log(d[1]);
+                        return y(d[1])-5;
+                   })
+                                  
+                   //console.log("mouseover : " + tab[0] );
+                   //console.log(valeurx-50);
+                        
+            var node = svg.selectAll("g.node")
+                       .select("g."+TP.Context().view[targetView].getType())
+                       .select(TP.Context().view[targetView].getViewNodes())                
+                       .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
+                       .style("fill", "red");
+                         	
+        }
+        
+
+        this.mouseoutScatterPlot = function(event)
+        {
+        	
+        	var selection = event.associatedData.obj;
+        	var targetView = event.associatedData.targetView;
+        	var scatter = event.associatedData.scatter;
+        	var svg = event.associatedData.svg;
+        	var id = event.associatedData.id;
+        	var tabClick = event.associatedData.tabClick;
+			
+            var tab = selection.data()[0];
+                  
+            //console.log("mouseout : " + tab[0] );
+                                
+            var result = tab[3];
+                    
+                                
+            scatter.selectAll("text.scatterPlot"+id)
+                   .data([])
+                   .exit()
+                   .remove();
+                                              
+            if(tabClick[""+result] == 0){   
+                                    
+                selection.style('fill',"#4682b4");
+                            
+                var node = svg.selectAll("g.node")
+                    .select("g."+TP.Context().view[targetView].getType())
+                    .select(TP.Context().view[targetView].getViewNodes())                
+                    .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
+                    .style("fill", TP.Context().view[targetView].getNodesColor());   
+                    
+            }             
+        }
+        
+
+        this.mouseclickScatterPlot = function(event)
+        {
+        	
+        	var selection = event.associatedData.obj;
+        	var tabClick = event.associatedData.tabClick;
+        	
+            var tab = selection.data()[0];
+
+            var result = tab[3];
+                    
+            if(tabClick[""+result] == 1){
+                 tabClick[""+result] = 0;                        
+            }
+            else {
+                if(tabClick[""+result] == 0){
+                    tabClick[""+result] = 1;
+                }       
+            }
+        }
+        
+        this.zoomScatterPlot = function(event){
+            
+            var scatter = event.associatedData.scatter;
+            var xAxis = event.associatedData.xAxis;
+            var yAxis = event.associatedData.yAxis;
+        	var x = event.associatedData.x;
+        	var y = event.associatedData.y;            
+            var id = event.associatedData.id;
+            
+            scatter.selectAll(".x_axis_scatterPlot"+id)
+                 .call(xAxis);
+                        
+            scatter.selectAll(".y_axis_scatterPlot"+id)
+                 .call(yAxis);       
+                        
+            scatter.selectAll("circle")           
+                 .attr("cx", function(d) { return x(d[0]); })
+                 .attr("cy", function(d) { return y(d[1]); })
+                 .attr("r", 3.5)                       
+        };         
+        
+        this.drawScatterPlot = function(event){
+        	
+        	var target = event.associatedData.source;
         	
             var svg = null
             svg = TP.Context().view[target].getSvg();
@@ -685,7 +880,9 @@
         
             var tabClick = [];
             
-            for (i = 0; i < metric.length; i++)
+            var end = metric.length;
+            
+            for (i = 0; i < end; i++)
             {
                var result = metric[i][3];
                //console.log("metric : " + result);
@@ -722,12 +919,17 @@
                .attr('height', "100%")             
                .append("g")
                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-            scatterP.call(d3.behavior.zoom().x(x).y(y).scaleExtent([0, Infinity]).on("zoom", zoomm));
-            
+             
             var xAxis = d3.svg.axis()
                 .scale(x)
                 .orient('bottom');
+            
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient('left');  
+                           
+            scatterP.call(d3.behavior.zoom().x(x).y(y).scaleExtent([0, Infinity]).on("zoom", function(){TP.Context().view[id].getController().sendMessage("zoomScatterPlot", {id:id, x:x, y:y, scatter:scatterP, xAxis:xAxis, yAxis:yAxis})}));
+
                 
             scatter.append('g')
                   .attr("class", "x_axis_scatterPlot"+id)
@@ -741,11 +943,7 @@
                   .attr("x", width)
                   .attr("y", -6)
                   .style("text-anchor", "end")
-                  .text(axesNames[0]);
-            
-            var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient('left');        
+                  .text(axesNames[0]);      
             
             
             scatter.append('g')
@@ -773,108 +971,15 @@
                .style("stroke", "#000")
                .style("fill", "steelblue")
                .on('mouseover', function(d) {
-                    var selection = d3.select(this);
-                    selection.style('fill','red');
-
-                      var valeurx = this.cx.animVal.value;
-
-                      
-                      var tab = selection.data()[0];
-
-                     // var svgbis = d3.select("scatterPlotsubstrate");
-                      
-                      var dataTab = [[tab[0], tab[1]]];
-                      
-                      //console.log(scatterP);
-                      
-                      
-                      scatter.selectAll("text.scatterPlot"+id)
-                        .data(dataTab)
-                        .enter()
-                        .append("text")
-                        .classed("scatterPlot"+id, true)
-                        .style("fill", "red")                       
-                       .text(function(d) {
-                             //console.log("titi : "+d[0]);
-                             return "x : "+d[0]+", y : "+d[1];
-                       })
-                       .attr("x", function(d) {
-                            //console.log(d[0]);
-                            return x(d[0]);
-                       })
-                       .attr("y", function(d) {
-                            //console.log(d[1]);
-                            return y(d[1])-5;
-                       })
-                                    
-                        //console.log("mouseover : " + tab[0] );
-                        //console.log(valeurx-50);
-                        
-                        var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().view[target].getType())
-                            .select("rect")                
-                            .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", "red");
-                       
+ 					TP.Context().view[id].getController().sendMessage("mouseoverScatterPlot", {id:id, obj:d3.select(this), targetView:target, scatter:scatter, svg:svg, x:x, y:y})
                 })
                .on('mouseout', function(d) {
-                
-                    var selection = d3.select(this);
-                    var tab = selection.data()[0];
-                    
-                    //console.log("mouseout : " + tab[0] );
-                    
-                    var result = tab[3];
-                    
-                                
-                    scatter.selectAll("text.scatterPlot"+id)
-                         .data([])
-                         .exit()
-                         .remove();
-                                                
-                    if(tabClick[""+result] == 0){   
-                                    
-                        selection.style('fill',"#4682b4");
-                            
-                        var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().view[target].getType())
-                            .select("rect")                
-                            .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", TP.Context().view[target].getNodesColor());   
-                    
-                    }                   
+               		TP.Context().view[id].getController().sendMessage("mouseoutScatterPlot", {id:id, obj:d3.select(this), targetView:target, scatter:scatter, svg:svg, tabClick:tabClick})             
                 })
                 .on('click', function(d,i) {
                     //click = 1;
-                    var tab = d3.select(this).data()[0];
-
-                    var result = tab[3];
-                    
-                    if(tabClick[""+result] == 1){
-                        tabClick[""+result] = 0;                        
-                    }
-                    else {
-                        if(tabClick[""+result] == 0){
-                            tabClick[""+result] = 1;
-                        }       
-                    }   
-                                        
-                });
-                
-                function zoomm(){
-                    
-                    scatter.selectAll(".x_axis_scatterPlot"+id)
-                        .call(xAxis);
-                        
-                    scatter.selectAll(".y_axis_scatterPlot"+id)
-                        .call(yAxis);       
-                        
-                    scatter.selectAll("circle")           
-                       .attr("cx", function(d) { return x(d[0]); })
-                       .attr("cy", function(d) { return y(d[1]); })
-                       .attr("r", 3.5)
-                       
-                };                              
+                   TP.Context().view[id].getController().sendMessage("mouseclickScatterPlot", {obj:d3.select(this), tabClick:tabClick})               
+                });                              
         
         } 
    

@@ -17,9 +17,42 @@
         <script type="text/javascript" src="View.js"></script>
         <script type="text/javascript" src="testView.js"></script>
         <script type="text/javascript" src="TulipPosy.js"></script>
+
+		<script>
+			/*
+			import_class('context.js', 'TP');
+			
+			
+			function reg() {
+			  window.captureEvents(Event.MOUSEDOWN);
+			  window.onmousedown = page;
+			  
+			  window.captureEvents(Event.MOUSEMOVE);
+			  window.onmousemove = page;
+			  
+			  window.captureEvents(Event.MOUSEUP);
+			  window.onmouseup = page;			  
+			  
+			  window.captureEvents(Event.MOUSEOVER);
+			  window.onmouseup = page;
+			  
+			  window.captureEvents(Event.MOUSEOUT);
+			  window.onmouseup = page;
+			  
+			}
+			
+			function page(event) {
+			 
+				TP.Context().getEvent(event); 
+			    
+			}*/
+			
+			
+		</script>
+
     </head>
     
-    <body>
+	<body>
         <script>
             // This function removes an element of the page by its id
             function remove(id) {
@@ -51,14 +84,20 @@
 
         <div id="wrap" class="sidebar" >
             <div id="container"></div>
-        </div> 
+        </div>
            
         <div style="opacity:0;display:none;">
             <input id="files" type="file">
         </div>
         
+        <div id="Controller"></div>
+        
         <script>
-
+			
+			//$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
+			
+			TP.Context().initController("principal", "principal");
+			
             $('#opfile').click(function(e){
                 $('#files').click();
             });

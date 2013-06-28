@@ -11,7 +11,7 @@
 
     import_class('context.js', 'TP');
     import_class("objectReferences.js", "TP");
-
+	import_class("Controller.js", 'TP');
 
     var Interface = function () {
         var __g__ = this;
@@ -162,6 +162,7 @@
         // positionNumber, the position at which we want to place the buttons
         // One button triggers the other one on or off, and refers to the 
         // global mode variable 'move_mode' or 'select_mode'
+        /*
         this.addGraphInteractorButtons = function (target, positionNumber) {
             var cGraph = null
             var svg = null
@@ -308,7 +309,7 @@
                 .style("fill", TP.Context().defaultTextColor)
                 .style("font-family", TP.Context().defaultTextFont)
                 .style("font-size", TP.Context().defaultTextSize)
-        }
+        }*/
 
 
         this.addInfoButton = function (target) {
@@ -446,9 +447,12 @@
         // target, the string value of the target svg view
         this.toggleSelectMove = function (target) {
             if (!target) return
-
+			
+			var view = null;
+			view = TP.Context().view[target];
+			
             var svg = null
-            svg = TP.Context().view[target].getSvg();
+            svg = view.getSvg();
 			
             //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
             //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
@@ -464,7 +468,10 @@
             if(TP.Context().view[target].getSelectMode()) {            	
                 svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor); 
-                objectReferences.InteractionObject.addLasso(target);
+                //objectReferences.InteractionObject.addLasso(target);
+                
+                view.getController().sendMessage("select"); //send Message "select" to the StateController
+                
                 objectReferences.InteractionObject.removeZoom(target);
             }
 
@@ -478,7 +485,7 @@
             }
         }
 
-
+/*
         this.addSettingsButton = function (target) {
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
             svg = TP.Context().view[target].getSvg();
@@ -567,14 +574,15 @@
                     })
             })
         }
-
+*/
 
         // Adds a button to a specific interface with its callback
         // target, the string of the svg interface to draw the button in
         // positionNumber, the position at which we want to place the button
         // buttonLabel, the label of the button
         // className, the name of the class assigned to the button
-        // callback, the callback function associated to the button click        
+        // callback, the callback function associated to the button click   
+        /*     
         this.addButton = function(target,positionNumber,buttonLabel,className,callback){
             var cGraph = null
             var svg = null
@@ -631,7 +639,7 @@
                 .style("fill", TP.Context().defaultTextColor)
                 .style("font-family", TP.Context().defaultTextFont)
                 .style("font-size", TP.Context().defaultTextSize)
-        }
+        }*/
 
 
         this.attachInfoBox = function () {
@@ -666,12 +674,16 @@
                 });*/
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    objectReferences.InterfaceObject.addInfoBox(d)
+                    //objectReferences.InterfaceObject.addInfoBox(d)
+                    TP.Controller().sendMessage("mouseoverInfoBox", {node:d}, "principal", "undifined")
                 });
         }
 
 
-        this.addInfoBox = function (node) {
+        this.addInfoBox = function (event) {
+        	
+        	var node = event.associatedData.node;
+        	
             document.getElementById('infoNodes').innerHTML = "<p>Node Informations: </p>"
             $('<p/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
             $('<p/>', {text:node.label}).appendTo('#infoNodes')
@@ -1033,7 +1045,10 @@
             if (tab!=''){
                 var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
                 this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
-                for (var i = 0; i < tab.length; i++) {
+                
+                var end = tab.length;
+                
+                for (var i = 0; i < end; i++) {
                     this.createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
                     this.createElement('br', null, '#'+id)
                 }
@@ -1058,7 +1073,10 @@
 
             }*/
            for(var key in tab){
-	       	   for(var i=0; i<tab[key].length; i++){	
+           		
+           		var end = tab[key].length;
+           		
+	       	   for(var i=0; i<end; i++){	
 	               this.createForm(pane, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])	
 	           }
            }
@@ -1116,7 +1134,10 @@
             })
 
             data = btn.siblings("input[type='text']")
-            for(var i=0; i<data.length; i++){
+            
+            var end = data.length;
+            
+            for(var i=0; i<end; i++){
                 key = data[i].name;
                 val = data[i].value;
                 res[key] = val;
@@ -1125,7 +1146,10 @@
             data = btn.siblings('.slider');
             var data2 = btn.siblings('.slider');
             console.log(data)
-            for(var i=0; i<data.length; i++){
+            
+            end = data.length;
+            
+            for(var i=0; i<end; i++){
                 key = 'valMin'+i
                 val = data.eq(i).slider("values",0);
                 res[key] = val;

@@ -8,7 +8,8 @@
 
     import_class("graph.js", "TP");
     import_class('States.js', 'TP');
-    import_class('StatesChange.js', 'TP');  
+    import_class('StatesChange.js', 'TP');
+    import_class('Controller.js', 'TP');
 
     var Context = function () {
         var __g__ = this;
@@ -17,6 +18,8 @@
         if (Context.prototype._singletonInstance) {
             return Context.prototype._singletonInstance;
         }
+        
+        this.controller = new TP.Controller();
 		
 		this.viewMeter = 0;
 		
@@ -72,6 +75,7 @@
         
 		this.tabOperator["catalyst"] = "OR";
         this.tabOperator[1] = "OR";
+        
 
         this.getViewGraph = function (viewID) {
                 return __g__.tabGraph["graph_"+viewID];
@@ -88,8 +92,9 @@
         
         this.clearInterface = function()
         {
+        	
         	if(this.menuNum != 1){
-	        		
+        	
 	        	d3.selectAll(".ui-dialog").remove();
 	        	d3.selectAll(".cont").remove();
 	        	d3.selectAll(".jPicker").remove();
@@ -118,6 +123,16 @@
 	        	this.stateStack = [];
         	
         	}
+        }
+        
+        this.initController = function(ID, typeC)
+        {        	
+        	this.controller.initListener(ID, typeC);
+        }
+        
+        this.getController = function()
+        {
+        	return this.controller;
         }
 
         return __g__;
