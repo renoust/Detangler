@@ -62,7 +62,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
    	//var typeEvent = null;
    	
    	/*
-   	this.getPosition = function (x, y, typeEvt)
+   	__g__getPosition = function (x, y, typeEvt)
    	{
 	   	tmpPosX = posX;
 	   	tmpPosY = posY;
@@ -78,43 +78,43 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
    	
    	
    	
-	this.setTypeEvent = function(name, typeEvent)
+	__g__.setTypeEvent = function(name, typeEvent)
 	{
 		tabTypeEvent[name] = typeEvent;
 	}   	
    	
-    this.getGraphDrawing = function()
+    __g__.getGraphDrawing = function()
     {    	
     	return graphDrawing;
     }
       	
     
-    this.getGroup = function()
+    __g__.getGroup = function()
     {    	
     	return viewGroup;
     }
     
-    this.viewInitialized = function()
+    __g__.viewInitialized = function()
     {
     	return viewInitialized;
     }
     
-    this.getGraph = function()
+    __g__.getGraph = function()
     {
     	return graph;
     }
     
-    this.getName = function()
+    __g__.getName = function()
     {
     	return name;
     }
     
-    this.getID = function(){    	
+    __g__.getID = function(){    	
     	//return name;
     	return ID;    	
     }    
     
-    this.setAssociatedView = function(linkType, view)
+    __g__.setAssociatedView = function(linkType, view)
     {
        	if(tabLinks[linkType] != null)
     	{
@@ -127,7 +127,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     }
     
     
-    this.getAssociatedView = function(linkType)
+    __g__.getAssociatedView = function(linkType)
     {
     	if(tabLinks[linkType] != null){
     		if(tabLinks[linkType].length != 0)
@@ -141,124 +141,124 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     
     
     
-    this.getType = function()
+    __g__.getType = function()
     {
     	return typeView;
     }
             
     
-    this.getDataTranslation = function(){    	
+    __g__.getDataTranslation = function(){    	
     	return DataTranslation;    	
     }
     
-    this.setDataTranslation = function(value){    	
+    __g__.setDataTranslation = function(value){    	
     	DataTranslation = value;    	
     }
     
     
-    this.setMetric_BC = function(value){    	
+    __g__.setMetric_BC = function(value){    	
     	metric_BC = value;    	
     }
     
-    this.getMetric_BC = function(){    	
+    __g__.getMetric_BC = function(){    	
     	return metric_BC;    	
     }
     
-    this.setMetric_SP = function(value){    	
+    __g__.setMetric_SP = function(value){    	
     	metric_SP = value;    	
     }
     
-    this.getMetric_SP = function(){    	
+    __g__.getMetric_SP = function(){    	
     	return metric_SP;    	
     }
     
-    this.setLasso = function(value){	
+    __g__.setLasso = function(value){	
 		lasso = value;    	
     }
     
-    this.getLasso = function(value){    	
+    __g__.getLasso = function(value){    	
     	return lasso;    	
     }
     
-    this.getController = function(){    	
+    __g__.getController = function(){    	
     	return controller;    	
     }
 
-	this.getSvg = function(){		
+	__g__.getSvg = function(){		
 		return svg;		
 	}
 	
-	this.getNodesColor = function(){		
+	__g__.getNodesColor = function(){		
 		return nodesColor;		
 	}
 	
-	this.setNodesColor = function(value){		
+	__g__.setNodesColor = function(value){		
 		nodesColor = value;		
 	}	
 
-	this.getLinksColor = function(){		
+	__g__.getLinksColor = function(){		
 		return linksColor;		
 	}
 	
-	this.setLinksColor = function(value){		
+	__g__.setLinksColor = function(value){		
 		linksColor = value;		
 	}
 	
-	this.getBgColor = function(){		
+	__g__.getBgColor = function(){		
 		return bgColor;		
 	}
 
-	this.setBgColor = function(value){		
+	__g__.setBgColor = function(value){		
 		bgColor = value;		
 	}
 
-	this.getViewNodes = function(){		
+	__g__.getViewNodes = function(){		
 		return viewNodes;		
 	}
 	
-	this.getSelectMode = function(){		
+	__g__.getSelectMode = function(){		
 		return selectMode;		
 	}
 	
-	this.setSelectMode = function(value){		
+	__g__.setSelectMode = function(value){		
 		selectMode = value;		
 	}
 	
-	this.getMoveMode = function(){		
+	__g__.getMoveMode = function(){		
 		return moveMode;		
 	}
 	
-	this.setMoveMode = function(value){		
+	__g__.setMoveMode = function(value){		
 		moveMode = value;		
 	}
 	
-	this.getShowLabels = function(){		
+	__g__.getShowLabels = function(){		
 		return showLabels;		
 	}
 	
-	this.setShowLabels = function(value){		
+	__g__.setShowLabels = function(value){		
 		showLabels = value;		
 	}
 	
 	
-	this.getShowLinks = function(){		
+	__g__.getShowLinks = function(){		
 		return showLinks;		
 	}
 	
-	this.setShowLinks = function(value){		
+	__g__.setShowLinks = function(value){		
 		showLinks = value;		
 	}	
 	
-	this.getNodeInformation = function(){		
+	__g__.getNodeInformation = function(){		
 		return nodeInformation;		
 	}
 	
-	this.setNodeInformation= function(value){		
+	__g__.setNodeInformation= function(value){		
 		nodeInformation = value;		
 	}		
 
 
-	this.addView = function() {		
+	__g__.addView = function() {		
 		     	 	
      	 controller = new TP.Controller();
      	 if(controller != null)
@@ -477,15 +477,17 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		        nodeInformation = true;           
 	           
 	            TP.Interaction().createLasso(ID);
-	            TP.Interaction().addZoom(ID);
+	            //TP.Interaction().addZoom(ID);
+	            TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
+	          //  __g__.getController().sendMessage("select");
 	            
 	            if(typeView == "substrate"){
 	           		//objectReferences.InteractionObject.addZoom(target);
 	                //TP.Interface().addEntanglementFeedback(ID);
-	           }
-	            TP.Context().stateStack[ID] = new TP.States();
-	            TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
-	            TP.Context().stateStack[ID].executeCurrentState();             
+	            }
+	            //TP.Context().stateStack[ID] = new TP.States();
+	            //TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
+	            //TP.Context().stateStack[ID].executeCurrentState();             
 	        }
 	    }    
 	    
@@ -533,11 +535,11 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
      	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
      	 
 
-//     	 d3.select("#zone"+ID)[0][0].addEventListener("mousedown", function(){TP.Context().getViewEvent(this.id.split("zone")[1]);}, false);
+//     	 d3.select("#zone"+ID)[0][0].addEventListener("mousedown", function(){TP.Context().getViewEvent(__g__.id.split("zone")[1]);}, false);
 //     	 d3.select("#zone"+ID)[0][0].addEventListener("mouseup", function(){TP.Context().delSelectionView();}, false);
 	}
 	
-	     this.buildLinks = function(){
+	     __g__.buildLinks = function(){
 		     if(idAssociation != null)	{
 		            		
 		            		if(typeView !== "combined"){
@@ -563,7 +565,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		     }
 	     }
 	     
-	     this.remove = function() {
+	     __g__.remove = function() {
 	     	
 	     	d3.select("#zone"+ID).remove();
 	     	controller.remove();
@@ -614,11 +616,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		   	idAssociation = null;
 		   	graphDrawing = null;	     	
 	     }
-		
-
-//utilisé pour test nombre View
-	
-
 
     return __g__;
 

@@ -13,7 +13,8 @@
         var typeC = null;
         
 		var StateTree = null;
-		var eventHandlerObject = null; 
+		var eventHandlerObject = null;
+						
 		var currentState = null;
 				
         __g__.addEvent = function(name, type, fn)
@@ -58,22 +59,102 @@
         		console.log(tabInit[key]);
         		__g__.addEvent(listenerState, tabInit[key].name, tabInit[key].func);
         	}
-        	
+        	/*
         	var tmp = StateTree.getRoot();
         	
         	if((tmp != null) && (Object.getPrototypeOf(tmp) == Object.getPrototypeOf({})))
         		if(tmp.hasOwnProperty("name"))
-        	  		currentState = StateTree.getRoot().name;
+        	  		currentState = StateTree.getRoot().name;*/
+        	  		
+        	if(typeC = "view")
+        		currentState = "select"
+        }
+        
+        __g__.getStateAccess = function(cState)
+        {   
+        	
+        	console.log("currentState : "+currentState)
+        	
+        	var State = StateTree.getInfoState(cState);
+        	
+        	if(State.activate == false){
+        		return false;
+        	}
+        	else{
+	        	if(State.specialRoot === true)
+	        	{
+	        		if(State.root["all"] !== undefined)
+	        			return true;
+	        	}
+	        	else if(State.root[currentState] !== undefined)
+	        	{
+	        		return true;
+	        	}
+	        	else
+	        		return __g__.isBindingToAll(currentState);	//if state's bindings has "all" occurence, the state doesn't modifie currentState.
+	      }   
+        }
+        
+        __g__.isBindingToAll = function(cState)
+        {
+        	var State = StateTree.getInfoState(cState);
+        	return State.bindings["all"] !== undefined;
+        }
+        
+        __g__.transitionState = function(cState)
+        {
+        	var State = StateTree.getInfoState(cState);
+        	
+        	if(State.useless !== true) 
+        		currentState = cState;
         }
         
         __g__.getTree = function()     
         {
-        	return StateTree.getStateTree(typeC);
+        	return StateTree.getStateTree();
         }
         
         __g__.sendMessage = function(messageName, object, targetController, source) //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principale"
         																			//same thing for view, type just the view ID("0", "1", "2")
         {
+        	
+        	if(source != null && targetController == null)
+        	{
+        		assert(false, "error !!!! source is specified, but not targetController");
+        		return;
+        	}	
+        	
+        	var access = null;
+        	var tmpController = null;
+        	
+        	if(targetController != null)
+        	{
+        		if(targetController === "principal")
+        		{
+        			tmpController = TP.Context().getController();
+        			access = tmpController.getStateAccess(messageName);
+        		}
+        		else
+        		{
+        			tmpController = TP.Context().view[targetController].getController();
+        			access = tmpController.getStateAccess(messageName);
+        		}
+        	}
+        	else
+        	{
+        		tmpController = __g__;
+				access = tmpController.getStateAccess(messageName);    		
+        	}
+        	
+        	if(access === false)
+        	{
+        		assert(false, "access denied : "+messageName);
+        		return;
+        	}         	
+        	
+        	
+        	tmpController.transitionState(messageName);
+        	
         	var event = new CustomEvent(messageName);
         	if(object != null){
         		event.associatedData = object;        		
@@ -96,13 +177,18 @@
         	if(targetController == null)    	 
         		document.getElementById(listenerState).dispatchEvent(event);
         	else
-        		document.getElementById("handlerState"+targetController).dispatchEvent(event);        		
+        		document.getElementById("handlerState"+targetController).dispatchEvent(event);
+        	    		
         }
         
         __g__.remove = function()
         {
         	d3.select("#"+listenerState+"").remove();
         }
+        
+        
+        
+        
                 
         
         return __g__;

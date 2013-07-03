@@ -181,6 +181,10 @@
      			TP.Context().view[tabCatalyst[0]] = new TP.View(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], idView);
                	TP.Context().view[tabCatalyst[0]].buildLinks();
                 TP.Context().view[tabCatalyst[0]].addView();
+                
+                assert(false,"......................................................");
+                console.log(TP.Context().view[tabCatalyst[0]].getController().getTree());
+                
             }        	
         	
         	//assert(true, "analyseGraph");
@@ -190,7 +194,11 @@
                 target: idView,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
-                        
+            			
+			assert(false, "idView : "+idView);  
+			console.log(TP.Context().view[idView]);
+			console.log(TP.Context().view[idView].getController());
+			
             TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery",{params:params}, "principal");
             
         }
@@ -203,10 +211,12 @@
            var source = event.associatedData.source;
            var params = event.associatedData.params;
            
+           console.log("succes")
+           
            __g__.sendQuery({
                parameters: params,
                success: function (data) {
-               	   	
+               	   
                    TP.Context().getController().sendMessage("answerAnalyseGraph",{data:data}, source);
         	       
                 }
@@ -289,6 +299,7 @@
         	var idView = event.associatedData.idView;
         	var layoutName = event.associatedData.layoutName;
 
+			
             //save for undo
             //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
            // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}

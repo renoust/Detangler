@@ -516,20 +516,11 @@
         // Applies the lasso interactor to a specific svg target as callback
         // to the mouse events.
         // target, the string value of the target svg view         
-        this.addLasso = function (object) {
-            if (!object)
-                return
+        this.addLasso = function (event) {
             
             var target = null;
             
-            if(typeof object.associatedData == "object"){
-            	if(!object.associatedData.source)
-            		return;
-            	else
-            		target = object.associatedData.source;
-            }
-            else
-            	target = object;
+            target = event.associatedData.source;
             	
            	console.log("target : " + target)
             
@@ -563,20 +554,18 @@
         // Removes the lasso interactor from a specific svg target's callbacks 
         //to its mouse events.
         // target, the string value of the target svg view         
-        this.removeLasso = function (target) {
+        this.removeLasso = function (event) {
 
-			//console.log("calling remove LASSO"); 
-            if (!target)
-                return
+            var target = null;
+            
+            target = event.associatedData.source;
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
             svg.on("mouseup", null);
             svg.on("mousedown", null);
-            svg.on("mousemove", null);
-            
-            
+            svg.on("mousemove", null);           
 
         }
         
@@ -587,6 +576,8 @@ this.runZoom = function(event){
      var target = event.associatedData.source;
      var wheelDelta = event.associatedData.wheelDelta;
      var mousePos = event.associatedData.mousePos;
+     
+     assert(true, "wheelData : "+wheelDelta)
      
 	 if (!TP.Context().view[target].getMoveMode())            
 	     return;
@@ -739,10 +730,11 @@ this.runZoom = function(event){
         
         // Adds a zoom interactor to a specific svg target as callbacks to its 
         //mouse events.       
-        this.addZoom = function(target){
+        this.addZoom = function(eventt){
         	
-			if (!target)
-               return
+			var target = null;
+			
+			target = eventt.associatedData.source;
 
             var svg = null;
             var cGraph = null;
@@ -751,7 +743,10 @@ this.runZoom = function(event){
 			cGraph = TP.Context().view[target].getGraph();
        		
 			svg.on("mousewheel", function(){
-				TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta:event.wheelDelta, mousePos:null});
+				
+				var value = event.wheelDelta;
+				
+				TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta:value, mousePos:null});
 			});	
 			//svg.on("drag", movingZoom(target));
 			
@@ -792,9 +787,11 @@ this.runZoom = function(event){
         // to its mouse events.
         // target, the string value of the target svg view         
         this.removeZoom = function (target) {
-            if (!target)
-                return
-
+        	
+            var target = null;
+            
+            target = event.associatedData.source;
+            
             var svg = null
             svg = TP.Context().view[target].getSvg();
 

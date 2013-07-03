@@ -472,7 +472,7 @@
                 
                 view.getController().sendMessage("select"); //send Message "select" to the StateController
                 
-                objectReferences.InteractionObject.removeZoom(target);
+                //objectReferences.InteractionObject.removeZoom(target);
             }
 
             //if(eval("TP.Context().move_mode_"+target)) {
@@ -480,8 +480,13 @@
                 //svg.style("cursor", "all-scroll");
                 svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
-                objectReferences.InteractionObject.removeLasso(target);
-                objectReferences.InteractionObject.addZoom(target);
+                //objectReferences.InteractionObject.removeLasso(target);
+                //objectReferences.InteractionObject.addZoom(target);
+                
+                view.getController().sendMessage("move");
+                
+                
+                
             }
         }
 
