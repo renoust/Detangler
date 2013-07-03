@@ -1,7 +1,11 @@
 /********************************** Left Menu ***********************************/
+li{
+	overflow: auto;
+}
+
 #wrap .cont{ 
 	position: absolute;
-	width: 250px;
+	width: 300px;
 	height: 100%;
 	top: 0px;
 	margin-left: 0px; 
@@ -168,3 +172,5 @@ p{
 	margin: 0;
 	padding: 0 0 0 20;
 }
+
+/************************** Menu : VIsualisation ********************************/

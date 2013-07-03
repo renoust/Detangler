@@ -179,7 +179,7 @@
       
               })
             .on("dragend", function(){
-                        console.log("mouseDown, mouseDown");
+                        //console.log("mouseDown, mouseDown");
                         //g.arrangeLabels();
                         //if(saveUndo == 1){
                             
@@ -308,25 +308,22 @@
         g.drawLabels = function(){	
 			return;                  // return???
             //console.log("drawLabels " + g.svg.attr("id"));
-            var labelNode = g.svg.selectAll("text.node")
+            /*var labelNode = g.svg.selectAll("text.node")
                 .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
                 .attr("class", function(d){return d._type})
                 .classed("text", true)
-                     
-                     
+                .style("fill", TP.Context().view[currentViewID].getLabelsColor())
+            console.log(TP.Context().view[currentViewID].getLabelsColor())
+            console.log("GraphDrawing -> drawLabels")
             var labelContent= labelNode
                 .append("text")
                 .attr("class", function(d){return "node" + d.baseID + " " + d._type})
                 .classed("node", true).classed("text", true)
                 .attr("dx", function(d){return d.currentX})
                 .attr("dy", function(d){return d.currentY})
-                //.style("stroke", "black")
-                // .style("stroke", context.labelColor)
-                // .style("stroke-width", 0.5)
-                // .style("font-family", "Arial")
-                // .style("font-size", 12)
-                .text(function(d) { return d.label; });
-            g.arrangeLabels();     
+                .text(function(d) { console.log(d); return d.label; });
+                console.log(labelNode)
+            g.arrangeLabels();     */
 
 		}
         
@@ -557,7 +554,7 @@
 
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph
-            console.log(params)
+            //console.log(params)
 
             var scaleMin = 3.0
             var scaleMax = 12.0
@@ -599,7 +596,7 @@
             //error: d n'a plus de ViewMetric par défaut...
             node.select("rect.node")
                 .attr("width", function (d) {
-                    console.log(d)
+                    //console.log(d)
                     return 2 * scale(eval('d.' + parameter))
                 })
                 .attr("height", function (d) {
@@ -677,6 +674,9 @@
             }else if(elem==="bg"){
                 $("#zone"+graphName).css("background-color", color);
             }else if(elem==="label"){
+                var labels = g.svg.selectAll("text.node.text")
+                    .style('fill',function (d) {return d3.rgb(color);})
+                    .style('stroke',function (d) {return d3.rgb(color);});
                 g.drawLabels();
                 //var label = g.svg.selectAll("g.text").style('fill',color);
             }else{
@@ -776,6 +776,7 @@
             
             g.svg.selectAll("text.node")
                 .style("opacity", 0.5)
+
                                
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
@@ -927,8 +928,8 @@
                     return true;
                 return false;
             }
-
-            var labels = g.svg.selectAll("text.node").attr("visibility", "visible");
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            var labels = g.svg.selectAll("text.node").attr("visibility", "visible").style("fill", TP.Context().view[currentViewID].getLabelsColor());
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")

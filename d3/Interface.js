@@ -51,271 +51,8 @@
         }
 
 
-        // This function adds a small frame that displays the entanglement informations while they are updated
-        // target, the string of the svg interface to draw the frame in
-        this.addEntanglementFeedback = function (target) {
-            assert(false,'Interface -> addEntanglementFeedback')
-            // if pour éviter la recopie si on charge u autre fihier --> nouvelle solutio à voir
-            /* $("<div/>", {
-                id:"entanglement",
-                style:"background-color: #fdd0a2;"
-            }).appendTo("#entanglement-cont");*/
-
-            document.getElementById('menu-2').innerHTML += 
-                "<div id='entanglement-cont'>"+
-                    "<div id='bg'></div>"+
-                    "<div id='entanglement'><span>Entanglement:</br>" + 
-                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></span></div>"+
-                "</div>"
-
-            /*if ($("#entanglement")[0].innerHTML!=="") {$("#entanglement")[0].innerHTML=""};
-            $("#entanglement")[0].innerHTML += "<div id='entanglement-cont'><p>Entanglement:</br>" + 
-                "<ul type='none'><li>Intensity: <text id='intensity'></text></br></li>" + 
-                "<li>Homogeneity: <text id='homogeneity'></text></li></ul></p></div>";*/
-
-            /*var cGraph = null
-            var svg = null
-
-            //document.getElementById("").innerHTML = "<p>Name: " + target + "</p>";
-            svg = TP.Context().view(target).getSvg();
-            cGraph = TP.Context().getViewGraph(target);
-
-            var coh = svg.selectAll("rect entanglement")
-                .data(["entanglement"])
-                .enter()
-                .append('g')
-                .attr("transform", function (d) {
-                    return "translate(" + 10 + "," + 395 + ")";
-                })
-
-            coh.append("rect")
-                .attr("class", "entanglementframe")
-                .classed("interfaceButton", 1)
-                .attr("width", 120)
-                .attr("height", 90)
-                .style("fill-opacity", 0)
-                .style("stroke-width", 1)
-                .style("stroke", 'black')
-
-            coh.append("text")
-                .attr('class', 'entanglementlabel')
-                .classed("interfaceButton", 1)
-                .attr("dx", 5)
-                .attr("dy", 15)
-                .text("Entanglement")
-                .style("fill", 'black')
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-
-            coh.append("text")
-                .attr('class', 'intensitylabel')
-                .classed("interfaceButton", 1)
-                .attr("dx", 10)
-                .attr("dy", 35)
-                .text("intensity:")
-                .style("fill", 'black')
-                .style("font-size", TP.Context().defaultTextSize)
-                .style("font-family", TP.Context().defaultTextFont)
-
-            coh.append("text")
-                .attr('class', 'intensity')
-                .classed("interfaceButton", 1)
-                .attr("dx", 110)
-                .attr("dy", 50)
-                .text(function (d) {
-                    return "" + TP.Context().entanglement_intensity
-                })
-                .style("fill", 'blue')
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-                .style('text-anchor', 'end')
-
-            coh.append("text")
-                .attr('class', 'homogeneitylabel')
-                .classed("interfaceButton", 1)
-                .attr("dx", 10)
-                .attr("dy", 70)
-                .attr("width", 120)
-                .style("font-family", TP.Context().defaultTextFont)
-                .text('homogeneity:')
-                .style("font-size", TP.Context().defaultTextSize)
-                .style("fill", 'black')
-                
-            coh.append("text")
-                .attr('class', 'homogeneity')
-                .classed("interfaceButton", 1)
-                .attr("dx", 110)
-                .attr("dy", 85)
-                .text(function (d) {                   
-                    return "" + TP.Context().entanglement_homogeneity
-                })
-                .style('text-anchor', 'end')
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("fill", 'blue')
-                .style("font-size", TP.Context().defaultTextSize)
-                */
-        }
-
-
-        // This function adds the graph interactor buttons (move and select) 
-        // to a target interface.
-        // target, the string of the svg interface to draw the buttons in
-        // positionNumber, the position at which we want to place the buttons
-        // One button triggers the other one on or off, and refers to the 
-        // global mode variable 'move_mode' or 'select_mode'
-        this.addGraphInteractorButtons = function (target, positionNumber) {
-            assert(false,'Interface ->addGraphInteractorButtons')
-            var cGraph = null
-            var svg = null
-
-            svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().view[target].getGraph();
-
-            var btMove = svg.selectAll("rect.moveButton")
-                .data([{
-                    text: "move",
-                    colorOver: TP.Context().defaultFillColor,
-                    colorOut: TP.Context().highlightFillColor
-                }])
-                .enter()
-                .append('g')
-                .attr("class", "moveButton")
-                .classed("interfaceButton", 1)
-                .attr("transform", function (d) {
-                    return "translate(" + 10 + "," + (10+25*positionNumber) + ")";Entan
-                })
-                .on("click", function (d) {
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", "yellow");
-                    //objectReferences.InterfaceObject.toggleSelectMove(target);
-                    TP.Context().stateStack[target].executeCurrentState();
-                })
-                .on("mouseover", function (d) {
-                    TP.Context().mouse_over_button = true;
-                    if (!TP.Context().view[target].getMoveMode()) {
-                        d.colorOver = TP.Context().highlightFillColor;
-                        d.colorOut = TP.Context().defaultFillColor;
-                    } else {
-                        d.colorOver = TP.Context().defaultFillColor;
-                        d.colorOut = TP.Context().highlightFillColor;
-                    }  
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", d.colorOver);
-                })
-
-                .on("mouseout", function (d) {
-                    TP.Context().mouse_over_button = false;
-                    if (!TP.Context().view[target].getMoveMode()) {
-                        d.colorOver = TP.Context().highlightFillColor;
-                        d.colorOut = TP.Context().defaultFillColor;
-                    } else {
-                        d.colorOver = TP.Context().defaultFillColor;
-                        d.colorOut = TP.Context().highlightFillColor;
-                    }
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", d.colorOut);
-                })
-
-            btMove.append("rect")
-                .attr("class", "moveButton")
-                .classed("interfaceButton", 1)
-                .attr("width", 120)
-                .attr("height", 20)
-                .style("fill", TP.Context().highlightFillColor)
-                .style("stroke-width", TP.Context().defaultBorderWidth)
-                .style("stroke", TP.Context().defaultBorderColor)
-
-            btMove.append("text")
-                .attr("class", "moveButton")
-                .classed("interfaceButton", 1)
-                .attr("dx", 5)
-                .attr("dy", 15)
-                .text(function (d) {
-                    return d.text
-                })
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-size", TP.Context().defaultTextSize)
-
-            var btSelect = svg.selectAll("rect.selectButton")
-                .data([{
-                    text: "select",
-                    colorOver: TP.Context().highlightFillColor,
-                    colorOut: TP.Context().defaultFillColor
-                }])
-                .enter()
-                .append('g')
-                .attr("class", "selectButton")
-                .classed("interfaceButton", 1)
-                .attr("transform", function (d) {
-                    return "translate("+10+","+(10+25*(positionNumber+1))+")";
-                })
-                .on("click", function (d) {
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", "yellow");
-                    //objectReferences.InterfaceObject.toggleSelectMove(target);
-                    TP.Context().stateStack[target].executeCurrentState();
-                })
-                .on("mouseover", function (d) {
-                    TP.Context().mouse_over_button = true;
-                    var select_mode = TP.Context().view[target].getSelectMode();
-                    //if (!eval("TP.Context().select_mode_" + target)) {
-                    if (!select_mode) {
-                        d.colorOver = TP.Context().highlightFillColor;
-                        d.colorOut = TP.Context().defaultFillColor;
-                    } else {
-                        d.colorOver = TP.Context().defaultFillColor;
-                        d.colorOut = TP.Context().highlightFillColor;
-                    }
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", d.colorOver);
-                })
-                .on("mouseout", function (d) {
-                    TP.Context().mouse_over_button = false;
-                    var select_mode = TP.Context().view[target].getSelectMode();
-                    //if (!eval("TP.Context().select_mode_" + target)) {
-                    if (!select_mode) {
-                        d.colorOver = TP.Context().highlightFillColor;
-                        d.colorOut = TP.Context().defaultFillColor;
-                    } else {
-                        d.colorOver = TP.Context().defaultFillColor;
-                        d.colorOut = TP.Context().highlightFillColor;
-                    }
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", d.colorOut);
-                })
-
-            btSelect.append("rect")
-                .attr("class", "selectButton")
-                .classed("interfaceButton", 1)
-                .attr("width", 120)
-                .attr("height", 20)
-                .style("fill", TP.Context().defaultFillColor)
-                .style("stroke-width", TP.Context().defaultBorderWidth)
-                .style("stroke", TP.Context().defaultBorderColor)
-            btSelect.append("text")
-                .attr("class", "selectButton")
-                .classed("interfaceButton", 1)
-                .attr("dx", 5)
-                .attr("dy", 15)
-                .text(function (d) {
-                    return d.text
-                })
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-        }
-
-
         this.addInfoButton = function (target) {
-            assert(false,'Interface -> addInfoButton')
+            //assert(true,'Interface -> addInfoButton')
             var cGraph = target.getGraph();
 
             var path = $('#files').val().split('\\');
@@ -323,110 +60,18 @@
             var view = target.getName().split('-')
             var type = view[view.length-1]
 
-            var zone = '#infoView'
-            document.getElementById('infoView').innerHTML = ''
-            /*$('<p/>', {text:'GLOBAL INFORMATIONS:'}).appendTo(zone);
-            $('<p/>', {text:'File:  '+ file}).appendTo(zone);
-            $('<p/>', {text:'View:  '+ type}).appendTo(zone);
-            $('<p/>', {text:' - '+ cGraph.nodes().length+' nodes'}).appendTo(zone);
-            $('<p/>', {text:' - '+ cGraph.links().length+' links'}).appendTo(zone);*/
-
-            document.getElementById('infoView').innerHTML +=
-                "<p> GLOBAL INFORMATIONS: </p>" +
+            $('#infoView').html("<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
                     "<li> File : "+ file + "</li>"+
                     "<li> View : "+ type + "</li>"+
                     "<li> - " + cGraph.nodes().length + " nodes </li>"+ 
                     "<li> - " + cGraph.links().length + " links </li>" +
-                "</ul>";
-            /*
-            var cGraph = null
-            var svg = null
-
-            svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().getViewGraph(target);
-
-            posInfo_x = TP.Context().width - 30
-            posInfo_y = TP.Context().height - 5
-            var btInfo = svg.selectAll("g.info")
-                .data(["`"])
-                .enter()
-                .append('g')
-                .attr("class", "info")
-                .classed("interfaceButton", 1)
-                .attr("transform", function () {
-                    return "translate(" + posInfo_x + "," + posInfo_y + ")";
-                })
-
-
-            btInfo.append("text")
-                .text(function (d) {
-                    return "`"
-                })
-                .style("fill", "lightgray")
-                .style("font-family", "EntypoRegular")
-                .style("font-size", 50)
-                .on("mouseover", function () {
-                    d3.select(this)
-                        .style("fill", "black")
-                })
-                .on("mouseout", function () {
-                    d3.select(this)
-                        .style("fill", "lightgray");
-                    svg.selectAll(".infoWindow")
-                        .data([])
-                        .exit()
-                        .remove();
-                })
-
-
-            btInfo.on("click", function () {
-                sGroup = svg.selectAll("infoWindow")
-                    .data(['WX'])
-                    .enter()
-                    .append("g")
-                    .attr("class", "infoWindow")
-                    .attr("transform", function () {
-                        return "translate(" + (posInfo_x - 120) + "," 
-                            + (posInfo_y - 40) + ")";
-                    })
-
-                sRect = sGroup.append("rect")
-                    .attr("class", "infoWindow")
-                    .attr("width", 120)
-                    .attr("height", 35)
-                    .style("fill", TP.Context().defaultFillColor)
-                    .style("stroke-width", TP.Context().defaultBorderWidth)
-                    .style("stroke", TP.Context().defaultBorderColor)
-
-                sGroup.append("text")
-                    .attr("class", "infoWindow")
-                    .attr("dx", 5)
-                    .attr("dy", 15)
-                    .text(function () {
-                        return "" + cGraph.nodes().length + " nodes"
-                    })
-                    .style("font-family", TP.Context().defaultTextFont)
-                    .style("fill", TP.Context().defaultTextColor)
-                    .style("font-size", TP.Context().defaultTextSize)
-
-                sGroup.append("text")
-                    .attr("class", "infoWindow")
-                    .attr("dx", 5)
-                    .attr("dy", 28)
-                    .text(function () {
-                        return "" + cGraph.links()
-                            .length + " links"
-                    })
-                    .style("font-family", TP.Context().defaultTextFont)
-                    .style("fill", TP.Context().defaultTextColor)
-                    .style("font-size", TP.Context().defaultTextSize)
-            })*/
+                "</ul>");
         }
 
 
         this.selectWeightProperty = function (group) {
-            assert(false,'Interface -> selectWeightProperty')
+            assert(true,'Interface -> selectWeightProperty')
             group.append("foreignObject")
                 .attr("x", 10)
                 .attr("y", 20)
@@ -451,7 +96,7 @@
 
 
         this.holdSVGInteraction = function (target) {
-            assert(false,'Interface -> holdSVGInteraction')
+            assert(true,'Interface -> holdSVGInteraction')
             objectReferences.InteractionObject.removeZoom(target);
             objectReferences.InteractionObject.removeLasso(target);
         }
@@ -464,19 +109,10 @@
             //assert(true,'Interface -> toggleSelectMove')
             if (!target) return
 
-            var svg = null
-            svg = TP.Context().view[target].getSvg();
-			
-            //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
-            //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
-            //TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
+            var svg = TP.Context().view[target].getSvg();
+
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
-            //TP.Context().tabMoveMode[target] = !TP.Context().tabMoveMode[target];
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
-            //console.log(!TP.Context().view[target].getSelectMode())
-            //console.log(!TP.Context().view[target].getMoveMode())
-            
-            //if(eval("TP.Context().select_mode_"+target)) {
             
             if(TP.Context().view[target].getSelectMode()) {            	
                 svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
@@ -485,9 +121,7 @@
                 objectReferences.InteractionObject.removeZoom(target);
             }
 
-            //if(eval("TP.Context().move_mode_"+target)) {
             if(TP.Context().view[target].getMoveMode()) {
-                //svg.style("cursor", "all-scroll");
                 svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
                 objectReferences.InteractionObject.removeLasso(target);
@@ -497,7 +131,7 @@
 
 
         this.addSettingsButton = function (target) {
-            assert(false,'Interface -> addSettingsButton')
+            assert(true,'Interface -> addSettingsButton')
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
             svg = TP.Context().view[target].getSvg();
             posSettings_x = TP.Context().width - 30
@@ -587,129 +221,23 @@
         }
 
 
-        // Adds a button to a specific interface with its callback
-        // target, the string of the svg interface to draw the button in
-        // positionNumber, the position at which we want to place the button
-        // buttonLabel, the label of the button
-        // className, the name of the class assigned to the button
-        // callback, the callback function associated to the button click        
-        this.addButton = function(target,positionNumber,buttonLabel,className,callback){
-            assert(false,'Interface -> addInfoButton')
-            var cGraph = null
-            var svg = null
-
-            svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().view[target].getGraph();
-
-            var bt = svg.selectAll("rect." + className)
-                .data([buttonLabel])
-                .enter()
-                .append('g')
-                .attr("class", className)
-                .classed("interfaceButton", 1)
-                .attr("transform", function (d) {
-                    return "translate(" + 10 + "," + (10+25*positionNumber)+")";
-                })
-                .on("click", function () {
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", "yellow");
-                    callback();
-                })
-                .on("mouseover", function () {
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", TP.Context().highlightFillColor);
-                    TP.Context().mouse_over_button = true;
-                })
-                .on("mouseout", function () {
-                    d3.select(this)
-                        .select("rect")
-                        .style("fill", TP.Context().defaultFillColor);
-                    TP.Context().mouse_over_button = false;
-                })
-
-            bt.append("rect")
-                .attr("class", className)
-                .classed("interfaceButton", 1)
-                .attr("width", 120)
-                .attr("height", 20)
-                .style("fill", TP.Context().defaultFillColor)
-                .style("stroke-width", TP.Context().defaultBorderWidth)
-                .style("stroke", TP.Context().defaultBorderColor)
-
-
-            bt.append("text")
-                .attr("class", className)
-                .classed("interfaceButton", 1)
-                .attr("dx", 5)
-                .attr("dy", 15)
-                .text(function (d) {
-                    return d
-                })
-                .style("fill", TP.Context().defaultTextColor)
-                .style("font-family", TP.Context().defaultTextFont)
-                .style("font-size", TP.Context().defaultTextSize)
-        }
-
-
         this.attachInfoBox = function () {
-            assert(false,'Interface -> attachInfoBox')
-            /*var cGraph = null
-            var svg = null
-
-            svg = TP.Context().view[target].getSvg();
-            cGraph = TP.Context().view[target].getGraph();
-
-            //eval("TP.Context().node_information_" + target + " = !TP.Context().node_information_" + target);
-			//TP.Context().tabNodeInformation[target] = !TP.Context().tabNodeInformation[target];
-            TP.Context().view[target].setNodeInformation(!TP.Context().view[target].getNodeInformation());
-
-            if (!TP.Context().view[target].getNodeInformation()) {
-                svg.selectAll("g.infoBox")
-                    .on("mouseout", function () {
-                        d3.select(this)
-                            .select("rect.infoBox")
-                            .style("fill", TP.Context().defaultFillColor);
-                        TP.Context().mouse_over_button = false;
-                    });
-                svg.selectAll("g.node").on("mouseover", null);
-                return
-            }
-
-            svg.selectAll("g.infoBox")
-                .on("mouseout", function () {
-                    d3.select(this)
-                        .select("rect.infoBox")
-                        .style("fill", TP.Context().highlightFillColor);
-                    TP.Context().mouse_over_button = false;
-                });*/
+            //assert(true, 'Interface -> attachInfoBox');
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    objectReferences.InterfaceObject.addInfoBox(d)
+                    //console.log(d)
+                     $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
+                    for(var k in d){
+                        //console.log(k, d[k])
+                        $('#infoNodes').append("<li><label style='font-weight:bold'>"+ k+ ":</label> "+ d[k] + "</li>");
+                    }
+                    $('#infoNodes').append("</ul>");
                 });
         }
 
 
-        this.addInfoBox = function (node) {
-            //assert(false,'Interface -> addInfoBox')
-            $('#infoNodes').empty()
-            //$('#infoNodes').css('border', '1px solid #666666')
-            document.getElementById('infoNodes').innerHTML +=
-                "<p> NODE INFORMATIONS: </p>" +
-                "<ul>" +
-                    "<li> ID: "+node.baseID+ "</li>"+
-                    "<li> "+ node.label+" </li>"+
-                "</ul>";
-            // $('<p/>', {style:'font-weight=bold', text:'NODE INFORMATIONS: '}).appendTo('#infoNodes');
-            // $('<span/>', {text:'ID: '+node.baseID}).appendTo('#infoNodes')
-            // $('<br/>').appendTo('#infoNodes')
-            // $('<span/>', {style:'padding-left:15px', text:node.label}).appendTo('#infoNodes')
-        }
-
-
         this.setCombinedForeground = function (target) {
-            assert(false,'Interface -> setCombinedForeground')
+            assert(true,'Interface -> setCombinedForeground')
             TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
@@ -737,7 +265,7 @@
 
 
         this.toggleCombinedForeground = function (target) {
-            assert(false,'Interface -> toggleCombinedForeground')
+            assert(true,'Interface -> toggleCombinedForeground')
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -749,40 +277,6 @@
         // gestion du menu à gauche
 
         
-        /*this.createMenu = function(nbPane){
-            for(i=0; i<nbPane; i++)
-                this.addPane();
-        }
-
-
-        this.addPane = function(){
-            menuNum =TP.Context().menuNum++;
-
-            $("<div/>", {
-                "class": "cont",
-                id: "menu-"+menuNum,
-            }).appendTo("#wrap");
-
-            $("<span/>", {
-                "class": "toggleButton",
-                id: "toggleBtn"+menuNum,
-                text: ">",
-                style:"top:"+40*menuNum+"px;",
-            }).appendTo("#menu-"+menuNum);
-
-            $('<div/>', {
-                class:'header-menu', 
-                text:header
-            }).appendTo('#menu-'+menuNum);
-
-            $('<div/>',{
-                id:'menu'+menuNum+'-content',
-                class:'menu-content',
-            }).appendTo('#menu-'+menuNum)
-            
-
-        }*/
-
         this.addPanelMenu = function(header){
             //assert(true,'Interface -> addPanelMenu')
 
@@ -795,8 +289,8 @@
         }
 
         this.interactionPane = function(buttons, mode){
-            var menu, tgbutton, content, fam;
-            var i=0;
+            //assert(true,'Interface -> interactionPane')
+            var menu, tgbutton, content, fam,i=0;
 
             if(mode==='update'){
                 for(i=0; i<contxt.menuNum;i++){
@@ -818,10 +312,11 @@
             i=0;
             $('<ul/>', {id:'nav'}).appendTo(content);
             for(var key in buttons){
+                //console.log(buttons)
                 fam = $('<li/>',{ class:'tglFamily'}).appendTo('#nav');
                 $('<a/>',{text:key}).appendTo(fam)
                 $('<ul/>',{id:'family-'+i, class:'family'}).appendTo(fam);
-                this.createArrayButtons2(buttons[key], 'family-'+i);
+                this.createArrayButtons(buttons[key], 'family-'+i);
                 i++;
             }
 
@@ -829,8 +324,7 @@
             $("li.tglFamily > a").click( function () {
                 if ($(this).next("ul.family:visible").length != 0) {
                     $(this).next("ul.family").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                }
-                else {
+                }else {
                     $("ul.family").slideUp("normal", function () { $(this).parent().removeClass("open") } );
                     $(this).next("ul.family").slideDown("normal", function () { $(this).parent().addClass("open") } );
                 }
@@ -840,70 +334,18 @@
             $("div.formParam:not('open_at_load')").hide();
 
             $("li.form > a").click(function(){
-                //console.log(this)
                 if($(this).parent().hasClass('tglForm')){
                     if ($(this).next("div.formParam:visible").length != 0) {
                         $(this).next("div.formParam").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                    }
-                    // Si le sous-menu est cache, on ferme les autres et on l'affiche :
-                    else {
+                    }else {
                         $("div.formParam").slideUp("normal", function () { $(this).parent().removeClass("open") } );
                         $(this).next("div.formParam").slideDown("normal", function () { $(this).parent().addClass("open") } );
                     }
                 }
                 return false;
-
             });
 
         }
-
-        this.createArrayButtons2 = function(tab, pane){
-            //assert(true,'Interface -> createArrayButtons')
-            for(var i=0; i<tab.length; i++){
-                this.createForm2(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
-            }
-
-            $( "#sizemap" ).slider({ 
-                range: true,
-                min: 0,
-                max: 99,
-                values: [ 3, 12 ],
-                change: function() {
-                    var value = $("#sizemap").slider("values",0);
-                    var value2 = $("#sizemap").slider("values",1);
-                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                },
-                slide: function() {
-                    var value = $("#sizemap").slider("values",0);
-                    var value2 = $("#sizemap").slider("values",1);
-                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                }
-            });
-        }
-
-        this.createForm2 = function(menuPane, id, title, tab, event){
-            //assert(true,'Interface -> createForm')
-            if (tab!=''){
-                fam = $('<li/>',{class:'form tglForm'}).appendTo('#'+menuPane);
-                $('<a/>',{text:title}).appendTo(fam)
-                var param = $('<div/>', {class:'formParam'}).appendTo(fam)
-                console.log(id)
-                for (var i = 0; i < tab.length; i++) {
-                    this.createElement(tab[i][0], tab[i][1], param, tab[i][2], tab[i][3])
-                    this.createElement('br', null, '#'+id)
-                }
-                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, param)
-                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
-            }
-            else{
-                fam = $('<li/>', {class:'form'}).appendTo('#'+menuPane);
-                var button = $('<a/>',{text:title}).appendTo(fam)
-                $(button).click(event.click);
-            }
-        }
-
 
         this.infoPane = function(){
             //assert(true,'Interface -> infoPane')
@@ -937,70 +379,48 @@
             var tgbutton = $('#'+menu).find('.toggleButton')
             $('<h3/>',{}).appendTo(tgbutton);
 
-            /*$.jPicker.List[0]=null
-            $.jPicker.List[1]=null
-            $.jPicker.List[2]=null*/
-
             var visu = content[0];
             var view = TP.Context().activeView;
 
-            visu.innerHTML += 
-                "Nodes: </br>" +
-                    "<span id='colorNode' ></span><!--<button id='shapeNode'>shape</button>--></br>"+
-                "Links: </br>" +
-                    "<span id='colorLink'></span><!--<button id='shapeLink'>shape</button>--></br>"+
-                "Background: </br>" +
+            visu.innerHTML +=   
+                '<form>'+
+                    '<div id="color">'+
+                        '<input type="radio" id="cnodes" name="color" class="colorwell"/><label for="radio1">Nodes Color</label><br/>'+
+                        '<input type="radio" id="clinks" name="color" class="colorwell"/><label for="clinks">Links Color</label><br/>'+
+                        '<input type="radio" id="cbg" name="color" class="colorwell"/><label for="cbg">Background Color</label><br/>'+
+                        '<input type="radio" id="clabels" name="color" class="colorwell"/><label for="clabels">Labels Color</label>'+
+                    '</div>'+
+                    "<div id='picker' ></div>"+
+                '</form>';
 
-                    "<span id='colorBg'></span> <span id='test' ></span> </br>"+
-                     "<button id='apply'>Apply</button> </br>"/*+
-                "Labels: </br>" +
-                    "<span id='colorLabel'></span> </br>"+
 
-                     "<button id='apply'>Apply</button> </br>"*/;
-
-            
-           $('#colorNode').jPicker({
-                window:{
-                    expandable: true, 
-                    position:{x:250, y:0},   
-                },
-            });
-           $('#colorLink').jPicker({
-                window:{
-                    expandable: true, 
-                    position:{x:250, y:0},
+            var f = $.farbtastic('#picker');
+            $('.colorwell').change(function(){
+                if($(this).hasClass('.colorwell-selected')){
+                    $(this).removeClass('colorwell-selected');
                 }
-            });
-           $('#colorBg').jPicker({
-                window:{
-                    expandable: true,
-                    position:{x:100, y:0},
-                    title:null,
-
+                else{
+                    $(this).addClass('colorwell-selected'); 
+                    $(this).siblings().each(function(){$(this).removeClass('colorwell-selected');})
                 }
-            });
-           /*$('#colorLabel').jPicker({
-                window:{
-                    expandable: true,
-                    position:{x:250, y:0},
+            })
+            f.linkTo(colorChange);
 
-                }
-
-            });  */  
-
-            $('#apply').click(function(){
-                /*contxt.labelColor = "#" + $.jPicker.List[3].color.active.val('hex');
-                console.log(contxt.labelColor)*/
-                    //console.log(TP.Context().view[TP.Context().activeView].getNodesColor(), $.jPicker.List[0].color.active.val('hex'))
-                    TP.Context().view[TP.Context().activeView].setNodesColor("#" + $.jPicker.List[0].color.active.val('hex'));
-                    TP.Context().view[TP.Context().activeView].setLinksColor("#" + $.jPicker.List[1].color.active.val('hex'));
-                    TP.Context().view[TP.Context().activeView].setBgColor("#" + $.jPicker.List[2].color.active.val('hex'));
+            function colorChange(){
+                if($('#cnodes').hasClass('colorwell-selected')){
+                    TP.Context().view[TP.Context().activeView].setNodesColor(f.color);
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "node", TP.Context().view[TP.Context().activeView].getNodesColor());
+                }else if($('#clinks').hasClass('colorwell-selected')){
+                    TP.Context().view[TP.Context().activeView].setLinksColor(f.color);
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "link", TP.Context().view[TP.Context().activeView].getLinksColor());
+                }else if($('#cbg').hasClass('colorwell-selected')){
+                    TP.Context().view[TP.Context().activeView].setBgColor(f.color);
                     objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "bg", TP.Context().view[TP.Context().activeView].getBgColor());
-            });
-            
-
+                }else if($('#clabels').hasClass('colorwell-selected')){
+                    TP.Context().view[TP.Context().activeView].setLabelsColor(f.color);
+                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "label", TP.Context().view[TP.Context().activeView].getLabelsColor());
+                }
+              }
         }
 
 
@@ -1009,42 +429,36 @@
             if(labelPrec) jQuery('<label/>', {text:labelPrec+' '}).appendTo(parentId);
             var elem = jQuery('<'+balise+'/>', attributes).appendTo(parentId);
             if(labelSuiv) jQuery('<label/>', {text:' '+labelSuiv}).appendTo(parentId);
-
             return elem;
         }
-        this.createForm = function(menuPane, id, title, tab, event){
-            //assert(true,'Interface -> createForm')
-            if (tab!=''){
-                var elem = this.createElement('p', {class:'header-form', text:title}, '#'+menuPane)
-                this.createElement('div', {class:'accordion', id:id}, '#'+menuPane)
-                for (var i = 0; i < tab.length; i++) {
-                    this.createElement(tab[i][0], tab[i][1], '#'+id, tab[i][2], tab[i][3])
-                    this.createElement('br', null, '#'+id)
-                }
 
-                this.createElement('button', {class:'submit', id:'submit-'+id, text:"Apply"}, '#'+id)
-                $('#submit-'+id).click(function(){objectReferences.InterfaceObject.callbackMenu('#submit-'+id, event)})
+        this.createArrayButtons = function(tab,pane){
+            var menu = pane;
+            var label,param,evnt;
 
-            }else{
-                var elem = this.createElement('p', {class:'buttonMenu', text:title}, '#'+menuPane)
-                elem.click(event.click)
-                this.createElement('div', {class:"button-collapsed"}, '#'+menuPane)
-            }
-
-            $('#'+menuPane).accordion('refresh')
-        }
-
-        this.createArrayButtons = function(tab, pane){
-            //assert(true,'Interface -> createArrayButtons')
             for(var i=0; i<tab.length; i++){
-                this.createForm(pane, tab[i][0], tab[i][1], tab[i][2], tab[i][3])
+                label = tab[i][0];
+                param = tab[i][1];
+                evnt = tab[i][2];
+
+                if (param==''){
+                    fam = $('<li/>', {class:'form'}).appendTo('#'+menu);
+                    button = $('<a/>',{text:label}).appendTo(fam)
+                    $(button).click(evnt.click);
+                }else{
+                    fam = $('<li/>',{class:'form tglForm'}).appendTo('#'+menu);
+                    $('<a/>',{text:label}).appendTo(fam)
+                    var form= $('<div/>', {class:'formParam'}).appendTo(fam)
+                    for (var j = 0; j < param.length; j++) {
+                        this.createElement(param[j][0], param[j][1], form, param[j][2], param[j][3])
+                        //this.createElement('br', null, '#'+id)
+                    }
+                    var submit = this.createElement('button', {class:'submit', text:"Apply"}, form)
+                    submit.click(function(e){return function(ev){objectReferences.InterfaceObject.callbackMenu(submit, e)}}(evnt))
+                }
             }
-            /*for(var key in tab){
-            	   for(var i=0; i<tab[key].length; i++){	
-                   this.createForm(pane, tab[key][i][0], tab[key][i][1], tab[key][i][2], tab[key][i][3])	
-               }
-            }*/
-           
+
+
             $( "#sizemap" ).slider({ 
                 range: true,
                 min: 0,
@@ -1066,49 +480,45 @@
         }
 
 
-        this.callbackMenu = function(param, event){
-            assert(false,'Interface -> call')
+        this.callbackMenu = function(param, evnt){
+            assert(true,'Interface -> call')
             var res = {}
             var key = null;
             var val = null;
-            var btn = $(param);
-            // console.log(btn.siblings('input'))
-            // console.log(btn.siblings('input[type="text"]')[0].name)
-            // console.log(btn.siblings('input[type="text"]')[0].value)
+            //var btn = $(param);
 
-            var data = btn.siblings("input[type='radio']:checked")
+            var data = param.siblings("input[type='radio']:checked")
             data.each(function(){
-                key = btn.attr('name');
-                res[key] = btn.val();
+                key = param.attr('name');
+                res[key] = param.val();
             })
 
-            data = btn.siblings('.ui-spinner')
+            data = param.siblings('.ui-spinner')
             data.each(function(){
-                key = btn.children('input').attr('name');       
-                val = btn.children('input')[0].value
+                key = param.children('input').attr('name');       
+                val = param.children('input')[0].value
                 res[key] = val;
             })
 
-            data = btn.siblings("input[type='checkbox']:checked")
+            data = param.siblings("input[type='checkbox']:checked")
             data.each(function(){
 
-                key = btn.attr('name');
+                key = param.attr('name');
                 if (res[key]==null)         
-                    res[key] = btn.val();
+                    res[key] = param.val();
                 else
-                    res[key] += ", "+btn.val();
+                    res[key] += ", "+param.val();
             })
 
-            data = btn.siblings("input[type='text']")
+            data = param.siblings("input[type='text']")
             for(var i=0; i<data.length; i++){
-                key = data[i].name;
+                key = 'text'+i;
                 val = data[i].value;
                 res[key] = val;
             }
 
-            data = btn.siblings('.slider');
-            var data2 = btn.siblings('.slider');
-            //console.log(data)
+            data = param.siblings('.slider');
+            var data2 = param.siblings('.slider');
             for(var i=0; i<data.length; i++){
                 key = 'valMin'+i
                 val = data.eq(i).slider("values",0);
@@ -1117,23 +527,9 @@
                 val = data.eq(i).slider("values",1);
                 res[key] = val;
             }
-
-            //console.log(res)
-
-
-            event.call(res)
+            evnt.call(res)
         
         }
-
-
-
-
-
-
-
-
-
-
 
         return __g__;
 

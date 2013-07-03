@@ -7,6 +7,11 @@ li{list-style-type:none}
 
 p{font-weight:bold;}
 
+td{
+	border: 1px solid black;
+	font-size: 0.7em
+}
+
 /********************************** Body *************************************/
 #wrap{
 	overflow: hidden;

@@ -11,7 +11,7 @@ import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
 
-var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
+var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC,view_nodes, type, idAssociation) {
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
@@ -25,6 +25,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     var nodesColor = nodesC;
     var linksColor = linksC;
     var bgColor = bgC;
+    var labelsColor = labelC;
     var viewNodes = null;
     var lasso = null;
     var DataTranslation = null;
@@ -205,6 +206,14 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		bgColor = value;		
 	}
 
+	this.getLabelsColor = function(){
+		return labelsColor;
+	}
+
+	this.setLabelsColor = function(value){
+		labelsColor = value;
+	}
+
 	this.getViewNodes = function(){		
 		return viewNodes;		
 	}
@@ -260,12 +269,12 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 			{
 				//console.log(bouton[p][4]);
 				
-				if(hashButton[bouton[p][4]] != null){
-					hashButton[bouton[p][4]].push(bouton[p]);
+				if(hashButton[bouton[p][3]] != null){
+					hashButton[bouton[p][3]].push(bouton[p]);
 				}
 				else{
-					hashButton[bouton[p][4]] = [];
-					hashButton[bouton[p][4]].push(bouton[p]);
+					hashButton[bouton[p][3]] = [];
+					hashButton[bouton[p][3]].push(bouton[p]);
 				}
 				
 			}
@@ -399,9 +408,11 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorBg);       
 	        //console.log($.jPicker.List[0])
 	        //console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
-	        $.jPicker.List[0].color.active.val('hex', nodesColor);
-	        $.jPicker.List[1].color.active.val('hex', linksColor);
-	        $.jPicker.List[2].color.active.val('hex', bgColor);
+	        //$.jPicker.List[0].color.active.val('hex', nodesColor);
+	        //$.jPicker.List[1].color.active.val('hex', linksColor);
+	        //$.jPicker.List[2].color.active.val('hex', bgColor);
+	        
+	        //$("#color1").css("text",nodesColor)
 
 	        //TP.ObjectReferences().Interface().addInfoButton(ID);
 	    });

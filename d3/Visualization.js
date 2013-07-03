@@ -426,7 +426,7 @@
             //console.log("iddddddddddddddddddddddd : "+id)
             
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
-            new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
+            new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null, null,  "barchart", target);
             
             console.log(TP.Context().view[id]);
             
@@ -678,7 +678,7 @@
             var id = ""+TP.Context().getIndiceView();
             
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
-            new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+id), "Scatter_Plot_"+TP.view[target].getName(), null, null, null, null, "scatter_plot", target);  
+            new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+id), "Scatter_Plot_"+TP.view[target].getName(), null, null, null, null, null, "scatter_plot", target);  
         	TP.Context().view[id].addView();
         	TP.Context().view[id].buildLinks();
         	
@@ -878,6 +878,100 @@
         
         } 
    
+        this.drawDataBase = function(target){
+            var svg = TP.Context().view[target].getSvg();
+            nodes = svg.selectAll('g.node').data()
+
+            //creation of a new view
+            var margin = {top: 20, right: 15, bottom: 60, left: 60}
+            var width = 960 - margin.left - margin.right;
+            var height =500 - margin.top - margin.bottom;
+            var id = ""+TP.Context().getIndiceView();
+            TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
+            new Array("svg_DataBase", null, width, height, "DataBase"+id), "DataBase"+TP.view[target].getName(), null, null, null, null, null, "DataBase", target);  
+            TP.Context().view[id].addView();
+
+            keys = [];
+            var table =$('<table/>', {id:'dataTable'}).appendTo('#zone'+id)
+            var thead = $('<thead/>').appendTo(table)
+            var tbody = $('<tbody/>').appendTo(table)
+            var head = $('<tr/>').appendTo(thead)
+            var body = $('<tbody/>').appendTo(table)
+
+            for(var i=0;i<nodes.length;i++){
+                for (var key in nodes[0]){
+                    if(keys.indexOf(key)==-1){  //a key is unique
+                        keys.push(key);   
+                        head.append('<th>'+key+'</th>')
+                    }
+                }
+            }
+            var map = []
+            var ligne = []
+
+            for (var i=0; i<nodes.length; i++){
+                for (var key in nodes[i]){
+                    ligne.push(nodes[i][key])
+                }
+                map.push(ligne)
+                ligne=[]
+            }
+            for(var i=0; i<map.length;i++){
+                var l = $('<tr/>').appendTo(tbody)
+                for(var j=0;j<map[i].length; j++){
+                    l.append('<td>'+map[i][j]+'</td>')
+                }
+            }
+
+            function sortTable(table, col, reverse) {
+                var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
+                    tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
+                    i;
+            
+                reverse = -((+reverse) || -1);
+            
+                if(parseInt(tr[0].cells[col].textContent)){
+                    tr = tr.sort(function (a, b) { // sort rows
+                        return reverse * (a.cells[col].textContent - b.cells[col].textContent )        
+                    })
+                }else{
+                    tr = tr.sort(function (a, b) { // sort rows
+                        return reverse // `-1 *` if want opposite order
+                            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
+                                .localeCompare(b.cells[col].textContent.trim())
+                            );
+                    });
+                }
+                for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
+            }
+
+            function makeSortable(table) {
+
+                var th = table.tHead, i;
+                th && (th = th.rows[0]) && (th = th.cells);
+                if (th) i = th.length;
+                else return; // if no `<thead>` then do nothing
+                while (--i >= 0) (function (i) {
+                    var dir = 1;
+                    th[i].addEventListener('click', function () {sortTable(table, i, (dir = 1 - dir))});
+                }(i));
+            }
+
+            /*function makeAllSortable(parent) {
+
+                parent = parent || document.body;
+                var t = parent.getElementsByTagName('table'), i = t.length;
+                
+                while (--i >= 0) makeSortable(t[i]);
+            }*/
+
+
+                makeSortable(table[0]);
+        }
+
+
+
+
 /********************************** ON GOING ***********************************/
         this.changeColor = function(graphName, elem, newcolor){
             var cGraph = null;
