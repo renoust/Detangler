@@ -38,6 +38,8 @@ from tulip import *
 from graphManager import *
 from session import *
 
+import mds
+
 globalSessionMan = TPSession()
 '''
 This class handles all the requests given through POST queries
@@ -262,9 +264,20 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 print 'parameters:', params, ' type:', params['type']
                 if 'type' in params and 'name' in params:
                         if params['type'] == 'layout':
-                                g = self.getGraphMan(request).callLayoutAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
-                                graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})
-                                self.sendJSON(graphJSON)
+                                layoutName = params['name'].encode("utf-8")
+                                g = None
+                                if layoutName == 'MDS':
+                                        print "calling mds layout"
+                                        g = self.getGraphMan(request).substrate
+                                        descP = g.getStringProperty("descriptors")
+                                        #res = mds.MDS(g, descP).points()
+                                        res = mds.MDS(g, descP).sklearn_mds()
+                                        print res                        
+                                else:
+                                    g = self.getGraphMan(request).callLayoutAlgorithm(layoutName, params['target'].encode("utf-8"))
+                                if g:
+                                    graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})
+                                    self.sendJSON(graphJSON)
 
                         if params['type'] == 'float':
                                 g = self.getGraphMan(request).callDoubleAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
@@ -275,8 +288,6 @@ class MyRequestHandler(tornado.web.RequestHandler):
                                 print "calling layout sync"
                                 graphJSON = self.getGraphMan(request).synchronizeLayouts()
                                 self.sendJSON(graphJSON)
-
-
 
     '''
     Handles an induced subgraph request, gathers the parameters and calls the process and send back the updated graph.
