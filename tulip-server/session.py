@@ -50,7 +50,7 @@ class TPSession():#threading.Thread):
 
     def delete_session(self, sid):
         #print "deleting one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
-        if sid in timeTrack:
+        if sid in self.timeTrack:
             sidTime = self.timeTrack.pop(sid)
             del(sidTime)
             sidGraphMan = self.sidToGraphManager.pop(sid)
@@ -62,6 +62,7 @@ class TPSession():#threading.Thread):
         #print "cheking one:",sid, " in ",self.sidList, "/", self.timeTrack, "/", self.sidToGraphManager
         now = int(round(time.time() * 1000))
         if now - self.timeTrack[sid] > self.expire:
+            print ">>> deleting session"
             self.delete_session(sid)
 
     def check_all(self):
