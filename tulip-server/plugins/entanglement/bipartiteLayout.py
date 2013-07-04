@@ -110,12 +110,18 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
                         resGraph.addEdge(n1, descGNToN[tToN[t]])
                     
     
+    if (tlp.getTulipRelease().split(".")[0] == '3'):        
+        dataSet = tlp.getDefaultPluginParameters("LinLog Layout (Noack)", resGraph)
+        dataSet["skip nodes"] = skipNodeP
+        dataSet["result"] = viewLayout
+        resGraph.computeLayoutProperty("LinLog Layout (Noack)", viewLayout, dataSet)
     
-    dataSet = tlp.getDefaultPluginParameters("LinLog Layout (Noack)", resGraph)
-    dataSet["skip nodes"] = skipNodeP
-    dataSet["result"] = viewLayout
-    resGraph.computeLayoutProperty("LinLog Layout (Noack)", viewLayout, dataSet)
-    
+    if (tlp.getTulipRelease().split(".")[0] == '4'):
+        dataSet = tlp.getDefaultPluginParameters("LinLog", resGraph)
+        dataSet["skip nodes"] = skipNodeP
+        dataSet["initial layout"] = viewLayout
+        dataSet["result"] = viewLayout
+        resGraph.computeLayoutProperty("LinLog", viewLayout, dataSet)
     
     '''
     dataSet = tlp.getDefaultPluginParameters("Anchored GEM (Frick)", resGraph)
@@ -124,7 +130,8 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
     resGraph.computeLayoutProperty("Anchored GEM (Frick)", viewLayout, dataSet)
     '''
     
-    tlp.loadPlugin("/home/brenoust/.Tulip-3.8/plugins/libfastoverlapremoval-3.8.0.so")
+    if (tlp.getTulipRelease().split(".")[0] == '3'):
+        tlp.loadPlugin("/home/brenoust/.Tulip-3.8/plugins/libfastoverlapremoval-3.8.0.so")
     resGraph.computeLayoutProperty("Fast Overlap Removal", viewLayout)
             
     for n in resGraph.getNodes():

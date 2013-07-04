@@ -3,8 +3,8 @@
 source ./config
 
 if [ "$(uname)" == "Darwin" ]; then
-    DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$tulip_lib_path
-    export LD_LIBRARY_PATH
+    DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$tulip_lib_path
+    export DYLD_FALLBACK_LIBRARY_PATH
 else
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$tulip_lib_path
     export LD_LIBRARY_PATH
