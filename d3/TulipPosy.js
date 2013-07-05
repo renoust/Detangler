@@ -21,6 +21,7 @@ import_class('context.js', 'TP');
 import_class('objectReferences.js', 'TP');
 import_class('View.js', 'TP');
 import_class("Controller.js", 'TP')
+import_class('ViewGraph.js', 'TP')
 
 var TulipPosy = function (originalJSON) {
 
@@ -158,7 +159,9 @@ var TulipPosy = function (originalJSON) {
 	var tabCatalyst = new Array();
 
 
-    TP.Context().view[target] = new TP.View(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    //TP.Context().view[target] = new TP.View(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
+    
+    TP.Context().view[target] = new TP.ViewGraph(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 

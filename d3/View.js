@@ -77,6 +77,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
    	}*/
    	
    	
+   	__g__.getTabLinks = function()
+   	{
+   		return tabLinks;
+   	}
    	
 	__g__.setTypeEvent = function(name, typeEvent)
 	{
@@ -261,8 +265,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	__g__.addView = function() {		
 		     	 	
      	 controller = new TP.Controller();
-     	 if(controller != null)
-     	 	controller.initListener(ID, "view");
+     	 //if(controller != null)
+     	 	//controller.initListener(ID, "view");
 		
 		//TP.Context().setStypeEventByDefault(ID);
 		
@@ -318,8 +322,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    //console.log('-->'+target);
 	    
 	
-	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=400; }
-	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
+	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=16;  TP.Context().dialogRight=400; }
+	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=16;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
 	
 	
@@ -329,8 +333,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("html");
 	
 	    var dialog = $("[id=zone" + ID + "]");
-	    //console.log(dialog);
-	
+//	    console.log(dialog);
+		
 	    dialog.dialog({
 	    	id:"btn-cancel",
 	        height: TP.Context().dialogHeight,
@@ -342,7 +346,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	        containment: "#container",
 	        opacity: 0.70
 	    });
-	
+		
 	    /****   en-tête du dialog   ****/
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');

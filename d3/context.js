@@ -19,81 +19,81 @@
             return Context.prototype._singletonInstance;
         }
         
-        this.controller = new TP.Controller();
+        __g__.controller = new TP.Controller();
 		
-		this.viewMeter = 0;
+		__g__.viewMeter = 0;
 		
-        Context.prototype._singletonInstance = this;
-        this.view = {};
+        Context.prototype._singletonInstance = __g__;
+        __g__.view = {};
 
         // initialization of the communication address and port        
         // an additional default json file
-        this.tulip_address = document.URL;
-        this.json_address = "./data/cluster1.json";
+        __g__.tulip_address = document.URL;
+        __g__.json_address = "./data/cluster1.json";
 
         // initialization of the default svg parameters
-        this.dialogWidth = 460;
-        this.dialogHeight = 460;
-        this.width = this.dialogWidth-30;
-        this.height = this.dialogHeight-50;
+        __g__.dialogWidth = 460;
+        __g__.dialogHeight = 460;
+        __g__.width = __g__.dialogWidth-30;
+        __g__.height = __g__.dialogHeight-50;
 
         // initialization of the svg frames
-		this.tabGraph = [];
+		__g__.tabGraph = [];
 
         //substrate by default
-        this.activeView = "substrate";
+        __g__.activeView = "substrate";
 
-        this.stateStack = [];
+        __g__.stateStack = [];
         
-        this.changeStack = new TP.StatesChange();
+        __g__.changeStack = new TP.StatesChange();
         
-        this.mouse_over_button = false;        
-        //this.combined_foreground = "substrate";
+        __g__.mouse_over_button = false;        
+        //__g__.combined_foreground = "substrate";
 
         // initialization of the global entanglement parameters        
-        this.tabOperator = [];
+        __g__.tabOperator = [];
                 
-        this.entanglement_intensity = 0.0;
-        this.entanglement_homogeneity = 0.0;
+        __g__.entanglement_intensity = 0.0;
+        __g__.entanglement_homogeneity = 0.0;
 
         // initialization of default interface visual parameters
-        this.defaultFillColor = "white";
-        this.highlightFillColor = "lavender";
-        this.defaultTextColor = "black";
-        this.defaultBorderColor = "gray";
-        this.defaultBorderWidth = .5;
-        this.defaultTextFont = "Arial";
-        this.defaultTextSize = 14;
+        __g__.defaultFillColor = "white";
+        __g__.highlightFillColor = "lavender";
+        __g__.defaultTextColor = "black";
+        __g__.defaultBorderColor = "gray";
+        __g__.defaultBorderWidth = .5;
+        __g__.defaultTextFont = "Arial";
+        __g__.defaultTextSize = 14;
 
-        this.sessionSid = 0;
+        __g__.sessionSid = 0;
 
-        this.substrateProperties = {};
-        this.substrateWeightProperty = null;
+        __g__.substrateProperties = {};
+        __g__.substrateWeightProperty = null;
 
         //number of pane for the menu
-        this.menuNum=1;
+        __g__.menuNum=1;
         
-		this.tabOperator["catalyst"] = "OR";
-        this.tabOperator[1] = "OR";
+		__g__.tabOperator["catalyst"] = "OR";
+        __g__.tabOperator[1] = "OR";
         
 
-        this.getViewGraph = function (viewID) {
+        __g__.getViewGraph = function (viewID) {
                 return __g__.tabGraph["graph_"+viewID];
         };
         
-        this.getIndiceView = function(){
+        __g__.getIndiceView = function(){
         	var tmp = __g__.viewMeter;
         	__g__.viewMeter++;
         	return tmp;
         };
         
-        this.GroupOfView = new Object();
+        __g__.GroupOfView = new Object();
         
         
-        this.clearInterface = function()
+        __g__.clearInterface = function()
         {
         	
-        	if(this.menuNum != 1){
+        	if(__g__.menuNum != 1){
         	
 	        	d3.selectAll(".ui-dialog").remove();
 	        	d3.selectAll(".cont").remove();
@@ -101,38 +101,49 @@
 	        	$('#wrap')[0].className='sidebar';
                 $.jPicker.List.splice(0,3)
 	        	
-	        	for(var key in this.view){        		
-	        		this.view[key].remove();
-	        		this.view[key] = null;        		
+	        	for(var key in __g__.view){        		
+	        		__g__.view[key].remove();
+	        		__g__.view[key] = null;        		
 	        	}
 	        	
-	        	this.view = null;
-	        	this.view = {};
+	        	__g__.view = null;
+	        	__g__.view = {};
 	        	
-	        	this.substrateProperties = {};
-	        	this.viewMeter = 0;
-	        	this.menuNum=1;
-	        	this.tabGraph = null;
-	        	this.tabGraph = [];
-	        	this.substrateWeightProperty = null;
-	        	this.entanglement_intensity = 0.0;
-	        	this.entanglement_homogeneity = 0.0;
-	        	this.tabOperator = [];
-                this.tabOperator['catalyst'] = 'OR';
-	        	this.changeStack = new TP.StatesChange();
-	        	this.stateStack = [];
+	        	__g__.substrateProperties = {};
+	        	__g__.viewMeter = 0;
+	        	__g__.menuNum=1;
+	        	__g__.tabGraph = null;
+	        	__g__.tabGraph = [];
+	        	__g__.substrateWeightProperty = null;
+	        	__g__.entanglement_intensity = 0.0;
+	        	__g__.entanglement_homogeneity = 0.0;
+	        	__g__.tabOperator = [];
+                __g__.tabOperator['catalyst'] = 'OR';
+	        	__g__.changeStack = new TP.StatesChange();
+	        	__g__.stateStack = [];
         	
         	}
         }
         
-        this.initController = function(ID, typeC)
+	__g__.initStates = function()
+	{	
+		assert(true, "type of controller principal");
+				
+		__g__.controller.addState({name:"callLayoutSendQuery", bindings:null, func:function(event){/*assert(true, "callLayoutSendQuery");*/ TP.Client().callLayoutSendQuery(event);}}, "all");				
+		__g__.controller.addState({name:"selectionSendQuery", bindings:null, func:function(event){/*assert(true, "selectionSendQuery");*/ TP.Client().selectionSendQuery(event);}}, "all");
+		__g__.controller.addState({name:"FloatAlgorithmSendQuery", bindings:null, func:function(event){/*assert(true, "FloatAlgorithmSendQuery");*/ TP.Client().FloatAlgorithmSendQuery(event);}}, "all");
+		__g__.controller.addState({name:"analyseGraphSendQuery", bindings:null, func:function(event){/*assert(true, "analyseGraphSendQuery");*/ TP.Client().analyseGraphSendQuery(event);}}, "all");
+		__g__.controller.addState({name:"mouseoverInfoBox", bindings:null, func:function(event){/*assert(true, "mouseoverInfoBox");*/ TP.Interface().addInfoBox(event);}},"all");		
+	}        
+        
+        __g__.initController = function(ID, typeC)
         {        	
-        	this.controller.initListener(ID, typeC);
+        	__g__.controller.initListener(ID, typeC);
         }
         
-        this.getController = function()
+        __g__.getController = function()
         {
-        	return this.controller;
+        	return __g__.controller;
         }
 
         return __g__;

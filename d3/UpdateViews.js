@@ -313,13 +313,15 @@
           
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
-           
+           /*
            var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
            char.attr("x", function(d){ 
            		//assert(false,d.viewMetric); 
            		pileCentrality.addMetric(d.viewMetric, d); 
            		return d.x; 
-           	});
+           	});*/
+           	
+           	pileCentrality.TreatmentAction(graphName, "viewMetric"/*,["Libye", "tolerance"]*/)
            	
 
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));

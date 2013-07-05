@@ -3,6 +3,7 @@
 	import_class('eventHandler.js', 'TP')
 	import_class('StateTree.js', 'TP')
 
+
     var Controller = function () {
     	
     	
@@ -27,6 +28,50 @@
         	eventHandlerObject.removeEvent(name, type, id);
         }
         
+        __g__.addStates = function()
+        {
+        	
+        	if(typeC === "view")
+        	{
+        		TP.Context().view[nameC].initStates();
+        	}
+        	else if(typeC == "principal")
+        		TP.Context().initStates();
+        	else
+				assert(false, "type of controller isn't supported");
+        }
+        
+        __g__.addState = function(node, nodeRoot, useless, activate)
+        {
+        	console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)        	
+        	StateTree.addState(node, nodeRoot, useless, activate);
+        }
+        
+		__g__.getInfoState = function(name)
+		{
+			return StateTree.getInfoState(name);
+		}
+		
+		__g__.isActivate = function(name)
+		{
+			return __g__.getInfoState(name).activate === true;
+		}		
+		
+		__g__.enableState = function(state)
+		{
+			StateTree.enableState(state);
+		}
+
+		__g__.disableState = function(state)
+		{
+			StateTree.disableState(state);
+		}
+		
+		__g__.setCurrentState = function(name)
+		{
+			currentState = name;
+		}
+        
         __g__.initListener = function(ID, typeController)
         {   
     		if(ID == null || typeController == null){
@@ -45,7 +90,8 @@
 		        	
         	$("#Controller").append('<div id='+listenerState+'></div>');
         	        	
-        	StateTree.initStateTree(typeC);
+        	//StateTree.initStateTree(typeC);
+        	__g__.addStates();
         	console.log(listenerState);
         	eventHandlerObject.addElement(listenerState,$("[id="+listenerState+"]")[0]);
         	
@@ -73,9 +119,14 @@
         __g__.getStateAccess = function(cState)
         {   
         	
-        	console.log("currentState : "+currentState)
+        	//console.log("currentState : "+currentState)
         	
         	var State = StateTree.getInfoState(cState);
+        	
+        	if(currentState === null)
+        	{
+        		return true;
+        	}
         	
         	if(State.activate == false){
         		return false;
@@ -148,7 +199,8 @@
         	
         	if(access === false)
         	{
-        		assert(false, "access denied : "+messageName);
+        		//console.log("currentState : "+currentState)
+        		//assert(false, "access denied : "+messageName);
         		return;
         	}         	
         	
