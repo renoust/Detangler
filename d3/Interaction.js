@@ -173,6 +173,7 @@
                     });
 
                 selList.sort()
+
                 
                 if (selList.length > 0)
                 	TP.Context().view[target].getController().sendMessage("nodeSelected", {selList:selList, prevSelList:prevSelList});
@@ -180,6 +181,7 @@
                 	TP.Context().view[target].getController().sendMessage("selectionVide", {selList:selList});        
                 
                 }
+
                 //console.log("selection list: ", selList, " with length ", selList.length)
 				
 				
@@ -306,6 +308,7 @@
 	                    //objectReferences.VisualizationObject.arrangeLabels(catalystName);
 	                    TP.Controller().sendMessage("arrangeLabels", null, catalystName, catalystName);
 
+
                    }
                    
                    if(substrateSvg != null){ 
@@ -410,12 +413,14 @@
                }
                
 
+
          __g__.brushstart = function (event) {      
          	   	
          	var svg = event.associatedData.svg;   	
             svg.classed("selecting", true);
             
          }
+
 
         // This function associate a d3.svg.brush element to select nodes in a 
         // view target, the string value of the target svg view 
@@ -786,7 +791,7 @@ this.runZoom = function(event){
         // Removes the lasso interactor from a specific svg target's callbacks 
         // to its mouse events.
         // target, the string value of the target svg view         
-        this.removeZoom = function (target) {
+        this.removeZoom = function (event) {
         	
             var target = null;
             

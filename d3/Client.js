@@ -178,7 +178,7 @@
                 			
                 console.log(tabCatalyst);
                 			
-     			TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], idView);
+     			TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6],tabCatalyst[7], tabCatalyst[8], tabCatalyst[9], idView);
                	TP.Context().view[tabCatalyst[0]].buildLinks();
                 TP.Context().view[tabCatalyst[0]].addView();
                 
@@ -191,6 +191,7 @@
                 target: idView,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
+
             			
 			assert(false, "idView : "+idView);  
 			console.log(TP.Context().view[idView]);
@@ -224,9 +225,13 @@
         
         this.answerAnalyseGraph = function(event)
         {
+        	console.log("toutou")
         	
         	var idView = event.associatedData.target;
+        	console.log("toutou1 : ", idView)
         	var data = event.associatedData.data;
+        	console.log("toutou2 : ", data)
+        	
         	
         	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
         }		

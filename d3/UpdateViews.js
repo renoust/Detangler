@@ -316,6 +316,7 @@
            /*
            var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
            char.attr("x", function(d){ 
+
            		//assert(false,d.viewMetric); 
            		pileCentrality.addMetric(d.viewMetric, d); 
            		return d.x; 
@@ -351,7 +352,7 @@
                 	graph = tmp[0].getGraph();
                 	svg = tmp[0].getSvg();
                 	find = true;
-		            //quick fix since w<'re not amanging multiple views yet
+		            //quick fix since we're not amanging multiple views yet
                 	targetView = tmp[0].getID();
                //}
             }
@@ -398,6 +399,14 @@
                 TP.Context().syncNodes = undefined;
             }
 			
+            //sets the target view selection as a list of nodes 
+			//(later we might want it to be graph)
+			nodeList = []
+			data.nodes.forEach(function(d){nodeList.push(d.baseID);})
+            //assert(true, "SETTING VIEW TARGET SELECTION");
+            //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
+			//TP.Context().view[targetView].setTargetSelection(nodeList);
+
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
 
             if (typeGraph == 'combined') {

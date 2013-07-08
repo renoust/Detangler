@@ -11,13 +11,14 @@ import_class('StateTree.js', 'TP')
 import_class("ViewTemplate.js", "TP")
 import_class("ScatterPlot.js", "TP")
 
-	var ViewGraph = function(id, groupe, bouton, svgs, name, nodesC, linksC, bgC, view_nodes, type, idAssociation){
+	var ViewGraph = function(id, groupe, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation){
 		
 		var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
 
 	    __g__.nodesColor = nodesC;
 	    __g__.linksColor = linksC;
 	    __g__.bgColor = bgC;
+	    __g__.labelsColor = labelC;
 	    __g__.viewNodes = null;
 	    __g__.lasso = null;
 	    __g__.DataTranslation = null;
@@ -94,6 +95,14 @@ import_class("ScatterPlot.js", "TP")
 	
 		__g__.setBgColor = function(value){		
 			__g__.bgColor = value;		
+		}
+		
+		__g__.getLabelsColor = function(){		
+			return __g__.labelsColor;		
+		}
+	
+		__g__.setLabelsColor = function(value){		
+			__g__.labelsColor = value;		
 		}
 	
 		__g__.getViewNodes = function(){		
@@ -209,7 +218,7 @@ import_class("ScatterPlot.js", "TP")
 	           
 	            TP.Interaction().createLasso(__g__.ID);
 	            //TP.Interaction().addZoom(ID);
-	            TP.ObjectReferences().InterfaceObject.toggleSelectMove(__g__.ID);          
+	            TP.Interface().toggleSelectMove(__g__.ID);          
 	        }
 	    }    
 	    
@@ -255,6 +264,7 @@ import_class("ScatterPlot.js", "TP")
 	    __g__.nodesColor = null;
 	    __g__.linksColor = null;
 	    __g__.bgColor = null;
+	    __g__.labelsColor = null;
 	    __g__.viewNodes = null;
 	    __g__.lasso = null;
 	    __g__.DataTranslation = null;
@@ -276,7 +286,6 @@ import_class("ScatterPlot.js", "TP")
 	__g__.initStates = function()
 	{
 		
-				__g__.controller.addState({name:"select", bindings: ["mousemoveLasso"], func:function(event){/*assert(true, "select");*/ TP.Interaction().addLasso(event); TP.Interaction().removeZoom(event) }}, "all");
 				__g__.controller.addState({name:"zoneApparu", bindings: ["nodeSelected","selectionVide","arrangeLabels"], func:function(event){/*assert(true, "zoneApparu");*/ TP.Interaction().checkIntersect(event);}});
 				__g__.controller.addState({name:"nodeSelected", bindings: ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], func:function(event){/*assert(true, "nodeSelected");*/ TP.Interaction().nodeSelected(event);}});
 				__g__.controller.addState({name:"selectionVide", bindings : ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], func:function(event){/*assert(true, "selectionVide");*/ TP.Interaction().emptyListAction(event);}});
@@ -303,6 +312,7 @@ import_class("ScatterPlot.js", "TP")
 						
 				
 				__g__.controller.addState({name:"move", bindings: ["movingZoomDrag"], func:function(event){/*assert(true, "move");*/ TP.Interaction().removeLasso(event); TP.Interaction().addZoom(event) }}, "all");				
+				__g__.controller.addState({name:"select", bindings: ["mousemoveLasso"], func:function(event){/*assert(true, "select");*/ TP.Interaction().addLasso(event); TP.Interaction().removeZoom(event) }}, "all");				
 				
 				__g__.controller.addState({name:"movingZoomDrag", bindings:["movingZoomDragEnd", "movingZoomDrag"], func:function(event){/*assert(true, "movingZoomDrag");*/ TP.Interaction().movingZoomDrag(event);}});
 				__g__.controller.addState({name:"movingZoomDragEnd", bindings:["movingZoomDrag"], func:function(event){/*assert(true, "movingZoomDragEnd"); */TP.Interaction().movingZoomDragEnd(event);}});				

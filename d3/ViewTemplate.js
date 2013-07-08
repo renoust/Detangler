@@ -15,7 +15,7 @@ import_class('StateTree.js', 'TP')
 		
 		__g__.tabDataSvg = svgs;
         __g__.controller = new TP.Controller();
-        __g__.tabLinks = new Object(); 
+        __g__.tabLinks = new Object();
 		__g__.graphDrawing = null;
 		__g__.ID = id;
 		__g__.viewInitialized = null;
@@ -35,14 +35,14 @@ import_class('StateTree.js', 'TP')
 			
 				for(var p = 0; p < end; p++)
 				{
-					console.log(bouton[p][4]);
+					console.log(bouton[p][3]);
 				
-					if(__g__.hashButton[bouton[p][4]] != null){
-						__g__.hashButton[bouton[p][4]].push(bouton[p]);
+					if(__g__.hashButton[bouton[p][3]] != null){
+						__g__.hashButton[bouton[p][3]].push(bouton[p]);
 					}
 					else{
-						__g__.hashButton[bouton[p][4]] = [];
-						__g__.hashButton[bouton[p][4]].push(bouton[p]);
+						__g__.hashButton[bouton[p][3]] = [];
+						__g__.hashButton[bouton[p][3]].push(bouton[p]);
 					}
 				
 				}
@@ -50,6 +50,7 @@ import_class('StateTree.js', 'TP')
 		
 			if(__g__.typeView  === "substrate")
 			{
+				console.log("boutons:", bouton)
 				TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashButton,'create');
 		    	TP.ObjectReferences().InterfaceObject.infoPane();
 		    	TP.ObjectReferences().InterfaceObject.visuPane();		
@@ -100,7 +101,11 @@ import_class('StateTree.js', 'TP')
 	    	else{    		
 	    		__g__.tabLinks[linkType] = new Array();
 	    		__g__.tabLinks[linkType].push(view);    		
-	    	}    	
+	    	} 
+	    	
+	    	assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
+	    	console.log("tabLinks : ", __g__.tabLinks)
+	    
 	    }
 	    
 	    
@@ -226,7 +231,7 @@ import_class('StateTree.js', 'TP')
 		    __g__.dialog.parent().click(function(){ 
 		    	var oldID=TP.Context().activeView
 		        TP.Context().activeView = __g__.ID;
-	
+				console.log("hashbuttons: ",__g__.hashButton)
 		        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(__g__.hashButton,'update')}
 	        	TP.Context().InterfaceObject.addInfoButton(__g__);
 	        	TP.Context().InterfaceObject.attachInfoBox()
@@ -235,10 +240,10 @@ import_class('StateTree.js', 'TP')
 	        	__g__.titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
 	
 	
-		        console.log($.jPicker.List[0].color.active.val('hex'), __g__.nodesColor)
+		        /*console.log($.jPicker.List[0].color.active.val('hex'), __g__.nodesColor)
 		        $.jPicker.List[0].color.active.val('hex', __g__.nodesColor);
 		        $.jPicker.List[1].color.active.val('hex', __g__.linksColor);
-		        $.jPicker.List[2].color.active.val('hex', __g__.bgColor);
+		        $.jPicker.List[2].color.active.val('hex', __g__.bgColor);*/
 	
 		        //TP.ObjectReferences().Interface().addInfoButton(ID);
 		    });     	

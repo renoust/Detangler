@@ -13,9 +13,11 @@ import_class('stateSelect.js','TP');
 import_class('Controller.js','TP');
 import_class('StateTree.js', 'TP')
 
-var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view_nodes, type, idAssociation) {
+
+var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 	
 	var tabTypeEvent = [];
+
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
 
@@ -28,6 +30,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
     var nodesColor = nodesC;
     var linksColor = linksC;
     var bgColor = bgC;
+    var labelsColor = labelC;
     var viewNodes = null;
     var lasso = null;
     var DataTranslation = null;
@@ -54,6 +57,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
    	
    	var graphDrawing = null;
    	
+
 
    	//var tmpPosX = null;
    	//var tmpPosY = null;
@@ -216,6 +220,15 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 		bgColor = value;		
 	}
 
+
+	__g__.getLabelsColor = function(){
+		return labelsColor;
+	}
+
+	__g__.setLabelsColor = function(value){
+		labelsColor = value;
+	}
+
 	__g__.getViewNodes = function(){		
 		return viewNodes;		
 	}
@@ -278,14 +291,14 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 			
 			for(var p = 0; p < end; p++)
 			{
-				console.log(bouton[p][4]);
+				//console.log(bouton[p][4]);
 				
-				if(hashButton[bouton[p][4]] != null){
-					hashButton[bouton[p][4]].push(bouton[p]);
+				if(hashButton[bouton[p][3]] != null){
+					hashButton[bouton[p][3]].push(bouton[p]);
 				}
 				else{
-					hashButton[bouton[p][4]] = [];
-					hashButton[bouton[p][4]].push(bouton[p]);
+					hashButton[bouton[p][3]] = [];
+					hashButton[bouton[p][3]].push(bouton[p]);
 				}
 				
 			}
@@ -325,7 +338,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=16;  TP.Context().dialogRight=400; }
 	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=16;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
-	
+	   console.log(TP.Context().dialogTop)
 	
 	    /****  création du dialog ****/
 	    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
@@ -333,6 +346,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("html");
 	
 	    var dialog = $("[id=zone" + ID + "]");
+
 //	    console.log(dialog);
 		
 	    dialog.dialog({
@@ -380,8 +394,12 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	    	var oldID=TP.Context().activeView
 	        TP.Context().activeView = ID;
 
-	        if (oldID!=TP.Context().activeView){TP.Context().InterfaceObject.interactionPane(hashButton,'update')}
-        	TP.Context().InterfaceObject.addInfoButton(__g__);
+	        if (oldID!=TP.Context().activeView){
+	        	TP.Context().InterfaceObject.interactionPane(hashButton,'update');
+	        	
+	        }
+	        TP.Context().InterfaceObject.addInfoButton(__g__);
+        	
         	TP.Context().InterfaceObject.attachInfoBox()
         	$('.ui-dialog-titlebar').each(function(){
         		$(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")})
@@ -423,10 +441,12 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, view
 	 		//console.log(colorLink);
 	 		//console.log(colorBg);       
 	        //console.log($.jPicker.List[0])
-	        console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
-	        $.jPicker.List[0].color.active.val('hex', nodesColor);
-	        $.jPicker.List[1].color.active.val('hex', linksColor);
-	        $.jPicker.List[2].color.active.val('hex', bgColor);
+	        //console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
+	        //$.jPicker.List[0].color.active.val('hex', nodesColor);
+	        //$.jPicker.List[1].color.active.val('hex', linksColor);
+	        //$.jPicker.List[2].color.active.val('hex', bgColor);
+	        
+	        //$("#color1").css("text",nodesColor)
 
 	        //TP.ObjectReferences().Interface().addInfoButton(ID);
 	    });
