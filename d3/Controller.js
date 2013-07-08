@@ -203,7 +203,7 @@
         	
         	if(access === false)
         	{
-        		console.log("currentState : "+currentState)
+        		//console.log("currentState : "+currentState)
         		assert(false, "access denied : "+messageName);
         		return;
         	}         	
