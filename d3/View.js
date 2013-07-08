@@ -314,7 +314,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=400; }
 	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
-	
+	   console.log(TP.Context().dialogTop)
 	
 	    /****  création du dialog ****/
 	    //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
@@ -322,7 +322,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("html");
 	
 	    var dialog = $("[id=zone" + ID + "]");
-	    //console.log(dialog);
+	    console.log(dialog);
 	
 	    dialog.dialog({
 	        height: TP.Context().dialogHeight,

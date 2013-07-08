@@ -269,7 +269,7 @@
 						
 	                    //objectReferences.VisualizationObject.resetSize(catalystName);
 	                    catalystSvg.selectAll("text.node").style("opacity", 1)
-	                    objectReferences.VisualizationObject.arrangeLabels(catalystName);
+	                    //objectReferences.VisualizationObject.arrangeLabels(catalystName);
 
                    }
                    

@@ -892,17 +892,19 @@
             TP.Context().view[id].addView();
 
             keys = [];
-            var table =$('<table/>', {id:'dataTable'}).appendTo('#zone'+id)
+            var table =$('<table/>', {id:'dataTable',class:'testgrid', style:'width:100%'}).appendTo('#zone'+id)
+            var colgroup = $('<colgroup/>',{id:'groupe'}).appendTo(table);
             var thead = $('<thead/>').appendTo(table)
             var tbody = $('<tbody/>').appendTo(table)
             var head = $('<tr/>').appendTo(thead)
-            var body = $('<tbody/>').appendTo(table)
+           
 
             for(var i=0;i<nodes.length;i++){
                 for (var key in nodes[0]){
                     if(keys.indexOf(key)==-1){  //a key is unique
-                        keys.push(key);   
-                        head.append('<th>'+key+'</th>')
+                        keys.push(key);  
+                        document.getElementById('groupe').innerHTML += '<col style="width:100px"/>';
+                        head.append('<th class="ui-resizable">'+key+'</th>')
                     }
                 }
             }
@@ -917,59 +919,58 @@
                 ligne=[]
             }
             for(var i=0; i<map.length;i++){
-                var l = $('<tr/>').appendTo(tbody)
+                var l = $('<tr/>',{id:'TR'+i}).appendTo(tbody)
                 for(var j=0;j<map[i].length; j++){
                     l.append('<td>'+map[i][j]+'</td>')
+                } 
+            }
+
+            for (var r=0; r < table[0].rows.length; r++){
+                for (var c=0; c <table[0].rows[r].cells.length; c++){
+                    
+                    $(table[0].rows[r].cells[c]).change(function(a,b){return function(){updateData(a,b)}}(r,c));
                 }
             }
 
-            function sortTable(table, col, reverse) {
-                var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-                    tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
-                    i;
-            
-                reverse = -((+reverse) || -1);
-            
-                if(parseInt(tr[0].cells[col].textContent)){
-                    tr = tr.sort(function (a, b) { // sort rows
-                        return reverse * (a.cells[col].textContent - b.cells[col].textContent )        
-                    })
-                }else{
-                    tr = tr.sort(function (a, b) { // sort rows
-                        return reverse // `-1 *` if want opposite order
-                            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-                                .localeCompare(b.cells[col].textContent.trim())
-                            );
-                    });
-                }
-                for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
-            }
-
-            function makeSortable(table) {
-
-                var th = table.tHead, i;
-                th && (th = th.rows[0]) && (th = th.cells);
-                if (th) i = th.length;
-                else return; // if no `<thead>` then do nothing
-                while (--i >= 0) (function (i) {
-                    var dir = 1;
-                    th[i].addEventListener('click', function () {sortTable(table, i, (dir = 1 - dir))});
-                }(i));
-            }
-
-            /*function makeAllSortable(parent) {
-
-                parent = parent || document.body;
-                var t = parent.getElementsByTagName('table'), i = t.length;
+            function updateData(r,c){
+                newVal = table[0].rows[r].cells[c].childNodes[0].value;
+                hcol = $("tr").find("th:eq("+c+")")[0].childNodes[0].innerHTML
+                bID = table[0].rows[r].cells[0].innerHTML
                 
-                while (--i >= 0) makeSortable(t[i]);
-            }*/
+                for(var i=0; i<nodes.length;i++){
+                    console.log(bID,nodes[i].baseID)
+                    if(nodes[i].baseID ==bID){
+                        nodes[i][hcol] = newVal;
+                        console.log(nodes[i])
+                    }
+                }
 
+            }
 
-                makeSortable(table[0]);
-        }
+            editableGrid = new EditableGrid("DemoGridAttach"); 
 
+                // we build and load the metadata in Javascript
+            editableGrid.load({ metadata: [
+                { name: "baseID", datatype: "integer", editable: false},
+                { name: "descriptors", datatype: "string", editable: true },
+                { name: "vewLabels", datatype: "string", editable: true },
+                { name: "label", datatype: "string", editable: true },
+                { name: "currentY", datatype: "double", editable: true}, 
+                { name: "currentX", datatype: "double", editable: true },
+                { name: "y", datatype: "double", editable: true },
+                { name: "x", datatype: "double", editable: true },
+                { name: "id", datatype: "double", editable: true },
+                { name: "_type", datatype: "string", editable: true }
+            ]});
+            for(i in editableGrid.columns){editableGrid.columns[i].thousands_separator= ''}
+            // then we attach to the HTML table and render it
+            editableGrid.attachToHTMLTable('dataTable');
+            editableGrid.renderGrid();
+            $('#dataTable').resizable();
+        
 
+        
+}
 
 
 /********************************** ON GOING ***********************************/

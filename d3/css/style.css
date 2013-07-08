@@ -8,8 +8,16 @@ li{list-style-type:none}
 p{font-weight:bold;}
 
 td{
-	border: 1px solid black;
+	border-width:1px;
+ 	border-style:solid; 
+ 	width:50%;
 	font-size: 0.7em
+}
+th{
+	border-width:1px;
+ 	border-style:solid; 
+ 	width:50%;
+	background: #cccccc;
 }
 
 /********************************** Body *************************************/
@@ -155,6 +163,10 @@ td{
 .link{
 	stroke: #808080;
 	stroke-width:1px;
+}
+
+#dataTable{
+	border-collapse: collapse;
 }
 
 

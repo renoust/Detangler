@@ -36,12 +36,9 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-//<<<<<<< HEAD
-            
+
+           
             g.drawNodes(TP.Context().view[currentViewID].getViewNodes());
-//=======
-//            g.drawNodes(TP.Context().view[target].getViewNodes());
-//>>>>>>> interface
             g.drawLabels()
         }
 

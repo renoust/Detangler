@@ -189,7 +189,7 @@ var TulipPosy = function (originalJSON) {
   //              parent.className = 'nosidebar';
                 $('.cont').each(function(){
                     $(this).css('z-index',0)
-                    $(this).css('left',-252)
+                    $(this).css('left',-301)
                 })
             }
             else{
