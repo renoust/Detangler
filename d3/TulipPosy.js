@@ -68,6 +68,7 @@ var TulipPosy = function (originalJSON) {
 	
 		['Force layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'FM^3 (OGDF)', idView:target})}}, "Layout"],
 		['Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
+		['MDS layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'MDS', idView:target})}}, "Layout"],
 		['Tulip layout algorithm',tl,{call:function(layout){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:layout.text0, idView:target})}}, "Layout"],
 		
 		['Induced subgraph','',{click:function(){TP.Context().view[target].getController().sendMessage("sendSelection", {json:objectReferences.ClientObject.getSelection(target), idView:target})}}, "Selection"],
