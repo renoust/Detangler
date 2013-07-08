@@ -45,6 +45,7 @@
         {
         	console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)        	
         	StateTree.addState(node, nodeRoot, useless, activate);
+        	//we can call addEvent after addState to simplifie Event insersion
         }
         
 		__g__.getInfoState = function(name)
@@ -123,6 +124,9 @@
         	
         	var State = StateTree.getInfoState(cState);
         	
+        	if(State == null)
+        		return false;
+        	
         	if(currentState === null)
         	{
         		return true;
@@ -199,8 +203,8 @@
         	
         	if(access === false)
         	{
-        		//console.log("currentState : "+currentState)
-        		//assert(false, "access denied : "+messageName);
+        		console.log("currentState : "+currentState)
+        		assert(false, "access denied : "+messageName);
         		return;
         	}         	
         	
@@ -236,6 +240,14 @@
         __g__.remove = function()
         {
         	d3.select("#"+listenerState+"").remove();
+	        nameC = null;
+	        listenerState = null;
+	        typeC = null;
+	        
+	        StateTree = null;
+			eventHandlerObject = null;
+							
+			currentState = null;        	
         }
         
         

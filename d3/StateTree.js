@@ -28,7 +28,11 @@
 		
 		__g__.getInfoState = function(name)
 		{
-			return hashTabNode[name];
+			if(hashTabNode[name] !== undefined || hashTabNode[name] !== null){
+				return hashTabNode[name];
+			}
+			else
+				return null;
 		}
 		
 		__g__.enableState = function(state)

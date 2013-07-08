@@ -283,7 +283,7 @@ import_class("ScatterPlot.js", "TP")
 						
 				__g__.controller.addState({name:"mouseupLasso", bindings:["zoneApparu", "mousedownLasso", "mousemoveLasso"], func:function(event){/*assert(true, "mouseupLasso");*/ __g__.controller.disableState("mouseupLasso"); event.associatedData.myL.canMouseUp(event.associatedData.mouse);}});
 				__g__.controller.addState({name:"mousedownLasso", bindings:["mousemoveLasso", "mouseupLasso"], func:function(event){/*assert(true, "mousedownLasso");*/  __g__.controller.enableState("mouseupLasso"); event.associatedData.myL.canMouseDown(event.associatedData.mouse);}});
-				__g__.controller.addState({name:"mousemoveLasso", bindings: ["mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], func:function(event){/*assert(true, "mousemoveLasso");*/ event.associatedData.myL.canMouseMove(event.associatedData.mouse);}});
+				__g__.controller.addState({name:"mousemoveLasso", bindings: ["mousemoveMouseDown","mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], func:function(event){/*assert(true, "mousemoveLasso");*/ event.associatedData.myL.canMouseMove(event.associatedData.mouse);}});
 				
 				__g__.controller.addState({name:"mouseoverMouseDown", bindings:["mousedownMouseDown", "mousemoveLasso", "mousemoveMouseDown"], func:function(event){
 						if(!__g__.controller.isActivate("mouseupLasso")){
@@ -297,7 +297,7 @@ import_class("ScatterPlot.js", "TP")
 				__g__.controller.addState({name:"mousedownMouseDown", bindings:["mousemoveMouseDown"], func:function(event){/*assert(true, "mousedownMouseDown");*/ TP.Lasso().mousedownMouseDown(event);}});
 				__g__.controller.addState({name:"mousemoveMouseDown", bindings:["mousemoveMouseDown","mouseoutMouseDown","mousedownMouseDown","mouseupMouseDown", "zoneApparu", "mousemoveLasso"], func:function(event){/*assert(true, "mousemoveMouseDown");*/ TP.Lasso().mousemoveMouseDown(event);}});
 				
-				__g__.controller.addState({name:"arrangeLabels", bindings:["mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], func:function(event){/*assert(true, "arrangeLabels"); */TP.Visualization().arrangeLabels(event);}}, "all");
+				__g__.controller.addState({name:"arrangeLabels", bindings:["mouseoverMouseDown","mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], func:function(event){/*assert(true, "arrangeLabels"); */TP.Visualization().arrangeLabels(event);}}, "all");
 				
 				__g__.controller.addState({name:"mouseupMouseDown", bindings:["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], func:function(event){/*assert(true, "mouseupMouseDown");*/ TP.Lasso().mouseupMouseDown(event);}});
 						
