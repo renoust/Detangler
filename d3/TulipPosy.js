@@ -20,6 +20,8 @@
 import_class('context.js', 'TP');
 import_class('objectReferences.js', 'TP');
 import_class('View.js', 'TP');
+import_class("Controller.js", 'TP')
+import_class('ViewGraph.js', 'TP')
 
 var TulipPosy = function (originalJSON) {
 
@@ -63,59 +65,71 @@ var TulipPosy = function (originalJSON) {
     //var paramSizeMap = [['scale: ', 0]]
 	
 	var array1 = [
+	
+		['Force layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'FM^3 (OGDF)', idView:target})}}, "Layout"],
+		['Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
+		['MDS layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'MDS', idView:target})}}, "Layout"],
+		['Tulip layout algorithm',tl,{call:function(layout){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:layout.text0, idView:target})}}, "Layout"],
+		
+		['Induced subgraph','',{click:function(){TP.Context().view[target].getController().sendMessage("sendSelection", {json:objectReferences.ClientObject.getSelection(target), idView:target})}}, "Selection"],
+        ['Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection(target)}}, "Selection"],
+        
+        ['Center view','',{click:function(){TP.Context().view[target].getController().sendMessage('resetView');}}, "View"],
+        ['Reset size','',{click:function(){TP.Context().view[target].getController().sendMessage("resetSize")}}, "View"],
+        ['Hide labels','',{click:function(){TP.Context().view[target].getController().sendMessage("Hide labels")}}, "View"],
+        ['Hide links','',{click:function(){TP.Context().view[target].getController().sendMessage("Hide links")}}, "View"],
+        ['Arrange labels','',{click:function(){TP.Context().view[target].getController().sendMessage("arrangeLabels")}}, "View"],
+        ['Rotation','',{click:function(){TP.Context().view[target].getController().sendMessage("rotateGraph")}}, "View"],
+        ['Size mapping',paramSizeMap, {call:function(scales){TP.Context().view[target].getController().sendMessage("sizeMapping", {parameter:'viewMetric', idView:contxt.activeView, scales:scales})}}, "View"],
+        ['zoom in','', {click:function(){TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta:120, mousePos:[TP.Context().width/2,TP.Context().height/2]})}}, "View"],
+        ['zoom out','', {click:function(){TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta:-120, mousePos:[TP.Context().width/2,TP.Context().height/2]})}}, "View"],
+        
+        ['Degree','',{click:function(){TP.Context().view[target].getController().sendMessage("callFloatAlgorithm",{floatAlgorithmName:'Degree', idView:target})}}, "Measure"],	
+        ['Betweenness centrality','',{click:function(){TP.Context().view[target].getController().sendMessage("callFloatAlgorithm",{floatAlgorithmName:'Betweenness Centrality',idView:target})}}, "Measure"],
+        ['Tulip measure',tl,{call:function(algo){TP.Context().view[target].getController().sendMessage("callFloatAlgorithm",{floatAlgorithmName:algo.text0, idView:target})}}, "Measure"],
+        
+        ['Bipartite analysis','',{click:function(){TP.Context().view[target].getController().sendMessage("analyseGraph",{target:target, tabCatalyst:tabCatalyst})}}, "Open View"],
+        ['Horizontal barchart','',{click:function(){TP.Context().view[target].getController().sendMessage("drawBarChart",{smell:'base'})}}, "Open View"],
+        ['Barchart','',{click:function(){TP.Context().view[target].getController().sendMessage("drawBarChart",{smell:'rotate'})}}, "Open View"],
+        ['Scatter plot','',{click:function(){TP.Context().view[target].getController().sendMessage("drawScatterPlot")}}, "Open View"], 
         ['Data', '',{click:function(){objectReferences.VisualizationObject.drawDataBase(target)}}, "Open View"],
-        ['Force layout', '',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)', target)}}, "Layout"],
-        ['Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
-        ['Tulip layout algorithm',tl,{call:function(layout){objectReferences.ClientObject.callLayout(layout.text0,target)}}, "Layout"],
-        // ['b20','MDS layout', '',{click:function(){objectReferences.ClientObject.callLayout('MDS', target)}}, "Layout"],
-
-        ['Induced subgraph','',{click:function(){objectReferences.ClientObject.sendSelection(objectReferences.ClientObject.getSelection(target), target)}}, "Selection"],
-        ['Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection()}}, "Selection"],
-
-        ['Center view','',{click:function(){objectReferences.VisualizationObject.resetView(target)}}, "View"],
-        ['Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target)}}, "View"],
-        ['Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target)}}, "View"],
-        ['Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target)}}, "View"],
-        ['Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target)}}, "View"],
-        ['Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target)}}, "View"],
-        ['Size mapping',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}, "View"],
-        ['Zoom in','', {click:function(){objectReferences.InteractionObject.runZoom(target, 120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
-        ['Zoom out','', {click:function(){objectReferences.InteractionObject.runZoom(target, -120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
-
-        ['Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target)}}, "Measure"],	
-        ['Betweenness centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality',target)}}, "Measure"],
-        ['Tulip measure',tl,{call:function(algo){objectReferences.ClientObject.callFloatAlgorithm(algo.text0,target)}}, "Measure"],
-
-        ['Bipartite analysis','',{click:function(){objectReferences.ClientObject.analyseGraph(target, tabCatalyst)}}, "Open View"],
-        ['Horizontal barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'base')}}, "Open View"],
-        ['Barchart','',{click:function(){objectReferences.VisualizationObject.drawBarChart(target,'rotate')}}, "Open View"],
-        ['Scatter plot','',{click:function(){objectReferences.VisualizationObject.drawScatterPlot(target)}}, "Open View"]
+        // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
+        // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],        
+        // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
+        // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
 
 	]
 	
-    
-	
-
 	var array2 = [
-        ['Data', '',{click:function(){objectReferences.VisualizationObject.drawDataBase(target1)}}, "Open View"],
-        ['Force layout','',{click:function(){objectReferences.ClientObject.callLayout('FM^3 (OGDF)',target1)}}, "Layout"],
+	
+        ['Force layout','',{click:function(){TP.Context().view[target1].getController().sendMessage('callLayout', {layoutName:'FM^3 (OGDF)', idView:target1})}}, "Layout"],
         ['Server update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, "Layout"],
-
-        ['Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}, "Selection"],
-
-        ['Reset size','',{click:function(){objectReferences.VisualizationObject.resetSize(target1)}}, "View"],
-        ['Hide labels','',{click:function(){objectReferences.VisualizationObject.showhideLabels(target1)}}, "View"],
-        ['Hide links','',{click:function(){objectReferences.VisualizationObject.showhideLinks(target1)}}, "View"],
-        ['Arrange labels','',{click:function(){objectReferences.VisualizationObject.arrangeLabels(target1)}}, "View"],
-        ['Rotation','',{click:function(){objectReferences.VisualizationObject.rotateGraph(target1)}}, "View"],
-        ['Zoom in','', {click:function(){objectReferences.InteractionObject.runZoom(target1, 120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
-        ['Zoom out','', {click:function(){objectReferences.InteractionObject.runZoom(target1, -120, [TP.Context().width/2,TP.Context().height/2])}}, "View"],
-        ['Size mapping',paramSizeMap, {call:function(scales){objectReferences.VisualizationObject.sizeMapping('viewMetric', contxt.activeView, scales) }}, "View"],
         
-        ['Degree','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Degree', target1)}}, "Measure"],
-        ['Betweenness centrality','',{click:function(){objectReferences.ClientObject.callFloatAlgorithm('Betweenness Centrality', target1)}}, "Measure"],
-        ['Weight mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('weight', target1)}}, "Measure"],
-        ['Entanglement mapping','',{click:function(){objectReferences.VisualizationObject.sizeMapping('entanglementIndice', target1)}}, "Measure"],
+        ['Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}, "Selection"],
+        
+        ['Reset size','',{click:function(){TP.Context().view[target1].getController().sendMessage("resetSize")}}, "View"],
+        ['Hide labels','',{click:function(){TP.Context().view[target1].getController().sendMessage("Hide labels")}}, "View"],
+        ['Hide links','',{click:function(){TP.Context().view[target1].getController().sendMessage("Hide links")}}, "View"],
+        ['Arrange labels','',{click:function(){TP.Context().view[target1].getController().sendMessage("arrangeLabels")}}, "View"],
+        ['Rotation','',{click:function(){TP.Context().view[target1].getController().sendMessage("rotateGraph")}}, "View"],
+        ['Zoom in','', {click:function(){TP.Context().view[target1].getController().sendMessage("runZoom", {wheelDelta:120, mousePos:[TP.Context().width/2,TP.Context().height/2]})}}, "View"],
+        ['Zoom out','', {click:function(){TP.Context().view[target1].getController().sendMessage("runZoom", {wheelDelta:-120, mousePos:[TP.Context().width/2,TP.Context().height/2]})}}, "View"],
+        ['Size mapping',paramSizeMap, {call:function(scales){TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter:'viewMetric', idView:contxt.activeView, scales:scales})}}, "View"],
+        
+        ['Degree','',{click:function(){TP.Context().view[target1].getController().sendMessage("callFloatAlgorithm",{floatAlgorithmName:'Degree', idView:target1})}}, "Measure"],
+        ['Betweenness. centrality','',{click:function(){TP.Context().view[target1].getController().sendMessage("callFloatAlgorithm",{floatAlgorithmName:'Betweenness Centrality',idView:target1})}}, "Measure"],
+        ['Weight mapping','',{click:function(scales){TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter:'weight', idView:contxt.activeView, scales:scales})}}, "Measure"],
+        ['Entanglement mapping','',{click:function(scales){TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter:'entanglementIndice', idView:contxt.activeView, scales:scales})}}, "Measure"],
+        
+        ['Horizontal barchart','',{click:function(){TP.Context().view[target1].getController().sendMessage("drawBarChart",{smell:'base'})}}, "Open View"],
+        ['Barchart','',{click:function(){TP.Context().view[target1].getController().sendMessage("drawBarChart",{smell:'rotate'})}}, "Open View"],
+        ['ScatterPlot','',{click:function(){TP.Context().view[target1].getController().sendMessage("drawScatterPlot")}}, "Open View"],
+        ['Data', '',{click:function(){objectReferences.VisualizationObject.drawDataBase(target1)}}, "Open View"],
+        // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
+        // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target1)}}],
+        // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
+        //['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', target1)}}],
+        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
 	]
 
 	
@@ -136,21 +150,16 @@ var TulipPosy = function (originalJSON) {
         });
     }*/
 
-    
-
 
 	var tabCatalyst = new Array();
 	
 
-    TP.Context().view[target] = new TP.View(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "#000000","rect", "substrate", null);
+    TP.Context().view[target] = new TP.ViewGraph(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_"+target), name+" - substrate", "#a0522d", "#808080", "#FFFFFF", "#000000","rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
 
 
 	tabCatalyst = new Array(target1, array2, new Array("svg", "graph", 960, 500, "svg_"+target1), name+" - catalyst", "#4682b4", "#808080", "#FFFFFF", "#000000","circle", "catalyst");
-
-
-
 
     $('#undo').click(function(){TP.Context().changeStack.undo();});
     $('#redo').click(function(){TP.Context().changeStack.redo();});    
@@ -247,7 +256,6 @@ var TulipPosy = function (originalJSON) {
     })  
 
 
-
     // This is the tricky part, because the json given to the function can be of many shapes.
     // If it is a query, we call tulip to perform the search
     // if it is a given file we load it normally
@@ -269,19 +277,11 @@ var TulipPosy = function (originalJSON) {
 
 
     if($('#analyse').is(':checked')){
-        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
+        TP.Context().view[target].getController().sendMessage("analyseGraph",{target:target, tabCatalyst:tabCatalyst});
     }
     if($('#sync').is(':checked')){
         objectReferences.ClientObject.syncLayouts(target)
     }
-
-/*
-    if(originalJSON==null){
-        console.log('TOTO')
-        objectReferences.ClientObject.analyseGraph(target, tabCatalyst)
-        objectReferences.ClientObject.syncLayouts(target)
-    }
-*/
 
     
 };

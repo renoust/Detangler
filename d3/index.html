@@ -27,7 +27,7 @@
 
     </head>
     
-    <body>
+	<body>
         <script>
             // This function removes an element of the page by its id
             function remove(id) {
@@ -57,10 +57,11 @@
                     }
                     e.preventDefault();
                 });
-                /*$('ul.submenu').mouseout(function(){
-                    $(this).slideUp("normal", function () { $(this).parent().removeClass("open") } );
+                $('ul.submenu').mouseleave(function(){
+                	console.log('mouseout');
+                    $('ul.submenu').slideUp("normal", function () { $(this).parent().removeClass("open") } );
 
-                })*/
+                })
                 $('#opfile').click(function(e){
                     $('#files').click();
                     e.preventDefault();
@@ -77,9 +78,11 @@
                 <ul id='menu'>
                     <li class='hmenu'><a href="">File</a>
                         <ul class='submenu'>
+
                             <li><a  href="" id='opfile'>Open File</a></li>
                             <li><a href="" >Analyse <input id='analyse' type='checkbox'></input></a></li>
                             <li><a href="" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
+                     
                         </ul>
                     </li>
                 </ul>
@@ -88,13 +91,26 @@
 
         <div id="wrap" class="sidebar" >
             <div id="container"></div>
-        </div> 
+        </div>
            
         <div style="opacity:0;display:none;">
             <input id="files" type="file">
         </div>
         
 
+        <div id="Controller"></div>
+        
+        <script>
+			
+			//$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
+			
+			TP.Context().initController("principal", "principal");
+			
+            $('#opfile').click(function(e){
+                $('#files').click();
+            });
+
+		</script>
     	<script type="text/javascript" src="load.js"></script>
     </body>
 </html>

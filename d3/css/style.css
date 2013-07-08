@@ -165,9 +165,15 @@ th{
 	stroke-width:1px;
 }
 
+<<<<<<< HEAD
+
+
+/***************************** Information zone ******************************/
+=======
 #dataTable{
 	border-collapse: collapse;
 }
+>>>>>>> interface
 
 
 /***************************** Information zone ******************************/
