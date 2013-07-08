@@ -11,6 +11,7 @@
     import_class('context.js', 'TP');
     import_class("objectReferences.js", "TP");
     import_class('lasso.js', 'TP');
+    import_class("Controller.js", "TP")
 
     var Interaction = function () {
         var __g__ = this;
@@ -53,26 +54,31 @@
             }*/
            
            //TP.Context().tabLasso[target] = new TP.Lasso(svg);
-           TP.Context().view[target].setLasso(new TP.Lasso(svg));
+           TP.Context().view[target].setLasso(new TP.Lasso(target));
            myL = TP.Context().view[target].getLasso();
 
+            myL.canMouseUp = __g__.MouseUp
 
-            var prevSelList = [];
+            myL.canMouseMove = __g__.MouseMove
 
-            myL.canMouseUp = function (e) {
+            myL.canMouseDown = __g__.MouseDown
+            
+		}
+		
+		__g__.MouseUp = function (e) {
                 if (!TP.Context().mouse_over_button)
                     this.mouseUp(e)
-            }
+       	}
 
-            myL.canMouseMove = function (e) {
+		__g__.MouseMove = function (e) {
                 if (!TP.Context().mouse_over_button)
                     this.mouseMove(e)
-            }
+        }
 
-            myL.canMouseDown = function (e) {
+		__g__.MouseDown = function (e) {
                 if (!TP.Context().mouse_over_button)
                     this.mouseDown(e)
-            }
+        }
 
             // redefines the intersection function
             // applies keyboard modifiers, control extends the selection, 
@@ -80,8 +86,19 @@
             // once the selection is made, it applies the synchronization 
             // function syncGraph() to the selected nodes
             // selection colors are hardcoded but this should be changed
-            myL.checkIntersect = function () {            	
-                var __g = this
+            this.checkIntersect = function (object) {    	
+            	
+            	assert(true, "checkIntersect");
+            	
+                //var __g = this                
+                var target = null;
+                target = object.associatedData.source;
+                
+                var svg = TP.Context().view[target].getSvg();
+                
+                var prevSelList = [];
+                
+                var __g = TP.Context().view[target].getLasso();
                 var selList = []
                 var e = window.event
                 svg.selectAll("g.node")
@@ -156,10 +173,40 @@
                     });
 
                 selList.sort()
-                TP.Context().view[target].setSourceSelection(selList);
-                //console.log("selection list: ", selList, " with length ", selList.length)
 
-                if (selList.length > 0) {
+                
+                if (selList.length > 0)
+                	TP.Context().view[target].getController().sendMessage("nodeSelected", {selList:selList, prevSelList:prevSelList});
+                else
+                	TP.Context().view[target].getController().sendMessage("selectionVide", {selList:selList});        
+                
+                }
+
+                //console.log("selection list: ", selList, " with length ", selList.length)
+				
+				
+				this.nodeSelected = function(object)
+				{
+					
+		            if (!object)
+		                return
+		                
+					var selList = null;
+					var target = null;
+		            var prevSelList = null;
+		            
+		            if(typeof object.associatedData == "object"){
+		            	if(!object.associatedData.source || !object.associatedData.selList)
+		            		return;
+		            	else{
+		            		target = object.associatedData.source;
+		            		selList = object.associatedData.selList;
+		            		prevSelList = object.associatedData.prevSelList;
+		            	}
+		            }
+		            else
+		            	return;					
+					
                     if (selList.length == prevSelList.length) {
                         var i = 0;
                         var iMax = selList.length;
@@ -175,8 +222,23 @@
                         prevSelList = selList.slice(0);
                         objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
                     }
-                } else {
+                }
+                
+                
+                
+ 				this.emptyListAction = function(object)
+				{         
 
+					assert(false, "il n'y a rien");
+					
+					var selList = null;
+                	var target = null;
+                	
+                	target = object.associatedData.source;
+                	selList =object.associatedData.selList;					
+					
+					
+					var svg = TP.Context().view[target].getSvg();
 					
 					var combinedSvg = null;
 					var catalystSvg = null;
@@ -211,33 +273,7 @@
 						combinedView = TP.Context().view[combinedName];
 						combinedSvg = (TP.Context().view[target].getType() == "combined") ? svg : combinedView.getSvg();
 					}
-					/*
-					var result1 = TP.Context().view[target].getAssociatedView("catalyst") != null;
-					var result2 = TP.Context().view[target].getType() == "catalyst";
-										
-					
-					catalystName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("catalyst")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("catalyst")[0].getID() : null) : target;
-					catalystView = (catalystName != null) ? TP.Context().view[catalystName] : null;
-					catalystSvg =  (catalystView != null) ? catalystView.getSvg() : null;
 
-					
-					result1 = TP.Context().view[target].getAssociatedView("substrate") != null;
-					result2 = TP.Context().view[target].getType() == "substrate";
-					
-					substrateName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("substrate")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("substrate")[0].getID() : null) : target;
-					substrateView = (substrateName != null) ? TP.Context().view[substrateName] : null;
-					substrateSvg =  (substrateView != null) ? substrateView.getSvg() : null;
-
-
-					result1 = TP.Context().view[target].getAssociatedView("combined") != null;
-					result2 = TP.Context().view[target].getType() == "combined";
-									
-					
-					combinedName = (result1 > result2) ? ((TP.Context().view[target].getAssociatedView("combined")[0].viewInitialized() == 1) ? TP.Context().view[target].getAssociatedView("combined")[0].getID() : null) : target;
-					combinedView = (combinedName != null) ? TP.Context().view[combinedName] : null;
-					combinedSvg =  (combinedView != null) ? combinedView.getSvg() : null;
-					
-					*/
 					if(catalystSvg != null){						
 
 					
@@ -270,6 +306,8 @@
 	                    //objectReferences.VisualizationObject.resetSize(catalystName);
 	                    catalystSvg.selectAll("text.node").style("opacity", 1)
 	                    //objectReferences.VisualizationObject.arrangeLabels(catalystName);
+	                    TP.Controller().sendMessage("arrangeLabels", null, catalystName, catalystName);
+
 
                    }
                    
@@ -304,7 +342,8 @@
 	                    
 	                    //objectReferences.VisualizationObject.resetSize(substrateName);
 	                    substrateSvg.selectAll("text.node").style("opacity", 1)
-	                    objectReferences.VisualizationObject.arrangeLabels(substrateName);
+	                    //objectReferences.VisualizationObject.arrangeLabels(substrateName);
+	                    TP.Controller().sendMessage("arrangeLabels", null, substrateName, substrateName);
 
                    }
 
@@ -356,7 +395,8 @@
                     prevSelList = selList.slice(0);
                     
                     if(catalystSvg != null)
-                   		TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
+                   		//TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
+                   		TP.Context().view[catalystName].getController().sendMessage("sizeMapping", {parameter:'entanglementIndice', idView:catalystName})
                                    	
                 	d3.select("#svg_"+target).select("g.brush").select("polygon").style('fill', "white");
                 	TP.Visualization().entanglementCaught(target, 1);
@@ -370,54 +410,24 @@
                     //assert(true, "arrangeLabels appele depuis le lasso");    
                     //objectReferences.VisualizationObject.arrangeLabels("substrate");
                     //objectReferences.VisualizationObject.arrangeLabels("catalyst");
-                }
-            }
-        }
+               }
+               
 
-        
-		this.toggleSelection = function(_currentViewID)
-		{
-            //console.log(this);
-            var cView = TP.Context().view[_currentViewID];
-			var cGraph = cView.getGraph();
-			var cSvg = cView.getSvg();
-			var typeGraph = cView.getType();
-			var associatedSelection = null;
-			var associatedViews = null;
-			if (typeGraph == "substrate")
-				associatedViews = cView.getAssociatedView("catalyst");
-			if (typeGraph == "catalyst")
-				associatedViews = cView.getAssociatedView("substrate");
-			if (!associatedViews) return;
-            //console.log("the current type: ",typeGraph);
-            //assert("true", "we have the associated view!");
-			//console.log(associatedViews[0].getType());
-			var cAssociatedView = associatedViews[0];
-			associatedSelection = cAssociatedView.getTargetSelection();
 
-			//console.log(associatedSelection);
-			if (!associatedSelection) return;
-
-            //assert(true, "the associated selection");
-            //console.log(associatedSelection)
-			
-			var associatedGraph = cAssociatedView.getGraph();
-			var associatedSvg = cAssociatedView.getSvg();
-			
-			var graph_drawing = cAssociatedView.getGraphDrawing();//TP.GraphDrawing(associatedGraph, associatedSvg, currentViewID);
-			graph_drawing.resetSelection();
-			graph_drawing.setSelection(associatedSelection);
-            //console.log("target json");
-            //console.log(objectReferences.ClientObject.getSelection(cAssociatedView.getID()));
-			objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(cAssociatedView.getID()), cAssociatedView.getID())
-		}
-
+         __g__.brushstart = function (event) {      
+         	   	
+         	var svg = event.associatedData.svg;   	
+            svg.classed("selecting", true);
+            
+         }
 
 
         // This function associate a d3.svg.brush element to select nodes in a 
         // view target, the string value of the target svg view 
         // This function is deprecated but one can activate it anytime
         this.addBrush = function (target) {
+        	
+        	
             var svg = null
             var graph = null
 
@@ -442,19 +452,14 @@
                 .call(d3.svg.brush()
                 .x(xScale)
                 .y(yScale)
-                .on("brushstart", brushstart)
+                .on("brushstart", function(){TP.Context().view[target].getController().sendMessage("brushstart", {svg:svg})})
                 .on("brush", brushmove)
                 .on("brushend", brushend))
                 .style('stroke', 'black')
                 .style('stroke-width', 2)
                 .style('fill-opacity', .125)
                 .style('shape-rendering', 'crispEdges')
-
-
-
-                function brushstart() {
-                    svg.classed("selecting", true);
-                }
+                
 
             var prevSelList = [];
 
@@ -463,6 +468,8 @@
 
             function brushmove() {
                 var e = d3.event.target.extent();
+                assert(false, "d3.event.target.extent()");
+                console.log(e);
                 var node = svg.selectAll("g.node")
                 var selList = []
                 node.classed("selected", function (d) {
@@ -514,14 +521,20 @@
         // Applies the lasso interactor to a specific svg target as callback
         // to the mouse events.
         // target, the string value of the target svg view         
-        this.addLasso = function (target) {
-            if (!target)
-                return
-
+        this.addLasso = function (event) {
+            
+            var target = null;
+            
+            target = event.associatedData.source;
+            	
+           	console.log("target : " + target)
+            
+            var view = TP.Context().view[target];
+            
             var mySvg = null
             var myL = null
 
-            mySvg = TP.Context().view[target].getSvg();
+            mySvg = view.getSvg();
 /*
             if (target == "catalyst") {
                 myL = TP.Context().lasso_catalyst
@@ -536,37 +549,40 @@
             }*/
            
            	myL = TP.Context().view[target].getLasso();
-           
-           
-            mySvg.on("mouseup", function (d) { myL.canMouseUp(d3.mouse(this))});
-            mySvg.on("mousedown", function (d) { myL.canMouseDown(d3.mouse(this))});
-            mySvg.on("mousemove", function (d) { myL.canMouseMove(d3.mouse(this))});
+           	       
+            mySvg.on("mouseup", function () {TP.Context().view[target].getController().sendMessage("mouseupLasso", {myL:myL, mouse:d3.mouse(this)})});
+            mySvg.on("mousedown", function () {TP.Context().view[target].getController().sendMessage("mousedownLasso", {myL:myL, mouse:d3.mouse(this)})});
+            mySvg.on("mousemove", function () { TP.Context().view[target].getController().sendMessage("mousemoveLasso", {myL:myL, mouse:d3.mouse(this)})});
         }
 
 
         // Removes the lasso interactor from a specific svg target's callbacks 
         //to its mouse events.
         // target, the string value of the target svg view         
-        this.removeLasso = function (target) {
+        this.removeLasso = function (event) {
 
-			//console.log("calling remove LASSO"); 
-            if (!target)
-                return
+            var target = null;
+            
+            target = event.associatedData.source;
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
 
             svg.on("mouseup", null);
             svg.on("mousedown", null);
-            svg.on("mousemove", null);
-            
-            
+            svg.on("mousemove", null);           
 
         }
         
 
 
-this.runZoom = function(target, deltaZoom, mousePos){
+this.runZoom = function(event){
+     
+     var target = event.associatedData.source;
+     var wheelDelta = event.associatedData.wheelDelta;
+     var mousePos = event.associatedData.mousePos;
+     
+     assert(true, "wheelData : "+wheelDelta)
      
 	 if (!TP.Context().view[target].getMoveMode())            
 	     return;
@@ -578,11 +594,8 @@ this.runZoom = function(target, deltaZoom, mousePos){
 	 var time = 0;
 	 
 	 var delta = null;
-	 
-	 if(deltaZoom == null)
-	 	delta = event.wheelDelta;
-	 else
-	 	delta = deltaZoom;
+
+	 delta = wheelDelta
 
 	 
 	 var mouseOrigin = [];
@@ -650,33 +663,16 @@ this.runZoom = function(target, deltaZoom, mousePos){
 	 event.preventDefault();
 
 }        
-        
-        
-        
-        // Adds a zoom interactor to a specific svg target as callbacks to its 
-        //mouse events.       
-        this.addZoom = function(target){
-        	
-			if (!target)
-               return
 
-            var svg = null;
-            var cGraph = null;
-            
-            svg = TP.Context().view[target].getSvg();
-			cGraph = TP.Context().view[target].getGraph();
+
+		this.movingZoomDrag = function(event)
+		{
 				
-			function movingZoom(target){
-				
-	            if (!target)
-	                 return
-	
-				var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
-				
-				data_translation = [translation_tab[0],translation_tab[1]]
-	                
-	            svg.call(d3.behavior.drag()
-                    .on("drag", function (){
+			var target = event.associatedData.source;
+			var data_translation = event.associatedData.data;
+			//console.log(data_translation);
+			var svg = event.associatedData.svg;
+			var cGraph = event.associatedData.cGraph;
 					
 	                if (!TP.Context().view[target].getMoveMode())	           
                         return;
@@ -714,13 +710,15 @@ this.runZoom = function(target, deltaZoom, mousePos){
                     .attr("d", function(d) {
                        	return "M"+d.source.currentX+" "+d.source.currentY+" L"+d.target.currentX+" "+d.target.currentY; 
                     })
-	                
-	               //svg.selectAll("g.link,text.node").attr("transform", "translate(" + data_translation[0]+ "," + data_translation[1] + ")") 
-	               //eval("TP.Context().data_translation_"+target+" = data_translation;");
-	               //TP.tabDataTranslation[target] = data_translation;
-	               //TP.Context().view[target].setDataTranslation(data_translation);
-                })
-                .on("dragend", function(){
+        }
+        
+        this.movingZoomDragEnd = function(event)
+        {
+        	
+  			var data_translation = event.associatedData.data;
+  			console.log("movingZoomDragEnd : ")
+  			console.log(data_translation);
+			var svg = event.associatedData.svg;      	
 					
 					var nodeDatum = svg.selectAll("g.node").data()
 	                
@@ -729,17 +727,49 @@ this.runZoom = function(target, deltaZoom, mousePos){
 	                   d.y = d.currentY; 
 	                });
 	                
-	                data_translation = [0,0];
-				})
-                
-                );
-       		}
+	                data_translation[0]=0;
+	                data_translation[1]=0;
+	    
+	    	//console.log(data_translation);
+        }
+        
+        // Adds a zoom interactor to a specific svg target as callbacks to its 
+        //mouse events.       
+        this.addZoom = function(eventt){
+        	
+			var target = null;
+			
+			target = eventt.associatedData.source;
 
+            var svg = null;
+            var cGraph = null;
+            
+            svg = TP.Context().view[target].getSvg();
+			cGraph = TP.Context().view[target].getGraph();
        		
 			svg.on("mousewheel", function(){
-					TP.Context().Interaction().runZoom(target, null, null);
+				
+				var value = event.wheelDelta;
+				
+				TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta:value, mousePos:null});
 			});	
-			svg.on("drag", movingZoom(target));
+			//svg.on("drag", movingZoom(target));
+			
+			
+			var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+				
+			data_translation = [translation_tab[0],translation_tab[1]]
+								
+				//console.log(data_translation );
+	            	                
+	        svg.call(d3.behavior.drag()
+                .on("drag", function (){
+					TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph:cGraph, data:data_translation, svg:svg});
+            	})
+            	.on("dragend", function(){
+					TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data:data_translation, svg:svg});
+				})                
+            );
 			
 			/*
 			svg.on("keydown", function(){
@@ -761,10 +791,12 @@ this.runZoom = function(target, deltaZoom, mousePos){
         // Removes the lasso interactor from a specific svg target's callbacks 
         // to its mouse events.
         // target, the string value of the target svg view         
-        this.removeZoom = function (target) {
-            if (!target)
-                return
-
+        this.removeZoom = function (event) {
+        	
+            var target = null;
+            
+            target = event.associatedData.source;
+            
             var svg = null
             svg = TP.Context().view[target].getSvg();
 

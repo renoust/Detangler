@@ -2,8 +2,9 @@
 //pile de gestion d'Etat
 
 (function () {
-
-
+	
+	import_class("context.js", "TP")
+	
 	var Metric = function(){
 
 		var __g__ = this;
@@ -12,11 +13,106 @@
 
 		var first = null;
 		var current = null;
-		var taille = 0;		
+		var taille = 0;
+		
+		
+		__g__.TreatmentAction = function(target, field, specificParam) //specificParams can be an array or a value
+		{	
+			
+			var dataNodes = TP.Context().view[target].getSvg();
+			dataNodes = dataNodes.selectAll("g.node").data();
+			
+			var paramIsDefine = (specificParam != null) ? true:false
+			
+			var intTest = 0;
+			
+											
+			if(typeof dataNodes[0][field] == typeof intTest)
+			{
+				if(paramIsDefine === true){
+					if(typeof specificParam === "object"){
+						if(Object.getPrototypeOf(specificParam) == Object.getPrototypeOf([])){
+							for(var i = 0; i<dataNodes.length; i++)
+							{
+								for(var j = 0; j < specificParam.length; j++)
+									if(""+dataNodes[i][field] === ""+specificParam[j])
+										__g__.addMetric(""+dataNodes[i][field], dataNodes[i]);
+							}
+						}
+					}
+					else
+					{
+						if(typeof specificParam === "string")
+						{
+							for(var i = 0; i<dataNodes.length; i++)
+							{
+								if(""+dataNodes[i][field] === specificParam)
+									__g__.addMetric(""+dataNodes[i][field], dataNodes[i]);
+							}
+						}		
+					}
+				}
+				else
+				{
+					for(var i = 0; i<dataNodes.length; i++)
+					{
+							__g__.addMetric(""+dataNodes[i][field], dataNodes[i]);
+					}			
+				}
+			}
+			else if(typeof dataNodes[0][field] === "string")
+			{
+				
+				var	tabTmp = null;
+				
+				if(paramIsDefine === true){
+					if(typeof specificParam === "object"){
+						if(Object.getPrototypeOf(specificParam) == Object.getPrototypeOf([])){
+							for(var i = 0; i<dataNodes.length; i++)
+							{
+								tabTmp = dataNodes[i][field].split(";");
+								
+								for(var j = 0; j < specificParam.length; j++)
+									for(var o = 0; o < tabTmp.length; o++)
+										if(""+tabTmp[o] === ""+specificParam[j])
+											__g__.addMetric(""+tabTmp[o], dataNodes[i]);
+							}
+						}
+					}
+					else
+					{
+						if(typeof specificParam === "string")
+						{
+							for(var i = 0; i<dataNodes.length; i++)
+							{
+								tabTmp = dataNodes[i][field].split(";");
+								
+								for(var o = 0; o < tabTmp.length; o++)
+									if(""+tabTmp[o] === specificParam)
+										__g__.addMetric(""+tabTmp[o], dataNodes[i]);
+							}
+						}		
+					}
+				}
+				else
+				{
+					for(var i = 0; i<dataNodes.length; i++)
+					{
+						tabTmp = dataNodes[i][field].split(";");
+						
+						for(var t = 0; t < tabTmp.length; t++)				
+							__g__.addMetric(""+tabTmp[t], dataNodes[i]);
+					}						
+				}
+			}				
+		}
+		
 
-		this.addMetric = function(numS, nodee)
-		{		
-
+		__g__.addMetric = function(numS, nodee)
+		{
+			
+			console.log(nodee)
+			
 			pileTMP = {avant : null, numS : null, nombreS : null, apres : null, indice : taille, node : null};
 			pileTMP.numS = numS;
 			pileTMP.nombreS = 1;
@@ -28,7 +124,7 @@
 				
 				for (var i=first; i != null ;i = i.apres)
 				{
-					if(i.numS == pileTMP.numS)
+					if(i.numS === pileTMP.numS)
 					{
 						i.nombreS++;
 						i.node.push(nodee);
@@ -57,7 +153,7 @@
 */		
 
 		
-		this.transformToArray = function(name)
+		__g__.transformToArray = function(name)
 		{
 			/*var tab = new Array();
 			tab.push("titi");
@@ -106,9 +202,7 @@
 					
 					tab[0][a.indice] = a.nombreS;					
 					tab[1][a.indice] = a.numS;					
-					tab[2][a.indice] = [a.numS, a.nombreS, a.node, a.numS];
-
-					
+					tab[2][a.indice] = [a.numS, a.nombreS, a.node, a.numS];					
 				}
 				
 			}
@@ -123,7 +217,7 @@
 		
 
 		
-		this.afficher = function(target)
+		__g__.afficher = function(target)
 		{
 			// console.log("pileMetric de " + target + " :")
 			// console.log(current);			

@@ -10,8 +10,13 @@
 import_class('context.js', 'TP');
 import_class("objectReferences.js", "TP");
 import_class('stateSelect.js','TP');
+import_class('Controller.js','TP');
+import_class('StateTree.js', 'TP')
 
-var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC,view_nodes, type, idAssociation) {
+
+var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+	
+	var tabTypeEvent = [];
 
 	//assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
     var __g__ = this;
@@ -52,63 +57,72 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
    	
    	var graphDrawing = null;
    	
-    var sourceSelection = null;
-   	var targetSelection = null;
-   	
-   	__g__.getSourceSelection = function()
-   	{
-   		return sourceSelection;
-   	}
-    
-    
-    __g__.setSourceSelection = function(_selection)
-    {
-    	sourceSelection = _selection;
-    }
 
-   	__g__.getTargetSelection = function()
-   	{
-   		return targetSelection;
-   	}
-    
-    
-    __g__.setTargetSelection = function(_selection)
-    {
-    	targetSelection = _selection;
-    }
+
+   	//var tmpPosX = null;
+   	//var tmpPosY = null;
+   	//var posX = null;
+   	//var posY = null;
+   	//var typeEvent = null;
    	
-    this.getGraphDrawing = function()
+   	/*
+   	__g__getPosition = function (x, y, typeEvt)
+   	{
+	   	tmpPosX = posX;
+	   	tmpPosY = posY;
+	   	posX = x;
+	   	posY = y;
+	   	
+	   	var typeEvent = typeEvt;
+	   	
+	   	console.log("In view : " + posX + " , " + posY + " type : "+ typeEvent);
+	   	//console.log(posX);
+	   	//console.log(posY);
+   	}*/
+   	
+   	
+   	__g__.getTabLinks = function()
+   	{
+   		return tabLinks;
+   	}
+   	
+	__g__.setTypeEvent = function(name, typeEvent)
+	{
+		tabTypeEvent[name] = typeEvent;
+	}   	
+   	
+    __g__.getGraphDrawing = function()
     {    	
     	return graphDrawing;
     }
       	
     
-    this.getGroup = function()
+    __g__.getGroup = function()
     {    	
     	return viewGroup;
     }
     
-    this.viewInitialized = function()
+    __g__.viewInitialized = function()
     {
     	return viewInitialized;
     }
     
-    this.getGraph = function()
+    __g__.getGraph = function()
     {
     	return graph;
     }
     
-    this.getName = function()
+    __g__.getName = function()
     {
     	return name;
     }
     
-    this.getID = function(){    	
+    __g__.getID = function(){    	
     	//return name;
     	return ID;    	
     }    
     
-    this.setAssociatedView = function(linkType, view)
+    __g__.setAssociatedView = function(linkType, view)
     {
        	if(tabLinks[linkType] != null)
     	{
@@ -121,7 +135,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
     }
     
     
-    this.getAssociatedView = function(linkType)
+    __g__.getAssociatedView = function(linkType)
     {
     	if(tabLinks[linkType] != null){
     		if(tabLinks[linkType].length != 0)
@@ -135,137 +149,147 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
     
     
     
-    this.getType = function()
+    __g__.getType = function()
     {
     	return typeView;
     }
             
     
-    this.getDataTranslation = function(){    	
+    __g__.getDataTranslation = function(){    	
     	return DataTranslation;    	
     }
     
-    this.setDataTranslation = function(value){    	
+    __g__.setDataTranslation = function(value){    	
     	DataTranslation = value;    	
     }
     
     
-    this.setMetric_BC = function(value){    	
+    __g__.setMetric_BC = function(value){    	
     	metric_BC = value;    	
     }
     
-    this.getMetric_BC = function(){    	
+    __g__.getMetric_BC = function(){    	
     	return metric_BC;    	
     }
     
-    this.setMetric_SP = function(value){    	
+    __g__.setMetric_SP = function(value){    	
     	metric_SP = value;    	
     }
     
-    this.getMetric_SP = function(){    	
+    __g__.getMetric_SP = function(){    	
     	return metric_SP;    	
     }
     
-    this.setLasso = function(value){	
+    __g__.setLasso = function(value){	
 		lasso = value;    	
     }
     
-    this.getLasso = function(value){    	
+    __g__.getLasso = function(value){    	
     	return lasso;    	
     }
     
-    this.getController = function(){    	
+    __g__.getController = function(){    	
     	return controller;    	
     }
 
-	this.getSvg = function(){		
+	__g__.getSvg = function(){		
 		return svg;		
 	}
 	
-	this.getNodesColor = function(){		
+	__g__.getNodesColor = function(){		
 		return nodesColor;		
 	}
 	
-	this.setNodesColor = function(value){		
+	__g__.setNodesColor = function(value){		
 		nodesColor = value;		
 	}	
 
-	this.getLinksColor = function(){		
+	__g__.getLinksColor = function(){		
 		return linksColor;		
 	}
 	
-	this.setLinksColor = function(value){		
+	__g__.setLinksColor = function(value){		
 		linksColor = value;		
 	}
 	
-	this.getBgColor = function(){		
+	__g__.getBgColor = function(){		
 		return bgColor;		
 	}
 
-	this.setBgColor = function(value){		
+	__g__.setBgColor = function(value){		
 		bgColor = value;		
 	}
 
-	this.getLabelsColor = function(){
+
+	__g__.getLabelsColor = function(){
 		return labelsColor;
 	}
 
-	this.setLabelsColor = function(value){
+	__g__.setLabelsColor = function(value){
 		labelsColor = value;
 	}
 
-	this.getViewNodes = function(){		
+	__g__.getViewNodes = function(){		
 		return viewNodes;		
 	}
 	
-	this.getSelectMode = function(){		
+	__g__.getSelectMode = function(){		
 		return selectMode;		
 	}
 	
-	this.setSelectMode = function(value){		
+	__g__.setSelectMode = function(value){		
 		selectMode = value;		
 	}
 	
-	this.getMoveMode = function(){		
+	__g__.getMoveMode = function(){		
 		return moveMode;		
 	}
 	
-	this.setMoveMode = function(value){		
+	__g__.setMoveMode = function(value){		
 		moveMode = value;		
 	}
 	
-	this.getShowLabels = function(){		
+	__g__.getShowLabels = function(){		
 		return showLabels;		
 	}
 	
-	this.setShowLabels = function(value){		
+	__g__.setShowLabels = function(value){		
 		showLabels = value;		
 	}
 	
 	
-	this.getShowLinks = function(){		
+	__g__.getShowLinks = function(){		
 		return showLinks;		
 	}
 	
-	this.setShowLinks = function(value){		
+	__g__.setShowLinks = function(value){		
 		showLinks = value;		
 	}	
 	
-	this.getNodeInformation = function(){		
+	__g__.getNodeInformation = function(){		
 		return nodeInformation;		
 	}
 	
-	this.setNodeInformation= function(value){		
+	__g__.setNodeInformation= function(value){		
 		nodeInformation = value;		
 	}		
 
 
-	this.addView = function() {
+	__g__.addView = function() {		
+		     	 	
+     	 controller = new TP.Controller();
+     	 //if(controller != null)
+     	 	//controller.initListener(ID, "view");
+		
+		//TP.Context().setStypeEventByDefault(ID);
 		
 		var hashButton = new Object();
 		
 		if(bouton != null){
-			for(var p = 0; p < bouton.length; p++)
+			
+			var end = bouton.length;
+			
+			for(var p = 0; p < end; p++)
 			{
 				//console.log(bouton[p][4]);
 				
@@ -311,8 +335,8 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	    //console.log('-->'+target);
 	    
 	
-	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=0;  TP.Context().dialogRight=400; }
-	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=0;  TP.Context().dialogRight=100; }
+	    if(typeView ==="substrate")    {TP.Context().activeView = ID; TP.Context().dialogTop=16;  TP.Context().dialogRight=400; }
+	    else if(typeView ==="catalyst"){ TP.Context().dialogTop=16;  TP.Context().dialogRight=100; }
 	    else                        { TP.Context().dialogTop=235; TP.Context().dialogRight=260; }
 	   console.log(TP.Context().dialogTop)
 	
@@ -322,9 +346,11 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	     $("<div/>", {id: "zone"+ID, title: target}).appendTo("html");
 	
 	    var dialog = $("[id=zone" + ID + "]");
-	    console.log(dialog);
-	
+
+//	    console.log(dialog);
+		
 	    dialog.dialog({
+	    	id:"btn-cancel",
 	        height: TP.Context().dialogHeight,
 	        width: TP.Context().dialogWidth,    
 	        position: "right-"+ TP.Context().dialogRight + " top+" + TP.Context().dialogTop ,/*{my: "center", at: "center", of: "#container"}*/
@@ -334,7 +360,7 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	        containment: "#container",
 	        opacity: 0.70
 	    });
-	
+		
 	    /****   en-tête du dialog   ****/
 	
 	    var titlebar = dialog.parents('.ui-dialog').find('.ui-dialog-titlebar');
@@ -347,14 +373,22 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	        var interact = $(this).button("option","label");
 	        if (interact=="Move")   { $(this).button("option", "label", "Select");}
 	        else                    { $(this).button("option", "label", "Move");}
-	        TP.Context().stateStack[ID].executeCurrentState();
+	        //TP.Context().stateStack[ID].executeCurrentState();
+	        TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
 	    });
+	    
+	    
+	    $('#toggle' + ID).attr("idView", ID);
+	    
+	    //$("#toggle"+ID).click(function(event){event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase:event.data}, event]);})
+	    
+	    
 
 	    var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
 	    dialog.parents('.ui-dialog').find('.ui-button').each(function(){minWidth+=$(this).width()})
 		dialog.dialog({minWidth:minWidth+ 25}) 
 	    
-	    if (typeView==="substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
+	    if (typeView === "substrate"){titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")}
 
 	    dialog.parent().click(function(){ 
 	    	var oldID=TP.Context().activeView
@@ -467,15 +501,17 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 		        nodeInformation = true;           
 	           
 	            TP.Interaction().createLasso(ID);
-	            TP.Interaction().addZoom(ID);
+	            //TP.Interaction().addZoom(ID);
+	            TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
+	          //  __g__.getController().sendMessage("select");
 	            
 	            if(typeView == "substrate"){
 	           		//objectReferences.InteractionObject.addZoom(target);
 	                //TP.Interface().addEntanglementFeedback(ID);
-	           }
-	            TP.Context().stateStack[ID] = new TP.States();
-	            TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
-	            TP.Context().stateStack[ID].executeCurrentState();             
+	            }
+	            //TP.Context().stateStack[ID] = new TP.States();
+	            //TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
+	            //TP.Context().stateStack[ID].executeCurrentState();             
 	        }
 	    }    
 	    
@@ -486,7 +522,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 	                .append("svg")
 	                .attr("width", "100%")
 	                .attr("height", "100%")
-	                .attr("id", tabDataSvg[4]);
+	                .attr("id", tabDataSvg[4])
+	         		.attr("idView", ID);
+	         
+	         	
 
 	                //.attr("viewBox", "0 0 500 600");
 	                
@@ -518,9 +557,13 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
      	 
      	 if(typeView === "substrate" || typeView === "catalyst" || typeView === "combined" )
      	 	graphDrawing = new TP.GraphDrawing(graph, svg ,id );
+     	 
+
+//     	 d3.select("#zone"+ID)[0][0].addEventListener("mousedown", function(){TP.Context().getViewEvent(__g__.id.split("zone")[1]);}, false);
+//     	 d3.select("#zone"+ID)[0][0].addEventListener("mouseup", function(){TP.Context().delSelectionView();}, false);
 	}
 	
-	     this.buildLinks = function(){
+	     __g__.buildLinks = function(){
 		     if(idAssociation != null)	{
 		            		
 		            		if(typeView !== "combined"){
@@ -546,9 +589,10 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 		     }
 	     }
 	     
-	     this.remove = function() {
+	     __g__.remove = function() {
 	     	
 	     	d3.select("#zone"+ID).remove();
+	     	controller.remove();
 	     	
 		    tabDataSvg = null;
 		    viewGroup = null;
@@ -596,11 +640,6 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
 		   	idAssociation = null;
 		   	graphDrawing = null;	     	
 	     }
-		
-
-//utilisé pour test nombre View
-	
-
 
     return __g__;
 

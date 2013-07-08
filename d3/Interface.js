@@ -11,7 +11,7 @@
 
     import_class('context.js', 'TP');
     import_class("objectReferences.js", "TP");
-
+	import_class("Controller.js", 'TP');
 
     var Interface = function () {
         assert(false,'Interface')
@@ -109,7 +109,16 @@
             //assert(true,'Interface -> toggleSelectMove')
             if (!target) return
 
-            var svg = TP.Context().view[target].getSvg();
+			
+			var view = null;
+			view = TP.Context().view[target];
+
+            var svg = null
+            svg = view.getSvg();
+			
+            //eval("TP.Context().select_mode_"+target+" = ! TP.Context().select_mode_"+target);
+            //eval("TP.Context().move_mode_"+target+" = ! TP.Context().move_mode_"+target);
+            //TP.Context().tabSelectMode[target] = !TP.Context().tabSelectMode[target];
 
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
@@ -117,19 +126,24 @@
             if(TP.Context().view[target].getSelectMode()) {            	
                 svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor); 
-                objectReferences.InteractionObject.addLasso(target);
-                objectReferences.InteractionObject.removeZoom(target);
+                //objectReferences.InteractionObject.addLasso(target);
+                
+                view.getController().sendMessage("select"); //send Message "select" to the StateController
+                
+                //objectReferences.InteractionObject.removeZoom(target);
             }
 
             if(TP.Context().view[target].getMoveMode()) {
                 svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
                 svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
-                objectReferences.InteractionObject.removeLasso(target);
-                objectReferences.InteractionObject.addZoom(target);
+                //objectReferences.InteractionObject.removeLasso(target);
+                //objectReferences.InteractionObject.addZoom(target);
+                
+                view.getController().sendMessage("move");
             }
         }
 
-
+/*
         this.addSettingsButton = function (target) {
             assert(true,'Interface -> addSettingsButton')
             objectReferences.InterfaceObject.holdSVGInteraction(target) //before, there was only substrate
@@ -219,20 +233,32 @@
                     })
             })
         }
+*/
 
 
         this.attachInfoBox = function () {
             //assert(true, 'Interface -> attachInfoBox');
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    //console.log(d)
-                     $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
-                    for(var k in d){
-                        //console.log(k, d[k])
-                        $('#infoNodes').append("<li><label style='font-weight:bold'>"+ k+ ":</label> "+ d[k] + "</li>");
-                    }
-                    $('#infoNodes').append("</ul>");
+
+                    //objectReferences.InterfaceObject.addInfoBox(d)
+                    TP.Controller().sendMessage("mouseoverInfoBox", {node:d}, "principal", "undifined")
                 });
+        }
+
+
+        this.addInfoBox = function (event) {
+        	
+        	var node = event.associatedData.node;
+        	
+            //console.log(d)
+             $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
+            for(var k in node){
+                //console.log(k, d[k])
+                $('#infoNodes').append("<li><label style='font-weight:bold'>"+ k+ ":</label> "+ node[k] + "</li>");
+            }
+            $('#infoNodes').append("</ul>");
+
         }
 
 
@@ -312,7 +338,7 @@
             i=0;
             $('<ul/>', {id:'nav'}).appendTo(content);
             for(var key in buttons){
-                //console.log(buttons)
+                console.log("Buttons: ",buttons)
                 fam = $('<li/>',{ class:'tglFamily'}).appendTo('#nav');
                 $('<a/>',{text:key}).appendTo(fam)
                 $('<ul/>',{id:'family-'+i, class:'family'}).appendTo(fam);
@@ -432,6 +458,7 @@
             return elem;
         }
 
+
         this.createArrayButtons = function(tab,pane){
             var menu = pane;
             var label,param,evnt;
@@ -457,7 +484,6 @@
                     submit.click(function(e){return function(ev){objectReferences.InterfaceObject.callbackMenu(submit, e)}}(evnt))
                 }
             }
-
 
             $( "#sizemap" ).slider({ 
                 range: true,
@@ -510,16 +536,21 @@
                     res[key] += ", "+param.val();
             })
 
+
             data = param.siblings("input[type='text']")
-            for(var i=0; i<data.length; i++){
+            
+            var end = data.length;
+            for(var i=0; i<end; i++){
                 key = 'text'+i;
+
                 val = data[i].value;
                 res[key] = val;
             }
 
             data = param.siblings('.slider');
             var data2 = param.siblings('.slider');
-            for(var i=0; i<data.length; i++){
+            end = data.length;
+            for(var i=0; i<end; i++){
                 key = 'valMin'+i
                 val = data.eq(i).slider("values",0);
                 res[key] = val;

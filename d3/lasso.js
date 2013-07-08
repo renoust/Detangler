@@ -22,7 +22,7 @@
 
 (function () {
 
-    var Lasso = function (svg) {
+    var Lasso = function (viewID) {
 
         // __g, the container to return and manipulate through the callbacks
         // cSvg, the current svg
@@ -42,7 +42,11 @@
 
         //console.log('creating a lasso object with', svg);
         var __g = this;
-        __g.cSvg = svg;
+        
+        __g.cSvg = null;
+        
+        if(viewID != null)
+        __g.cSvg = TP.Context().view[viewID].getSvg();
 
         __g.started = false;
         __g.canMove = false;
@@ -101,8 +105,123 @@
         // We first initiate the useful variables to draw the lasso, then 
         // create the group element and its behaviors (mouseover, mouseout, 
         //mousedown, mousemove, mouseup)
+        
+        __g.mouseoverMouseDown = function(event)
+        {
+        	
+        	var source = event.associatedData.source;
+        	
+        	var obj = TP.Context().view[source].getLasso();
+        	
+        	if (obj.started || obj.canMove) return;
+                obj.canMove = true;
+        }
+        
+        __g.mouseoutMouseDown = function(event)
+        {
+        	
+        	var source = event.associatedData.source;
+        	
+        	var obj = TP.Context().view[source].getLasso();
+        	
+            obj.canMove = false;
+        }
+
+        __g.mousedownMouseDown = function(event)
+        {
+        	
+        	var source = event.associatedData.source;        	
+        	var obj = TP.Context().view[source].getLasso();            
+            var mouse = event.associatedData.mouse;
+            
+            obj.prevMovePoint = [mouse[0], mouse[1]];
+            obj.moveLasso = true;
+        }
+        
+        __g.mousemoveMouseDown = function(event)
+        {
+         	var source = event.associatedData.source;        	
+        	var obj = TP.Context().view[source].getLasso();         	
+        	var mouse = event.associatedData.mouse;
+        	var d = event.associatedData.d;
+        	
+            if (obj.moveLasso) {
+
+                var coord = mouse;
+                var dx = coord[0] - obj.prevMovePoint[0];
+                var dy = coord[1] - obj.prevMovePoint[1];
+					
+				var end = d.length;
+					
+                for (var i = 0; i < end; i++) {
+                    d[i][0] = d[i][0] + dx;
+                    d[i][1] = d[i][0] + dy;
+                }
+
+                var strPointList = "";
+                    
+                end = obj.pointList.length;
+                    
+                for (var i = 0; i < end; i++) {
+                    obj.pointList[i][0] = obj.pointList[i][0] + dx;
+                    obj.pointList[i][1] = obj.pointList[i][1] + dy;
+                    var p = obj.pointList[i]
+                    strPointList += p[0] + ',' + p[1] + ' '
+                }
+
+                if (obj.isLasso()) {
+                    obj.cSvg.select("polygon.brush")
+                       .data(obj.pointList)
+                        .attr("points", strPointList)
+                        .attr("style", function () {
+                            return "fill:" + obj.fillColor + ";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.5";
+                        })
+                } else {
+                    var p0 = obj.pointList[0]
+                    var p1 = obj.pointList[obj.pointList.length - 1]
+                    obj.cSvg.select("rect.view")
+                        .data([1])
+                        .attr("x", Math.min(p0[0], p1[0]))
+                        .attr("y", Math.min(p0[1], p1[1]))
+                        .attr("width", Math.abs(p0[0] - p1[0]))
+                        .attr("height", Math.abs(p0[1] - p1[1]))
+                        .style("fill", function () {
+                            return obj.fillColor;
+                        })
+                        .style("fill-opacity", .5)
+                        .style("stroke", "purple")
+                        .style("stroke-width", 2)
+                     obj.cSvg.selectAll("g.resize")
+                        .data([])
+                        .exit()
+                        .remove()
+                     obj.drawResizeRectangles(p0, p1);
+                }
+                    
+                var p = mouse;
+                obj.prevMovePoint = [p[0], p[1]];
+               
+                //obj.checkIntersect();
+                TP.Context().view[source].getController().sendMessage("zoneApparu");
+             };
+	    }
+	    
+	    
+        __g.mouseupMouseDown = function(event)
+        {        	
+        	var source = event.associatedData.source;        	
+        	var obj = TP.Context().view[source].getLasso();            
+            var mouse = event.associatedData.mouse;
+            
+            if (obj.moveLasso) {
+                var coord = mouse;
+            }
+            obj.moveLasso = false;
+        }
+        	     
+        
         __g.mouseDown = function (e) {
-        	console.log("mouseDown8")
+        	assert(false,"lasso_mouseDown")
         	
             if (__g.started || __g.canMove /*|| __g.isResizing*/)
                 return;
@@ -126,20 +245,22 @@
                 .data(__g.pointList)
                 .attr("class", "brush")
             // allow to move the brush when the mouse pass over
-            .on("mouseover", function (d) {
+            .on("mouseover", function (d) {/*
                 if (__g.started || __g.canMove) return;
-                __g.canMove = true;
+                __g.canMove = true;*/
+               TP.Context().view[viewID].getController().sendMessage("mouseoverMouseDown");
             })
             // disables the brush ability to be moved
             .on("mouseout", function (d) {
-                __g.canMove = false;
+               TP.Context().view[viewID].getController().sendMessage("mouseoutMouseDown");
             })
             // enter the 'moving' mode, and stores the first point
             .on("mousedown", function (d) {
-            	console.log("mouseDown9")
+            	/*
                 var p = d3.mouse(this);
                 __g.prevMovePoint = [p[0], p[1]];
-                __g.moveLasso = true;
+                __g.moveLasso = true;*/
+               TP.Context().view[viewID].getController().sendMessage("mousedownMouseDown", {mouse:d3.mouse(this)});
             })
             // defines the moving behavior:
             // first compute the translation vector and applies it to each 
@@ -152,67 +273,11 @@
             // if it intersects with any point in the view, and store the
             // mouse pointer.
             .on("mousemove", function (d) {
-                if (__g.moveLasso) {
-                    var coord = d3.mouse(this);
-                    var dx = coord[0] - __g.prevMovePoint[0];
-                    var dy = coord[1] - __g.prevMovePoint[1];
-
-                    for (var i = 0; i < d.length; i++) {
-                        d[i][0] = d[i][0] + dx;
-                        d[i][1] = d[i][0] + dy;
-                    }
-
-                    var strPointList = "";
-                    for (var i = 0; i < __g.pointList.length; i++) {
-                        __g.pointList[i][0] = __g.pointList[i][0] + dx;
-                        __g.pointList[i][1] = __g.pointList[i][1] + dy;
-                        var p = __g.pointList[i]
-                        strPointList += p[0] + ',' + p[1] + ' '
-                    }
-
-                    if (__g.isLasso()) {
-                        __g.cSvg.select("polygon.brush")
-                            .data(__g.pointList)
-                            .attr("points", strPointList)
-                            .attr("style", function () {
-                                return "fill:" + __g.fillColor + ";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.5";
-                            })
-                    } else {
-                        var p0 = __g.pointList[0]
-                        var p1 = __g.pointList[__g.pointList.length - 1]
-
-                        __g.cSvg.select("rect.view")
-                            .data([1])
-                            .attr("x", Math.min(p0[0], p1[0]))
-                            .attr("y", Math.min(p0[1], p1[1]))
-                            .attr("width", Math.abs(p0[0] - p1[0]))
-                            .attr("height", Math.abs(p0[1] - p1[1]))
-                            .style("fill", function () {
-                                return __g.fillColor;
-                            })
-                            .style("fill-opacity", .5)
-                            .style("stroke", "purple")
-                            .style("stroke-width", 2)
-
-                        __g.cSvg.selectAll("g.resize")
-                            .data([])
-                            .exit()
-                            .remove()
-
-                        __g.drawResizeRectangles(p0, p1);
-                    }
-
-                    __g.checkIntersect();
-                    var p = d3.mouse(this);
-                    __g.prevMovePoint = [p[0], p[1]];
-                }
+				TP.Context().view[viewID].getController().sendMessage("mousemoveMouseDown", {mouse:d3.mouse(this), d:d})
             })
             // ends the moving phase, disable the 'moveLasso' trigger
             .on("mouseup", function (d) {
-                if (__g.moveLasso) {
-                    var coord = d3.mouse(this);
-                }
-                __g.moveLasso = false;
+				TP.Context().view[viewID].getController().sendMessage("mouseupMouseDown", {mouse:d3.mouse(this)})
             })
 
 
@@ -241,6 +306,9 @@
         // removed from the scene, and if the brush still matches to a 
         //rectangle shape, then a new one is constructed
         __g.mouseMove = function (e) {
+        	
+        	//assert(false,"lasso_mouseMove")
+        	
             if (__g.isResizing) {
 
                 var p0 = __g.pointList[0];
@@ -310,6 +378,9 @@
         // Any intersection is finally checked and the starting flag is turned 
         // off, useless path and rect are cleaned.
         __g.mouseUp = function (e) {
+        	
+        	assert(false,"lasso_mouseUp")
+        	
             if (__g.isResizing) __g.isResizing = false;
             if (!__g.started || __g.canMove) return;
             var prevPoint = __g.pointList[__g.pointList.length - 1];
@@ -340,7 +411,10 @@
                 __g.pointList.push([prevPoint[0], prevPoint[1]]);
 
                 var strPointList = ""
-                for (i = 0; i < this.pointList.length; i++) {
+                
+                var end = this.pointList.length;
+                
+                for (i = 0; i < end; i++) {
                     var p = __g.pointList[i]
                     strPointList += p[0] + ',' + p[1] + ' '
                 }
@@ -399,7 +473,8 @@
                     .remove();
             }
 
-            __g.checkIntersect()
+            //__g.checkIntersect()
+            TP.Context().view[viewID].getController().sendMessage("zoneApparu");
 
             // reactivation of the text selection
             __g.cSvg.selectAll("text")
@@ -421,6 +496,27 @@
                 .exit()
         }
 
+
+		__g.mousedownResizeGroup = function(event)
+		{
+			var source = event.associatedData.source;
+			var direction = event.associatedData.direction;
+			
+			var obj = TP.Context().view[source].getLasso();
+			
+			obj.isResizing = true;
+			obj.resizeDirection = direction;
+		}
+
+		__g.mouseupResizeGroup = function(event)
+		{
+			var source = event.associatedData.source
+			
+			var obj = TP.Context().view[source].getLasso();
+			
+			obj.isResizing = false;
+		}
+		
 
         // This method draws invisible rectangles 10px wide around a given 
         // rectangle defined by its north-west and south-east corners p0 and p1.
@@ -447,13 +543,15 @@
                 .style("fill", "black")
                 .style("fill-opacity", 0)
                 .style("cursor", "w-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown1")
                     __g.isResizing = true;
-                    __g.resizeDirection = "west";
+                    __g.resizeDirection = "west";*/
+                   TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"west"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                	//__g.isResizing = false;
+                	TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -467,13 +565,15 @@
                 .style("fill", "black")
                 .style("fill-opacity", 0)
                 .style("cursor", "e-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown2")
                     __g.isResizing = true;
-                    __g.resizeDirection = "east";
+                    __g.resizeDirection = "east";*/
+                    TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"east"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -487,14 +587,16 @@
                 .style("fill", "black")
                 .style("fill-opacity", 0)
                 .style("cursor", "n-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown3")
                     __g.isResizing = true;
-                    __g.resizeDirection = "north";
+                    __g.resizeDirection = "north";*/
+                   TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"north"})
                 })
                 .on("mousemove", function () {})
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -509,12 +611,15 @@
                 .style("fill-opacity", 0)
                 .style("cursor", "s-resize")
                 .on("mousedown", function () {
+                	/*
                 	console.log("mouseDown3")
                     __g.isResizing = true;
-                    __g.resizeDirection = "south";
+                    __g.resizeDirection = "south";*/
+                   TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"south"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -528,13 +633,15 @@
                 .style("fill", "red")
                 .style("fill-opacity", 0)
                 .style("cursor", "nw-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown4")
                     __g.isResizing = true;
-                    __g.resizeDirection = "north_west";
+                    __g.resizeDirection = "north_west";*/
+                    TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"north_west"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -548,13 +655,15 @@
                 .style("fill", "red")
                 .style("fill-opacity", 0)
                 .style("cursor", "sw-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown5")
                     __g.isResizing = true;
-                    __g.resizeDirection = "south_west";
+                    __g.resizeDirection = "south_west";*/
+                    TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"south_west"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -568,13 +677,15 @@
                 .style("fill", "red")
                 .style("fill-opacity", 0)
                 .style("cursor", "se-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown6")
                     __g.isResizing = true;
-                    __g.resizeDirection = "south_east";
+                    __g.resizeDirection = "south_east";*/
+                   TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"south_east"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
 
             resizeGroup.append("rect")
@@ -588,13 +699,15 @@
                 .style("fill", "red")
                 .style("fill-opacity", 0)
                 .style("cursor", "ne-resize")
-                .on("mousedown", function () {
+                .on("mousedown", function () {/*
                 	console.log("mouseDown7")
                     __g.isResizing = true;
-                    __g.resizeDirection = "north_east";
+                    __g.resizeDirection = "north_east";*/
+                   TP.Context().view[viewID].getController().sendMessage("mousedownResizeGroup", {direction:"north_east"})
                 })
                 .on("mouseup", function () {
-                    __g.isResizing = false;
+                    //__g.isResizing = false;
+                    TP.Context().view[viewID].getController().sendMessage("mouseupResizeGroup")
                 })
         }
 
@@ -729,7 +842,8 @@
                 .style("fill-opacity", .5)
                 .style("stroke", "purple")
                 .style("stroke-width", 2)
-            __g.checkIntersect();
+            //__g.checkIntersect();
+            TP.Context().view[viewID].getController().sendMessage("zoneApparu");
             return
         }
 
@@ -747,7 +861,12 @@
             var i = 0
             var j = 0
             var c = 0;
-            for (i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+            
+            var end1 = polygon.length;            
+            var end2 = end1 - 1;
+
+            
+            for (i = 0, j = end2; i < end1; j = i++) {
                 if ((((polygon[i][1] <= y) && (y < polygon[j][1])) || ((polygon[j][1] <= y) && (y < polygon[i][1]))) &&
                     (x < (polygon[j][0] - polygon[i][0]) * (y-polygon[i][1])/(polygon[j][1]-polygon[i][1]) + polygon[i][0]))
                     c = !c;
