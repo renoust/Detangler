@@ -1,0 +1,28 @@
+/*
+ * editablegrid-2.0.1.css
+ * 
+ * This file is part of EditableGrid.
+ * http://editablegrid.net
+ *
+ * Copyright (c) 2011 Webismymind SPRL
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://editablegrid.net/license
+ */
+
+td.number {
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+
+td.boolean {
+	text-align: center;
+}
+
+th.boolean {
+	text-align: center;
+}
+table.testgrid { border-collapse: collapse; border: 1px solid #CCB; width: 800px; }
+			table.testgrid td, table.testgrid th { padding: 5px; border: 1px solid #E0E0E0; }
+			table.testgrid th { background: #E5E5E5; text-align: left; }

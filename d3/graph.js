@@ -147,7 +147,10 @@
 			}	
 			
             g.links_array.forEach(function (d, i) {
-				for (var j = 0; j<_attributes.length; j++)//nodes[i])
+            	
+            	var end = _attributes.length;
+            	
+				for (var j = 0; j<end; j++)//nodes[i])
 				{
 					var keys = _attributes[j]
 					var keyIn = keys["in"];

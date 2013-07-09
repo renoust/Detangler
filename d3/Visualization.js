@@ -18,8 +18,10 @@
         var objectReferences = TP.ObjectReferences();
 
 
-        this.showhideLinks = function (target) {
-
+        this.showhideLinks = function (event) {
+			
+			var target = event.associatedData.source;
+			
             if (!target)return
 
             var svg = null
@@ -29,9 +31,9 @@
 
             if (TP.Context().view[target].getShowLinks()) {
                 svg.selectAll('g.link').attr("visibility", "visible");
-                $('.ui-accordion-header').each(function(){if($(this).text()==='show links'){$(this).text('hide links')} })
+                $('li.form > a').each(function(){if($(this).text()==='Show links'){$(this).text('Hide links')} })
             } else {
-                $('.ui-accordion-header').each(function(){if($(this).text()==='hide links'){$(this).text('show links')} })
+               $('li.form > a').each(function(){if($(this).text()==='Hide links'){$(this).text('Show links')} })
                 svg.selectAll('g.link').attr("visibility", "hidden");
             }
         }
@@ -72,7 +74,7 @@
             if (TP.Context().view[target_source].getLasso()) 
                 TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
         }
-
+/*
         this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code
             var matrixData = [];
             nbNodes = TP.Context().view[target].getGraph().nodes().length;
@@ -105,7 +107,7 @@
 
             function move() {
 
-                assert(true, "toto = titi")
+                //assert(true, "toto = titi")
 
                 objectReferences.VisualizationObject.parentNode.appendChild(this);
                 var dragTarget = d3.select(this);
@@ -119,7 +121,7 @@
                 var newX = parseInt(panelPos[0]) + posX
                 var newY = parseInt(panelPos[1]) + posY
 
-                console.log(panelPos);
+                //console.log(panelPos);
 
                 dragTarget.attr("transform", function (d) {
                     d.panelPosX = newX;
@@ -213,10 +215,13 @@
                 })
             })
         }
+*/
 
 
-
-        this.resetView = function (target) {
+        this.resetView = function (event) {
+        	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 			
@@ -249,7 +254,13 @@
 	       	objectReferences.VisualizationObject.entanglementCaught(target);
         }
 
-        this.resetSize = function (target) {
+
+
+
+        this.resetSize = function (event) {
+        	        	       	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 
@@ -263,7 +274,13 @@
             TP.Context().view[target].getGraphDrawing().resize(cGraph, 0)
         }
 
-		this.rotateGraph = function (target) {
+
+
+
+		this.rotateGraph = function (event) {
+			
+			var target = event.associatedData.source;
+			
             var cGraph = null
             var svg = null
 
@@ -273,7 +290,10 @@
             TP.Context().view[target].getGraphDrawing().rotate(target,5)
         }
         
-        this.arrangeLabels = function (target) {
+        this.arrangeLabels = function (event) {
+        	
+        	var target = event.associatedData.source;
+        	
             var cGraph = null
             var svg = null
 
@@ -299,8 +319,10 @@
 
 
 
-        this.showhideLabels = function (target) {
-
+        this.showhideLabels = function (event) {
+			
+			var target = event.associatedData.source;
+			
             if (!target)
                 return
 
@@ -315,7 +337,7 @@
                 svg.selectAll('text.node').attr("visibility", function (d) {
                     return "visible";
                 });
-                $('.ui-accordion-header').each(function(){if($(this).text()==='show labels'){$(this).text('hide labels')} })                
+                $('li.form > a').each(function(){if($(this).text()==='Show labels'){$(this).text('Hide labels')} })                
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
 
@@ -323,7 +345,7 @@
                         return "hidden";
 
                 });
-                $('.ui-accordion-header').each(function(){if($(this).text()==='hide labels'){$(this).text('show labels')} })
+                $('li.form > a').each(function(){if($(this).text()==='Hide labels'){$(this).text('Show labels')} })
             }
         }
 
@@ -362,7 +384,12 @@
 
 
 
-        this.sizeMapping = function (parameter, graphName, scales) {
+        this.sizeMapping = function (event) {
+        	
+        	var parameter = event.associatedData.parameter;
+        	var idView = event.associatedData.idView;
+        	var scales = event.associatedData.scales;
+        	
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
@@ -370,11 +397,11 @@
             if (scales!=null){scaleMin=scales.valMin0; scaleMax=scales.valMax0}
 
 
-            svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().view[graphName].getGraph();
+            svg = TP.Context().view[idView].getSvg();
+            cGraph = TP.Context().view[idView].getGraph();
 
-            TP.Context().view[graphName].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
-            objectReferences.VisualizationObject.entanglementCaught(graphName);
+            TP.Context().view[idView].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric:parameter, scaleMin:scaleMin ,scaleMax:scaleMax });
+            objectReferences.VisualizationObject.entanglementCaught(idView);
 
         };
 
@@ -395,489 +422,100 @@
         };
 
 
-        this.drawBarChart = function(target, smell){
- 
-            var svg = null
-            svg = TP.Context().view[target].getSvg();
+        this.drawDataBase = function(target){
+            var svg = TP.Context().view[target].getSvg();
+            nodes = svg.selectAll('g.node').data()
 
-            var tabMetric = TP.Context().view[target].getMetric_BC();
-
-            var numberMetric = tabMetric[0];       
-            var metric = tabMetric[1];
-            var tabSommet = tabMetric[2];
-                        
-            var tabClick = [];            
-            
-            
-            for (i = 0; i < metric.length; i++)
-            {
-               tabClick[""+metric[i]+""] = 0;
-            }
-
-            //console.log("mettttrrrrrrrriiiiiiicccccc : ");
-            //console.log(tabClick);
-            
-            //console.log("metric[0] : " + tabClick[""+metric[0]+""])
-            
-            assert(true, "erreur1");
-            
-            var id = ""+TP.Context().getIndiceView();
-            
-            console.log("iddddddddddddddddddddddd : "+id)
-            
-            TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
-            new Array("svg_BarChart", null, width, height, "svg_BarChart_"+smell+"_"+id), "BarChart_"+smell+"_"+TP.view[target].getName(), null, null, null, null,  "barchart", target);
-            
-            console.log(TP.Context().view[id]);
-            
-            TP.Context().view[id].addView();			
-			TP.Context().view[id].buildLinks();
-			
-			assert(true, "erreur2");
-			
-            var chart;
-            
-            if(smell == "base"){
-                    
-                    
-                //var chart;
-                var width = 400;
-                var bar_width = 20;
-                var height = bar_width * numberMetric.length;           
-    
-                var left_width = 200;                   
-    
-                var chartt = d3.select("#zone"+id).append("svg")
-                  .attr('class', 'chart_'+smell+"_"+id)
-                  //.attr('width', width+left_width)
-                  //.attr('height', height);
-                  .attr('width', "100%")
-                  .attr('height', "100%")   
-                
-                chart = d3.select('.chart_'+smell+"_"+id);    
-                
-                var x, y;
-                x = d3.scale.linear()
-                   .domain([0, d3.max(numberMetric)])
-                   .range([0, width]);      
-      
-      
-                y = d3.scale.ordinal()
-                   .domain(numberMetric)
-                   .rangeBands([0, height]);
-                //return;
-                
-                //console.log(y.rangeBand());
-    
-                //console.log(tabSommet);
-                
-                chart.selectAll("rect")
-                   .data(tabSommet)
-                   .enter().append("rect")
-                   .attr("x", left_width)
-                   .attr("y", function(d, i) { return i * bar_width; })
-                   .attr("width", function(d){ return x(d[0]); })
-                   .attr("height", 20)
-                   .style("stroke", "white")
-                   .style("fill", "steelblue")
-                
-                
-                chart.selectAll("text.score")
-                  .data(numberMetric)
-                  .enter().append("text")
-                  .attr("x", function(d) { return x(d) + left_width;})
-                  .attr("y", function(d, i){ return (i * bar_width)+10;})
-                  .attr("dx", -5)
-                  .attr("dy", ".36em")
-                  .attr("text-anchor", "end")
-                  .style("fill", "white")
-                  .text(String);
-    
-    
-                chart.selectAll("text.name")
-                  .data(metric)
-                  .enter().append("text")
-                  .attr("x", left_width / 2)
-                  .attr("y", function(d,i){ return (i * bar_width)+10; } )
-                  .attr("dy", ".36em")
-                  .attr("text-anchor", "middle")
-                  .attr('class', 'name')
-                  .text(String);
-              }
-              
-              if(smell == "rotate" )
-              {
-                
-                var margin = {top: 30, right: 10, bottom: 200, left: 130};
-                
-                var height = 400;
-                var bar_width = 40;
-                var width = bar_width * numberMetric.length;        
-    
-                //var left_width = 200;
-                var chartt = d3.select("#zone"+id).append("svg")
-                  .attr('class', 'chart_'+smell+"_"+id)
-                  //.attr('width', width+margin.left+margin.right)
-                  //.attr('height', height+margin.top+margin.bottom)
-                  .attr('width', "100%")
-                  .attr('height', "100%")                 
-                  .append("g")
-                  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                
-                
-                var x, y;
-                x = d3.scale.ordinal()
-                   .domain(metric)
-                   .rangeBands([0, width]);     
-      
-                y = d3.scale.linear()
-                   .domain([0, d3.max(numberMetric)])
-                   .range([height, 0]);
-                
-                var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom");
-                
-                var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient("left");    
-                
-                chart = d3.select('.chart_'+smell+"_"+id).select("g");
-                
-
-                
-                chart.append("g")
-                    .attr("class", "x_axis_BarChart"+smell+"_"+id)
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(xAxis)
-                    .style("fill", "none")
-                    .style("stroke", "#000")
-                    .style("shape-rendering", "crispEdges");
-                
-                chart.append("g")
-                    .attr("class", "y_axis_BarChart"+smell+"_"+id)                    
-                    .call(yAxis)
-                    .style("fill", "none")
-                    .style("stroke", "#000")
-                    .style("shape-rendering", "crispEdges");
-                    
-                chart.selectAll("rect")
-                   .data(tabSommet)
-                   .enter().append("rect")
-                    .attr("x", function(d,i) {return x(d[2]);})
-                    .attr("y", function(d) {return y(d[0]);})
-                    .attr("width",bar_width)
-                    .attr("height", function(d) {return height - y(d[0]);})
-                    .style("stroke", "white")
-                    .style("fill", "steelblue");
-                    
-                    
-                chart.selectAll("text.score")
-                  .data(tabSommet)
-                  .enter().append("text")
-                  .attr("x", function(d,i) {return (x(d[2]) + (bar_width+1)/2)})
-                  .attr("y", function(d){ return y(d[0])+11;})
-                  //.attr("dy", ".36em")
-                  .attr("text-anchor", "end")
-                  .style("fill", "white")
-                  .text(function(d){return ""+d[0];});
-                  
-                var texte = d3.selectAll(".x_axis_BarChart"+smell+"_"+id).selectAll("g.tick")
-                              .attr("text-anchor", "middle")
-                              .selectAll("text")
-                              .style("text-anchor", "end");
-                  
-                    //texte.attr("dd", function(d) {console.log(this.getBBox());});
-                    
-                texte.attr("transform", function(d) {return "translate(" + this.getBBox().height * -1 + "," + 0  + ")rotate(-30)";});
-                
-              }
-                        
-                chart.selectAll("rect")                     
-                    .on('mouseover', function(d,i) {
-                            d3.select(this).style('fill','red');
-                            //if(click == 0){
-                            
-                            //console.log(d3.select(this).data()[0]);
-                            var value = d3.select(this).data()[0];
-                            
-                            //console.log(value[1]);
-                            
-                            var node = svg.selectAll("g.node")
-                                .select("g."+TP.Context().view[target].getType())
-                                .select("rect")                
-                                .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                .style("fill", "red");
-                                //.enter()
-                            
-                            //console.log(node);            
-                        //}
-                    })
-                   .on('mouseout', function(d,i) {
-                    
-                            var value = d3.select(this).data()[0];
-                            
-                            // console.log(value[2]);
-                            // console.log("tableau : "+tabClick[""+value[2]]);
-                            
-                            if(tabClick[""+value[2]] == 0){
-                                
-                                d3.select(this).style('fill',"#4682b4");
-                                
-                                
-                                var node = svg.selectAll("g.node")
-                                    .select("g."+TP.Context().view[target].getType())
-                                    .select("rect")                
-                                    .data(value[1], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                                    .style("fill", TP.Context().view[target].getNodesColor());   
-                                
-                            }               
-    
-                    })
-                    .on('click', function(d,i) {
-                        //click = 1;
-                        var value = d3.select(this).data()[0];
-                        
-                        //console.log(value[2]);
-                        //console.log("tableau1 : "+tabClick[""+value[2]]);
-                        
-                        if(tabClick[""+value[2]] == 1){
-                            tabClick[""+value[2]] = 0;
-                        }
-                        else {
-                            if(tabClick[""+value[2]] == 0){
-                                tabClick[""+value[2]] = 1;
-                            }       
-                        }           
-                        //console.log("tableau2 : "+tabClick[""+value[2]]);
-                        d3.select(this).style('fill','red');                    
-                    });
-              
-        }
-        
-        
-        this.drawScatterPlot = function(target){
-        	
-            var svg = null
-            svg = TP.Context().view[target].getSvg();
-
+            //creation of a new view
             var margin = {top: 20, right: 15, bottom: 60, left: 60}
-
-
-			var tabMetric = TP.Context().view[target].getMetric_SP();
-
-            var numberMetric = tabMetric[0];
-            var metrics = tabMetric[1];        
-            var metric = tabMetric[2];
-            var axesNames = tabMetric[3];
-            
-            
             var width = 960 - margin.left - margin.right;
             var height =500 - margin.top - margin.bottom;
-            
             var id = ""+TP.Context().getIndiceView();
-            
             TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
-            new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_"+id), "Scatter_Plot_"+TP.view[target].getName(), null, null, null, null, "scatter_plot", target);  
-        	TP.Context().view[id].addView();
-        	TP.Context().view[id].buildLinks();
-        	
-        
-            var tabClick = [];
-            
-            for (i = 0; i < metric.length; i++)
-            {
-               var result = metric[i][3];
-               //console.log("metric : " + result);
-               tabClick[""+result+""] = 0;
-            }
-            
-            /*
-            metric.forEach(function (d, i) {
-                console.log("forEach : "+d[1]);
-                d[1] = height-d[1];
-            });*/
-            
-            var maxX = d3.max(metrics);
-            var maxY = d3.max(numberMetric);
-            var minX = 0;// d3.min(metrics);
-            var minY = 0;//d3.min(numberMetric);
-            
-            var x = d3.scale.linear()
-                  .domain([minX, maxX])  // the range of the values to plot
-                  .range([ minX, width ]);
+            new Array("svg_DataBase", null, width, height, "DataBase"+id), "DataBase"+TP.view[target].getName(), null, null, null, null, null, "DataBase", target);  
+            TP.Context().view[id].addView();
 
-            var y = d3.scale.linear()
-                  .domain([minY, maxY])
-                  .range([ height, minY ]);
-            
-            
-            var scatterP = d3.select("#zone"+id)
-            
-            var scatter = scatterP.append("svg")
-               .attr('class', 'scatterPlot'+id)
-               //.attr('width', width + margin.right + margin.left)
-               //.attr('height', height + margin.top + margin.bottom)
-               .attr('width', "100%")
-               .attr('height', "100%")             
-               .append("g")
-               .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-            scatterP.call(d3.behavior.zoom().x(x).y(y).scaleExtent([0, Infinity]).on("zoom", zoomm));
-            
-            var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient('bottom');
-                
-            scatter.append('g')
-                  .attr("class", "x_axis_scatterPlot"+id)
-                  .attr("transform", "translate(0," + height + ")")
-                  .call(xAxis)
-                  .style("fill", "none")
-                  .style("stroke", "#000")
-                  .style("shape-rendering", "crispEdges")
-                .append("text")
-                  .attr("class", "label_x_axis_scatterPlot"+id)
-                  .attr("x", width)
-                  .attr("y", -6)
-                  .style("text-anchor", "end")
-                  .text(axesNames[0]);
-            
-            var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient('left');        
-            
-            
-            scatter.append('g')
-                  .attr("class", "y_axis_scatterPlot"+id)
-                  .call(yAxis)
-                  .style("fill", "none")
-                  .style("stroke", "#000")
-                  .style("shape-rendering", "crispEdges")                 
-                .append("text")
-                  .attr("class", "label_y_axis_scatterPlot"+id)
-                  .attr("transform", "rotate(-90)")
-                  .attr("y", 6)
-                  .attr("dy", ".71em")
-                  .style("text-anchor", "end")
-                  .text(axesNames[1])
-                
-                            
-            scatter.selectAll(".dot")
-               .data(metric)
-               .enter()
-               .append("circle")              
-               .attr("cx", function(d) { return x(d[0]); })
-               .attr("cy", function(d) { return y(d[1]); })
-               .attr("r", 3.5)
-               .style("stroke", "#000")
-               .style("fill", "steelblue")
-               .on('mouseover', function(d) {
-                    var selection = d3.select(this);
-                    selection.style('fill','red');
+            keys = [];
+            var table =$('<table/>', {id:'dataTable',class:'testgrid', style:'width:100%'}).appendTo('#zone'+id)
+            var colgroup = $('<colgroup/>',{id:'groupe'}).appendTo(table);
+            var thead = $('<thead/>').appendTo(table)
+            var tbody = $('<tbody/>').appendTo(table)
+            var head = $('<tr/>').appendTo(thead)
+           
 
-                      var valeurx = this.cx.animVal.value;
-
-                      
-                      var tab = selection.data()[0];
-
-                     // var svgbis = d3.select("scatterPlotsubstrate");
-                      
-                      var dataTab = [[tab[0], tab[1]]];
-                      
-                      //console.log(scatterP);
-                      
-                      
-                      scatter.selectAll("text.scatterPlot"+id)
-                        .data(dataTab)
-                        .enter()
-                        .append("text")
-                        .classed("scatterPlot"+id, true)
-                        .style("fill", "red")                       
-                       .text(function(d) {
-                             //console.log("titi : "+d[0]);
-                             return "x : "+d[0]+", y : "+d[1];
-                       })
-                       .attr("x", function(d) {
-                            //console.log(d[0]);
-                            return x(d[0]);
-                       })
-                       .attr("y", function(d) {
-                            //console.log(d[1]);
-                            return y(d[1])-5;
-                       })
-                                    
-                        //console.log("mouseover : " + tab[0] );
-                        //console.log(valeurx-50);
-                        
-                        var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().view[target].getType())
-                            .select("rect")                
-                            .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", "red");
-                       
-                })
-               .on('mouseout', function(d) {
-                
-                    var selection = d3.select(this);
-                    var tab = selection.data()[0];
-                    
-                    //console.log("mouseout : " + tab[0] );
-                    
-                    var result = tab[3];
-                    
-                                
-                    scatter.selectAll("text.scatterPlot"+id)
-                         .data([])
-                         .exit()
-                         .remove();
-                                                
-                    if(tabClick[""+result] == 0){   
-                                    
-                        selection.style('fill',"#4682b4");
-                            
-                        var node = svg.selectAll("g.node")
-                            .select("g."+TP.Context().view[target].getType())
-                            .select("rect")                
-                            .data(tab[2], function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
-                            .style("fill", TP.Context().view[target].getNodesColor());   
-                    
-                    }                   
-                })
-                .on('click', function(d,i) {
-                    //click = 1;
-                    var tab = d3.select(this).data()[0];
-
-                    var result = tab[3];
-                    
-                    if(tabClick[""+result] == 1){
-                        tabClick[""+result] = 0;                        
+            for(var i=0;i<nodes.length;i++){
+                for (var key in nodes[0]){
+                    if(keys.indexOf(key)==-1){  //a key is unique
+                        keys.push(key);  
+                        document.getElementById('groupe').innerHTML += '<col style="width:100px"/>';
+                        head.append('<th class="ui-resizable">'+key+'</th>')
                     }
-                    else {
-                        if(tabClick[""+result] == 0){
-                            tabClick[""+result] = 1;
-                        }       
-                    }   
-                                        
-                });
-                
-                function zoomm(){
+                }
+            }
+            var map = []
+            var ligne = []
+
+            for (var i=0; i<nodes.length; i++){
+                for (var key in nodes[i]){
+                    ligne.push(nodes[i][key])
+                }
+                map.push(ligne)
+                ligne=[]
+            }
+            for(var i=0; i<map.length;i++){
+                var l = $('<tr/>',{id:'TR'+i}).appendTo(tbody)
+                for(var j=0;j<map[i].length; j++){
+                    l.append('<td>'+map[i][j]+'</td>')
+                } 
+            }
+
+            for (var r=0; r < table[0].rows.length; r++){
+                for (var c=0; c <table[0].rows[r].cells.length; c++){
                     
-                    scatter.selectAll(".x_axis_scatterPlot"+id)
-                        .call(xAxis);
-                        
-                    scatter.selectAll(".y_axis_scatterPlot"+id)
-                        .call(yAxis);       
-                        
-                    scatter.selectAll("circle")           
-                       .attr("cx", function(d) { return x(d[0]); })
-                       .attr("cy", function(d) { return y(d[1]); })
-                       .attr("r", 3.5)
-                       
-                };                              
+                    $(table[0].rows[r].cells[c]).change(function(a,b){return function(){updateData(a,b)}}(r,c));
+                }
+            }
+
+            function updateData(r,c){
+                newVal = table[0].rows[r].cells[c].childNodes[0].value;
+                hcol = $("tr").find("th:eq("+c+")")[0].childNodes[0].innerHTML
+                bID = table[0].rows[r].cells[0].innerHTML
+                
+                for(var i=0; i<nodes.length;i++){
+                    console.log(bID,nodes[i].baseID)
+                    if(nodes[i].baseID ==bID){
+                        nodes[i][hcol] = newVal;
+                        console.log(nodes[i])
+                    }
+                }
+
+            }
+
+            editableGrid = new EditableGrid("DemoGridAttach"); 
+
+                // we build and load the metadata in Javascript
+            editableGrid.load({ metadata: [
+                { name: "baseID", datatype: "integer", editable: false},
+                { name: "descriptors", datatype: "string", editable: true },
+                { name: "vewLabels", datatype: "string", editable: true },
+                { name: "label", datatype: "string", editable: true },
+                { name: "currentY", datatype: "double", editable: true}, 
+                { name: "currentX", datatype: "double", editable: true },
+                { name: "y", datatype: "double", editable: true },
+                { name: "x", datatype: "double", editable: true },
+                { name: "id", datatype: "double", editable: true },
+                { name: "_type", datatype: "string", editable: true }
+            ]});
+            for(i in editableGrid.columns){editableGrid.columns[i].thousands_separator= ''}
+            // then we attach to the HTML table and render it
+            editableGrid.attachToHTMLTable('dataTable');
+            editableGrid.renderGrid();
+            $('#dataTable').resizable();
         
-        } 
-   
+
+        
+}
+
 /********************************** ON GOING ***********************************/
         this.changeColor = function(graphName, elem, newcolor){
             var cGraph = null;
