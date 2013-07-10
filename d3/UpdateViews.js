@@ -143,8 +143,10 @@
 			
 
             TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
-            TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
-			TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst"); 
+            //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
+            TP.Controller().sendMessage("arrangeLabels", null, viewID, viewID);
+			//TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst");
+			TP.Controller().sendMessage("arrangeLabels", null, "catalyst", "catalyst");
 
         }
 
@@ -311,13 +313,16 @@
           
             TP.Context().metric_substrate_BC = pileCentrality.transformToArray("BarChart");
             TP.Context().metric_substrate_SP = pileCentrality.transformToArray("ScatterPlot");*/
-           
-           var _char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
-           _char.attr("x", function(d){ 
+           /*
+           var char = d3.selectAll("#svg_"+graphName).selectAll("g.node."+TP.Context().view[graphName].getType());
+           char.attr("x", function(d){ 
+
            		//assert(false,d.viewMetric); 
            		pileCentrality.addMetric(d.viewMetric, d); 
            		return d.x; 
-           	});
+           	});*/
+           	
+           	pileCentrality.TreatmentAction(graphName, "viewMetric"/*,["Libye", "tolerance"]*/)
            	
 
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));
@@ -400,7 +405,7 @@
 			data.nodes.forEach(function(d){nodeList.push(d.baseID);})
             //assert(true, "SETTING VIEW TARGET SELECTION");
             //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
-			TP.Context().view[targetView].setTargetSelection(nodeList);
+			//TP.Context().view[targetView].setTargetSelection(nodeList);
 
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
 

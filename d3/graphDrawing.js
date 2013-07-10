@@ -36,83 +36,83 @@
             if (g.cGraph.links().length < 1000) {
                 g.drawLinks()
             }
-//<<<<<<< HEAD
-            
+
+           
             g.drawNodes(TP.Context().view[currentViewID].getViewNodes());
-//=======
-//            g.drawNodes(TP.Context().view[target].getViewNodes());
-//>>>>>>> interface
             g.drawLabels()
         }
 
 
-        // this function draws the nodes using d3
-        // we associate to each graph node an svg:g (indexed by baseID)
-        // each svg:g sets the interaction for the nodes (click, 
-        // mouseover, mouseout)
-        // to each group are added an svg:circle (placed according to the node 
-        // property x and y) and an svg:text printing the node property label
-        g.drawNodes = function (view_nodes) {
-            var saveUndo = 0;
-            var undo = null;
-            var redo = null;
-
-            function move(tabb) {
+        g.moveNode = function move(tabb) {
                 //var dragTarget = d3.select(this);
-                var dragTarget = tabb[0];
-                var circleTarget = dragTarget.select("circle.node");
-                var rectTarget = dragTarget.select("rect.node");
-                var currentNode = dragTarget.data()[0]
-                var labelTarget = g.svg.select("text.node"+currentNode.baseID);
+           var dragTarget = tabb[0];
+           var circleTarget = dragTarget.select("circle.node");
+           var rectTarget = dragTarget.select("rect.node");
+           var currentNode = dragTarget.data()[0]
+           var labelTarget = g.svg.select("text.node"+currentNode.baseID);
+	       
+	       if(tabb[1] == null)
+           {
+               var posX = d3.event.dx
+               var posY = d3.event.dy
+               // console.log("first");                   
+               currentNode.x += posX
+               currentNode.y += posY
+               currentNode.currentX += posX
+               currentNode.currentY += posY
+           }else{
+               // console.log("second");
+               currentNode.x = tabb[1]
+               currentNode.y = tabb[2]
+               currentNode.currentX = tabb[3]
+               currentNode.currentY = tabb[4]                  
+           }
 
-                if(tabb[1] == null)
-                {
-                    var posX = d3.event.dx
-                    var posY = d3.event.dy
-                    // console.log("first");                   
-                    currentNode.x += posX
-                    currentNode.y += posY
-                    currentNode.currentX += posX
-                    currentNode.currentY += posY
-                }else{
-                    // console.log("second");
-                    currentNode.x = tabb[1]
-                    currentNode.y = tabb[2]
-                    currentNode.currentX = tabb[3]
-                    currentNode.currentY = tabb[4]                  
-                }
+           var currentBaseID = currentNode.baseID
 
-                var currentBaseID = currentNode.baseID
+           if(circleTarget){
+                circleTarget
+	                  .attr("cx", function(){return currentNode.x})
+                      .attr("cy", function(){return currentNode.y});
+           }
 
-                if(circleTarget){
-                    circleTarget
-                        .attr("cx", function(){return currentNode.x})
-                        .attr("cy", function(){return currentNode.y});
-                }
+           if (rectTarget){
+               rectTarget
+                    .attr("x", function(){return currentNode.x})
+                    .attr("y", function(){return currentNode.y});
+           }
 
-                if (rectTarget){
-                    rectTarget
-                        .attr("x", function(){return currentNode.x})
-                        .attr("y", function(){return currentNode.y});
-                }
-                labelTarget
-                    .attr("dx", function(){return currentNode.x})
-                    .attr("dy", function(){return currentNode.y});
+           labelTarget
+               .attr("dx", function(){return currentNode.x})
+               .attr("dy", function(){return currentNode.y});
 
                 // console.log("current svg:", g.svg, g.cGraph.links());
-                var links = g.svg.selectAll("g.link").data(g.cGraph.links(), function (d) {return d.baseID})
-                    .select("path.link")
-                    .attr("d", function (d) {
-                    //console.log("updating the graph");
-                        return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
-                    })
+           var links = g.svg.selectAll("g.link").data(g.cGraph.links(), function (d) {return d.baseID})
+               .select("path.link")
+               .attr("d", function (d) {
+               //console.log("updating the graph");
+                   return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+               })
                     .style("stroke-width", function (d) {
                         return 1;
-                    }) 
-                };
+               }) 
+        };
+        
+        
+        g.dragNode = function(event)
+        {
+        	    var tab1 = [];
+                tab1[0] = event.associatedData.node;
+                tab1[1] = null;
+                tab1[2] = null;
+                
+                g.moveNode(tab1);              	
+        }
 
-            function showHideLabel() {
-                var dragTarget = d3.select(this);
+
+
+         g.showHideLabelNode = function(event) {
+                var dragTarget = event.associatedData.node;
                 var currentNode = dragTarget.data()[0];
                 var labelTarget = g.svg.select("text.node"+currentNode.baseID);
                 var nodeTarget = dragTarget.select("circle.node");
@@ -130,6 +130,34 @@
                     }
                 });
             };
+        
+        
+        g.showLabelNode = function(event)
+        {
+          g.svg.selectAll("text.snippet").data([event.associatedData.data]).enter()
+             .append("text")
+             .attr("dx", function(dd){return dd.currentX})
+             .attr("dy", function(dd){return dd.currentY})
+             .classed("snippet", true)
+             .text(function(dd){return dd.label});        	
+        }
+        
+        g.mouseOutNode = function()
+        {
+        	var o = g.svg.selectAll("text.snippet").data([]).exit().remove();
+        }
+
+        // this function draws the nodes using d3
+        // we associate to each graph node an svg:g (indexed by baseID)
+        // each svg:g sets the interaction for the nodes (click, 
+        // mouseover, mouseout)
+        // to each group are added an svg:circle (placed according to the node 
+        // property x and y) and an svg:text printing the node property label
+        g.drawNodes = function (view_nodes) {
+            var saveUndo = 0;
+            var undo = null;
+            var redo = null;
+
 
             //créer tout les noeud (rectangle, cercle) depuis les données contenu dans cGraph.nodes (= données des noeuds passé dans un tableaux)
             var node = g.svg.selectAll("g.node").data(g.cGraph.nodes(), function (d) {
@@ -148,7 +176,7 @@
                 return
             })
             .call(d3.behavior.drag()
-            .on("dragstart", function(d){
+            .on("dragstart", function(d){/*
                 var tab = []
                 tab[0] = d3.select(this);
                 tab[1] = tab[0].data()[0].x;
@@ -156,16 +184,12 @@
                 tab[3] = tab[0].data()[0].currentX;
                 tab[4] = tab[0].data()[0].currentY;
 
-                undo = function(){/*console.log(tab);*/ move(tab);} 
+                undo = function(){move(tab);}*/ 
             })
             .on("drag", function(d){
-                var tab1 = []
-                tab1[0] = d3.select(this);
-                tab1[1] = null;
-                tab1[2] = null;                 
-                
-                move(tab1);
-                
+            	TP.Context().view[currentViewID].getController().sendMessage("dragNode", {node:d3.select(this)});           
+                //g.dragNode(d3.select(this));
+                /*
                 //save for redo
                 var tab2 = []
                 tab2[0] = d3.select(this);
@@ -174,12 +198,14 @@
                 tab2[3] = tab2[0].data()[0].currentX;
                 tab2[4] = tab2[0].data()[0].currentY;
                 
-                redo = function(){/*console.log(tab2);*/ move(tab2);}           
+                redo = function(){*//*console.log(tab2);*//* g.moveNode(tab2);}           
                 //TP.Context().changeStack.addChange("moveSommet", undo, redo);      
-      
+      			*/
               })
-            .on("dragend", function(){
+
+            .on("dragend", function(){/*
                         console.log("mouseDown, mouseDown");
+
                         //g.arrangeLabels();
                         //if(saveUndo == 1){
                             
@@ -188,20 +214,14 @@
                             redo = null;
                             saveUndo = 0;                   
                         //}             
-                    }))
-            .on("click", showHideLabel)
+                    */}))
+            .on("click", function(d){TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node:d3.select(this)})})
             .on("mouseover", function(d){
                 //console.log("appending a snippet");
-                
-                g.svg.selectAll("text.snippet").data([d]).enter()
-                    .append("text")
-                    .attr("dx", function(dd){return dd.currentX})
-                    .attr("dy", function(dd){return dd.currentY})
-                    .classed("snippet", true)
-                    .text(function(dd){return dd.label}); 
+                TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data:d});
             })
             .on("mouseout",function(){
-                var o = g.svg.selectAll("text.snippet").data([]).exit().remove();
+                TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode");
             })                
             .append("g")
             .attr("class", function (d) {
@@ -308,25 +328,22 @@
         g.drawLabels = function(){	
 			return;                  // return???
             //console.log("drawLabels " + g.svg.attr("id"));
-            var labelNode = g.svg.selectAll("text.node")
+            /*var labelNode = g.svg.selectAll("text.node")
                 .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
                 .attr("class", function(d){return d._type})
                 .classed("text", true)
-                     
-                     
+                .style("fill", TP.Context().view[currentViewID].getLabelsColor())
+            console.log(TP.Context().view[currentViewID].getLabelsColor())
+            console.log("GraphDrawing -> drawLabels")
             var labelContent= labelNode
                 .append("text")
                 .attr("class", function(d){return "node" + d.baseID + " " + d._type})
                 .classed("node", true).classed("text", true)
                 .attr("dx", function(d){return d.currentX})
                 .attr("dy", function(d){return d.currentY})
-                //.style("stroke", "black")
-                // .style("stroke", context.labelColor)
-                // .style("stroke-width", 0.5)
-                // .style("font-family", "Arial")
-                // .style("font-size", 12)
-                .text(function(d) { return d.label; });
-            g.arrangeLabels();     
+                .text(function(d) { console.log(d); return d.label; });
+                console.log(labelNode)
+            g.arrangeLabels();     */
 
 		}
         
@@ -439,14 +456,11 @@
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
-//<<<<<<< HEAD
-                .style("stroke", TP.Context().view[currentViewID].getLinksColor()) //before, there was catalyst
-                .style("stroke-width", function (d) {return 1;})
-/*=======
-                 .style("stroke", TP.Context().view[target].getLinksColor()) //before, there was catalyst
+
+                 .style("stroke", TP.Context().view[currentViewID].getLinksColor()) //before, there was catalyst
                  .style("stroke-width", function (d) {return 1;})
->>>>>>> interface
-*/
+
+
             link.attr("transform", transform);
         }
 
@@ -557,16 +571,18 @@
 
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph
-
+            //console.log(params)
 
             var scaleMin = 3.0
             var scaleMax = 12.0
-
+			console.log("params: ",params)
             var parameter = ""
             if(params.metric) parameter = params.metric;
             if(params.scaleMin) scaleMin = params.scaleMin;
             if(params.scaleMax) scaleMax = params.scaleMax;
-
+			
+			console.log("params.metric : ",params.metric)
+			
             if (parameter == "") return
 
 
@@ -574,7 +590,9 @@
             var valMax = null
             g.cGraph.nodes()
                 .forEach(function (n) {
+                	console.log("node:", n)
                    val = eval("n." + parameter);
+                   console.log("val:", val)
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -596,8 +614,10 @@
                 return scale(eval('d.' + parameter));
 
             })
+            //error: d n'a plus de ViewMetric par défaut...
             node.select("rect.node")
                 .attr("width", function (d) {
+                    //console.log(d)
                     return 2 * scale(eval('d.' + parameter))
                 })
                 .attr("height", function (d) {
@@ -675,6 +695,9 @@
             }else if(elem==="bg"){
                 $("#zone"+graphName).css("background-color", color);
             }else if(elem==="label"){
+                var labels = g.svg.selectAll("text.node.text")
+                    .style('fill',function (d) {return d3.rgb(color);})
+                    .style('stroke',function (d) {return d3.rgb(color);});
                 g.drawLabels();
                 //var label = g.svg.selectAll("g.text").style('fill',color);
             }else{
@@ -774,6 +797,7 @@
             
             g.svg.selectAll("text.node")
                 .style("opacity", 0.5)
+
                                
             var link = g.svg.selectAll("g.link")
                 .style("opacity", .25)
@@ -925,8 +949,8 @@
                     return true;
                 return false;
             }
-
-            var labels = g.svg.selectAll("text.node").attr("visibility", "visible");
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            var labels = g.svg.selectAll("text.node").attr("visibility", "visible").style("fill", TP.Context().view[currentViewID].getLabelsColor());
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")
@@ -955,8 +979,12 @@
                 var anyChange = false,
                     noChange = false;
                 //We should reduce the complexity of this algo!!
-                for (var iLabel = 0; iLabel < iterArray.length - 1; iLabel++) {
-                //for (var iLabel = iterArray.length - 2; iLabel >= 0; iLabel--) {
+
+                
+                var end = iterArray.length - 1;
+                
+                for (var iLabel = 0; iLabel < end; iLabel++) {
+
                     var bbox = iterArray[iLabel];
 
                     if (labelsArray[iLabel].attr("visibility") == "visible") {
@@ -970,9 +998,11 @@
                         ];
 
                         noChange = false;
-                        for (var iLabel2 = iLabel + 1; iLabel2 < iterArray.length; iLabel2++) {
-                        //for (var iLabel2 = iterArray.length - 1; iLabel2 >= iLabel + 1; iLabel2--) {
                         
+                        var end2 = iterArray.length;
+                        
+                        for (var iLabel2 = iLabel + 1; iLabel2 < end2; iLabel2++) {
+
                             if (labelsArray[iLabel2].attr("visibility")  == "visible") {
                                 var bbox2 = iterArray[iLabel2];
                                 var polygon2 = [
@@ -984,7 +1014,10 @@
                                     [bbox2.x + bbox2.width + margin, bbox2.y 
                                         + bbox2.height + margin],
                                 ];
-                                for (var iPoint = 0; iPoint < polygon2.length && !noChange; iPoint++) {
+                                
+                                var end3 = polygon2.length;
+                                
+                                for (var iPoint = 0; iPoint < end3 && !noChange; iPoint++) {
                                     if (intersect([polygon[0], polygon[3]], polygon2[iPoint])) {
                                         labelsArray[iLabel2].attr("visibility", "hidden");
                                         noChange = true;
@@ -992,7 +1025,7 @@
                                         break;
                                     }
                                 }
-                                for (var iPoint = 0; iPoint < polygon2.length 
+                                for (var iPoint = 0; iPoint < end3 
                                     && !noChange; iPoint++) {
                                     if (intersect([polygon2[0], polygon2[3]], 
                                         polygon[iPoint])) {
