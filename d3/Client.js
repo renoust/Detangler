@@ -1,5 +1,5 @@
 /************************************************************************
- * This module contains all the requests to the server that the client 
+ * This module contains all the requests to the server that the client
  * has to do in order to get the graph, or to modify some of its nodes.
  * @requires jquery.js
  * @authors Guy Melancon, Benjamin Renoust
@@ -15,7 +15,7 @@
     import_class("graphDrawing.js", "TP");
     import_class("UpdateViews.js", "TP");
     import_class("Controller.js", "TP");
-    
+
 
     var Client = function () {
         var __g__ = this;
@@ -36,21 +36,21 @@
                     console.log("success");
                 })
 
-                .error(function (e) {
-                    alert("error!!", e);
-                })
-                .complete(function () {
-                    console.log("complete");
-                })
-                .success(function (data, b) {
-                    objectReferences.ToolObject.addBaseID(data, "id")
-                    jsonData = JSON.stringify(data)
-                    objectReferences.ToolObject.loadJSON(data, target)
-                    TP.Client().createTulipGraph(jsonData, target);
-                    
+                    .error(function (e) {
+                        alert("error!!", e);
+                    })
+                    .complete(function () {
+                        console.log("complete");
+                    })
+                    .success(function (data, b) {
+                        objectReferences.ToolObject.addBaseID(data, "id")
+                        jsonData = JSON.stringify(data)
+                        objectReferences.ToolObject.loadJSON(data, target)
+                        TP.Client().createTulipGraph(jsonData, target);
 
-                    //this.analyseGraph(target)
-                });
+
+                        //this.analyseGraph(target)
+                    });
             } else {
                 data = $.parseJSON(json)
                 objectReferences.ToolObject.addBaseID(data, "id")
@@ -68,16 +68,16 @@
             //TP.ObjectReferences().ClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
             /*var cGraph = null;
-    		var svg = null;
+             var svg = null;
 
-    		svg = TP.Context().view('catalyst').getSvg();
-    		cGraph = contxt.getViewGraph('catalyst');
-    		var graph_drawing = TP.GraphDrawing(cGraph, svg);
-    		graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndice');
+             svg = TP.Context().view('catalyst').getSvg();
+             cGraph = contxt.getViewGraph('catalyst');
+             var graph_drawing = TP.GraphDrawing(cGraph, svg);
+             graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndice');
 
-    		objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
-    		objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
-    		objectContext.TulipPosyVisualizationObject.entanglementCaught();*/
+             objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
+             objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
+             objectContext.TulipPosyVisualizationObject.entanglementCaught();*/
         }
 
 
@@ -91,10 +91,10 @@
             $.ajax({
                 url: contxt.tulip_address,
                 async: false,
-                data: {type: "creation",'search': query['query']},
+                data: {type: "creation", 'search': query['query']},
                 type: 'POST',
                 success: function (data) {
-                    console.log('sending search request in tulip, and recieved data: ',data)
+                    console.log('sending search request in tulip, and recieved data: ', data)
                     data = JSON.parse(data)
                     recieved_data = data
                 }
@@ -104,12 +104,13 @@
 
 
         this.sendQuery = function (params) {
-        //success parameters might be useless...closure just does it well enough
+            //success parameters might be useless...closure just does it well enough
 
             var defaultParams = {
                 parameters: {},
                 async: true,
-                success: function () {},
+                success: function () {
+                },
                 successParameters: []
             }
 
@@ -131,7 +132,7 @@
                 success: function (data) {
                     var args = [data];
                     var end = params['successParameters'].length;
-                    for (var i = 0; i < end;i++)
+                    for (var i = 0; i < end; i++)
                         args.push(params['successParameters'][i]);
                     params['success'].apply(this, args);
                 }
@@ -151,7 +152,9 @@
                 parameters: params,
                 async: false,
                 //success: objectReferences.UpdateViewsObject.buildGraphFromData
-                success: function(data){objectReferences.UpdateViewsObject.buildGraphFromData(data, target)}
+                success: function (data) {
+                    objectReferences.UpdateViewsObject.buildGraphFromData(data, target)
+                }
             });
         }
 
@@ -160,31 +163,31 @@
         // stores and displays it in the catalyst view, updating the new 
         // entanglement indices computed.
         this.analyseGraph = function (event) {
-        	
-        	var idView = event.associatedData.source;
-			var tabCatalyst = event.associatedData.tabCatalyst;
-        	
-        	if(TP.Context().view[idView].getType() !== "substrate"){
-        		assert(false, "not substrate type"); 		
-        		return;
-        	}
-        	
-                	
-           if(TP.Context().view[idView].getAssociatedView("catalyst") == null && tabCatalyst.length != null){
-                			
+
+            var idView = event.associatedData.source;
+            var tabCatalyst = event.associatedData.tabCatalyst;
+
+            if (TP.Context().view[idView].getType() !== "substrate") {
+                assert(false, "not substrate type");
+                return;
+            }
+
+
+            if (TP.Context().view[idView].getAssociatedView("catalyst") == null && tabCatalyst.length != null) {
+
                 assert(false, tabCatalyst[0])
                 assert(false, tabCatalyst[8])
                 assert(false, tabCatalyst[9])
-                			
+
                 console.log(tabCatalyst);
-                			
-     			TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6],tabCatalyst[7], tabCatalyst[8], tabCatalyst[9], idView);
-               	TP.Context().view[tabCatalyst[0]].buildLinks();
+
+                TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], tabCatalyst[9], idView);
+                TP.Context().view[tabCatalyst[0]].buildLinks();
                 TP.Context().view[tabCatalyst[0]].addView();
-                
-            }        	
-        	
-        	//assert(true, "analyseGraph");
+
+            }
+
+            //assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
@@ -192,62 +195,57 @@
                 weight: contxt.substrateWeightProperty
             }
 
-            			
-			assert(false, "idView : "+idView);  
-			console.log(TP.Context().view[idView]);
-			console.log(TP.Context().view[idView].getController());
-			
-            TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery",{params:params}, "principal");
-            
+
+            assert(false, "idView : " + idView);
+            console.log(TP.Context().view[idView]);
+            console.log(TP.Context().view[idView].getController());
+
+            TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
+
         }
 
 
-        
-        this.analyseGraphSendQuery = function(event)
-        {
-           
-           var source = event.associatedData.source;
-           var params = event.associatedData.params;
-           
-           console.log("succes")
-           
-           __g__.sendQuery({
-               parameters: params,
-               success: function (data) {
-               	   
-                   TP.Context().getController().sendMessage("answerAnalyseGraph",{data:data}, source);
-        	       
+        this.analyseGraphSendQuery = function (event) {
+
+            var source = event.associatedData.source;
+            var params = event.associatedData.params;
+
+            console.log("succes")
+
+            __g__.sendQuery({
+                parameters: params,
+                success: function (data) {
+
+                    TP.Context().getController().sendMessage("answerAnalyseGraph", {data: data}, source);
+
                 }
             });
-             
-        }
-        
-        
-        this.answerAnalyseGraph = function(event)
-        {
-        	console.log("toutou")
-        	
-        	var idView = event.associatedData.target;
-        	console.log("toutou1 : ", idView)
-        	var data = event.associatedData.data;
-        	console.log("toutou2 : ", data)
-        	
-        	
-        	objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
-        }		
 
+        }
+
+
+        this.answerAnalyseGraph = function (event) {
+            console.log("toutou")
+
+            var idView = event.associatedData.target;
+            console.log("toutou1 : ", idView)
+            var data = event.associatedData.data;
+            console.log("toutou2 : ", data)
+
+
+            objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
+        }
 
 
         // This function send to the tulip server a selection of nodes and 
         // removes the unselected nodes
         // json, the json string of the graph
         // graphName, the string value corresponding to the graph
-        this.sendSelection = function (event) 
-        {
-        	        	        
-       	  	var idView = event.associatedData.idView;
-			var json = event.associatedData.json;
-        	
+        this.sendSelection = function (event) {
+
+            var idView = event.associatedData.idView;
+            var json = event.associatedData.json;
+
             var updateParams = {
                 type: "induced"
             };
@@ -259,36 +257,34 @@
                 target: idView
             }
 
-            TP.Context().view[idView].getController().sendMessage("selectionSendQuery",{params:params}, "principal");
-            
+            TP.Context().view[idView].getController().sendMessage("selectionSendQuery", {params: params}, "principal");
+
         };
-        
-        
-        this.selectionSendQuery = function(event)
-        {
-           
-           var source = event.associatedData.source;
-           var params = event.associatedData.params;
-           
-           __g__.sendQuery({
-               parameters: params,
-               success: function (data) {
-               	   	
-                   TP.Context().getController().sendMessage("answerSendSelection",{data:data}, source);
-        	       
+
+
+        this.selectionSendQuery = function (event) {
+
+            var source = event.associatedData.source;
+            var params = event.associatedData.params;
+
+            __g__.sendQuery({
+                parameters: params,
+                success: function (data) {
+
+                    TP.Context().getController().sendMessage("answerSendSelection", {data: data}, source);
+
                 }
             });
-             
+
         }
-        
-        
-        this.answerSendSelection = function(event)
-        {
-        	
-        	var idView = event.associatedData.target;
-        	var data = event.associatedData.data;
-        	
-        	objectReferences.UpdateViewsObject.applyInducedSubGraphFromData(data, idView);
+
+
+        this.answerSendSelection = function (event) {
+
+            var idView = event.associatedData.target;
+            var data = event.associatedData.data;
+
+            objectReferences.UpdateViewsObject.applyInducedSubGraphFromData(data, idView);
         }
 
 
@@ -297,15 +293,15 @@
         // layoutName, the name of the tulip layout we want to call
         // graphName, the string value corresponding to the graph
         this.callLayout = function (event) {
-        	
-        	var idView = event.associatedData.idView;
-        	var layoutName = event.associatedData.layoutName;
 
-			
+            var idView = event.associatedData.idView;
+            var layoutName = event.associatedData.layoutName;
+
+
             //save for undo
             //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
-           // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
-            
+            // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+
             var layoutParams = {
                 type: "layout",
                 name: layoutName,
@@ -317,40 +313,36 @@
                 parameters: JSON.stringify(layoutParams)
             };
 
-            TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery",{params:params}, "principal")
-                    	
+            TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery", {params: params}, "principal")
+
         };
-        
-        
-        this.callLayoutSendQuery = function(event)
-        {
-           
-           var source = event.associatedData.source;
-           var params = event.associatedData.params;
-           
-           __g__.sendQuery({
-               parameters: params,
-               success: function (data) {
-               	                	
-                   TP.Context().getController().sendMessage("AnswerCallLayout",{data:data}, source);
-        	       
+
+
+        this.callLayoutSendQuery = function (event) {
+
+            var source = event.associatedData.source;
+            var params = event.associatedData.params;
+
+            __g__.sendQuery({
+                parameters: params,
+                success: function (data) {
+
+                    TP.Context().getController().sendMessage("AnswerCallLayout", {data: data}, source);
+
                 }
             });
-             
-        }
-        
-        
-        this.AnswerCallLayout = function(event)
-        {
-        	
-        	var idView = event.associatedData.target;
-        	var data = event.associatedData.data;
-        	
-        	objectReferences.UpdateViewsObject.applyLayoutFromData(data, idView);
+
         }
 
 
-		
+        this.AnswerCallLayout = function (event) {
+
+            var idView = event.associatedData.target;
+            var data = event.associatedData.data;
+
+            objectReferences.UpdateViewsObject.applyLayoutFromData(data, idView);
+        }
+
 
         this.updateLayout = function (graphName, json) {
             json = JSON.stringify({
@@ -369,7 +361,8 @@
 
             __g__.sendQuery({
                 parameters: params,
-                success: function (data) {}
+                success: function (data) {
+                }
             });
         };
 
@@ -379,10 +372,10 @@
         // floatAlgorithmName, the name of the tulip algorithm we want to call
         // graphName, the string value corresponding to the graph
         this.callFloatAlgorithm = function (event) {
-			
-			var floatAlgorithmName = event.associatedData.floatAlgorithmName;
-			var idView = event.associatedData.idView;
-			
+
+            var floatAlgorithmName = event.associatedData.floatAlgorithmName;
+            var idView = event.associatedData.idView;
+
             var floatParams = {
                 type: "float",
                 name: floatAlgorithmName,
@@ -394,37 +387,34 @@
                 parameters: JSON.stringify(floatParams)
             }
             floatAlgorithmName, idView
-            TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params:params}, "principal");
-            
+            TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params: params}, "principal");
+
         }
-        
-        
-        this.FloatAlgorithmSendQuery = function(event)
-        {
-           
-           var source = event.associatedData.source;
-           var params = event.associatedData.params;
-           
-           __g__.sendQuery({
-               parameters: params,
-               success: function (data) {
-               	                	
-                   TP.Context().getController().sendMessage("AnswerFloatAlgorithm",{data:data}, source);
-        	       
+
+
+        this.FloatAlgorithmSendQuery = function (event) {
+
+            var source = event.associatedData.source;
+            var params = event.associatedData.params;
+
+            __g__.sendQuery({
+                parameters: params,
+                success: function (data) {
+
+                    TP.Context().getController().sendMessage("AnswerFloatAlgorithm", {data: data}, source);
+
                 }
             });
-             
+
         }
-        
-        
-        this.AnswerFloatAlgorithm = function(event)
-        {        	
-        	var idView = event.associatedData.target;
-        	var data = event.associatedData.data;
-        	
-        	objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView);
+
+
+        this.AnswerFloatAlgorithm = function (event) {
+            var idView = event.associatedData.target;
+            var data = event.associatedData.data;
+
+            objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView);
         }
-        
 
 
         // This function calls the synchronization from a given graph through 
@@ -433,9 +423,9 @@
         // selection, the JSON string of the selected subgraph
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
-        	
-        	//assert(true, "syncGraph : "+graphName);
-			
+
+            //assert(true, "syncGraph : "+graphName);
+
             var syncTarget = TP.Context().view[graphName].getType();
 
             if (syncTarget == 'combined')
@@ -461,11 +451,11 @@
 
 
         this.syncLayouts = function (currentGraph, async) {
-        	
-        	assert(true, "syncLayouts");
-        	
-			if(async !== false)
-           		async = true;
+
+            assert(true, "syncLayouts");
+
+            if (async !== false)
+                async = true;
 
             var syncLayoutParams = {
                 type: "synchronize layouts",
@@ -479,9 +469,11 @@
 
             __g__.sendQuery({
                 parameters: params,
-                async:async,
+                async: async,
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
-                success: function(data){objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)}
+                success: function (data) {
+                    objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)
+                }
             });
         };
 
@@ -493,21 +485,21 @@
         // constructs and array of nodes with only its 'baseID'
         // and returns a string JSON version of the corresponding selection
         this.getSelection = function (idView) {
-            
+
             var svg = null;
             svg = TP.Context().view[idView].getSvg();
-            
+
             //assert(false, ""+graphName);
-            
+
             var nodeS = svg.selectAll("g.node.selected").data();
-			
-			//console.log(u);
-			
+
+            //console.log(u);
+
             var toStringify = {};
             toStringify.nodes = new Array();
-			
-			var end = nodeS.length;
-			
+
+            var end = nodeS.length;
+
             for (i = 0; i < end; i++) {
                 var node = {};
                 node.baseID = nodeS[i].baseID;

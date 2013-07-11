@@ -1,55 +1,50 @@
-
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Test tulip-python/D3</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Test tulip-python/D3</title>
 </head>
 
-<style> 
- 
- 
-svg {
-  border: solid 1px #ccc;
-}
- 
-.background {
-  fill: none;
-  pointer-events: all;
-}
- 
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
- 
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-  stroke-width: 1.5px;
-}
+<style>
 
 
-@font-face {
+  svg {
+    border: solid 1px #ccc;
+  }
+
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+  }
+
+  .link {
+    stroke: #999;
+    stroke-opacity: .6;
+    stroke-width: 1.5px;
+  }
+
+  @font-face {
     font-family: 'EntypoRegular';
     src: url('font/entypo-webfont.eot');
-    src: url('font/entypo-webfont.eot?#iefix') format('embedded-opentype'),
-         url('font/entypo-webfont.woff') format('woff'),
-         url('font/entypo-webfont.ttf') format('truetype'),
-         url('font/entypo-webfont.svg#EntypoRegular') format('svg');
+    src: url('font/entypo-webfont.eot?#iefix') format('embedded-opentype'), url('font/entypo-webfont.woff') format('woff'), url('font/entypo-webfont.ttf') format('truetype'), url('font/entypo-webfont.svg#EntypoRegular') format('svg');
     font-weight: normal;
     font-style: normal;
-}
- 
-</style> 
+  }
 
- 
-<h1>Explore you graph</h1> 
+</style>
+
+
+<h1>Explore you graph</h1>
 
 <script src="local/jquery.js" type="text/javascript"></script>
-<script src="local/d3.v2.js" type="text/javascript"></script> 
-<script src="colorbrewer.js" type="text/javascript"></script> 
+<script src="local/d3.v2.js" type="text/javascript"></script>
+<script src="colorbrewer.js" type="text/javascript"></script>
 <script src="assert.js" type="text/javascript"></script>
-<script src="import_class.js" type="text/javascript"></script> 
+<script src="import_class.js" type="text/javascript"></script>
 <script src="TulipPosy.js" type="text/javascript"></script>
 <!--
 <script src="graph.js" type="text/javascript"></script> 
@@ -71,87 +66,86 @@ svg {
 <input id=send value="send" type=button><br>
 </p>
 <p>
-or just--> 
+or just-->
 <p>choose a file to upload:
-<input id=files type=file>
+  <input id=files type=file>
 </p>
 <!--
 <p><aside>Selection can be rectangle or lasso, ctrl or shift extends or restrains the selection, move zooms too.</aside> </p>
 -->
 <script>
 
-//import_class('tools.js', 'TOOL');
-//var f = new TOOL.Foo();
-//console.log(TOOL, f, f.x);
+  //import_class('tools.js', 'TOOL');
+  //var f = new TOOL.Foo();
+  //console.log(TOOL, f, f.x);
 
-// This function removes an element of the page by its id
-function remove(id)
-{
+  // This function removes an element of the page by its id
+  function remove(id) {
     elem = document.getElementById(id);
     if (elem)
-	    return elem.parentNode.removeChild(elem);
+      return elem.parentNode.removeChild(elem);
     else
-	    return
-}
+      return
+  }
 
-var url = 'http://localhost:8085'
-var xhr = new XMLHttpRequest();
+  var url = 'http://localhost:8085'
+  var xhr = new XMLHttpRequest();
 
-// uploads the file and send it to TulipPosy
-var file_object;
-document.getElementById('files').addEventListener('change', function(e) {
-     var file = this.files[0];
-     console.log('logging file before sending: ', this.files[0])
-     xhr.file = file; // not necessary if you create scopes like this
-     xhr.addEventListener('progress', function(e) {
-         var done = e.position || e.loaded, total = e.totalSize || e.total;
-         console.log('xhr progress: ' + (Math.floor(done/total*1000)/10) + '%');
-     }, false);
-    if ( xhr.upload ) {
-        xhr.upload.onprogress = function(e) {
-            var done = e.position || e.loaded, total = e.totalSize || e.total;
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done/total*1000)/10) + '%');
-        };
+  // uploads the file and send it to TulipPosy
+  var file_object;
+  document.getElementById('files').addEventListener('change', function (e) {
+    var file = this.files[0];
+    console.log('logging file before sending: ', this.files[0])
+    xhr.file = file; // not necessary if you create scopes like this
+    xhr.addEventListener('progress', function (e) {
+      var done = e.position || e.loaded, total = e.totalSize || e.total;
+      console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+    }, false);
+    if (xhr.upload) {
+      xhr.upload.onprogress = function (e) {
+        var done = e.position || e.loaded, total = e.totalSize || e.total;
+        console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+      };
     }
-    xhr.onreadystatechange = function(e) {
-        if ( 4 == this.readyState && this.status==200) {
-            console.log(['xhr upload complete', e]);
-	    //console.log(xhr.responseText);
-	    remove("svg_substrate");
+    xhr.onreadystatechange = function (e) {
+      if (4 == this.readyState && this.status == 200) {
+        console.log(['xhr upload complete', e]);
+        //console.log(xhr.responseText);
+        remove("svg_substrate");
         remove("svg_combined");
-	    remove("svg_catalyst");
+        remove("svg_catalyst");
         remove("svg_combined");
 
-	    TulipPosy({file:xhr.responseText})
-        }
+        TulipPosy({file: xhr.responseText})
+      }
     };
-        
+
     xhr.open('post', url, true);
-	xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        xhr.setRequestHeader("X-File-Name", encodeURIComponent(this.files[0].name));
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    xhr.setRequestHeader("X-File-Name", encodeURIComponent(this.files[0].name));
+    xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(xhr.file)
-}, false);
+  }, false);
 
 
-
-// sends a query request to TulipPosy
-document.getElementById('send').addEventListener('click', function(e) {
-	assert(true, "turlututu")
-	query = document.getElementById('query').value
-	//console.log('logging file: ', query)
-	remove("svg_substrate");
+  // sends a query request to TulipPosy
+  document.getElementById('send').addEventListener('click', function (e) {
+    assert(true, "turlututu")
+    query = document.getElementById('query').value
+    //console.log('logging file: ', query)
+    remove("svg_substrate");
     remove("svg_combined");
-	remove("svg_catalyst");
+    remove("svg_catalyst");
     remove("svg_combined");
 
-	TulipPosy({'query':query})
+    TulipPosy({'query': query})
 
-}, false);
+  }, false);
 
 </script>
 
 <p>
+
 <div>
 
 </div>
