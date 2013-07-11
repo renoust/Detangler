@@ -67,6 +67,9 @@
 
         __g__.sessionSid = 0;
 
+		__g__.tulipLayoutAlgorithms = {};
+		__g__.tulipDoubleAlgorithms = {};
+
         __g__.substrateProperties = {};
         __g__.substrateWeightProperty = null;
 
@@ -125,6 +128,31 @@
         	}
         }
         
+    __g__.updateTulipLayoutAlgorithms = function(layoutList)
+    {    	
+    	for (var index in layoutList) {
+            key = layoutList[index]
+            if (!(key in __g__.tulipLayoutAlgorithms))
+	            __g__.tulipLayoutAlgorithms[key] = {}
+        }
+    }
+    
+     __g__.updateTulipDoubleAlgorithms = function(doubleList)
+    {    	
+    	for (var index in doubleList) {
+            key = doubleList[index]
+            if (!(key in __g__.tulipDoubleAlgorithms))
+	            __g__.tulipDoubleAlgorithms[key] = {}
+        }
+    }
+    
+    
+    __g__.updateForm = function(_event)
+    {
+    	$('#family-0 #4').addClass('tglForm');
+    	$('#family')
+    }
+        
 	__g__.initStates = function()
 	{	
 		assert(true, "type of controller principal");
@@ -133,7 +161,12 @@
 		__g__.controller.addState({name:"selectionSendQuery", bindings:null, func:function(event){/*assert(true, "selectionSendQuery");*/ TP.Client().selectionSendQuery(event);}}, "all");
 		__g__.controller.addState({name:"FloatAlgorithmSendQuery", bindings:null, func:function(event){/*assert(true, "FloatAlgorithmSendQuery");*/ TP.Client().FloatAlgorithmSendQuery(event);}}, "all");
 		__g__.controller.addState({name:"analyseGraphSendQuery", bindings:null, func:function(event){/*assert(true, "analyseGraphSendQuery");*/ TP.Client().analyseGraphSendQuery(event);}}, "all");
-		__g__.controller.addState({name:"mouseoverInfoBox", bindings:null, func:function(event){/*assert(true, "mouseoverInfoBox");*/ TP.Interface().addInfoBox(event);}},"all");		
+		__g__.controller.addState({name:"mouseoverInfoBox", bindings:null, func:function(event){/*assert(true, "mouseoverInfoBox");*/ TP.Interface().addInfoBox(event);}},"all");
+		__g__.controller.addState({name:"getPluginsSendQuery", bindings:null, func:function(event){/*assert(true, "mouseoverInfoBox");*/ TP.Client().getPluginsSendQuery(event);}},"all");
+		__g__.controller.addState({name:"getPlugins", bindings:null, func:function(event){/*assert(true, "callFloatAlgorithm");*/ TP.Client().getPlugins(event);}}, "all");
+		__g__.controller.addState({name:"answerGetPlugins", bindings:null, func:function(event){/*assert(true, "callFloatAlgorithm");*/ TP.Client().answerGetPlugins(event);}}, "all");
+		__g__.controller.addState({name:"updateForm",bindings:null, func:function(event){TP.Context().updateForm(event);}},'all');
+		
 	}        
         
         __g__.initController = function(ID, typeC)

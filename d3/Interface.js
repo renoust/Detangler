@@ -469,11 +469,11 @@
                 evnt = tab[i][2];
 
                 if (param==''){
-                    fam = $('<li/>', {class:'form'}).appendTo('#'+menu);
+                    fam = $('<li/>', {id:i, class:'form'}).appendTo('#'+menu);
                     button = $('<a/>',{text:label}).appendTo(fam)
                     $(button).click(evnt.click);
                 }else{
-                    fam = $('<li/>',{class:'form tglForm'}).appendTo('#'+menu);
+                    fam = $('<li/>',{id:i, class:'form tglForm'}).appendTo('#'+menu);
                     $('<a/>',{text:label}).appendTo(fam)
                     var form= $('<div/>', {class:'formParam'}).appendTo(fam)
                     for (var j = 0; j < param.length; j++) {

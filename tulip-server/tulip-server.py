@@ -218,6 +218,55 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
                 if request['type'][0] == 'update':
                         self.updateGraphRequest(request)
+                        
+                if request['type'][0] == 'plugin':
+                        self.getPlugins(request)
+
+
+    '''
+    Returns a json as a list.
+    The list contains all the different algorithms supported by tulip
+    or the parameters necessary to configure a specific plugin.
+    Warning, some of these functions are not functionning well
+    in earlier versions of Tulip. Works fine from Tulip 4.0
+    '''
+    def getPlugins(self, request):
+        
+        returnParams = {}
+        
+        print "getting pleugins"
+        print request
+        
+        params = request['parameters'][0]
+        params = json.loads(params)
+        if not 'type' in params:
+            return
+        
+        if params['type'] == 'layout':
+            returnParams = json.dumps(tlp.getLayoutAlgorithmPluginsList())
+        if params['type'] == 'double':
+            returnParams = json.dumps(tlp.getDoubleAlgorithmPluginsList())
+        if params['type'] == 'boolean':
+            returnParams = json.dumps(tlp.getBooleanAlgorithmPluginsList())
+        if params['type'] == 'string':
+            returnParams = json.dumps(tlp.getStringAlgorithmPluginsList())
+        if params['type'] == 'integer':
+            returnParams = json.dumps(tlp.getIntegerAlgorithmPluginsList())
+        if params['type'] == 'size':
+            returnParams = json.dumps(tlp.getSizeAlgorithmPluginsList())
+        if params['type'] == 'color':
+            returnParams = json.dumps(tlp.getColorAlgorithmPluginsList())
+        if params['type'] == 'algorithm':
+            returnParams = json.dumps(tlp.getAlgorithmPluginsList())
+        
+        if params['type'] == 'pluginParameter':
+            if 'pluginName' in params:
+                #TODO manage with preset graphs
+                returnParams = json.dumps(tlp.getDefaultPluginParameters(pluginName))
+            
+        print returnParams
+        
+        self.sendJSON(returnParams)
 
 
 

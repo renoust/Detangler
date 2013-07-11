@@ -64,12 +64,32 @@ var TulipPosy = function (originalJSON) {
     var tl = [['input',{type:'text'}]];
     //var paramSizeMap = [['scale: ', 0]]
 	
+	var t2 = [['input',{type:'radio', name:'a', value:'a'}, 'toto'], ['input',{type:'radio', name:'b', value:'b'}, 'titi']];
+	
+	var buildSelectAlgorithmList = function()
+	{
+		assert (true, "###################### evaluating here ##########################################################################################################################################");
+		console.log("list", TP.Context().tulipLayoutAlgorithms)
+		//var liste = ["algo1","algo2","algo3"]
+		
+		var form = []
+		var liste = TP.Context().tulipLayoutAlgorithms
+		for (var key in liste)
+		{
+			form.push(['input', {type:'radio', name:key, value:key}])
+		}
+		return form
+	}
+	
 	var array1 = [
 	
 		['Force layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'FM^3 (OGDF)', idView:target})}}, "Layout"],
 		['Sync layouts','',{click:function(){objectReferences.ClientObject.syncLayouts(target)}}, "Layout"],
 		['MDS layout', '',{click:function(){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:'MDS', idView:target})}}, "Layout"],
-		['Tulip layout algorithm',tl,{call:function(layout){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:layout.text0, idView:target})}}, "Layout"],
+		['Tulip layout algorithm', tl,{call:function(layout){TP.Context().view[target].getController().sendMessage('callLayout', {layoutName:layout.text0, idView:target})}}, "Layout"],
+		['Tulip layout algorithm 2', '',{click:function(){TP.Context().view[target].getController().sendMessage('updateForm')}}, "Layout"],
+		['Tulip layout list','',{click:function(){TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout",endHandler:TP.Context().updateTulipLayoutAlgorithms})}}, "Layout"],
+		
 		
 		['Induced subgraph','',{click:function(){TP.Context().view[target].getController().sendMessage("sendSelection", {json:objectReferences.ClientObject.getSelection(target), idView:target})}}, "Selection"],
         ['Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection(target)}}, "Selection"],
@@ -275,6 +295,8 @@ var TulipPosy = function (originalJSON) {
     	objectReferences.ClientObject.loadData(null, target)
     }
 
+	TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout",endHandler:TP.Context().updateTulipLayoutAlgorithms})
+	TP.Context().getController().sendMessage('getPlugins', {pluginType:"double",endHandler:TP.Context().updateTulipDoubleAlgorithms})
 
     if($('#analyse').is(':checked')){
         TP.Context().view[target].getController().sendMessage("analyseGraph",{target:target, tabCatalyst:tabCatalyst});

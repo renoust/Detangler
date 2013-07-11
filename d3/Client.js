@@ -322,11 +322,61 @@
         };
         
         
-        this.callLayoutSendQuery = function(event)
+        this.getPlugins = function (event) {
+        	
+        	var pluginType = event.associatedData.pluginType;
+		    var endHandler = event.associatedData.endHandler;
+            //save for undo
+            //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
+           // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+            
+            var pluginParams = {
+                type: pluginType
+            };
+            
+            var params = {
+                sid: contxt.sessionSid,
+                type: 'plugin',
+                parameters: JSON.stringify(pluginParams)
+            };
+
+            TP.Context().getController().sendMessage("getPluginsSendQuery",{params:params, endHandler:endHandler}, "principal")
+                    	
+        };
+        
+        this.getPluginsSendQuery = function(_event)
         {
            
-           var source = event.associatedData.source;
-           var params = event.associatedData.params;
+           var params = _event.associatedData.params;
+           var endHandler = _event.associatedData.endHandler;
+
+           __g__.sendQuery({
+               parameters: params,
+               success: function (data) {
+                   TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
+                }
+            });
+             
+        }
+        
+        this.answerGetPlugins = function(_event)
+        {
+        	console.log("Je suis dans answer getPlugins");
+        	
+        	var data = _event.associatedData.data;
+        	var endHandler = _event.associatedData.endHandler;
+        	
+        	assert(true, "Grabbed algorithms:")
+        	console.log(data)
+        	endHandler.call(TP.Context(), data)
+        }
+        
+        
+        this.callLayoutSendQuery = function(_event)
+        {
+           
+           var source = _event.associatedData.source;
+           var params = _event.associatedData.params;
            
            __g__.sendQuery({
                parameters: params,

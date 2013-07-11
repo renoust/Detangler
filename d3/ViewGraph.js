@@ -326,6 +326,8 @@ import_class("ScatterPlot.js", "TP")
 				
 				__g__.controller.addState({name:"resetView", bindings:null, func:function(event){/*assert(true, "resetView");*/ TP.Visualization().resetView(event);}}, "all", true);
 				
+
+
 				__g__.controller.addState({name:"callFloatAlgorithm", bindings:null, func:function(event){/*assert(true, "callFloatAlgorithm");*/ TP.Client().callFloatAlgorithm(event);}}, "all", true);
 				__g__.controller.addState({name:"AnswerFloatAlgorithm", bindings:null, func:function(event){/*assert(true, "AnswerFloatAlgorithm");*/ TP.Client().AnswerFloatAlgorithm(event);}}, "all", true);
 				
