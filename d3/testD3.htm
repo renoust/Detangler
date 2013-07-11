@@ -1,167 +1,187 @@
 <html>
 <head>
-<title>Test tulip-python/D3</title>
+  <title>Test tulip-python/D3</title>
 </head>
 
-<style> 
- 
- 
-svg {
-  border: solid 1px #ccc;
-}
- 
-.background {
-  fill: none;
-  pointer-events: all;
-}
- 
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
- 
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-  stroke-width: 1.5px;
-}
+<style>
 
 
-@font-face {
+  svg {
+    border: solid 1px #ccc;
+  }
+
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+  }
+
+  .link {
+    stroke: #999;
+    stroke-opacity: .6;
+    stroke-width: 1.5px;
+  }
+
+  @font-face {
     font-family: 'EntypoRegular';
     src: url('entypo-webfont.eot');
-    src: url('entypo-webfont.eot?#iefix') format('embedded-opentype'),
-         url('entypo-webfont.woff') format('woff'),
-         url('entypo-webfont.ttf') format('truetype'),
-         url('entypo-webfont.svg#EntypoRegular') format('svg');
+    src: url('entypo-webfont.eot?#iefix') format('embedded-opentype'), url('entypo-webfont.woff') format('woff'), url('entypo-webfont.ttf') format('truetype'), url('entypo-webfont.svg#EntypoRegular') format('svg');
     font-weight: normal;
     font-style: normal;
-}
+  }
 
- 
-</style> 
 
- 
-<h1>Proof of concept: D3 and tulip-python</h1> 
+</style>
+
+
+<h1>Proof of concept: D3 and tulip-python</h1>
 <!--
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
 -->
 <script src="local/jquery.js"></script>
 <script src="local/jqui.js"></script>
-<script src="local/d3.v2.js"></script> 
-<script src="lasso.js"></script> 
-<script> 	
-		
- 
-var data=[[1,2],[3,4],[5,6]]
-
-//    $("body").append("div").attr("id","dialog")
-d3.select("body").append("div")
-                    .attr("id", "dialog")
-                .append("input")
-                    .on("mouseover", function(d,e,f){console.log(d,e,f); d3.select(this).attr("value", "toto")});
-                
- $(function() {
-$( "#dialog" ).dialog();
-
-});
+<script src="local/d3.v2.js"></script>
+<script src="lasso.js"></script>
+<script>
 
 
-/*
-		$("#dialog").append("dialog").attr("id", "dbox")
-        
-        $("#dbox").dialog({
-			autoOpen: false,
-			width: 400,
-			buttons: [
-				{
-					text: "Ok",
-					click: function() {
-						$( this ).dialog( "close" );
-					}
-				},
-				{
-					text: "Cancel",
-					click: function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			]
-		});
-*/
-var svg = d3.select("#dialog").data([1]).append("svg:svg")
-        .attr("id", "svgScene")
-	.attr("width",400)
-	.attr("height",400)
+  var data = [
+    [1, 2],
+    [3, 4],
+    [5, 6]
+  ]
 
-var node = svg.selectAll("node").data(data).enter()
-	
-node.append("svg:circle")
-		.attr("class", "node.circle")
-		.attr("cx", function(d,i){return i*100;})
-		.attr("cy", function(d,i){return i*100;})
-		.attr("r", 5)
+  //    $("body").append("div").attr("id","dialog")
+  d3.select("body").append("div")
+      .attr("id", "dialog")
+      .append("input")
+      .on("mouseover", function (d, e, f) {
+        console.log(d, e, f);
+        d3.select(this).attr("value", "toto")
+      });
 
-node.append("svg:text")
-	.attr("class", "node.text")
-	.attr("dx", function(d,i){return 10;})
-	.attr("dy", function(d,i){return 100;})
-	.text(function(d){return "@"})
-	.style("fill", "blue").style("font-family", /*"Arial"*/"EntypoRegular").style("font-size", 50)
-    
+  $(function () {
+    $("#dialog").dialog();
 
-nodes = d3.selectAll("circle").transition().delay(function(d, i){return i*1000})
-	.attr("cx", function(d,i){console.log("updating"); console.log(d); return 300;})
-
-var myL = lasso(svg);
-
-svg.on("mouseup", function(d){
-        console.log("up");
-        //myL.mouseUp(d3.mouse(this))
-});
-
-svg.on("mousedown", function(d){
-        console.log("down");
-        //myL.mouseDown(d3.mouse(this));
-        var e=window.event
-        //alert("CharCode value: "+e.keyCode)
-        console.log("Character: "+e.ctrlKey)//String.fromCharCode(e.charCode))
-});
-
-svg.on("mousemove", function(d){
-        //myL.mouseMove(d3.mouse(this))
-});
-
-/*
-svg.on("keydown", function(d){console.log('d:',d)});
-svg.onkeypress=function(e){
- var e=window.event || e
- alert("CharCode value: "+e.charCode)
- alert("Character: "+String.fromCharCode(e.charCode))
-}
-*/
+  });
 
 
-var charfield=document.getElementById("svgScene")
-console.log(charfield)
+  /*
+   $("#dialog").append("dialog").attr("id", "dbox")
 
-document.onkeydown = function(e){
-        var e=window.event || e
-        console.log(e.ctrlKey)
-        console.log(e.keyCode)
-}
+   $("#dbox").dialog({
+   autoOpen: false,
+   width: 400,
+   buttons: [
+   {
+   text: "Ok",
+   click: function() {
+   $( this ).dialog( "close" );
+   }
+   },
+   {
+   text: "Cancel",
+   click: function() {
+   $( this ).dialog( "close" );
+   }
+   }
+   ]
+   });
+   */
+  var svg = d3.select("#dialog").data([1]).append("svg:svg")
+      .attr("id", "svgScene")
+      .attr("width", 400)
+      .attr("height", 400)
 
-console.log(d3.selectAll("circle"))
+  var node = svg.selectAll("node").data(data).enter()
 
-</script> 
+  node.append("svg:circle")
+      .attr("class", "node.circle")
+      .attr("cx", function (d, i) {
+        return i * 100;
+      })
+      .attr("cy", function (d, i) {
+        return i * 100;
+      })
+      .attr("r", 5)
+
+  node.append("svg:text")
+      .attr("class", "node.text")
+      .attr("dx", function (d, i) {
+        return 10;
+      })
+      .attr("dy", function (d, i) {
+        return 100;
+      })
+      .text(function (d) {
+        return "@"
+      })
+      .style("fill", "blue").style("font-family", /*"Arial"*/"EntypoRegular").style("font-size", 50)
+
+
+  nodes = d3.selectAll("circle").transition().delay(function (d, i) {
+    return i * 1000
+  })
+      .attr("cx", function (d, i) {
+        console.log("updating");
+        console.log(d);
+        return 300;
+      })
+
+  var myL = lasso(svg);
+
+  svg.on("mouseup", function (d) {
+    console.log("up");
+    //myL.mouseUp(d3.mouse(this))
+  });
+
+  svg.on("mousedown", function (d) {
+    console.log("down");
+    //myL.mouseDown(d3.mouse(this));
+    var e = window.event
+    //alert("CharCode value: "+e.keyCode)
+    console.log("Character: " + e.ctrlKey)//String.fromCharCode(e.charCode))
+  });
+
+  svg.on("mousemove", function (d) {
+    //myL.mouseMove(d3.mouse(this))
+  });
+
+  /*
+   svg.on("keydown", function(d){console.log('d:',d)});
+   svg.onkeypress=function(e){
+   var e=window.event || e
+   alert("CharCode value: "+e.charCode)
+   alert("Character: "+String.fromCharCode(e.charCode))
+   }
+   */
+
+
+  var charfield = document.getElementById("svgScene")
+  console.log(charfield)
+
+  document.onkeydown = function (e) {
+    var e = window.event || e
+    console.log(e.ctrlKey)
+    console.log(e.keyCode)
+  }
+
+  console.log(d3.selectAll("circle"))
+
+</script>
 <body>
 <div>
-<p><aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside> 
+  <p>
+    <aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside>
 </div>
 <p>We're just trying</p>
- </body>
-<footer> 
-  <aside>May 25, 2012</aside> 
-  Benjamin Renoust (from Mike Bostock) 
+</body>
+<footer>
+  <aside>May 25, 2012</aside>
+  Benjamin Renoust (from Mike Bostock)
 </footer> 

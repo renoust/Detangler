@@ -1,116 +1,122 @@
+<html>
+<head>
+  <script src="local/editablegrid-2.0.1.js"></script>
+  <link rel="stylesheet" href="css/editablegrid-2.0.1.css" type="text/css" media="screen">
 
-<html>   
-    <head>
-        <script src="local/editablegrid-2.0.1.js"></script>
-        <link rel="stylesheet" href="css/editablegrid-2.0.1.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
+  <link rel="stylesheet" href="css/jPicker/jPicker-1.1.6.min.css" type="text/css"/>
+  <link rel="stylesheet" href="css/farbastic/farbtastic.css" type="text/css"/>
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="css/menu.css" type="text/css">
 
-        <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
-        <link rel="stylesheet" href="css/jPicker/jPicker-1.1.6.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/farbastic/farbtastic.css" type="text/css"/>
-        <link rel="stylesheet" href="css/style.css" type="text/css">
-        <link rel="stylesheet" href="css/menu.css" type="text/css">
+  <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
+  <script type="text/javascript" src="local/d3.v3.min.js"></script>
+  <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
+  <script type="text/javascript" src="local/farbtastic.js"></script>
+  <script type="text/javascript" src="local/colorbrewer.js"></script>
 
-        <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
-        <script type="text/javascript" src="local/d3.v3.min.js"></script>
-        <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
-        <script type="text/javascript" src="local/farbtastic.js"></script>
-        <script type="text/javascript" src="local/colorbrewer.js"></script>
-
-        <script type="text/javascript" src="script-test.js"></script>
-        <script type="text/javascript" src="assert.js"></script>
-        <script type="text/javascript" src="import_class.js"></script>
-        <script type="text/javascript" src="View.js"></script>
-        <script type="text/javascript" src="testView.js"></script>
-        <script type="text/javascript" src="TulipPosy.js"></script>
-
-
-    </head>
-    
-	<body>
-        <script>
-            // This function removes an element of the page by its id
-            function remove(id) {
-                elem = document.getElementById(id);
-                if (elem)
-                    return elem.parentNode.removeChild(elem);
-                else
-                    return
-            }
-
-            //$(document).ready(function() {
-
-    
+  <script type="text/javascript" src="script-test.js"></script>
+  <script type="text/javascript" src="assert.js"></script>
+  <script type="text/javascript" src="import_class.js"></script>
+  <script type="text/javascript" src="View.js"></script>
+  <script type="text/javascript" src="testView.js"></script>
+  <script type="text/javascript" src="TulipPosy.js"></script>
 
 
+</head>
 
-            $(document).ready( function (e) {
-                $(".submenu:not('.open_at_load')").hide();
-                $("li.hmenu > a").click( function (e) {
-                    if ($(this).next("ul.submenu:visible").length != 0) {
-                        $(this).next("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                    }
-                    else {
-                        $("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                        console.log()
-                        $(this).next("ul.submenu").slideDown("normal", function () { $(this).parent().addClass("open") } );
-                    }
-                    e.preventDefault();
-                });
-                $('ul.submenu').mouseleave(function(){
-                	console.log('mouseout');
-                    $('ul.submenu').slideUp("normal", function () { $(this).parent().removeClass("open") } );
+<body>
+<script>
+  // This function removes an element of the page by its id
+  function remove(id) {
+    elem = document.getElementById(id);
+    if (elem)
+      return elem.parentNode.removeChild(elem);
+    else
+      return
+  }
 
-                })
-                $('#opfile').click(function(e){
-                    $('#files').click();
-                    e.preventDefault();
-                })
+  //$(document).ready(function() {
 
-            }); 
-            
-        </script>
 
-        <div id='header'>
-            <div id='header-content'>
-            <button id='redo'> Redo</button> <button id='refresh'> Refresh</button><button id='undo'> Undo</button>
-    			<div id='header-logo'>TulipPosy</div>
-                <ul id='menu'>
-                    <li class='hmenu'><a href="">File</a>
-                        <ul class='submenu'>
+  $(document).ready(function (e) {
+    $(".submenu:not('.open_at_load')").hide();
+    $("li.hmenu > a").click(function (e) {
+      if ($(this).next("ul.submenu:visible").length != 0) {
+        $(this).next("ul.submenu").slideUp("normal", function () {
+          $(this).parent().removeClass("open")
+        });
+      }
+      else {
+        $("ul.submenu").slideUp("normal", function () {
+          $(this).parent().removeClass("open")
+        });
+        console.log()
+        $(this).next("ul.submenu").slideDown("normal", function () {
+          $(this).parent().addClass("open")
+        });
+      }
+      e.preventDefault();
+    });
+    $('ul.submenu').mouseleave(function () {
+      console.log('mouseout');
+      $('ul.submenu').slideUp("normal", function () {
+        $(this).parent().removeClass("open")
+      });
 
-                            <li><a  href="" id='opfile'>Open File</a></li>
-                            <li><a href="" >Analyse <input id='analyse' type='checkbox'></input></a></li>
-                            <li><a href="" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
-                     
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>  
+    })
+    $('#opfile').click(function (e) {
+      $('#files').click();
+      e.preventDefault();
+    })
 
-        <div id="wrap" class="sidebar" >
-            <div id="container"></div>
-        </div>
-           
-        <div style="opacity:0;display:none;">
-            <input id="files" type="file">
-        </div>
-        
+  });
 
-        <div id="Controller"></div>
-        
-        <script>
-			
-			//$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
-			
-			TP.Context().initController("principal", "principal");
-			
-            $('#opfile').click(function(e){
-                $('#files').click();
-            });
+</script>
 
-		</script>
-    	<script type="text/javascript" src="load.js"></script>
-    </body>
+<div id='header'>
+  <div id='header-content'>
+    <button id='redo'> Redo</button>
+    <button id='refresh'> Refresh</button>
+    <button id='undo'> Undo</button>
+    <div id='header-logo'>TulipPosy</div>
+    <ul id='menu'>
+      <li class='hmenu'><a href="">File</a>
+        <ul class='submenu'>
+
+          <li><a href="" id='opfile'>Open File</a></li>
+          <li><a href="">Analyse <input id='analyse' type='checkbox'></input></a></li>
+          <li><a href="">Sync Layout <input id='sync' type='checkbox'></input></a></li>
+
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="wrap" class="sidebar">
+  <div id="container"></div>
+</div>
+
+<div style="opacity:0;display:none;">
+  <input id="files" type="file">
+</div>
+
+
+<div id="Controller"></div>
+
+<script>
+
+  //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
+
+  TP.Context().initController("principal", "principal");
+
+  $('#opfile').click(function (e) {
+    $('#files').click();
+  });
+
+</script>
+<script type="text/javascript" src="load.js"></script>
+</body>
 </html>
