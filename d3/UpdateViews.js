@@ -407,6 +407,15 @@
             //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
 			//TP.Context().view[targetView].setTargetSelection(nodeList);
 
+
+            //sets the target view selection as a list of nodes 
+            //(later we might want it to be graph)
+            nodeList = []
+            data.nodes.forEach(function(d){nodeList.push(d.baseID);})
+                 //assert(true, "SETTING VIEW TARGET SELECTION");
+                 //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
+            TP.Context().view[targetView].setTargetSelection(nodeList);
+
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
 
             if (typeGraph == 'combined') {

@@ -57,7 +57,28 @@ var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labe
    	
    	var graphDrawing = null;
    	
+    var sourceSelection = null;
+    var targetSelection = null;
 
+    __g__.getSourceSelection = function()
+    {
+       return sourceSelection;
+    }
+
+    __g__.setSourceSelection = function(_selection)
+    {
+      sourceSelection = _selection;
+    }
+
+    __g__.getTargetSelection = function()
+    {
+        return targetSelection;
+    }
+
+    __g__.setTargetSelection = function(_selection)
+    {
+      targetSelection = _selection;
+    }
 
    	//var tmpPosX = null;
    	//var tmpPosY = null;

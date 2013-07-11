@@ -28,6 +28,29 @@ import_class('StateTree.js', 'TP')
 		__g__.idAssociation = idAssociation;
 		__g__.viewGroup = groupe;
 		
+		var sourceSelection = null;
+        var targetSelection = null;
+    
+        __g__.getSourceSelection = function()
+        {
+           return sourceSelection;
+        }
+    
+        __g__.setSourceSelection = function(_selection)
+        {
+          sourceSelection = _selection;
+        }
+    
+        __g__.getTargetSelection = function()
+        {
+            return targetSelection;
+        }
+    
+        __g__.setTargetSelection = function(_selection)
+        {
+          targetSelection = _selection;
+        }
+		
 		__g__.buttonTreatment = function(){
 			if(bouton != null){
 			

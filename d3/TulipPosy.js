@@ -73,6 +73,7 @@ var TulipPosy = function (originalJSON) {
 		
 		['Induced subgraph','',{click:function(){TP.Context().view[target].getController().sendMessage("sendSelection", {json:objectReferences.ClientObject.getSelection(target), idView:target})}}, "Selection"],
         ['Delete selection','',{click:function(){objectReferences.InteractionObject.delSelection(target)}}, "Selection"],
+        ['Toggle selection','',{click:function(){objectReferences.InteractionObject.toggleSelection(target)}}, 'Selection'],
         
         ['Center view','',{click:function(){TP.Context().view[target].getController().sendMessage('resetView');}}, "View"],
         ['Reset size','',{click:function(){TP.Context().view[target].getController().sendMessage("resetSize")}}, "View"],
@@ -106,6 +107,8 @@ var TulipPosy = function (originalJSON) {
         ['Server update layout','',{click:function(){objectReferences.ClientObject.updateLayout(target1)}}, "Layout"],
         
         ['Operator ' + TP.Context().tabOperator["catalyst"],'',{click:function(){objectReferences.InteractionObject.toggleCatalystSyncOperator(target1)}}, "Selection"],
+        ['Toggle selection','',{click:function(){objectReferences.InteractionObject.toggleSelection(target1)}}, 'Selection'],
+        
         
         ['Reset size','',{click:function(){TP.Context().view[target1].getController().sendMessage("resetSize")}}, "View"],
         ['Hide labels','',{click:function(){TP.Context().view[target1].getController().sendMessage("Hide labels")}}, "View"],
