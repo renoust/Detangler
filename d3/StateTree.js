@@ -1,12 +1,13 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
-    import_class('Interaction.js', 'TP')
-    import_class('assert.js', 'TP')
-    import_class("Client.js", "TP")
-    import_class("lasso.js", 'TP')
-    import_class("BarChart.js", 'TP')
+
+
+
+
+
 
     var StateTree = function () {
 
@@ -127,5 +128,5 @@
 
         return __g__;
     }
-    return {StateTree: StateTree};
-})()
+    TP.StateTree = StateTree;
+})(TP);

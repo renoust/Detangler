@@ -5,12 +5,13 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class("graphDrawing.js", "TP");
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('View.js', 'TP');
+
+
+
+
 
     var Visualization = function () {
         var __g__ = this;
@@ -567,5 +568,5 @@
 
         return __g__;
     }
-    return {Visualization: Visualization};
-})()
+    TP.Visualization = Visualization;
+})(TP);

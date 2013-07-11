@@ -20,6 +20,7 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
     var Lasso = function (viewID) {
@@ -908,5 +909,5 @@
         }
     }
 
-    return {Lasso: Lasso}
-})()
+    TP.Lasso = Lasso;
+})(TP);

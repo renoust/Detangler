@@ -1,5 +1,6 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
 
@@ -70,5 +71,5 @@
         return __g__;
     }
 
-    return {States: States};
-})()
+    TP.States = States;
+})(TP);

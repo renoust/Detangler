@@ -15,10 +15,11 @@
  ***********************************************************************/
 
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class('objectReferences.js', 'TP');
+
+
 
     var GraphDrawing = function (_graph, _svg, currentViewID) {
 
@@ -1257,5 +1258,5 @@
 
         return g;
     }
-    return {GraphDrawing: GraphDrawing};
-})()
+    TP.GraphDrawing = GraphDrawing;
+})(TP);

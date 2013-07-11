@@ -5,13 +5,14 @@
  * @created March 2013
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('stateSelect.js', 'TP');
-    import_class('Controller.js', 'TP');
-    import_class('StateTree.js', 'TP')
+
+
+
+
+
 
 
     var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
@@ -653,5 +654,5 @@
         return __g__;
 
     }
-    return {View: View};
-})()
+    TP.View = View;
+})(TP);

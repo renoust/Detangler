@@ -1,7 +1,8 @@
+var TP = TP || {};
 (function () {
 
-    import_class('eventHandler.js', 'TP')
-    import_class('StateTree.js', 'TP')
+
+
 
 
     var Controller = function () {
@@ -229,5 +230,5 @@
         return __g__;
     }
 
-    return {Controller: Controller};
-})()
+    TP.Controller = Controller;
+})(TP);

@@ -1,11 +1,12 @@
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('stateSelect.js', 'TP');
-    import_class('Controller.js', 'TP');
-    import_class('StateTree.js', 'TP')
-    import_class("ViewBarchart.js", "TP")
+
+
+
+
+
+
 
     var BarChart = function () {
 
@@ -361,6 +362,6 @@
 
     }
 
-    return {BarChart: BarChart};
+    TP.BarChart = BarChart;
 
-})()
+})(TP);
