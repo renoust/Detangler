@@ -1,6 +1,7 @@
+var TP = TP || {};
 (function () {
 
-    import_class("objectReferences.js", "TP");
+
 
     var stateSelect = function (args) {
 
@@ -26,6 +27,6 @@
         return __g__;
     }
 
-    return {stateSelect: stateSelect};
+    TP.stateSelect = stateSelect;
 
-})()
+})(TP);

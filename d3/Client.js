@@ -6,15 +6,16 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
 
-    import_class("graph.js", "TP");
-    import_class("graphDrawing.js", "TP");
-    import_class("UpdateViews.js", "TP");
-    import_class("Controller.js", "TP");
+
+
+
+
+
+
 
 
     var Client = function () {
@@ -510,5 +511,5 @@
 
         return __g__;
     }
-    return {Client: Client};
-})()
+    TP.Client = Client;
+})(TP);

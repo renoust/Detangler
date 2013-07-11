@@ -4,8 +4,8 @@
  * @created May 2012
  ***********************************************************************/
 
-import_class("context.js", "TP");
-import_class("objectReferences.js", "TP");
+
+
 
 
 var testView = function (nbView, nbBouton) {

@@ -4,16 +4,17 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('tools.js', 'TOOL');
-    import_class('context.js', 'TP');
 
-    import_class('Visualization.js', 'TP');
-    import_class('Interaction.js', 'TP');
-    import_class('Interface.js', 'TP');
-    import_class('Client.js', 'TP');
-    import_class('UpdateViews.js', 'TP');
+
+
+
+
+
+
+
 
     var ObjectReferences = function () {
         //forcing ObjectReferences to be singleton, instanciated once 
@@ -32,10 +33,10 @@
         this.InterfaceObject = new TP.Interface();
         this.InteractionObject = new TP.Interaction();
         this.UpdateViewsObject = new TP.UpdateViews();
-        this.ToolObject = new TOOL.Tools();
+        this.ToolObject = new TP.Tools();
 
         return __g__;
     }
 
-    return {ObjectReferences: ObjectReferences};
-})()
+    TP.ObjectReferences = ObjectReferences;
+})(TP);

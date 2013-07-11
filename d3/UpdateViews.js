@@ -7,13 +7,14 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class("graph.js", "TP");
-    import_class("graphDrawing.js", "TP");
-    import_class("Metric.js", "TP");
+
+
+
+
+
 
 
     var UpdateViews = function () {
@@ -501,5 +502,5 @@
 
         return __g__;
     }
-    return {UpdateViews: UpdateViews}
-})()
+    TP.UpdateViews = UpdateViews;
+})(TP);

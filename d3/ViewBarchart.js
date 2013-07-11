@@ -1,10 +1,11 @@
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('stateSelect.js', 'TP');
-    import_class('Controller.js', 'TP');
-    import_class('StateTree.js', 'TP')
+
+
+
+
+
 
     var ViewBarchart = function (id, groupe, bouton, svgs, name, type, idAssociation, typeBarchart) {
 
@@ -59,6 +60,6 @@
         return __g__;
     }
 
-    return {ViewBarchart: ViewBarchart};
+    TP.ViewBarchart = ViewBarchart;
 
-})()
+})(TP);

@@ -17,11 +17,11 @@
 // with the communication, the other with the interaction, another for the overall
 // interface...
 
-import_class('context.js', 'TP');
-import_class('objectReferences.js', 'TP');
-import_class('View.js', 'TP');
-import_class("Controller.js", 'TP')
-import_class('ViewGraph.js', 'TP')
+
+
+
+
+
 
 var TulipPosy = function (originalJSON) {
 

@@ -4,12 +4,13 @@
  * @created February 2013
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class("graph.js", "TP");
-    import_class('States.js', 'TP');
-    import_class('StatesChange.js', 'TP');
-    import_class('Controller.js', 'TP');
+
+
+
+
 
     var Context = function () {
         var __g__ = this;
@@ -155,5 +156,5 @@
         return __g__;
     }
 
-    return {Context: Context};
-})()
+    TP.Context = Context;
+})(TP);

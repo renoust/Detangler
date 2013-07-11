@@ -7,11 +7,12 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class("Controller.js", 'TP');
+
+
+
 
     var Interface = function () {
         assert(false, 'Interface')
@@ -197,7 +198,8 @@
          .attr("class", "settingsWindow")
          .attr("dx", 5)
          .attr("dy", 15)
-         .text(function () {
+         .textvar TP = TP || {};
+(function () {
          return "Weight property"
          })
          .style("font-family", TP.Context().defaultTextFont)
@@ -210,7 +212,8 @@
          .attr("class", "settingsWindow")
          .attr("dx", 50)
          .attr("dy", 115)
-         .text(function () {
+         .textvar TP = TP || {};
+(function () {
          return "WX"
          })
          .style("font-family", "EntypoRegular")
@@ -585,5 +588,5 @@
         return __g__;
 
     }
-    return {Interface: Interface};
-})()
+    TP.Interface = Interface;
+})(TP);

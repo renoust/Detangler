@@ -7,6 +7,7 @@
  * @created May 2012
  **************************************************************************/
 
+var TP = TP || {};
 (function () {
 
     // This class can be called with 'new' to create independant instances
@@ -321,5 +322,5 @@
 
         return g;
     }
-    return {Graph: Graph};
-})()
+    TP.Graph = Graph;
+})(TP);

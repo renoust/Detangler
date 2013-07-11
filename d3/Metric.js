@@ -1,8 +1,9 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
-    import_class("context.js", "TP")
+
 
     var Metric = function () {
 
@@ -200,5 +201,5 @@
         return __g__;
     }
 
-    return {Metric: Metric};
-})()
+    TP.Metric = Metric;
+})(TP);

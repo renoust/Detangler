@@ -3,7 +3,7 @@
  * @authors Benjamin Renoust
  * @created February 2013
  ***********************************************************************/
-
+var TP = TP || {};
 (function () {
 
     this.assert = function (test, message) {
@@ -30,4 +30,4 @@
     }
 
 
-})();
+})(TP);

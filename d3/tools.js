@@ -6,11 +6,12 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class("graphDrawing.js", "TP");
-    import_class("context.js", "TP");
-    import_class("objectReferences.js", "TP");
+
+
+
 
     var Tools = function () {
 
@@ -142,5 +143,5 @@
         return __g__;
     }
 
-    return {Tools: Tools};
-})()
+    TP.Tools = Tools;
+})(TP);

@@ -6,12 +6,13 @@
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('lasso.js', 'TP');
-    import_class("Controller.js", "TP")
+
+
+
+
 
     var Interaction = function () {
         var __g__ = this;
@@ -993,5 +994,5 @@
         return __g__;
 
     }
-    return {Interaction: Interaction};
-})()
+    TP.Interaction = Interaction;
+})(TP);

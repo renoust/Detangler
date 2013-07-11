@@ -1,14 +1,15 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
-    import_class('context.js', 'TP');
-    import_class("objectReferences.js", "TP");
-    import_class('stateSelect.js', 'TP');
-    import_class('Controller.js', 'TP');
-    import_class('StateTree.js', 'TP')
-    import_class("ViewTemplate.js", "TP")
-    import_class("ScatterPlot.js", "TP")
+
+
+
+
+
+
+
 
     var ViewGraph = function (id, groupe, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
@@ -443,5 +444,5 @@
         return __g__;
     }
 
-    return {ViewGraph: ViewGraph};
-})()
+    TP.ViewGraph = ViewGraph;
+})(TP);

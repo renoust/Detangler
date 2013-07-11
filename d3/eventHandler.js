@@ -1,8 +1,9 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
-    import_class('Store.js', 'TP')
+
 
     var eventHandler = function () {
 
@@ -184,5 +185,5 @@
         return __g__;
     }
 
-    return {eventHandler: eventHandler};
-})()
+    TP.eventHandler = eventHandler;
+})(TP);

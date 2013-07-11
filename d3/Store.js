@@ -1,5 +1,6 @@
 //pile de gestion d'Etat
 
+var TP = TP || {};
 (function () {
 
 
@@ -55,5 +56,5 @@
         return __g__;
     }
 
-    return {Store: Store};
-})()
+    TP.Store = Store;
+})(TP);
