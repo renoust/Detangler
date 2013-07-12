@@ -1,17 +1,18 @@
 /************************************************************************
  * This module contains various tools for the application. They were put
  * here because they didn't really belong to any other modules.
- * 
+ *
  * @authors Guy Melancon, Benjamin Renoust
  * @created May 2012
  ***********************************************************************/
 
+var TP = TP || {};
 (function () {
 
-    import_class("graphDrawing.js", "TP");
-    import_class("context.js", "TP");
-    import_class("objectReferences.js", "TP");
-    
+
+
+
+
     var Tools = function () {
 
         var __g__ = this;
@@ -87,13 +88,15 @@
                 } else {
                     d.x = 0;
                     d.currentX = 0;
-                };
+                }
+                ;
                 if ("y" in d) {
                     d.currentY = d.y;
                 } else {
                     d.y = 0;
                     d.currentY = 0;
-                };
+                }
+                ;
             })
             if (idName == "") {
                 data.nodes.forEach(function (d, i) {
@@ -120,8 +123,8 @@
         this.loadJSON = function (data, target) {
             //console.log("loadJSONrescaleBEGIN");
 
-		    //TP.GraphDrawing(TP.Context().getViewGraph('substrate'),TP.Context().getViewSVG('substrate')).rescaleGraph(contxt,data);
-		    //console.log("loadJSONrescaleENDING");
+            //TP.GraphDrawing(TP.Context().getViewGraph('substrate'),TP.Context().getViewSVG('substrate')).rescaleGraph(contxt,data);
+            //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
             typeGraph = TP.Context().view[target].getType();
@@ -132,7 +135,7 @@
 
             TP.Context().view[target].getGraphDrawing().draw();
             //objectReferences.VisualizationObject.rescaleGraph(data);
-            
+
             return
         }
 
@@ -140,5 +143,5 @@
         return __g__;
     }
 
-    return {Tools: Tools};
-})()
+    TP.Tools = Tools;
+})(TP);

@@ -12,9 +12,11 @@ fi
 
 PYTHONPATH=$PYTHONPATH:$tulip_python_path:$PWD/plugins
 
-for sd in $(find $PWD/plugins -type d)
+for sd in "$PWD"/plugins/*
 do
-    PYTHONPATH=$PYTHONPATH:$sd
+    if [[ -d $sd ]]; then
+	PYTHONPATH=$PYTHONPATH:$sd
+    fi
 done
 
 export PYTHONPATH
