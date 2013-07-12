@@ -28,16 +28,6 @@ var TulipPosy = function (originalJSON) {
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
 
-    $.fn.jPicker.defaults.images.clientPath = 'css/jPicker/';
-
-
-    var nav = (navigator.userAgent).toLowerCase().indexOf("chrome");
-
-    if (nav == -1) {
-        //notification
-    }
-
-
     TP.Context().clearInterface();
 
     var target = "" + TP.Context().getIndiceView();
@@ -56,14 +46,38 @@ var TulipPosy = function (originalJSON) {
     var type3 = "Vizualisation";
     var type4 = "Others";
 
-    // parameter: [labelprec, type, labelsuiv]
-    // types:   0:text
-    //          1:slider
-    var paramSizeMap = [
+    // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
+    // types:   0:text      3:textfield     6:spinner
+    //          1:slider    4:checkbox
+    //          2:button    5:sider
+    /*var paramSizeMap = [
         ['div', {id: 'sizemap', class: 'slider'}, 'scale: ']
-    ]
+    ];*/
+    var paramSizeMap = [
+        [5, {id:"sizemap"},{
+                range: true,
+                min: 0,
+                max: 99,
+                values: [ 3, 12 ],
+                change: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                },
+                slide: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                }
+            },
+            "scale: "
+        ]
+    ];
+
     var tl = [
-        ['input', {type: 'text'}]
+        [3,{id:"selectedAlgo"}]
     ];
     //var paramSizeMap = [['scale: ', 0]]
 
@@ -79,7 +93,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: 'MDS', idView: target})
         }}, "Layout"],
         ['Tulip layout algorithm', tl, {call: function (layout) {
-            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.text0, idView: target})
+            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target})
         }}, "Layout"],
 
         ['Induced subgraph', '', {click: function () {
@@ -127,7 +141,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: target})
         }}, "Measure"],
         ['Tulip measure', tl, {call: function (algo) {
-            TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.text0, idView: target})
+            TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: target})
         }}, "Measure"],
 
         ['Bipartite analysis', '', {click: function () {
@@ -159,6 +173,9 @@ var TulipPosy = function (originalJSON) {
         }}, "Layout"],
         ['Server update layout', '', {click: function () {
             objectReferences.ClientObject.updateLayout(target1)
+        }}, "Layout"],
+        ['Tulip layout algorithm', tl, {call: function (layout) {
+            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target})
         }}, "Layout"],
 
         ['Operator ' + TP.Context().tabOperator["catalyst"], '', {click: function () {
@@ -205,6 +222,9 @@ var TulipPosy = function (originalJSON) {
         }}, "Measure"],
         ['Entanglement mapping', '', {click: function (scales) {
             TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: contxt.activeView, scales: scales})
+        }}, "Measure"],
+        ['Tulip measure', tl, {call: function (algo) {
+            TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: target1})
         }}, "Measure"],
 
         ['Horizontal barchart', '', {click: function () {
@@ -382,6 +402,12 @@ var TulipPosy = function (originalJSON) {
     }
     if ($('#sync').is(':checked')) {
         objectReferences.ClientObject.syncLayouts(target)
+    }
+
+    //check if Google Chrome browser is used, if not, warn the user
+     if(!window.chrome){
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","This application is optimized for Google Chrome browser. If you see this message, please "+
+            "use Google Chrome or... run you fools.")
     }
 
 

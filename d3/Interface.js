@@ -58,8 +58,8 @@ var TP = TP || {};
 
             var path = $('#files').val().split('\\');
             var file = path[path.length - 1];
-            var view = target.getName().split('-')
-            var type = view[view.length - 1]
+            var view = target.getName().split('-');
+            var type = view[view.length - 1];
 
             $('#infoView').html("<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
@@ -239,8 +239,41 @@ var TP = TP || {};
          */
 
 
-        this.attachInfoBox = function () {
+        this.attachInfoBox = function (target) {
             //assert(true, 'Interface -> attachInfoBox');
+            $('#infoNodes').html("<p> NODE INFORMATIONS: </p>");
+            $('#infoNodes').append("<button id='searchNode' class='hidden'>Search</button>")
+            var nodesBID = $('<select/>',{style:"visibility:hidden"}).appendTo("#infoNodes")
+            $('#infoNodes').append("<ul></ul>");
+
+            var svg = TP.Context().view[target].getSvg();
+            var nodes = svg.selectAll('g.node').data()
+            
+            nodesBID.append("<option>-Nodes-</option>")
+            for(n in nodes){
+                nodesBID.append("<option>"+nodes[n].baseID+"</option>")
+            }
+            $("#searchNode").click(function(){
+                if($(this).hasClass('hidden')){
+                    $(this).siblings('select').css('visibility','visible')
+                    $(this).removeClass('hidden')
+                }else{
+                    $(this).siblings('select').css('visibility','hidden')
+                    $(this).addClass('hidden')
+                }
+            })
+            nodesBID.change(function(){
+                var selectedNode = nodesBID[0].options[nodesBID[0].selectedIndex].value;
+                var node = null;
+                for (n in nodes){
+                    if(nodes[n].baseID==selectedNode){
+                        node = nodes[n];
+                        break;
+                    }
+                }
+                TP.Controller().sendMessage("mouseoverInfoBox", {node:node}, "principal", "undifined")
+            })
+
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
 
@@ -253,15 +286,12 @@ var TP = TP || {};
         this.addInfoBox = function (event) {
 
             var node = event.associatedData.node;
-
-            //console.log(d)
-            $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
+            $("#infoNodes ul").empty();
+            
             for (var k in node) {
                 //console.log(k, d[k])
-                $('#infoNodes').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
+                $('#infoNodes ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
             }
-            $('#infoNodes').append("</ul>");
-
         }
 
 
@@ -305,19 +335,76 @@ var TP = TP || {};
         }
 
 
+        this.throwAnnouncement = function(title, text){          
+            $('body').append('<div id=announce></div>');
+            $('#announce').dialog({
+                title: title,
+                modal: true,
+                zIndex: 3999    
+            });
+            $('.ui-front').css('z-index', 3000);
+            $('#announce').append(text)
+
+        }
+
+
+        this.tileDialog = function(tabView, x, y, h, w, sens){
+            var length = tabView.length;
+            if(length==1){
+                drawDialog(x,y,h,w,tabView[0])
+                //return x;
+            }else{
+                tmp = changesens(h,w,sens)
+                hbis = tmp.h;
+                wbis = tmp.w;
+                console.log("A------ x:",x,"x+(w-wbis): ",x+(w-wbis), "wbis:",wbis,"hbis",hbis)
+                s1 = this.tileDialog(tabView.slice(0,length/2), x,y,hbis,wbis,!sens)
+                //console.log("S1: ",s1)
+                console.log("B------ x:",x,"x+(w-wbis): ",x+(w-wbis), "wbis:",wbis,"hbis",hbis)
+                //var x = s1;
+                //console.log(tp)
+                s2 = this.tileDialog(tabView.slice(length/2, length), x+(w-wbis), y+(h-hbis),hbis,wbis,!sens);
+                console.log("C------ x:",x,"w: ",w, "x+(w-wbis): ",x+(w-wbis), "wbis:",wbis,"hbis",hbis)
+                //return x;
+            }
+            function changesens(h,w,sens){
+                if(sens)
+                    return {h:h/2, w:w};
+                else 
+                    return {h:h, w:w/2};
+            }
+            function drawDialog(x,y,h,w,view){
+                view.dialog.dialog({
+                    width:w,
+                    height:h,
+                    position: [x+20,y+30]
+                })
+                assert(true, [x,y,h,w,view, sens])
+            }
+        }
+
         // gestion du menu à gauche
-
-
         this.addPanelMenu = function (header) {
             //assert(true,'Interface -> addPanelMenu')
 
             menuNum = contxt.menuNum++;
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
-            $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
+            var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
+            var cbtn = $('<div/>', {class:'close-button'}).appendTo(head)
             $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content', }).appendTo('#menu-' + menuNum)
+            
+            cbtn.click(function(){
+                $("#wrap").toggleClass('nosidebar sidebar');
+                $('.toggleButton').removeClass("open")
+                $('.cont').each(function(){
+                    $(this).css('z-index',0)
+                    $(this).css('left',-301)
+                })
+            })
             return 'menu-' + menuNum;
         }
+
 
         this.interactionPane = function (buttons, mode) {
             //assert(true,'Interface -> interactionPane')
@@ -417,7 +504,7 @@ var TP = TP || {};
 
         this.visuPane = function (pane) {
             //assert(true,'Interface -> visuPane')
-            var menu = this.addPanelMenu('');
+            var menu = this.addPanelMenu('View settings');
             var content = $("#" + menu + " .menu-content");
             var tgbutton = $('#' + menu).find('.toggleButton')
             $('<h3/>', {}).appendTo(tgbutton);
@@ -469,12 +556,80 @@ var TP = TP || {};
         }
 
 
-        this.createElement = function (balise, attributes, parentId, labelPrec, labelSuiv) {
+        /*this.createElement = function (balise, attributes, parentId, labelPrec, labelSuiv) {
             //assert(true,'Interface -> createElement')
             if (labelPrec) jQuery('<label/>', {text: labelPrec + ' '}).appendTo(parentId);
             var elem = jQuery('<' + balise + '/>', attributes).appendTo(parentId);
             if (labelSuiv) jQuery('<label/>', {text: ' ' + labelSuiv}).appendTo(parentId);
             return elem;
+        }*/
+
+        this.createElements = function(tab, parentId){
+            var par = $(parentId)
+            for(k in tab){
+                switch(tab[k][0]){
+                    case 0:
+                        par.append(tab[k][3])
+                        var div = $('<select>', tab[k][1]).appendTo(parentId);
+                        for(opt in tab[k][2]){
+                            $('<option/>',{value:tab[k][2][opt].value, text:tab[k][2][opt].text}).appendTo(div)
+                        }
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 1:
+                        par.append(tab[k][3])
+                        var form = $('<form>', tab[k][1]).appendTo(parentId);
+                        form.addClass('radio')
+                        for(opt in tab[k][2]){
+                            $('<input/>',{type:"radio",name:tab[k][2][opt].name, value:tab[k][2][opt].value, text:tab[k][2][opt].text}).appendTo(form)
+                            $('<label/>',{text:tab[k][2][opt].text}).appendTo(form)
+                            $(form).append("<br/>")
+                        }
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 2:
+                        par.append(tab[k][3])
+                        $('<button/>',{text:tab[k][1].text}).appendTo(parentId)
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 3:
+                        par.append(tab[k][3])
+                        var div =$('<input/>',tab[k][1]).appendTo(parentId)
+                        div.attr("type","text")
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 4:
+                        par.append(tab[k][3])
+                        var form = $('<form>', tab[k][1]).appendTo(parentId);
+                        form.addClass('checkbox')
+                        for(opt in tab[k][2]){
+                            $('<input/>',{type:"checkbox",name:tab[k][2][opt].name, value:tab[k][2][opt].value, text:tab[k][2][opt].text}).appendTo(form)
+                            $('<label/>',{text:tab[k][2][opt].text}).appendTo(form)
+                            $(form).append("<br/>")
+                        }
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 5:
+                        par.append(tab[k][3])
+                        var div = $('<div/>',tab[k][1]).appendTo(parentId)
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        div.slider(tab[k][2]);
+                        break;
+                    case 6:
+                        par.append(tab[k][3])
+                        var div = $('<input/>', tab[k][1]).appendTo(parentId)
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        div.spinner(tab[k][2]);
+                        break;
+                }
+            }
         }
 
 
@@ -495,20 +650,22 @@ var TP = TP || {};
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);
                     $('<a/>', {text: label}).appendTo(fam)
                     var form = $('<div/>', {class: 'formParam'}).appendTo(fam)
-                    for (var j = 0; j < param.length; j++) {
+                    this.createElements(param,form)
+                    /*for (var j = 0; j < param.length; j++) {
                         this.createElement(param[j][0], param[j][1], form, param[j][2], param[j][3])
                         //this.createElement('br', null, '#'+id)
-                    }
-                    var submit = this.createElement('button', {class: 'submit', text: "Apply"}, form)
-                    submit.click(function (e) {
-                        return function (ev) {
-                            objectReferences.InterfaceObject.callbackMenu(submit, e)
-                        }
-                    }(evnt))
+                    }*/
+                    var submit = $('<button/>', {class: 'submit', text: "Apply"}).appendTo(form);
+                    //var submit = this.createElement('button', {class: 'submit', text: "Apply"}, form)
+                    submit.click((function (s, e) {
+                        return function () {
+                            objectReferences.InterfaceObject.callbackMenu(s, e)
+                        };
+                    })(submit, evnt))
                 }
             }
 
-            $("#sizemap").slider({
+            /*$("#sizemap").slider({
                 range: true,
                 min: 0,
                 max: 99,
@@ -525,64 +682,91 @@ var TP = TP || {};
                     $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
                     $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
                 }
-            });
+            });*/
         }
 
 
-        this.callbackMenu = function (param, evnt) {
-            assert(true, 'Interface -> call')
+        this.callbackMenu = function(param, evnt){
+            assert(true,'Interface -> call')
             var res = {}
-            var key = null;
-            var val = null;
-            //var btn = $(param);
+            var key, val, data;
 
-            var data = param.siblings("input[type='radio']:checked")
-            data.each(function () {
-                key = param.attr('name');
-                res[key] = param.val();
+
+            // select
+            data = param.siblings("select")
+            data.each(function(){
+                key = this.id+"_text";
+                res[key] = document.getElementById(this.id).options[document.getElementById(this.id).selectedIndex].text
+                key = this.id+"_val";
+                res[key] = document.getElementById(this.id).options[document.getElementById(this.id).selectedIndex].value
             })
 
+            // radio
+            data = param.siblings('form.radio')
+            data = data.find("input[type='radio']:checked")
+            data.each(function(){
+                key = $(this).attr('name')+"_val";
+                res[key] = $(this).val();
+                key = $(this).attr('name')+"_text";
+                res[key] = $(this).text();
+            })
+
+            // textfield
+            data = param.siblings("input[type='text']")
+            data.each(function(){
+                key = this.id;
+                res[key] = this.value;
+            })  
+
+            // checkbox
+            data = param.siblings('form.checkbox')
+            data = data.find("input[type='checkbox']:checked")
+            data.each(function(){
+                key = $(this).attr('name')
+                res[key] = {text:$(this).text(), val:$(this).val()};
+            })
+
+            //slider
+            data = param.siblings('.ui-slider');
+            data.each(function(){
+                key = this.id;
+                console.log(this)
+                res[key] = {val1:$(this).slider("values",0), val2:$(this).slider("values",1)}
+            })
+
+            //spinner
             data = param.siblings('.ui-spinner')
-            data.each(function () {
-                key = param.children('input').attr('name');
-                val = param.children('input')[0].value
-                res[key] = val;
+            data = data.find('.ui-spinner-input')
+            data.each(function(){
+                console.log($(this).spinner("value"))
+                key = this.id
+                res[key] = $(this).spinner('value')
             })
 
-            data = param.siblings("input[type='checkbox']:checked")
-            data.each(function () {
+            /*data = param.siblings("input[type='checkbox']:checked")
+            data.each(function(){
 
                 key = param.attr('name');
-                if (res[key] == null)
+                if (res[key]==null)         
                     res[key] = param.val();
                 else
-                    res[key] += ", " + param.val();
-            })
+                    res[key] += ", "+param.val();
+            })*/
 
 
-            data = param.siblings("input[type='text']")
-
-            var end = data.length;
-            for (var i = 0; i < end; i++) {
-                key = 'text' + i;
-
-                val = data[i].value;
-                res[key] = val;
-            }
-
-            data = param.siblings('.slider');
+            /*data = param.siblings('.ui-slider');
             var data2 = param.siblings('.slider');
             end = data.length;
-            for (var i = 0; i < end; i++) {
-                key = 'valMin' + i
-                val = data.eq(i).slider("values", 0);
+            for(var i=0; i<end; i++){
+                key = 'valMin'+i
+                val = data.eq(i).slider("values",0);
                 res[key] = val;
-                key = 'valMax' + i
-                val = data.eq(i).slider("values", 1);
+                key = 'valMax'+i
+                val = data.eq(i).slider("values",1);
                 res[key] = val;
-            }
+            }*/
+            console.log(res)
             evnt.call(res)
-
         }
 
         return __g__;

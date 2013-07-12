@@ -263,7 +263,7 @@ var TP = TP || {};
                     TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
-                TP.Context().InterfaceObject.attachInfoBox()
+                TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
                 $('.ui-dialog-titlebar').each(function () {
                     $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 })

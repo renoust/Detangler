@@ -425,8 +425,8 @@ var TP = TP || {};
             var scaleMin = null;
             var scaleMax = null
             if (scales != null) {
-                scaleMin = scales.valMin0;
-                scaleMax = scales.valMax0
+                scaleMin = scales.sizemap.val1;
+                scaleMax = scales.sizemap.val2;
             }
 
 
