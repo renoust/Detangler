@@ -1,14 +1,22 @@
 #! /bin/bash
 #TODO find automatically tulip
 source ./config
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$tulip_lib_path
-export LD_LIBRARY_PATH
+
+if [ "$(uname)" == "Darwin" ]; then
+    DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:$tulip_lib_path
+    export DYLD_FALLBACK_LIBRARY_PATH
+else
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$tulip_lib_path
+    export LD_LIBRARY_PATH
+fi
 
 PYTHONPATH=$PYTHONPATH:$tulip_python_path:$PWD/plugins
 
-for sd in $(find $PWD/plugins -type d)
+for sd in "$PWD"/plugins/*
 do
-    PYTHONPATH=$PYTHONPATH:$sd
+    if [[ -d $sd ]]; then
+	PYTHONPATH=$PYTHONPATH:$sd
+    fi
 done
 
 export PYTHONPATH

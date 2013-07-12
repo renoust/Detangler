@@ -1,116 +1,150 @@
+<html>
+<head>
+  <script src="local/editablegrid-2.0.1.js"></script>
+  <link rel="stylesheet" href="css/editablegrid-2.0.1.css" type="text/css" media="screen">
 
-<html>   
-    <head>
-        <script src="local/editablegrid-2.0.1.js"></script>
-        <link rel="stylesheet" href="css/editablegrid-2.0.1.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
+  <link rel="stylesheet" href="css/jPicker/jPicker-1.1.6.min.css" type="text/css"/>
+  <link rel="stylesheet" href="css/farbastic/farbtastic.css" type="text/css"/>
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="css/menu.css" type="text/css">
 
-        <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
-        <link rel="stylesheet" href="css/jPicker/jPicker-1.1.6.min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/farbastic/farbtastic.css" type="text/css"/>
-        <link rel="stylesheet" href="css/style.css" type="text/css">
-        <link rel="stylesheet" href="css/menu.css" type="text/css">
+  <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
+  <script type="text/javascript" src="local/d3.v3.min.js"></script>
+  <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
+  <script type="text/javascript" src="local/farbtastic.js"></script>
+  <script type="text/javascript" src="local/colorbrewer.js"></script>
 
-        <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
-        <script type="text/javascript" src="local/d3.v3.min.js"></script>
-        <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
-        <script type="text/javascript" src="local/farbtastic.js"></script>
-        <script type="text/javascript" src="local/colorbrewer.js"></script>
-
-        <script type="text/javascript" src="script-test.js"></script>
-        <script type="text/javascript" src="assert.js"></script>
-        <script type="text/javascript" src="import_class.js"></script>
-        <script type="text/javascript" src="View.js"></script>
-        <script type="text/javascript" src="testView.js"></script>
-        <script type="text/javascript" src="TulipPosy.js"></script>
-
-
-    </head>
-    
-	<body>
-        <script>
-            // This function removes an element of the page by its id
-            function remove(id) {
-                elem = document.getElementById(id);
-                if (elem)
-                    return elem.parentNode.removeChild(elem);
-                else
-                    return
-            }
-
-            //$(document).ready(function() {
-
-    
-
+  <script type="text/javascript" src="BarChart.js"></script>
+  <script type="text/javascript" src="Client.js"></script>
+  <script type="text/javascript" src="Controller.js"></script>
+  <script type="text/javascript" src="Interaction.js"></script>
+  <script type="text/javascript" src="Interface.js"></script>
+  <script type="text/javascript" src="Metric.js"></script>
+  <script type="text/javascript" src="ScatterPlot.js"></script>
+  <script type="text/javascript" src="StateTree.js"></script>
+  <script type="text/javascript" src="States.js"></script>
+  <script type="text/javascript" src="StatesChange.js"></script>
+  <script type="text/javascript" src="Store.js"></script>
+  <script type="text/javascript" src="UpdateViews.js"></script>
+  <script type="text/javascript" src="ViewBarchart.js"></script>
+  <script type="text/javascript" src="ViewGraph.js"></script>
+  <script type="text/javascript" src="ViewScatterPlot.js"></script>
+  <script type="text/javascript" src="ViewTemplate.js"></script>
+  <script type="text/javascript" src="context.js"></script>
+  <script type="text/javascript" src="eventHandler.js"></script>
+  <script type="text/javascript" src="graph.js"></script>
+  <script type="text/javascript" src="graphDrawing.js"></script>
+  <script type="text/javascript" src="lasso.js"></script>
+  <script type="text/javascript" src="Visualization.js"></script>
+  <script type="text/javascript" src="objectReferences.js"></script>
+  <script type="text/javascript" src="stateSelect.js"></script>
+  <script type="text/javascript" src="tools.js"></script>
+  <script type="text/javascript" src="assert.js"></script>
+  <script type="text/javascript" src="View.js"></script>
+  <script type="text/javascript" src="TulipPosy.js"></script>
 
 
-            $(document).ready( function (e) {
-                $(".submenu:not('.open_at_load')").hide();
-                $("li.hmenu > a").click( function (e) {
-                    if ($(this).next("ul.submenu:visible").length != 0) {
-                        $(this).next("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                    }
-                    else {
-                        $("ul.submenu").slideUp("normal", function () { $(this).parent().removeClass("open") } );
-                        console.log()
-                        $(this).next("ul.submenu").slideDown("normal", function () { $(this).parent().addClass("open") } );
-                    }
-                    e.preventDefault();
-                });
-                $('ul.submenu').mouseleave(function(){
-                	console.log('mouseout');
-                    $('ul.submenu').slideUp("normal", function () { $(this).parent().removeClass("open") } );
+</head>
 
-                })
-                $('#opfile').click(function(e){
-                    $('#files').click();
-                    e.preventDefault();
-                })
+<body>
+<script>
+  // This function removes an element of the page by its id
+  function remove(id) {
+    elem = document.getElementById(id);
+    if (elem)
+      return elem.parentNode.removeChild(elem);
+    else
+      return
+  }
 
-            }); 
-            
-        </script>
+  //$(document).ready(function() {
 
-        <div id='header'>
-            <div id='header-content'>
-            <button id='redo'> Redo</button> <button id='refresh'> Refresh</button><button id='undo'> Undo</button>
-    			<div id='header-logo'>TulipPosy</div>
-                <ul id='menu'>
-                    <li class='hmenu'><a href="">File</a>
-                        <ul class='submenu'>
 
-                            <li><a  href="" id='opfile'>Open File</a></li>
-                            <li><a href="" >Analyse <input id='analyse' type='checkbox'></input></a></li>
-                            <li><a href="" >Sync Layout <input id='sync' type='checkbox'></input></a></li>
-                     
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>  
+  $(document).ready(function (e) {
+    $(".submenu:not('.open_at_load')").hide();
+    $("li.hmenu > a").click(function (e) {
+      if ($(this).next("ul.submenu:visible").length != 0) {
+        $(this).next("ul.submenu").slideUp("normal", function () {
+          $(this).parent().removeClass("open")
+        });
+      }
+      else {
+        $("ul.submenu").slideUp("normal", function () {
+          $(this).parent().removeClass("open")
+        });
+        console.log()
+        $(this).next("ul.submenu").slideDown("normal", function () {
+          $(this).parent().addClass("open")
+        });
+      }
+      e.preventDefault();
+    });
+    $('ul.submenu').mouseleave(function () {
+      console.log('mouseout');
+      $('ul.submenu').slideUp("normal", function () {
+        $(this).parent().removeClass("open")
+      });
 
-        <div id="wrap" class="sidebar" >
-            <div id="container"></div>
-        </div>
-           
-        <div style="opacity:0;display:none;">
-            <input id="files" type="file">
-        </div>
-        
+    })
+    $('#opfile').click(function (e) {
+      $('#files').click();
+      e.preventDefault();
+    })
 
-        <div id="Controller"></div>
-        
-        <script>
-			
-			//$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
-			
-			TP.Context().initController("principal", "principal");
-			
-            $('#opfile').click(function(e){
-                $('#files').click();
-            });
+  });
 
-		</script>
-    	<script type="text/javascript" src="load.js"></script>
-    </body>
+</script>
+
+<div id='header'>
+  <div id='header-content'>
+    <!--<button id='redo'> Redo</button>
+    <button id='refresh'> Refresh</button>
+    <button id='undo'> Undo</button>-->
+    <button id='tile'>Tile</button>
+    <div id='header-logo'>TulipPosy</div>
+    <ul id='menu'>
+      <li class='hmenu'><a href="">File</a>
+        <ul class='submenu'>
+
+          <li><a href="" id='opfile'>Open File</a></li>
+          <li><a href="">Analyse <input id='analyse' type='checkbox'></input></a></li>
+          <li><a href="">Sync Layout <input id='sync' type='checkbox'></input></a></li>
+
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="wrap" class="sidebar">
+  <div id="container"></div>
+</div>
+
+<div style="opacity:0;display:none;">
+  <input id="files" type="file">
+</div>
+
+
+<div id="Controller"></div>
+
+<script>
+  $('#tile').click(function(){
+    var tab=[]
+    for(k in TP.Context().view)
+      tab.push(TP.Context().view[k]);
+    TP.Context().InterfaceObject.tileDialog(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth()-20,true)
+  })
+  //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
+
+  TP.Context().initController("principal", "principal");
+
+  $('#opfile').click(function (e) {
+    $('#files').click();
+  });
+
+</script>
+<script type="text/javascript" src="load.js"></script>
+</body>
 </html>
