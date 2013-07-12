@@ -175,7 +175,7 @@ var TulipPosy = function (originalJSON) {
             objectReferences.ClientObject.updateLayout(target1)
         }}, "Layout"],
         ['Tulip layout algorithm', tl, {call: function (layout) {
-            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target})
+            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target1})
         }}, "Layout"],
 
         ['Operator ' + TP.Context().tabOperator["catalyst"], '', {click: function () {
