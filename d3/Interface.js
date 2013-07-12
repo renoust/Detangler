@@ -568,7 +568,7 @@ var TP = TP || {};
             var par = $(parentId)
             for(k in tab){
                 switch(tab[k][0]){
-                    case 0:
+                    case 0: // select
                         par.append(tab[k][3])
                         var div = $('<select>', tab[k][1]).appendTo(parentId);
                         for(opt in tab[k][2]){
@@ -577,7 +577,7 @@ var TP = TP || {};
                         par.append(tab[k][4])
                         par.append("<br/>")
                         break;
-                    case 1:
+                    case 1: // radio
                         par.append(tab[k][3])
                         var form = $('<form>', tab[k][1]).appendTo(parentId);
                         form.addClass('radio')
@@ -589,20 +589,7 @@ var TP = TP || {};
                         par.append(tab[k][4])
                         par.append("<br/>")
                         break;
-                    case 2:
-                        par.append(tab[k][3])
-                        $('<button/>',{text:tab[k][1].text}).appendTo(parentId)
-                        par.append(tab[k][4])
-                        par.append("<br/>")
-                        break;
-                    case 3:
-                        par.append(tab[k][3])
-                        var div =$('<input/>',tab[k][1]).appendTo(parentId)
-                        div.attr("type","text")
-                        par.append(tab[k][4])
-                        par.append("<br/>")
-                        break;
-                    case 4:
+                    case 2: // checkbox
                         par.append(tab[k][3])
                         var form = $('<form>', tab[k][1]).appendTo(parentId);
                         form.addClass('checkbox')
@@ -614,14 +601,21 @@ var TP = TP || {};
                         par.append(tab[k][4])
                         par.append("<br/>")
                         break;
-                    case 5:
+                    case 3: // textfield
+                        par.append(tab[k][3])
+                        var div =$('<input/>',tab[k][1]).appendTo(parentId)
+                        div.attr("type","text")
+                        par.append(tab[k][4])
+                        par.append("<br/>")
+                        break;
+                    case 4: //slider
                         par.append(tab[k][3])
                         var div = $('<div/>',tab[k][1]).appendTo(parentId)
                         par.append(tab[k][4])
                         par.append("<br/>")
                         div.slider(tab[k][2]);
                         break;
-                    case 6:
+                    case 5: //spinner
                         par.append(tab[k][3])
                         var div = $('<input/>', tab[k][1]).appendTo(parentId)
                         par.append(tab[k][4])
@@ -711,13 +705,6 @@ var TP = TP || {};
                 res[key] = $(this).text();
             })
 
-            // textfield
-            data = param.siblings("input[type='text']")
-            data.each(function(){
-                key = this.id;
-                res[key] = this.value;
-            })  
-
             // checkbox
             data = param.siblings('form.checkbox')
             data = data.find("input[type='checkbox']:checked")
@@ -725,6 +712,13 @@ var TP = TP || {};
                 key = $(this).attr('name')
                 res[key] = {text:$(this).text(), val:$(this).val()};
             })
+
+            // textfield
+            data = param.siblings("input[type='text']")
+            data.each(function(){
+                key = this.id;
+                res[key] = this.value;
+            })  
 
             //slider
             data = param.siblings('.ui-slider');

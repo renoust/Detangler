@@ -47,14 +47,14 @@ var TulipPosy = function (originalJSON) {
     var type4 = "Others";
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
-    // types:   0:text      3:textfield     6:spinner
-    //          1:slider    4:checkbox
-    //          2:button    5:sider
+    // types:   0:select    3:textfield     
+    //          1:radio     4:slider
+    //          2:checkbox  5:spinner
     /*var paramSizeMap = [
         ['div', {id: 'sizemap', class: 'slider'}, 'scale: ']
     ];*/
     var paramSizeMap = [
-        [5, {id:"sizemap"},{
+        [4, {id:"sizemap"},{
                 range: true,
                 min: 0,
                 max: 99,
@@ -342,7 +342,7 @@ var TulipPosy = function (originalJSON) {
     });
 
 
-    $('.submit').click(function () {
+    /*$('.submit').click(function () {
         res = {}
         var key = null;
         var val = null;
@@ -375,7 +375,7 @@ var TulipPosy = function (originalJSON) {
             val = $(this).val()
             res[key] = val;
         })
-    })
+    })*/
 
 
     // This is the tricky part, because the json given to the function can be of many shapes.
