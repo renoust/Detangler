@@ -35,7 +35,8 @@ var TP = TP || {};
             //.enter()
 
             //console.log(node);
-            //}			
+            //}
+            TP.Context().view[event.associatedData.source].getController().sendMessage("updateOtherView", {data:obj.data()[0], type:"simpleSelect"});		
         }
 
         __g__.mouseoutBarChartRect = function (_event) {

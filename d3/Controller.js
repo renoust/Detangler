@@ -211,6 +211,23 @@ var TP = TP || {};
 
         }
 
+
+        __g__.modifyFunc = function(name, func)
+        {
+        	var oldFunc = StateTree.modifyFunc(name, func); //we modify 
+        	eventHandlerObject.modifyFunc(listenerState, name, func);
+        	eventHandlerObject.setMessAvailable(listenerState, name); //we put available the added function 
+        	
+        	return oldFunc;
+        }
+        
+        
+       	__g__.getFuncEvent = function(name)
+       	{
+       		return eventHandlerObject.getFuncEvent(listenerState, name);
+       	}
+
+
         __g__.remove = function () {
             d3.select("#" + listenerState + "").remove();
             nameC = null;

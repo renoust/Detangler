@@ -246,7 +246,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
         }}, "View"],
 
-        ['Color settings', colorSettings,null, "View"],
+        ['Color settings', colorSettings, null, "View"],
         
 
         ['Degree', '', {click: function () {
