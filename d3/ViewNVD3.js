@@ -218,10 +218,7 @@ var TP = TP || {};
                 
                   chart.xAxis.tickFormat(d3.format('.02f'))
                   chart.yAxis.tickFormat(d3.format('.02f'))
-                  
-                  console.log("The area to append the view")
-                  console.log(d3.select("#zone" + id))
-                
+                                  
                   d3.select("#zone" + id + " svg")
                       .datum((function(graph){
                           var values = []
