@@ -130,8 +130,6 @@ var TP = TP || {};
          var newX = parseInt(panelPos[0]) + posX
          var newY = parseInt(panelPos[1]) + posY
 
-         //console.log(panelPos);
-
          dragTarget.attr("transform", function (d) {
          d.panelPosX = newX;
          d.panelPosY = newY;
@@ -304,8 +302,6 @@ var TP = TP || {};
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
-            //assert(true, "ArrangeLabels appelé depuis arrangeLabels (wtf)")
-            //console.log(target, svg, cGraph);
             TP.Context().view[target].getGraphDrawing().arrangeLabels();
         }
 
@@ -366,8 +362,6 @@ var TP = TP || {};
         // data, the graph data (modified during the function)
         this.rescaleGraph = function (data) {
 
-            //console.log("should be rescaling graphe, here is the data: ", data);
-
             // these should be set as globale variables
             var buttonWidth = 0//130.0
             var frame = 10.0
@@ -400,7 +394,6 @@ var TP = TP || {};
                 ;
             })
 
-            //data.nodes.forEach(function(d){console.log("Point: ",d.x,' ', d.y)})
 
             var delta = 0.00000000000000000001 //to avoid division by 0
             scale = Math.min.apply(null, [w / (maxX - minX + delta), h / (maxY - minY + delta)])
@@ -519,10 +512,8 @@ var TP = TP || {};
                 bID = table[0].rows[r].cells[0].innerHTML
 
                 for (var i = 0; i < nodes.length; i++) {
-                    console.log(bID, nodes[i].baseID)
                     if (nodes[i].baseID == bID) {
                         nodes[i][hcol] = newVal;
-                        console.log(nodes[i])
                     }
                 }
 
@@ -550,21 +541,29 @@ var TP = TP || {};
             editableGrid.attachToHTMLTable('dataTable');
             editableGrid.renderGrid();
             $('#dataTable').resizable();
-
-
         }
 
-        /********************************** ON GOING ***********************************/
-        this.changeColor = function (graphName, elem, newcolor) {
-            var cGraph = null;
-            var svg = null;
-            svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().view[graphName].getGraph();
 
-            TP.Context().view[graphName].getGraphDrawing().changeColor(graphName, cGraph, elem, newcolor);
+        this.changeColor = function () {
+            var IDView = TP.Context().activeView;
+            var view = TP.Context().view[IDView];
+            var cGraph = view.getGraph();
+            var f = $.farbtastic('#picker');
 
+            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').hasClass('selected')) {
+                view.setNodesColor(f.color);
+                view.getGraphDrawing().changeColor(IDView, cGraph, "node", view.getNodesColor());
+            } else if ($('#clinks').hasClass('colorwell') && $('#clinks').hasClass('selected')) {
+                view.setLinksColor(f.color);
+                view.getGraphDrawing().changeColor(IDView, cGraph, "link", view.getLinksColor());
+            } else if ($('#cbg').hasClass('colorwell') && $('#cbg').hasClass('selected')) {
+                view.setBgColor(f.color);
+                view.getGraphDrawing().changeColor(IDView, cGraph, "bg", view.getBgColor());
+            } else if ($('#clabels').hasClass('colorwell') && $('#clabels').hasClass('selected')) {
+                view.setLabelsColor(f.color);
+                view.getGraphDrawing().changeColor(IDView, cGraph, "label", view.getLabelsColor());
+            }
         }
-        /********************************** ON GOING ***********************************/
 
         return __g__;
     }

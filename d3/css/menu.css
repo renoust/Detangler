@@ -74,46 +74,46 @@ li{
 
 /***************************** Menu 1: Interactors ******************************/
 
-#nav label{
+.nav label{
 	font-size: 13px;
 }
 
-#nav{
+.nav{
 	padding: 0;
 	margin: 0;
 	font-size: 0.8em;
 }
 
-#nav li.tglFamily > a{
+.nav li.tglFamily > a{
 	display: block;
 	padding: 4px 10px;
 	background: url(myTheme/state-default.png) left bottom repeat-x;
 }
 
-#nav li.form > a{
+.nav li.form > a{
 	display: block;
 	padding: 4px 10px;
 	background: url(myTheme/state-default2.png) left bottom repeat-x;
 }
 
-#nav div.formParam {
+.nav div.formParam {
 	display: block;
 	padding: 4px 10px;
 	text-decoration: none;
 }
 
-#nav li.open > a{
+.nav li.open > a{
 	background: url(myTheme/state-open.png) left bottom repeat-x;
 }
 
-#nav a:hover, #nav a:focus, #nav a:active, #nav a:visited {
+.nav a:hover, .nav a:focus, .nav a:active, .nav a:visited {
 	/*text-decoration: underline;*/
 	cursor: pointer;
 	color:#000;
 	background: url(myTheme/state-hover.png) left bottom repeat-x;
 }
 
-#nav .family{
+.nav .family{
 	padding: 0;
 }
 

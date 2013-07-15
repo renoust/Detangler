@@ -47,12 +47,34 @@ var TulipPosy = function (originalJSON) {
     var type4 = "Others";
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
-    // types:   0:select    3:textfield     
+    // types:   0:select    3:textfield     6:text
     //          1:radio     4:slider
     //          2:checkbox  5:spinner
-    /*var paramSizeMap = [
-        ['div', {id: 'sizemap', class: 'slider'}, 'scale: ']
+    /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}]],
+    [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}]],
+    [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]],
+    [3, {id:"text"}],
+    [5, {id:"spinner"}],
+    [4,{id:'slider',class:'slider'},
+        {   range: true,
+            min: 0,
+            max: 99,
+            values: [ 3, 12 ],
+            change: function() {
+                var value = $("#sizemap").slider("values",0);
+                var value2 = $("#sizemap").slider("values",1);
+                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+            },
+            slide: function() {
+                var value = $("#sizemap").slider("values",0);
+                var value2 = $("#sizemap").slider("values",1);
+                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+            }
+        }]
     ];*/
+
     var paramSizeMap = [
         [4, {id:"sizemap"},{
                 range: true,
@@ -79,10 +101,22 @@ var TulipPosy = function (originalJSON) {
     var tl = [
         [3,{id:"selectedAlgo"}]
     ];
-    //var paramSizeMap = [['scale: ', 0]]
+
+    var colorSettings = [
+        [1,{id:"color"},[
+            {id:"cnodes", name:"color", class:"colorwell", text:"Nodes Color"},
+            {id:"clinks", name:"color", class:"colorwell", text:"Links Color"},
+            {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
+            {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
+        ],
+        [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+
+
 
     var array1 = [
-
+        /*['TEST', '', {call: function (res) {
+            console.log(res)
+        }}, "Layout"],*/
         ['Force layout', '', {click: function () {
             TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: target})
         }}, "Layout"],
@@ -127,12 +161,13 @@ var TulipPosy = function (originalJSON) {
         ['Size mapping', paramSizeMap, {call: function (scales) {
             TP.Context().view[target].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
         }}, "View"],
-        ['zoom in', '', {click: function () {
+        ['Zoom in', '', {click: function () {
             TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
-        ['zoom out', '', {click: function () {
+        ['Zoom out', '', {click: function () {
             TP.Context().view[target].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
+        ['Color settings', colorSettings,null, "View"],
 
         ['Degree', '', {click: function () {
             TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: target})
@@ -185,7 +220,9 @@ var TulipPosy = function (originalJSON) {
             objectReferences.InteractionObject.toggleSelection(target1)
         }}, 'Selection'],
 
-
+        ['Center view', '', {click: function () {
+            TP.Context().view[target].getController().sendMessage('resetView');
+        }}, "View"],
         ['Reset size', '', {click: function () {
             TP.Context().view[target1].getController().sendMessage("resetSize")
         }}, "View"],
@@ -201,15 +238,17 @@ var TulipPosy = function (originalJSON) {
         ['Rotation', '', {click: function () {
             TP.Context().view[target1].getController().sendMessage("rotateGraph")
         }}, "View"],
+        ['Size mapping', paramSizeMap, {call: function (scales) {
+            TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
+        }}, "View"],
         ['Zoom in', '', {click: function () {
             TP.Context().view[target1].getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
         ['Zoom out', '', {click: function () {
             TP.Context().view[target1].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
-        ['Size mapping', paramSizeMap, {call: function (scales) {
-            TP.Context().view[target1].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
-        }}, "View"],
+        ['Color settings', colorSettings,null, "View"],
+        
 
         ['Degree', '', {click: function () {
             TP.Context().view[target1].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: target1})
@@ -256,25 +295,12 @@ var TulipPosy = function (originalJSON) {
         }}, type3]
     ]
 
-
-    /*for(var i=0; i<array1.length)
-     if($('family1').length==0){
-     $('<div/>', {id:'family1'}).appendTo('menu1-content');
-     $('menu1').accordion({
-     collapsible:true,
-     active:false,
-     heightStyle:'content'
-     });
-     }*/
-
-
     var tabCatalyst = new Array();
 
 
     TP.Context().view[target] = new TP.ViewGraph(target, 1, array1, new Array("svg", "graph", 960, 500, "svg_" + target), name + " - substrate", "#a0522d", "#808080", "#FFFFFF", "#000000", "rect", "substrate", null);
     TP.Context().view[target].addView();
     TP.Context().view[target].buildLinks();
-
 
     tabCatalyst = new Array(target1, array2, new Array("svg", "graph", 960, 500, "svg_" + target1), name + " - catalyst", "#4682b4", "#808080", "#FFFFFF", "#000000", "circle", "catalyst");
 
@@ -284,98 +310,6 @@ var TulipPosy = function (originalJSON) {
     $('#redo').click(function () {
         TP.Context().changeStack.redo();
     });
-
-
-// Event toggle sidebars
-
-    $('div.toggleButton').click(function (e) {
-        var src = event.srcElement.parentNode.parentNode;
-        console.log(src)
-        var menuNum = src.id.split('-')[1];
-        var menu = $('#menu-' + menuNum);
-        console.log(menu)
-        console.log($(src))
-        var parent = src.parentNode;
-        var button = $(this);
-        if (parent.className === 'nosidebar') {
-            button.eq(0).toggleClass('open')
-            /*button.text('<');*/
-            $(parent).eq(0).toggleClass('nosidebar sidebar')
-            //parent.className='sidebar';
-            $('.cont').each(function () {
-                $(this).css('left', 0)
-            })
-            menu.css('z-index', 102)
-        }
-        else if (parent.className === 'sidebar') {
-
-            if (menu.css('z-index') == 102) {
-                /*button.text('>');*/
-                button.eq(0).toggleClass('open')
-
-                //console.log($(parent))
-                $(parent).eq(0).toggleClass('nosidebar sidebar')
-                //              parent.className = 'nosidebar';
-                $('.cont').each(function () {
-                    $(this).css('z-index', 0)
-                    $(this).css('left', -301)
-                })
-            }
-            else {
-                $('.toggleButton').each(function () {
-                    /*$(this).text('>') */
-
-                    console.log($(this).eq(0).className)
-                    $(this).eq(0).removeClass('open')
-                })
-                $('.cont').each(function () {
-                    $(this).css('z-index', 101)
-                })
-                menu.css('z-index', 102);
-                /*button.text('<')*/
-                button.eq(0).toggleClass('open')
-                //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
-
-            }
-        }
-        else console.log('FAIL: toggle panel');
-    });
-
-
-    /*$('.submit').click(function () {
-        res = {}
-        var key = null;
-        var val = null;
-
-        var data = $(this).siblings("input[type='radio']:checked")
-        data.each(function () {
-            key = $(this).attr('name');
-            res[key] = $(this).val();
-        })
-
-        data = $(this).siblings('.ui-spinner')
-        data.each(function () {
-            key = $(this).children('input').attr('name');
-            val = $(this).children('input')[0].value
-            res[key] = val;
-        })
-
-        data = $(this).siblings("input[type='checkbox']:checked")
-        data.each(function () {
-            key = $(this).attr('name');
-            if (res[key] == null)
-                res[key] = $(this).val();
-            else
-                res[key] += ", " + $(this).val();
-        })
-
-        data = $(this).siblings("input[type='text']")
-        data.each(function () {
-            key = $(this).attr('name');
-            val = $(this).val()
-            res[key] = val;
-        })
-    })*/
 
 
     // This is the tricky part, because the json given to the function can be of many shapes.
