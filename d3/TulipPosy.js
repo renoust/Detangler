@@ -142,14 +142,16 @@ var TulipPosy = function (originalJSON) {
         ['Scatter plot', '', {click: function () {
             TP.Context().view[target].getController().sendMessage("drawScatterPlot")
         }}, "Open View"],
+        ['Scatter plot nvd3', '', {click: function () {
+            TP.Context().view[target].getController().sendMessage("drawScatterPlotNVD3")
+        }}, "Open View"],
         ['Data', '', {click: function () {
             objectReferences.VisualizationObject.drawDataBase(target)
-        }}, "Open View"],
+        }}, "Open View"]
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],        
         // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
-
     ]
 
     var array2 = [
@@ -218,7 +220,7 @@ var TulipPosy = function (originalJSON) {
         }}, "Open View"],
         ['Data', '', {click: function () {
             objectReferences.VisualizationObject.drawDataBase(target1)
-        }}, "Open View"],
+        }}, "Open View"]
         // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
         // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target1)}}],
         // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],

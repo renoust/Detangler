@@ -3,14 +3,6 @@
 var TP = TP || {};
 (function () {
 
-
-
-
-
-
-
-
-
     var ViewGraph = function (id, groupe, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
@@ -406,6 +398,12 @@ var TP = TP || {};
             }}, "all", true);
             __g__.controller.addState({name: "drawScatterPlot", bindings: null, func: function (event) {/*assert(true, "drawScatterPlot");*/
                 TP.ScatterPlot().drawScatterPlot(event);
+            }}, "all", true);
+
+            __g__.controller.addState({name: "drawScatterPlotNVD3", bindings: null, func: function (event) {/*assert(true, "drawScatterPlot");*/
+                //this.nvd3 = new TP.ViewNVD3(event);
+                //this.nvd3.setGraph(__g__.graph)
+                TP.ViewNVD3().drawScatterPlot(event);
             }}, "all", true);
 
             __g__.controller.addState({name: "runZoom", bindings: null, func: function (event) {/*assert(true, "runZoom");*/
