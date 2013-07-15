@@ -4,7 +4,7 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewTemplate = function (id, groupe, svgs, name, type, idAssociation, bouton) {
+    var ViewTemplate = function (id, svgs, name, type, idAssociation, bouton) {
 
         var __g__ = this;
 
@@ -21,7 +21,6 @@ var TP = TP || {};
         __g__.dialog = null;
         __g__.titlebar = null;
         __g__.idAssociation = idAssociation;
-        __g__.viewGroup = groupe;
 
         var sourceSelection = null;
         var targetSelection = null;
@@ -69,10 +68,6 @@ var TP = TP || {};
             }
 
 
-        }
-
-        __g__.getGroup = function () {
-            return __g__.viewGroup;
         }
 
         __g__.getSvg = function () {
@@ -156,6 +151,7 @@ var TP = TP || {};
                 //console.log(TP.Context().view[__g__.idAssociation]);
             }
 
+            /*
             if (__g__.typeView == "substrate") {
                 TP.Context().GroupOfView[__g__.viewGroup] = [];
                 TP.Context().GroupOfView[__g__.viewGroup]["substrate"] = __g__;
@@ -163,7 +159,7 @@ var TP = TP || {};
             else {
                 TP.Context().GroupOfView[__g__.viewGroup][__g__.typeView] = __g__;
             }
-
+            */
         }
 
 

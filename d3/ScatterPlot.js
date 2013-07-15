@@ -174,7 +174,7 @@ var TP = TP || {};
 
             var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewScatterPlot(id, TP.view[target].getGroup(), null,
+            TP.Context().view[id] = new TP.ViewScatterPlot(id, null,
                 new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_" + id), "Scatter_Plot_" + TP.view[target].getName(), "scatter_plot", target);
             TP.Context().view[id].addView();
             TP.Context().view[id].buildLinks();

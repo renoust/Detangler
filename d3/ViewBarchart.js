@@ -2,9 +2,9 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewBarchart = function (id, groupe, bouton, svgs, name, type, idAssociation, typeBarchart) {
+    var ViewBarchart = function (id, bouton, svgs, name, type, idAssociation, typeBarchart) {
 
-        var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
 
         __g__.typeBarChart = typeBarchart;
 

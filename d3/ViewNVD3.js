@@ -4,9 +4,9 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewNVD3Template = function (id, groupe, bouton, svgs, name, type, idAssociation) {
+    var ViewNVD3Template = function (id, bouton, svgs, name, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
 
         __g__.addView = function () {
 
@@ -66,7 +66,7 @@ var TP = TP || {};
 
             var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewNVD3Template(id, TP.view[target].getGroup(), null,
+            TP.Context().view[id] = new TP.ViewNVD3Template(id, null,
                 new Array("svg_NVD3", null, width, height, "svg_NVD3_" + id), "NVD3_" + TP.view[target].getName(), "nvd3", target);
             TP.Context().view[id].addView();
 

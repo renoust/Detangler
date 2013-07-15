@@ -2,9 +2,9 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewScatterPlot = function (id, groupe, bouton, svgs, name, type, idAssociation) {
+    var ViewScatterPlot = function (id, bouton, svgs, name, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
 
         __g__.addView = function () {
 

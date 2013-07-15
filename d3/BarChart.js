@@ -160,8 +160,8 @@ var TP = TP || {};
 
             //console.log("iddddddddddddddddddddddd : " + id)
 
-            TP.Context().view[id] = new TP.ViewBarchart(id, TP.view[target].getGroup(), null,
-                new Array("svg_BarChart", null, width, height, "svg_BarChart_" + smell + "_" + id), "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
+            TP.Context().view[id] = new TP.ViewBarchart(id, null,
+                new Array("svg_BarChart", width, height, "svg_BarChart_" + smell + "_" + id), "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
 
             //console.log(TP.Context().view[id]);
 

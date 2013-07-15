@@ -3,9 +3,9 @@
 var TP = TP || {};
 (function () {
 
-    var ViewGraph = function (id, groupe, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+    var ViewGraph = function (id, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
 
         __g__.nodesColor = nodesC;
         __g__.linksColor = linksC;

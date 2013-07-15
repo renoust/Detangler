@@ -84,7 +84,12 @@ var TP = TP || {};
             return tmp;
         };
 
-        __g__.GroupOfView = new Object();
+
+        __g__.registerView = function (viewInstance)
+        {
+            var viewID = String(__g__.getIndiceView());
+            __g__.view[viewID] = viewInstance;
+        }
 
 
         __g__.clearInterface = function () {

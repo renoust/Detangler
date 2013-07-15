@@ -9,7 +9,7 @@ var TP = TP || {};
 (function () {
 
 
-    var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+    var View = function (id, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var tabTypeEvent = [];
 
@@ -17,8 +17,6 @@ var TP = TP || {};
         var __g__ = this;
 
         var tabDataSvg = svgs;
-        var viewGroup = groupe;
-        //TP.Context().view[target] = __g__;
 
         var controller = null;
         var svg = null;
@@ -87,10 +85,6 @@ var TP = TP || {};
             return graphDrawing;
         }
 
-
-        __g__.getGroup = function () {
-            return viewGroup;
-        }
 
         __g__.viewInitialized = function () {
             return viewInitialized;
@@ -548,13 +542,14 @@ var TP = TP || {};
 
             }
 
+            /*
             if (typeView == "substrate") {
                 TP.Context().GroupOfView[viewGroup] = [];
                 TP.Context().GroupOfView[viewGroup]["substrate"] = __g__;
             }
             else {
                 TP.Context().GroupOfView[viewGroup][typeView] = __g__;
-            }
+            }*/
 
             $("#zone" + ID).parent().appendTo("#container")
 

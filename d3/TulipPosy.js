@@ -226,7 +226,7 @@ var TulipPosy = function (originalJSON) {
 
 
 
-    TP.Context().view[viewIndex] = new TP.ViewGraph(viewIndex, 1, array1, ["svg", "graph", 960, 500, "svg_" + viewIndex], name + " - substrate", "#a0522d", "#808080", "#FFFFFF", "#000000", "rect", "substrate", null);
+    TP.Context().view[viewIndex] = new TP.ViewGraph(viewIndex, array1, ["svg", "graph", 960, 500, "svg_" + viewIndex], name + " - substrate", "#a0522d", "#808080", "#FFFFFF", "#000000", "rect", "substrate", null);
     TP.Context().view[viewIndex].addView();
     TP.Context().view[viewIndex].buildLinks();
 
