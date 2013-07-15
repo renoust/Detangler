@@ -34,7 +34,9 @@ var TP = TP || {};
         __g__.combined_foreground = null;
         __g__.acceptedGraph = [];
         __g__.graph = null;
-
+		
+		__g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
+		
         __g__.getGraph = function () {
             return __g__.graph;
         }
@@ -285,6 +287,12 @@ var TP = TP || {};
         }
 
 
+	__g__.modifUpdate = function()
+	{
+		assert(true, "je suis la vue Graph : "+__g__.ID)
+	}
+
+
         __g__.initStates = function () {
 
             __g__.controller.addState({name: "zoneApparu", bindings: ["nodeSelected", "selectionVide", "arrangeLabels"], func: function (event) {/*assert(true, "zoneApparu");*/
@@ -434,6 +442,14 @@ var TP = TP || {};
             __g__.controller.addState({name: "brushstart", bindings: null, func: function (event) {/*assert(true, "brushstart");*/
                 TP.Interaction().brushstart(event);
             }}, "all", true);
+
+			__g__.controller.addState({name : "updateOtherView", bindings : null, func:function(event){
+				console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateOtherViews(event);
+			}}, "all", true)		
+			
+			__g__.controller.addState({name : "updateView", bindings : null, func:function(event){
+				console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
+			}}, "all", true)
 
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);

@@ -38,9 +38,11 @@ var TP = TP || {};
             __g__.controller.addState({name: "mouseoverScatterPlot", bindings: null, func: function (event) {/*assert(true, "mouseoverScatterPlot");*/
                 TP.ScatterPlot().mouseoverScatterPlot(event);
             }}, "all", true);
+            
             __g__.controller.addState({name: "mouseoutScatterPlot", bindings: null, func: function (event) {/*assert(true, "mouseoutScatterPlot");*/
                 TP.ScatterPlot().mouseoutScatterPlot(event);
             }}, "all", true);
+            
             __g__.controller.addState({name: "mouseclickScatterPlot", bindings: null, func: function (event) {/*assert(true, "mouseclickScatterPlot");*/
                 TP.ScatterPlot().mouseclickScatterPlot(event);
             }}, "all", true);
@@ -48,7 +50,15 @@ var TP = TP || {};
             __g__.controller.addState({name: "zoomScatterPlot", bindings: null, func: function (event) {/*assert(true, "zoomScatterPlot");*/
                 TP.ScatterPlot().zoomScatterPlot(event);
             }}, "all", true);
+			
 
+			__g__.controller.addState({name : "updateOtherView", bindings : null, func:function(event){
+				console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateOtherViews(event);
+			}}, "all", true)		
+			
+			__g__.controller.addState({name : "updateView", bindings : null, func:function(event){
+				console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
+			}}, "all", true)			
 
             __g__.controller.setCurrentState(null);
 
