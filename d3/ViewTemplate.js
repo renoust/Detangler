@@ -171,6 +171,8 @@ var TP = TP || {};
 
             //assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
 
+            var dialogTop = 235;
+            var dialogRight = 260;
             if (__g__.typeView === "substrate") {
                 TP.Context().activeView = __g__.ID;
                 dialogTop = 16;
@@ -179,10 +181,6 @@ var TP = TP || {};
             else if (__g__.typeView === "catalyst") {
                 dialogTop = 16;
                 dialogRight = 100;
-            }
-            else {
-                dialogTop = 235;
-                dialogRight = 260;
             }
 
             //console.log("tppppppppppppppppp", dialogTop);
