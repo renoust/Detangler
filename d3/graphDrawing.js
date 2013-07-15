@@ -19,8 +19,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
     var GraphDrawing = function (_graph, _svg, currentViewID) {
 
         // g, the return variable
@@ -639,13 +637,13 @@ var TP = TP || {};
 
             var scaleMin = 3.0
             var scaleMax = 12.0
-            console.log("params: ", params)
+            //console.log("params: ", params)
             var parameter = ""
             if (params.metric) parameter = params.metric;
             if (params.scaleMin) scaleMin = params.scaleMin;
             if (params.scaleMax) scaleMax = params.scaleMax;
 
-            console.log("params.metric : ", params.metric)
+            //console.log("params.metric : ", params.metric)
 
             if (parameter == "") return
 
@@ -654,9 +652,9 @@ var TP = TP || {};
             var valMax = null
             g.cGraph.nodes()
                 .forEach(function (n) {
-                    console.log("node:", n)
+                    //console.log("node:", n)
                     val = eval("n." + parameter);
-                    console.log("val:", val)
+                    //console.log("val:", val)
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -710,7 +708,7 @@ var TP = TP || {};
             g.cGraph = _graph
             //console.log(g.cGraph);
             //we would like it better as a parameter
-            assert(false, "turlututu");
+            //assert(false, "turlututu");
             scaleMin = 3.0
             scaleMax = 12.0
 

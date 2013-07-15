@@ -9,10 +9,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
     var Visualization = function () {
         var __g__ = this;
         var contxt = TP.Context();
@@ -519,10 +515,10 @@ var TP = TP || {};
                 bID = table[0].rows[r].cells[0].innerHTML
 
                 for (var i = 0; i < nodes.length; i++) {
-                    console.log(bID, nodes[i].baseID)
+                    //console.log(bID, nodes[i].baseID)
                     if (nodes[i].baseID == bID) {
                         nodes[i][hcol] = newVal;
-                        console.log(nodes[i])
+                        //console.log(nodes[i])
                     }
                 }
 

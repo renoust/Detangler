@@ -4,11 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var StateTree = function () {
 
         var __g__ = this;
@@ -87,12 +82,12 @@ var TP = TP || {};
 
                             if (hashTabNode[node.name].bindings[tmp[key]] === undefined) {
                                 hashTabNode[node.name].bindings[tmp[key]] = hashTabNode[tmp[key]];
-                                assert(true, "binding with : '" + tmp[key] + "' added")
+                                //assert(true, "binding with : '" + tmp[key] + "' added")
 
 
                                 if (hashTabNode[tmp[key]].root[node.name] == undefined && hashTabNode[tmp[key]].specialRoot === false) {
                                     hashTabNode[tmp[key]].root[node.name] = hashTabNode[node.name];
-                                    assert(true, "root : '" + node.name + "' added to : '" + tmp[key] + "'")
+                                    //assert(true, "root : '" + node.name + "' added to : '" + tmp[key] + "'")
                                 }
                                 else
                                     assert(false, "root : '" + node.name + "' already added to : '" + tmp[key] + "' or node is special node")
@@ -117,7 +112,7 @@ var TP = TP || {};
             if (node.func != null) {
                 if (hashTabNode[node.name].func == null) {
                     hashTabNode[node.name].func = node.func;
-                    assert(true, "the function just been associated to the State")
+                    //assert(true, "the function just been associated to the State")
                 }
                 else
                     assert(false, "one function already associated to the State")

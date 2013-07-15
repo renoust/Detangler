@@ -2,9 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Controller = function () {
 
 
@@ -39,7 +36,7 @@ var TP = TP || {};
         }
 
         __g__.addState = function (node, nodeRoot, useless, activate) {
-            console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
+            //console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
             StateTree.addState(node, nodeRoot, useless, activate);
             //we can call addEvent after addState to simplifie Event insersion
         }
@@ -83,17 +80,17 @@ var TP = TP || {};
 
             //StateTree.initStateTree(typeC);
             __g__.addStates();
-            console.log(listenerState);
+            //console.log(listenerState);
             eventHandlerObject.addElement(listenerState, $("[id=" + listenerState + "]")[0]);
 
             var tabInit = StateTree.getStateTree();
 
-            console.log("tabInit : ");
-            console.log(tabInit);
+            //console.log("tabInit : ");
+            //console.log(tabInit);
 
             for (var key in tabInit) {
-                console.log(key);
-                console.log(tabInit[key]);
+                //console.log(key);
+                //console.log(tabInit[key]);
                 __g__.addEvent(listenerState, tabInit[key].name, tabInit[key].func);
             }
             /*

@@ -4,7 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var eventHandler = function () {
 
         var __g__ = this;
@@ -51,7 +50,7 @@ var TP = TP || {};
 
             var data = objectStore.getData(elem);
 
-            console.log(data)
+            //console.log(data)
 
             if (data == null) return;
 
@@ -115,7 +114,7 @@ var TP = TP || {};
             //assert(true, "avantaddEventListener")
 
 //			if(data.handlers[type].length == 1){
-            assert(true, "addEventListener")
+            //assert(true, "addEventListener")
             if (document.addEventListener) { //for DOM
                 //assert(true, "addEventListener")
                 data.addEventListener(type, data.dispatcher, false);

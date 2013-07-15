@@ -26,9 +26,9 @@ var TP = TP || {};
 
             }
 
-            console.log(current.name);
-            console.log(current.undo);
-            console.log(current.redo);
+            //console.log(current.name);
+            //console.log(current.undo);
+            //console.log(current.redo);
 
             /*
              else{
@@ -51,7 +51,7 @@ var TP = TP || {};
 
             }
 
-            console.log("undo : " + current.name);
+            //console.log("undo : " + current.name);
         }
 
         this.redo = function () {
@@ -67,7 +67,7 @@ var TP = TP || {};
                 current.redo();
 
 
-            console.log("redo : " + current.name);
+            //console.log("redo : " + current.name);
         }
         /*
          this.afficher = function(target)

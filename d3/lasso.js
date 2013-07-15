@@ -218,7 +218,7 @@ var TP = TP || {};
 
 
         __g.mouseDown = function (e) {
-            assert(false, "lasso_mouseDown")
+            //assert(false, "lasso_mouseDown")
 
             if (__g.started || __g.canMove /*|| __g.isResizing*/)
                 return;
@@ -342,7 +342,7 @@ var TP = TP || {};
 
             if (!__g.isLasso()) {
 
-                assert(false, "should be drawing the rectangle")
+                //assert(false, "should be drawing the rectangle")
                 var p0 = __g.pointList[0]
                 var p1 = __g.pointList[__g.pointList.length - 1]
 
@@ -376,7 +376,7 @@ var TP = TP || {};
         // off, useless path and rect are cleaned.
         __g.mouseUp = function (e) {
 
-            assert(false, "lasso_mouseUp")
+            //assert(false, "lasso_mouseUp")
 
             if (__g.isResizing) __g.isResizing = false;
             if (!__g.started || __g.canMove) return;

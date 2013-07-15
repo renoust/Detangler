@@ -10,9 +10,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Tools = function () {
 
         var __g__ = this;

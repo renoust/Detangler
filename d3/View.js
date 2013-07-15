@@ -9,12 +9,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var tabTypeEvent = [];
@@ -334,7 +328,7 @@ var TP = TP || {};
                 TP.Context().dialogTop = 235;
                 TP.Context().dialogRight = 260;
             }
-            console.log(TP.Context().dialogTop)
+            //console.log(TP.Context().dialogTop)
 
             /****  création du dialog ****/
                 //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
@@ -593,7 +587,7 @@ var TP = TP || {};
 
                 }
 
-                console.log(TP.Context().view[idAssociation]);
+                //console.log(TP.Context().view[idAssociation]);
 
 
             }
