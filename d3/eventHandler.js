@@ -89,7 +89,7 @@ var TP = TP || {};
 
                 //assert(true, "dispatcher")
 
-                data.dispatcher = function _event) {
+                data.dispatcher = function (_event) {
                     //_event = fixEvent(_event);
 
                     var handlers = data.handlers[_event.type];

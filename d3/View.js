@@ -359,7 +359,7 @@ var TP = TP || {};
             $("<button/>", {id: "toggle" + ID, text: "Move", style: 'right:15px'}).appendTo(titlebar);
 
 
-            $('#toggle' + ID).button().click(function _event) {
+            $('#toggle' + ID).button().click(function (_event) {
                 var interact = $(this).button("option", "label");
                 if (interact == "Move") {
                     $(this).button("option", "label", "Select");

@@ -7,7 +7,7 @@ var TP = TP || {};
 
         var __g__ = this;
 
-        __g__.mouseoverBarChartRect = function _event) {
+        __g__.mouseoverBarChartRect = function (_event) {
             var targetView =_event.associatedData.targetView
             var obj =_event.associatedData.obj
             var svg =_event.associatedData.svg
@@ -38,7 +38,7 @@ var TP = TP || {};
             //}			
         }
 
-        __g__.mouseoutBarChartRect = function _event) {
+        __g__.mouseoutBarChartRect = function (_event) {
 
             var targetView =_event.associatedData.targetView;
             var obj =_event.associatedData.obj;
@@ -71,7 +71,7 @@ var TP = TP || {};
         }
 
 
-        __g__.mouseclickBarChartRect = function _event) {
+        __g__.mouseclickBarChartRect = function (_event) {
 
             var obj =_event.associatedData.obj;
             var tabClick =_event.associatedData.tabClick;
@@ -129,7 +129,7 @@ var TP = TP || {};
         }
 
 
-        __g__.drawBarChart = function _event) {
+        __g__.drawBarChart = function (_event) {
 
 
             var target =_event.associatedData.source;

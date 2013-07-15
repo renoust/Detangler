@@ -1072,7 +1072,7 @@ var TP = TP || {};
                     return true;
                 return false;
             }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             var labels = g.svg.selectAll("text.node").attr("visibility", "visible").style("fill", TP.Context().view[currentViewID].getLabelsColor());
             var labelsArray = []
             var iterArray = []
