@@ -4,11 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var StateTree = function () {
 
         var __g__ = this;

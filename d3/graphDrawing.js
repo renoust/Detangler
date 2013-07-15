@@ -19,8 +19,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
     var GraphDrawing = function (_graph, _svg, currentViewID) {
 
         // g, the return variable

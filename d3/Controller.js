@@ -2,9 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Controller = function () {
 
 

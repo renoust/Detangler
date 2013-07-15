@@ -11,9 +11,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Interface = function () {
         //assert(false, 'Interface')
         var __g__ = this;
@@ -199,7 +196,7 @@ var TP = TP || {};
          .attr("dx", 5)
          .attr("dy", 15)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "Weight property"
          })
          .style("font-family", TP.Context().defaultTextFont)
@@ -213,7 +210,7 @@ var TP = TP || {};
          .attr("dx", 50)
          .attr("dy", 115)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "WX"
          })
          .style("font-family", "EntypoRegular")

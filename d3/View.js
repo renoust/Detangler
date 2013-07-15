@@ -9,12 +9,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var tabTypeEvent = [];

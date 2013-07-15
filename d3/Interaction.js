@@ -10,10 +10,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
     var Interaction = function () {
         var __g__ = this;
 

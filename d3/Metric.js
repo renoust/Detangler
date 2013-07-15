@@ -4,7 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var Metric = function () {
 
         var __g__ = this;

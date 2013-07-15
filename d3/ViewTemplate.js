@@ -4,11 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var ViewTemplate = function (id, groupe, svgs, name, type, idAssociation, bouton) {
 
         var __g__ = this;

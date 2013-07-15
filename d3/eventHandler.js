@@ -4,7 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var eventHandler = function () {
 
         var __g__ = this;

@@ -9,10 +9,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
     var Visualization = function () {
         var __g__ = this;
         var contxt = TP.Context();

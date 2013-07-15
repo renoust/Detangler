@@ -2,12 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var ScatterPlot = function () {
 
 

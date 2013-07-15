@@ -8,14 +8,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
-
-
     var ObjectReferences = function () {
         //forcing ObjectReferences to be singleton, instanciated once 
         if (ObjectReferences.prototype._singletonInstance) {

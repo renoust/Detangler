@@ -11,12 +11,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var UpdateViews = function () {
         var __g__ = this;
 

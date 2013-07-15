@@ -2,11 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var ViewScatterPlot = function (id, groupe, bouton, svgs, name, type, idAssociation) {
 
         var __g__ = new TP.ViewTemplate(id, groupe, svgs, name, type, idAssociation, bouton);

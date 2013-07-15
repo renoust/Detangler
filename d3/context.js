@@ -8,10 +8,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
     var Context = function () {
         var __g__ = this;
 
