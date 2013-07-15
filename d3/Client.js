@@ -59,7 +59,7 @@ var TP = TP || {};
 
                 objectReferences.ToolObject.loadJSON(data, target)
                 //console.log("I am creating the graph in Tulip")
-                console.log(data);
+                //console.log(data);
                 this.createTulipGraph(json, target)
                 //console.log("I should now analyse the graph",contxt.sessionSid)
                 //this.analyseGraph(target)
@@ -95,7 +95,7 @@ var TP = TP || {};
                 data: {type: "creation", 'search': query['query']},
                 type: 'POST',
                 success: function (data) {
-                    console.log('sending search request in tulip, and recieved data: ', data)
+                    //console.log('sending search request in tulip, and recieved data: ', data)
                     data = JSON.parse(data)
                     recieved_data = data
                 }
@@ -176,11 +176,11 @@ var TP = TP || {};
 
             if (TP.Context().view[idView].getAssociatedView("catalyst") == null && tabCatalyst.length != null) {
 
-                assert(false, tabCatalyst[0])
-                assert(false, tabCatalyst[8])
-                assert(false, tabCatalyst[9])
+                //assert(false, tabCatalyst[0])
+                //assert(false, tabCatalyst[8])
+                //assert(false, tabCatalyst[9])
 
-                console.log(tabCatalyst);
+                //console.log(tabCatalyst);
 
                 TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], TP.view[idView].getGroup(), tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], tabCatalyst[9], idView);
                 TP.Context().view[tabCatalyst[0]].buildLinks();
@@ -197,9 +197,9 @@ var TP = TP || {};
             }
 
 
-            assert(false, "idView : " + idView);
-            console.log(TP.Context().view[idView]);
-            console.log(TP.Context().view[idView].getController());
+            //assert(false, "idView : " + idView);
+            //console.log(TP.Context().view[idView]);
+            //console.log(TP.Context().view[idView].getController());
 
             TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
 
@@ -211,7 +211,7 @@ var TP = TP || {};
             var source = event.associatedData.source;
             var params = event.associatedData.params;
 
-            console.log("succes")
+            //console.log("succes")
 
             __g__.sendQuery({
                 parameters: params,
@@ -226,12 +226,12 @@ var TP = TP || {};
 
 
         this.answerAnalyseGraph = function (event) {
-            console.log("toutou")
+            //console.log("toutou")
 
             var idView = event.associatedData.target;
-            console.log("toutou1 : ", idView)
+            //console.log("toutou1 : ", idView)
             var data = event.associatedData.data;
-            console.log("toutou2 : ", data)
+            //console.log("toutou2 : ", data)
 
 
             objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
@@ -453,7 +453,7 @@ var TP = TP || {};
 
         this.syncLayouts = function (currentGraph, async) {
 
-            assert(true, "syncLayouts");
+            //assert(true, "syncLayouts");
 
             if (async !== false)
                 async = true;

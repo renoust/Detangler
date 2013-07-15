@@ -15,13 +15,13 @@ var TP = TP || {};
 
 
     var Interface = function () {
-        assert(false, 'Interface')
+        //assert(false, 'Interface')
         var __g__ = this;
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
-            assert(false, 'Interface -> includeFormParam')
+            //assert(false, 'Interface -> includeFormParam')
             myinput = svg.append("foreignObject")
                 .attr("width", 100)
                 .attr("height", 100)
@@ -40,7 +40,7 @@ var TP = TP || {};
 
 
         this.eraseAllInterface = function (target) {
-            assert(false, 'Interface -> eraseAllInterface')
+            //assert(false, 'Interface -> eraseAllInterface')
             var cGraph = null
             var svg = null
 
@@ -72,7 +72,7 @@ var TP = TP || {};
 
 
         this.selectWeightProperty = function (group) {
-            assert(true, 'Interface -> selectWeightProperty')
+            //assert(true, 'Interface -> selectWeightProperty')
             group.append("foreignObject")
                 .attr("x", 10)
                 .attr("y", 20)
@@ -97,7 +97,7 @@ var TP = TP || {};
 
 
         this.holdSVGInteraction = function (target) {
-            assert(true, 'Interface -> holdSVGInteraction')
+            //assert(true, 'Interface -> holdSVGInteraction')
             objectReferences.InteractionObject.removeZoom(target);
             objectReferences.InteractionObject.removeLasso(target);
         }
@@ -266,7 +266,7 @@ var TP = TP || {};
 
 
         this.setCombinedForeground = function (target) {
-            assert(true, 'Interface -> setCombinedForeground')
+            //assert(true, 'Interface -> setCombinedForeground')
             TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
@@ -296,7 +296,7 @@ var TP = TP || {};
 
 
         this.toggleCombinedForeground = function (target) {
-            assert(true, 'Interface -> toggleCombinedForeground')
+            //assert(true, 'Interface -> toggleCombinedForeground')
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -343,7 +343,7 @@ var TP = TP || {};
             i = 0;
             $('<ul/>', {id: 'nav'}).appendTo(content);
             for (var key in buttons) {
-                console.log("Buttons: ", buttons)
+                //console.log("Buttons: ", buttons)
                 fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
                 $('<a/>', {text: key}).appendTo(fam)
                 $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
@@ -530,7 +530,7 @@ var TP = TP || {};
 
 
         this.callbackMenu = function (param, evnt) {
-            assert(true, 'Interface -> call')
+            //assert(true, 'Interface -> call')
             var res = {}
             var key = null;
             var val = null;

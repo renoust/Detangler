@@ -156,7 +156,7 @@ var TP = TP || {};
 
         this.buildGraphFromData = function (data, target) { //substrate at bigin of project
 
-            console.log('creating in tulip, and recieved data: ', data)
+            //console.log('creating in tulip, and recieved data: ', data)
             //console.log("here should be sid: ", data.data.sid)
             TP.Context().sessionSid = data.data.sid
             //console.log("the session sid has just been affected: ", TP.Context().sessionSid);
@@ -470,7 +470,7 @@ var TP = TP || {};
                     tmp[0].getGraph().links().forEach(function (d) {
                         if (!d.source.baseID || !d.target.baseID) console.log(d);
                         if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
-                            console.log("selected:", d, d.source, d.target);
+                            //console.log("selected:", d, d.source, d.target);
                             tempLinks.push(d);
                         }
                     })

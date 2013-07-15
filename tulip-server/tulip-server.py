@@ -15,6 +15,7 @@ import cgi
 import json
 import sys
 import os
+import mimetypes
 
 print sys.path
 # this should point to your tulip directory
@@ -98,7 +99,13 @@ class MyRequestHandler(tornado.web.RequestHandler):
         
         if os.path.isfile(self.currentPath+arg):
             print "FILE found!", self.currentPath+arg
+            abspath = os.path.abspath(self.currentPath)
+            mime_type, encoding = mimetypes.guess_type(self.currentPath+arg)
+            print "mime type", mime_type
+            if mime_type:
+                self.set_header("Content-Type", 'text/javascript')
             f = open(self.currentPath+arg, 'r')
+            self.set_header("Content-type", mime_type)
             self.write(f.read())#.encode('utf-8'))
             f.close()
             self.finish()

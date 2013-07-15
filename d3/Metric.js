@@ -96,7 +96,7 @@ var TP = TP || {};
 
         __g__.addMetric = function (numS, nodee) {
 
-            console.log(nodee)
+            //console.log(nodee)
 
             pileTMP = {avant: null, numS: null, nombreS: null, apres: null, indice: taille, node: null};
             pileTMP.numS = numS;
@@ -184,7 +184,7 @@ var TP = TP || {};
 
             }
 
-            console.log(tab);
+            //console.log(tab);
 
             tab[3] = ["metrics", "numberNodes"];
 

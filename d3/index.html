@@ -80,7 +80,7 @@
         $("ul.submenu").slideUp("normal", function () {
           $(this).parent().removeClass("open")
         });
-        console.log()
+        //console.log()
         $(this).next("ul.submenu").slideDown("normal", function () {
           $(this).parent().addClass("open")
         });
@@ -88,7 +88,7 @@
       e.preventDefault();
     });
     $('ul.submenu').mouseleave(function () {
-      console.log('mouseout');
+      //console.log('mouseout');
       $('ul.submenu').slideUp("normal", function () {
         $(this).parent().removeClass("open")
       });

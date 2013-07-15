@@ -126,7 +126,7 @@ var TP = TP || {};
         }
 
         __g__.initStates = function () {
-            assert(true, "type of controller principal");
+            //assert(true, "type of controller principal");
 
             __g__.controller.addState({name: "callLayoutSendQuery", bindings: null, func: function (event) {/*assert(true, "callLayoutSendQuery");*/
                 TP.Client().callLayoutSendQuery(event);

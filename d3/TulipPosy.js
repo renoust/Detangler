@@ -272,11 +272,11 @@ var TulipPosy = function (originalJSON) {
 
     $('div.toggleButton').click(function (e) {
         var src = event.srcElement.parentNode.parentNode;
-        console.log(src)
+        //console.log(src)
         var menuNum = src.id.split('-')[1];
         var menu = $('#menu-' + menuNum);
-        console.log(menu)
-        console.log($(src))
+        //console.log(menu)
+        //console.log($(src))
         var parent = src.parentNode;
         var button = $(this);
         if (parent.className === 'nosidebar') {
@@ -307,7 +307,7 @@ var TulipPosy = function (originalJSON) {
                 $('.toggleButton').each(function () {
                     /*$(this).text('>') */
 
-                    console.log($(this).eq(0).className)
+                    //console.log($(this).eq(0).className)
                     $(this).eq(0).removeClass('open')
                 })
                 $('.cont').each(function () {
@@ -365,9 +365,9 @@ var TulipPosy = function (originalJSON) {
     // if it is a given file we load it normally
     // other wise we load the default function
     if (originalJSON != null && originalJSON != "") {
-        console.log('originalJSON not null', originalJSON)
+        //console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {
-            console.log('query is in json', originalJSON)
+            //console.log('query is in json', originalJSON)
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
             objectReferences.ClientObject.loadData(recievedGraph, target);
         } else if ('file' in originalJSON) {

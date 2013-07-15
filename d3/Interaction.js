@@ -89,7 +89,7 @@ var TP = TP || {};
         // selection colors are hardcoded but this should be changed
         this.checkIntersect = function (object) {
 
-            assert(true, "checkIntersect");
+            //assert(true, "checkIntersect");
 
             //var __g = this
             var target = null;
@@ -227,7 +227,7 @@ var TP = TP || {};
 
         this.emptyListAction = function (object) {
 
-            assert(false, "il n'y a rien");
+            //assert(false, "il n'y a rien");
 
             var selList = null;
             var target = null;
@@ -466,8 +466,8 @@ var TP = TP || {};
 
             function brushmove() {
                 var e = d3.event.target.extent();
-                assert(false, "d3.event.target.extent()");
-                console.log(e);
+                //assert(false, "d3.event.target.extent()");
+                //console.log(e);
                 var node = svg.selectAll("g.node")
                 var selList = []
                 node.classed("selected", function (d) {
@@ -525,7 +525,7 @@ var TP = TP || {};
 
             target = event.associatedData.source;
 
-            console.log("target : " + target)
+            //console.log("target : " + target)
 
             var view = TP.Context().view[target];
 
@@ -585,7 +585,7 @@ var TP = TP || {};
             var wheelDelta = event.associatedData.wheelDelta;
             var mousePos = event.associatedData.mousePos;
 
-            assert(true, "wheelData : " + wheelDelta)
+            //assert(true, "wheelData : " + wheelDelta)
 
             if (!TP.Context().view[target].getMoveMode())
                 return;
@@ -745,8 +745,8 @@ var TP = TP || {};
         this.movingZoomDragEnd = function (event) {
 
             var data_translation = event.associatedData.data;
-            console.log("movingZoomDragEnd : ")
-            console.log(data_translation);
+            //console.log("movingZoomDragEnd : ")
+            //console.log(data_translation);
             var svg = event.associatedData.svg;
 
             var nodeDatum = svg.selectAll("g.node").data()
@@ -873,7 +873,7 @@ var TP = TP || {};
 
 
         this.toggleCatalystSyncOperator = function (target) {
-            console.log(target)
+            //console.log(target)
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
                 $('.ui-accordion-header').each(function () {
@@ -947,7 +947,7 @@ var TP = TP || {};
 
         this.delSelection = function (target) {
 
-            assert("")
+            //assert("")
 
             svg = TP.Context().view[target].getSvg(); //before, it was only svg_substrate
             graph = TP.Context().view[target].getGraph();
