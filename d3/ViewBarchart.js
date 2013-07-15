@@ -2,9 +2,9 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewBarchart = function (id, bouton, svgs, name, type, idAssociation, typeBarchart) {
+    var ViewBarchart = function (id, bouton, name, type, idAssociation, typeBarchart) {
 
-        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
         __g__.typeBarChart = typeBarchart;
 
@@ -25,7 +25,7 @@ var TP = TP || {};
                 .attr('class', 'chart_' + __g__.typeBarChart + "_" + __g__.ID)
                 .attr("width", "100%")
                 .attr("height", "100%")
-                .attr("id", __g__.tabDataSvg[4])
+                .attr("id", "svg"+__g__.ID)
                 .attr("idView", __g__.ID);
         }
 

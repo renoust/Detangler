@@ -461,7 +461,7 @@ var TP = TP || {};
             var height = 500 - margin.top - margin.bottom;
             var id = "" + TP.Context().getIndiceView();
             TP.Context().view[id] = new TP.View(id, null,
-                new Array("svg_DataBase", null, width, height, "DataBase" + id), "DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
+                 "DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
             TP.Context().view[id].addView();
 
             keys = [];

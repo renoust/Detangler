@@ -4,11 +4,10 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewTemplate = function (id, svgs, name, type, idAssociation, bouton) {
+    var ViewTemplate = function (id, name, type, idAssociation, bouton) {
 
         var __g__ = this;
 
-        __g__.tabDataSvg = svgs;
         __g__.controller = new TP.Controller();
         __g__.tabLinks = new Object();
         __g__.graphDrawing = null;

@@ -3,9 +3,9 @@
 var TP = TP || {};
 (function () {
 
-    var ViewGraph = function (id, bouton, svgs, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+    var ViewGraph = function (id, bouton, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
         __g__.nodesColor = nodesC;
         __g__.linksColor = linksC;
@@ -219,14 +219,12 @@ var TP = TP || {};
                 }
             }
 
-            if (__g__.tabDataSvg[0] == "svg") {
-
                 //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)
                 __g__.svg = d3.select("#zone" + __g__.ID)
                     .append("svg")
                     .attr("width", "100%")
                     .attr("height", "100%")
-                    .attr("id", __g__.tabDataSvg[4])
+                    .attr("id", "svg"+__g__.ID)
                     .attr("idView", __g__.ID);
 
 
@@ -243,7 +241,7 @@ var TP = TP || {};
                     __g__.combined_foreground = "substrate";
                 }
 
-            }
+            
 
             __g__.viewInitialized = 1;
 

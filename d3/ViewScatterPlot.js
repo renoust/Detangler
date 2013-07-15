@@ -2,9 +2,9 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewScatterPlot = function (id, bouton, svgs, name, type, idAssociation) {
+    var ViewScatterPlot = function (id, bouton, name, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, svgs, name, type, idAssociation, bouton);
+        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
         __g__.addView = function () {
 
@@ -19,7 +19,7 @@ var TP = TP || {};
                 .attr('class', 'scatterPlot' + __g__.ID)
                 .attr("width", "100%")
                 .attr("height", "100%")
-                .attr("id", __g__.tabDataSvg[4])
+                .attr("id", "svg"+__g__.ID)
                 .attr("idView", __g__.ID);
         }
 
