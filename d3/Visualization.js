@@ -460,8 +460,9 @@ var TP = TP || {};
             var width = 960 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
             var id = "" + TP.Context().getIndiceView();
-            TP.Context().view[id] = new TP.View(id, null,
+            TP.Context().view[id] = new TP.ViewTemplate(id, null,
                  "DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
+                 
             TP.Context().view[id].addView();
 
             keys = [];
