@@ -15,6 +15,7 @@ li{
 	background-color: white;
 	border:1px solid #666666;
 }
+
 .toggleButton{ 
 	width: 20px; 
 	height: 100px; 
@@ -26,6 +27,7 @@ li{
 	border:1px solid #666666;
 	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) ;
 }
+
 .toggleButton h3{
 	-webkit-transform: rotate(-90deg);	
 	-moz-transform: rotate(-90deg);
@@ -33,80 +35,94 @@ li{
 	-o-transform: rotate(-90deg);
 	transform: rotate(-90deg);
 	position: absolute;
-	top: 28;
+	top: 28px;
 	right: -45px;
 	width:102px;
 	height:22px;
 	font-size: 0.7em;
 }
+
 .toggleButton.open{
 	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
 }
+
 .header-menu{
-	line-height:30px;
+	line-height:32px;
 	text-align:center;
 	background-color: #6d6d6d;
 	color: #fff;
 	font-family: Arial;
 	font-size: 16px;
 }
+
 .menu-content{
 	margin:10px;
 }
+
 .nosidebar .cont{
-	left: -301px;
+	left: -200px;
 	z-index: 0;
 }
 
+.close-button{
+	background: url(myTheme/close-button.png);
+	width:32px;
+	height:32px;
+	float:right;
+
+}
 
 /***************************** Menu 1: Interactors ******************************/
 
-#nav label{
+.nav label{
 	font-size: 13px;
 }
-#nav{
+
+.nav{
 	padding: 0;
 	margin: 0;
 	font-size: 0.8em;
 }
-#nav li.tglFamily > a{
+
+.nav li.tglFamily > a{
 	display: block;
 	padding: 4px 10px;
 	background: url(myTheme/state-default.png) left bottom repeat-x;
 }
-#nav li.form > a{
+
+.nav li.form > a{
 	display: block;
 	padding: 4px 10px;
 	background: url(myTheme/state-default2.png) left bottom repeat-x;
 }
-#nav div.formParam {
+
+.nav div.formParam {
 	display: block;
 	padding: 4px 10px;
 	text-decoration: none;
 }
-#nav li.open > a{
-	background: #4c4c4c;
+
+.nav li.open > a{
+	background: url(myTheme/state-open.png) left bottom repeat-x;
 }
-#nav a:hover, #nav a:focus, #nav a:active, #nav a:visited {
+
+.nav a:hover, .nav a:focus, .nav a:active, .nav a:visited {
 	/*text-decoration: underline;*/
 	cursor: pointer;
 	color:#000;
 	background: url(myTheme/state-hover.png) left bottom repeat-x;
 }
-#nav .family{
+
+.nav .family{
 	padding: 0;
 }
 
-
 .submit{
 	/*display: block;*/
-
 }
 
 
 /***************************** Menu 2: Informations *****************************/
-
-
 p{
 	font-weight: bold;
 }
@@ -134,9 +150,11 @@ p{
 
 	/*border: 1px solid #666666;*/
 }
+
 #infoNodes p{
 	margin: 2px;
 }
+
 #infoNodes ul{
 	padding: 0;
 	margin:0 0 0 20;
@@ -151,12 +169,14 @@ p{
     margin-bottom: 5px;
 
 }
+
 #bg  {
     /*background: #fdd0a2;*/
     opacity: 0.5; 
     position: absolute;
     height: 100%; width:100%;
 }
+
 #entanglement {
     position: absolute;
     top: 0; left: 0;
@@ -165,9 +185,11 @@ p{
 	font-family:arial;
 	font-size:12px;
 }
+
 #entanglement p{
 	margin:2 2 5 2;
 }
+
 #entanglement ul{
 	margin: 0;
 	padding: 0 0 0 20;

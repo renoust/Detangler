@@ -46,8 +46,6 @@ var TP = TP || {};
                 var end = bouton.length;
 
                 for (var p = 0; p < end; p++) {
-                    //console.log(bouton[p][3]);
-
                     if (__g__.hashButton[bouton[p][3]] != null) {
                         __g__.hashButton[bouton[p][3]].push(bouton[p]);
                     }
@@ -55,18 +53,15 @@ var TP = TP || {};
                         __g__.hashButton[bouton[p][3]] = [];
                         __g__.hashButton[bouton[p][3]].push(bouton[p]);
                     }
-
                 }
             }
 
             if (__g__.typeView === "substrate") {
-                //console.log("boutons:", bouton)
                 TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashButton, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
-                TP.ObjectReferences().InterfaceObject.visuPane();
+                TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashButton,'create');
+                TP.ObjectReferences().InterfaceObject.togglePanelMenu();
             }
-
-
         }
 
         __g__.getSvg = function () {
@@ -101,10 +96,8 @@ var TP = TP || {};
                 __g__.tabLinks[linkType] = new Array();
                 __g__.tabLinks[linkType].push(view);
             }
-
             //assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
             //console.log("tabLinks : ", __g__.tabLinks)
-
         }
 
 
@@ -146,7 +139,6 @@ var TP = TP || {};
                     __g__.setAssociatedView(tmp2.getType(), tmp2);
 
                 }
-
                 //console.log(TP.Context().view[__g__.idAssociation]);
             }
 
@@ -214,10 +206,8 @@ var TP = TP || {};
 
                 var fullheight = $('#container').height() - 2;
                 var fullwidth = $('#container').width() - 3;
-                //console.log(dialog.parent().width() + " - " + fullwidth);
-                //console.log(dialog.parent());
                 if (__g__.dialog.parent().width() != fullwidth) {
-                    //console.log(1);
+
                     __g__.dialog.dialog({
                         width: fullwidth,
                         height: fullheight,
@@ -225,16 +215,13 @@ var TP = TP || {};
                     });
                 }
                 else {
-                    //console.log(2);
+
                     __g__.dialog.dialog({
                         width: TP.Context().dialogWidth,
                         height: TP.Context().dialogHeight,
                         position: "right-" + dialogRight + " top+" + dialogTop,
                     });
                 }
-                //console.log(TP.Context().dialogTop);
-
-                //$(this).height()=fullheight;
             });
 
 
@@ -249,21 +236,14 @@ var TP = TP || {};
                 //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
                     TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
+                    TP.Context().InterfaceObject.visuPane(__g__.hashButton, 'update')
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
-                TP.Context().InterfaceObject.attachInfoBox()
+                TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
                 $('.ui-dialog-titlebar').each(function () {
                     $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 })
                 __g__.titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
-
-
-                /*console.log($.jPicker.List[0].color.active.val('hex'), __g__.nodesColor)
-                 $.jPicker.List[0].color.active.val('hex', __g__.nodesColor);
-                 $.jPicker.List[1].color.active.val('hex', __g__.linksColor);
-                 $.jPicker.List[2].color.active.val('hex', __g__.bgColor);*/
-
-                //TP.ObjectReferences().Interface().addInfoButton(ID);
             });
 
             $("#zone" + __g__.ID).parent().appendTo("#container")

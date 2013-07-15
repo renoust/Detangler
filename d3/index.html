@@ -105,9 +105,10 @@
 
 <div id='header'>
   <div id='header-content'>
-    <button id='redo'> Redo</button>
+    <!--<button id='redo'> Redo</button>
     <button id='refresh'> Refresh</button>
-    <button id='undo'> Undo</button>
+    <button id='undo'> Undo</button>-->
+    <button id='tile'>Tile</button>
     <div id='header-logo'>TulipPosy</div>
     <ul id='menu'>
       <li class='hmenu'><a href="">File</a>
@@ -135,14 +136,15 @@
 <div id="Controller"></div>
 
 <script>
-
+  $('#tile').click(function(){
+    var tab=[]
+    for(k in TP.Context().view)
+      tab.push(TP.Context().view[k]);
+    TP.Context().InterfaceObject.tileDialog(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth()-20,true)
+  })
   //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
 
   TP.Context().initController("principal", "principal");
-
-  $('#opfile').click(function (e) {
-    $('#files').click();
-  });
 
 </script>
 <script type="text/javascript" src="load.js"></script>

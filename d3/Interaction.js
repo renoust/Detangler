@@ -872,18 +872,19 @@ var TP = TP || {};
             //console.log(target)
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
-                $('.ui-accordion-header').each(function () {
+                $('li.form > a').each(function () {
                     if ($(this).text() === 'Operator OR') {
                         $(this).text('Operator AND')
                     }
                 })
             } else {
                 TP.Context().tabOperator[target] = "OR"
-                $('.ui-accordion-header').each(function () {
+                $('li.form > a').each(function () {
                     if ($(this).text() === 'Operator AND') {
                         $(this).text('Operator OR')
                     }
                 })
+
             }
             /*
              TP.Context().view[target].getSvg().selectAll("g.toggleCatalystOp")

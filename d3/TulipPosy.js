@@ -23,16 +23,6 @@ var TulipPosy = function (originalJSON) {
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
 
-    $.fn.jPicker.defaults.images.clientPath = 'css/jPicker/';
-
-
-    var nav = (navigator.userAgent).toLowerCase().indexOf("chrome");
-
-    if (nav == -1) {
-        //notification
-    }
-
-
     TP.Context().clearInterface();
 
     var viewIndex = "" + TP.Context().getIndiceView();
@@ -51,19 +41,77 @@ var TulipPosy = function (originalJSON) {
     var type3 = "Vizualisation";
     var type4 = "Others";
 
-    // parameter: [labelprec, type, labelsuiv]
-    // types:   0:text
-    //          1:slider
+    // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
+    // types:   0:select    3:textfield     6:text
+    //          1:radio     4:slider
+    //          2:checkbox  5:spinner
+    /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}]],
+    [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}]],
+    [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]],
+    [3, {id:"text"}],
+    [5, {id:"spinner"}],
+    [4,{id:'slider',class:'slider'},
+        {   range: true,
+            min: 0,
+            max: 99,
+            values: [ 3, 12 ],
+            change: function() {
+                var value = $("#sizemap").slider("values",0);
+                var value2 = $("#sizemap").slider("values",1);
+                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+            },
+            slide: function() {
+                var value = $("#sizemap").slider("values",0);
+                var value2 = $("#sizemap").slider("values",1);
+                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+            }
+        }]
+    ];*/
+
     var paramSizeMap = [
-        ['div', {id: 'sizemap', class: 'slider'}, 'scale: ']
-    ]
-    var tl = [
-        ['input', {type: 'text'}]
+        [4, {id:"sizemap"},{
+                range: true,
+                min: 0,
+                max: 99,
+                values: [ 3, 12 ],
+                change: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                },
+                slide: function() {
+                    var value = $("#sizemap").slider("values",0);
+                    var value2 = $("#sizemap").slider("values",1);
+                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                }
+            },
+            "scale: "
+        ]
     ];
-    //var paramSizeMap = [['scale: ', 0]]
+
+    var tl = [
+        [3,{id:"selectedAlgo"}]
+    ];
+
+    var colorSettings = [
+        [1,{id:"color"},[
+            {id:"cnodes", name:"color", class:"colorwell", text:"Nodes Color"},
+            {id:"clinks", name:"color", class:"colorwell", text:"Links Color"},
+            {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
+            {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
+        ],
+        [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+
+
 
     var array1 = [
-
+        /*['TEST', '', {call: function (res) {
+            console.log(res)
+        }}, "Layout"],*/
         ['Force layout', '', {click: function () {
             TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: viewIndex})
         }}, "Layout"],
@@ -74,7 +122,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: 'MDS', idView: viewIndex})
         }}, "Layout"],
         ['Tulip layout algorithm', tl, {call: function (layout) {
-            TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: layout.text0, idView: viewIndex})
+            TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: viewIndex})
         }}, "Layout"],
 
         ['Induced subgraph', '', {click: function () {
@@ -114,6 +162,7 @@ var TulipPosy = function (originalJSON) {
         ['zoom out', '', {click: function () {
             TP.Context().view[viewIndex].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
+        ['Color settings', colorSettings,null, "View"],
 
         ['Degree', '', {click: function () {
             TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: viewIndex})
@@ -122,7 +171,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: viewIndex})
         }}, "Measure"],
         ['Tulip measure', tl, {call: function (algo) {
-            TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.text0, idView: viewIndex})
+            TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: viewIndex})
         }}, "Measure"],
 
         ['Bipartite analysis', '', {click: function () {
@@ -157,6 +206,9 @@ var TulipPosy = function (originalJSON) {
         ['Server update layout', '', {click: function () {
             objectReferences.ClientObject.updateLayout(viewIndex1)
         }}, "Layout"],
+        ['Tulip layout algorithm', tl, {call: function (layout) {
+            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target1})
+        }}, "Layout"],
 
         ['Operator ' + TP.Context().tabOperator["catalyst"], '', {click: function () {
             objectReferences.InteractionObject.toggleCatalystSyncOperator(viewIndex1)
@@ -165,7 +217,9 @@ var TulipPosy = function (originalJSON) {
             objectReferences.InteractionObject.toggleSelection(viewIndex1)
         }}, 'Selection'],
 
-
+        ['Center view', '', {click: function () {
+            TP.Context().view[target].getController().sendMessage('resetView');
+        }}, "View"],
         ['Reset size', '', {click: function () {
             TP.Context().view[viewIndex1].getController().sendMessage("resetSize")
         }}, "View"],
@@ -187,9 +241,13 @@ var TulipPosy = function (originalJSON) {
         ['Zoom out', '', {click: function () {
             TP.Context().view[viewIndex1].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
         }}, "View"],
+
         ['Size mapping', paramSizeMap, {call: function (scales) {
             TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
         }}, "View"],
+
+        ['Color settings', colorSettings,null, "View"],
+        
 
         ['Degree', '', {click: function () {
             TP.Context().view[viewIndex1].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: viewIndex1})
@@ -202,6 +260,9 @@ var TulipPosy = function (originalJSON) {
         }}, "Measure"],
         ['Entanglement mapping', '', {click: function (scales) {
             TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: contxt.activeView, scales: scales})
+        }}, "Measure"],
+        ['Tulip measure', tl, {call: function (algo) {
+            TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: target1})
         }}, "Measure"],
 
         ['Horizontal barchart', '', {click: function () {
@@ -230,7 +291,6 @@ var TulipPosy = function (originalJSON) {
     TP.Context().view[viewIndex].addView();
     TP.Context().view[viewIndex].buildLinks();
 
-
     var tabCatalyst = [viewIndex1, 
                        array2, 
                        name + " - catalyst", 
@@ -247,99 +307,6 @@ var TulipPosy = function (originalJSON) {
     $('#redo').click(function () {
         TP.Context().changeStack.redo();
     });
-
-
-// Event toggle sidebars
-
-    $('div.toggleButton').click(function (e) {
-        var src = event.srcElement.parentNode.parentNode;
-        //console.log(src)
-        var menuNum = src.id.split('-')[1];
-        var menu = $('#menu-' + menuNum);
-        //console.log(menu)
-        //console.log($(src))
-        var parent = src.parentNode;
-        var button = $(this);
-        if (parent.className === 'nosidebar') {
-            button.eq(0).toggleClass('open')
-            /*button.text('<');*/
-            $(parent).eq(0).toggleClass('nosidebar sidebar')
-            //parent.className='sidebar';
-            $('.cont').each(function () {
-                $(this).css('left', 0)
-            })
-            menu.css('z-index', 102)
-        }
-        else if (parent.className === 'sidebar') {
-
-            if (menu.css('z-index') == 102) {
-                /*button.text('>');*/
-                button.eq(0).toggleClass('open')
-
-                //console.log($(parent))
-                $(parent).eq(0).toggleClass('nosidebar sidebar')
-                //              parent.className = 'nosidebar';
-                $('.cont').each(function () {
-                    $(this).css('z-index', 0)
-                    $(this).css('left', -301)
-                })
-            }
-            else {
-                $('.toggleButton').each(function () {
-                    /*$(this).text('>') */
-
-                    //console.log($(this).eq(0).className)
-                    $(this).eq(0).removeClass('open')
-                })
-                $('.cont').each(function () {
-                    $(this).css('z-index', 101)
-                })
-                menu.css('z-index', 102);
-                /*button.text('<')*/
-                button.eq(0).toggleClass('open')
-                //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
-
-            }
-        }
-        else console.log('FAIL: toggle panel');
-    });
-
-
-    $('.submit').click(function () {
-        res = {}
-        var key = null;
-        var val = null;
-
-        var data = $(this).siblings("input[type='radio']:checked")
-        data.each(function () {
-            key = $(this).attr('name');
-            res[key] = $(this).val();
-        })
-
-        data = $(this).siblings('.ui-spinner')
-        data.each(function () {
-            key = $(this).children('input').attr('name');
-            val = $(this).children('input')[0].value
-            res[key] = val;
-        })
-
-        data = $(this).siblings("input[type='checkbox']:checked")
-        data.each(function () {
-            key = $(this).attr('name');
-            if (res[key] == null)
-                res[key] = $(this).val();
-            else
-                res[key] += ", " + $(this).val();
-        })
-
-        data = $(this).siblings("input[type='text']")
-        data.each(function () {
-            key = $(this).attr('name');
-            val = $(this).val()
-            res[key] = val;
-        })
-    })
-
 
     // This is the tricky part, because the json given to the function can be of many shapes.
     // If it is a query, we call tulip to perform the search
@@ -365,6 +332,12 @@ var TulipPosy = function (originalJSON) {
     }
     if ($('#sync').is(':checked')) {
         objectReferences.ClientObject.syncLayouts(viewIndex)
+    }
+
+    //check if Google Chrome browser is used, if not, warn the user
+     if(!window.chrome){
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","This application is optimized for Google Chrome browser. If you see this message, please "+
+            "use Google Chrome or... run you fools.")
     }
 
 
