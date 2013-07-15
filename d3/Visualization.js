@@ -15,9 +15,9 @@ var TP = TP || {};
         var objectReferences = TP.ObjectReferences();
 
 
-        this.showhideLinks = function (event) {
+        this.showhideLinks = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             if (!target)return
 
@@ -223,9 +223,9 @@ var TP = TP || {};
          */
 
 
-        this.resetView = function (event) {
+        this.resetView = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             var cGraph = null
             var svg = null
@@ -260,9 +260,9 @@ var TP = TP || {};
         }
 
 
-        this.resetSize = function (event) {
+        this.resetSize = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             var cGraph = null
             var svg = null
@@ -278,9 +278,9 @@ var TP = TP || {};
         }
 
 
-        this.rotateGraph = function (event) {
+        this.rotateGraph = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             var cGraph = null
             var svg = null
@@ -291,9 +291,9 @@ var TP = TP || {};
             TP.Context().view[target].getGraphDrawing().rotate(target, 5)
         }
 
-        this.arrangeLabels = function (event) {
+        this.arrangeLabels = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             var cGraph = null
             var svg = null
@@ -319,9 +319,9 @@ var TP = TP || {};
         }
 
 
-        this.showhideLabels = function (event) {
+        this.showhideLabels = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             if (!target)
                 return
@@ -410,11 +410,11 @@ var TP = TP || {};
         }
 
 
-        this.sizeMapping = function (event) {
+        this.sizeMapping = function (_event) {
 
-            var parameter = event.associatedData.parameter;
-            var idView = event.associatedData.idView;
-            var scales = event.associatedData.scales;
+            var parameter = _event.associatedData.parameter;
+            var idView = _event.associatedData.idView;
+            var scales = _event.associatedData.scales;
 
             var cGraph = null;
             var svg = null;

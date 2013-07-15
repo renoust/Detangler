@@ -406,9 +406,9 @@ var TP = TP || {};
         }
 
 
-        __g__.brushstart = function (event) {
+        __g__.brushstart = function (_event) {
 
-            var svg = event.associatedData.svg;
+            var svg = _event.associatedData.svg;
             svg.classed("selecting", true);
 
         }
@@ -515,11 +515,11 @@ var TP = TP || {};
         // Applies the lasso interactor to a specific svg target as callback
         // to the mouse events.
         // target, the string value of the target svg view         
-        this.addLasso = function (event) {
+        this.addLasso = function (_event) {
 
             var target = null;
 
-            target = event.associatedData.source;
+            target = _event.associatedData.source;
 
             //console.log("target : " + target)
 
@@ -559,11 +559,11 @@ var TP = TP || {};
         // Removes the lasso interactor from a specific svg target's callbacks 
         //to its mouse events.
         // target, the string value of the target svg view         
-        this.removeLasso = function (event) {
+        this.removeLasso = function (_event) {
 
             var target = null;
 
-            target = event.associatedData.source;
+            target = _event.associatedData.source;
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
@@ -575,11 +575,11 @@ var TP = TP || {};
         }
 
 
-        this.runZoom = function (event) {
+        this.runZoom = function (_event) {
 
-            var target = event.associatedData.source;
-            var wheelDelta = event.associatedData.wheelDelta;
-            var mousePos = event.associatedData.mousePos;
+            var target = _event.associatedData.source;
+            var wheelDelta = _event.associatedData.wheelDelta;
+            var mousePos = _event.associatedData.mousePos;
 
             //assert(true, "wheelData : " + wheelDelta)
 
@@ -667,24 +667,24 @@ var TP = TP || {};
                     return d.y;
                 })
 
-            event.preventDefault();
+            _event.preventDefault();
 
         }
 
 
-        this.movingZoomDrag = function (event) {
+        this.movingZoomDrag = function (_event) {
 
-            var target = event.associatedData.source;
-            var data_translation = event.associatedData.data;
+            var target = _event.associatedData.source;
+            var data_translation = _event.associatedData.data;
             //console.log(data_translation);
-            var svg = event.associatedData.svg;
-            var cGraph = event.associatedData.cGraph;
+            var svg = _event.associatedData.svg;
+            var cGraph = _event.associatedData.cGraph;
 
             if (!TP.Context().view[target].getMoveMode())
                 return;
 
-            data_translation[0] = d3.event.dx + data_translation[0];
-            data_translation[1] = d3.event.dy + data_translation[1];
+            data_translation[0] = d3._event.dx + data_translation[0];
+            data_translation[1] = d3._event.dy + data_translation[1];
 
             var nodeDatum = svg.selectAll("g.node").data()
 
@@ -738,12 +738,12 @@ var TP = TP || {};
                 })
         }
 
-        this.movingZoomDragEnd = function (event) {
+        this.movingZoomDragEnd = function (_event) {
 
-            var data_translation = event.associatedData.data;
+            var data_translation = _event.associatedData.data;
             //console.log("movingZoomDragEnd : ")
             //console.log(data_translation);
-            var svg = event.associatedData.svg;
+            var svg = _event.associatedData.svg;
 
             var nodeDatum = svg.selectAll("g.node").data()
 
@@ -760,11 +760,11 @@ var TP = TP || {};
 
         // Adds a zoom interactor to a specific svg target as callbacks to its 
         //mouse events.       
-        this.addZoom = function (eventt) {
+        this.addZoom = function (_event) {
 
             var target = null;
 
-            target = eventt.associatedData.source;
+            target = _event.associatedData.source;
 
             var svg = null;
             var cGraph = null;
@@ -853,11 +853,11 @@ var TP = TP || {};
         // Removes the lasso interactor from a specific svg target's callbacks 
         // to its mouse events.
         // target, the string value of the target svg view         
-        this.removeZoom = function (event) {
+        this.removeZoom = function (_event) {
 
             var target = null;
 
-            target = event.associatedData.source;
+            target = _event.associatedData.source;
 
             var svg = null
             svg = TP.Context().view[target].getSvg();

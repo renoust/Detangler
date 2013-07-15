@@ -107,9 +107,9 @@ var TP = TP || {};
         // create the group element and its behaviors (mouseover, mouseout, 
         //mousedown, mousemove, mouseup)
 
-        __g.mouseoverMouseDown = function (event) {
+        __g.mouseoverMouseDown = function (_event) {
 
-            var source = event.associatedData.source;
+            var source = _event.associatedData.source;
 
             var obj = TP.Context().view[source].getLasso();
 
@@ -117,30 +117,30 @@ var TP = TP || {};
             obj.canMove = true;
         }
 
-        __g.mouseoutMouseDown = function (event) {
+        __g.mouseoutMouseDown = function (_event) {
 
-            var source = event.associatedData.source;
+            var source = _event.associatedData.source;
 
             var obj = TP.Context().view[source].getLasso();
 
             obj.canMove = false;
         }
 
-        __g.mousedownMouseDown = function (event) {
+        __g.mousedownMouseDown = function (_event) {
 
-            var source = event.associatedData.source;
+            var source = _event.associatedData.source;
             var obj = TP.Context().view[source].getLasso();
-            var mouse = event.associatedData.mouse;
+            var mouse = _event.associatedData.mouse;
 
             obj.prevMovePoint = [mouse[0], mouse[1]];
             obj.moveLasso = true;
         }
 
-        __g.mousemoveMouseDown = function (event) {
-            var source = event.associatedData.source;
+        __g.mousemoveMouseDown = function (_event) {
+            var source = _event.associatedData.source;
             var obj = TP.Context().view[source].getLasso();
-            var mouse = event.associatedData.mouse;
-            var d = event.associatedData.d;
+            var mouse = _event.associatedData.mouse;
+            var d = _event.associatedData.d;
 
             if (obj.moveLasso) {
 
@@ -205,10 +205,10 @@ var TP = TP || {};
         }
 
 
-        __g.mouseupMouseDown = function (event) {
-            var source = event.associatedData.source;
+        __g.mouseupMouseDown = function (_event) {
+            var source = _event.associatedData.source;
             var obj = TP.Context().view[source].getLasso();
-            var mouse = event.associatedData.mouse;
+            var mouse = _event.associatedData.mouse;
 
             if (obj.moveLasso) {
                 var coord = mouse;
@@ -498,9 +498,9 @@ var TP = TP || {};
         }
 
 
-        __g.mousedownResizeGroup = function (event) {
-            var source = event.associatedData.source;
-            var direction = event.associatedData.direction;
+        __g.mousedownResizeGroup = function (_event) {
+            var source = _event.associatedData.source;
+            var direction = _event.associatedData.direction;
 
             var obj = TP.Context().view[source].getLasso();
 
@@ -508,8 +508,8 @@ var TP = TP || {};
             obj.resizeDirection = direction;
         }
 
-        __g.mouseupResizeGroup = function (event) {
-            var source = event.associatedData.source
+        __g.mouseupResizeGroup = function (_event) {
+            var source = _event.associatedData.source
 
             var obj = TP.Context().view[source].getLasso();
 

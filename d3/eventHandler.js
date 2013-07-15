@@ -89,10 +89,10 @@ var TP = TP || {};
 
                 //assert(true, "dispatcher")
 
-                data.dispatcher = function (event) {
-                    //event = fixEvent(event);
+                data.dispatcher = function _event) {
+                    //_event = fixEvent(_event);
 
-                    var handlers = data.handlers[event.type];
+                    var handlers = data.handlers[_event.type];
 
                     //console.log(handlers);
 
@@ -102,11 +102,11 @@ var TP = TP || {};
 
                          for(var n = 0; n < end; n++){
                          if(handlers[n] != null)
-                         handlers[n].call(elem, event);
+                         handlers[n].call(elem, _event);
                          }
                          */
                         if (handlers.available == true)
-                            handlers.call(elem, event);
+                            handlers.call(elem, _event);
                     }
                 };
             }

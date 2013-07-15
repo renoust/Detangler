@@ -155,10 +155,10 @@ var TP = TP || {};
         // This function calls through tulip the analysis of a substrate graph, 
         // stores and displays it in the catalyst view, updating the new 
         // entanglement indices computed.
-        this.analyseGraph = function (event) {
+        this.analyseGraph = function (_event) {
 
-            var idView = event.associatedData.source;
-            var tabCatalyst = event.associatedData.tabCatalyst;
+            var idView = _event.associatedData.source;
+            var tabCatalyst = _event.associatedData.tabCatalyst;
 
             if (TP.Context().view[idView].getType() !== "substrate") {
                 assert(false, "not substrate type");
@@ -198,10 +198,10 @@ var TP = TP || {};
         }
 
 
-        this.analyseGraphSendQuery = function (event) {
+        this.analyseGraphSendQuery = function (_event) {
 
-            var source = event.associatedData.source;
-            var params = event.associatedData.params;
+            var source = _event.associatedData.source;
+            var params = _event.associatedData.params;
 
             //console.log("succes")
 
@@ -217,12 +217,12 @@ var TP = TP || {};
         }
 
 
-        this.answerAnalyseGraph = function (event) {
+        this.answerAnalyseGraph = function (_event) {
             //console.log("toutou")
 
-            var idView = event.associatedData.target;
+            var idView = _event.associatedData.target;
             //console.log("toutou1 : ", idView)
-            var data = event.associatedData.data;
+            var data = _event.associatedData.data;
             //console.log("toutou2 : ", data)
 
 
@@ -234,10 +234,10 @@ var TP = TP || {};
         // removes the unselected nodes
         // json, the json string of the graph
         // graphName, the string value corresponding to the graph
-        this.sendSelection = function (event) {
+        this.sendSelection = function (_event) {
 
-            var idView = event.associatedData.idView;
-            var json = event.associatedData.json;
+            var idView = _event.associatedData.idView;
+            var json = _event.associatedData.json;
 
             var updateParams = {
                 type: "induced"
@@ -255,10 +255,10 @@ var TP = TP || {};
         };
 
 
-        this.selectionSendQuery = function (event) {
+        this.selectionSendQuery = function (_event) {
 
-            var source = event.associatedData.source;
-            var params = event.associatedData.params;
+            var source = _event.associatedData.source;
+            var params = _event.associatedData.params;
 
             __g__.sendQuery({
                 parameters: params,
@@ -272,10 +272,10 @@ var TP = TP || {};
         }
 
 
-        this.answerSendSelection = function (event) {
+        this.answerSendSelection = function (_event) {
 
-            var idView = event.associatedData.target;
-            var data = event.associatedData.data;
+            var idView = _event.associatedData.target;
+            var data = _event.associatedData.data;
 
             objectReferences.UpdateViewsObject.applyInducedSubGraphFromData(data, idView);
         }
@@ -285,10 +285,10 @@ var TP = TP || {};
         // and moves the given graph accordingly
         // layoutName, the name of the tulip layout we want to call
         // graphName, the string value corresponding to the graph
-        this.callLayout = function (event) {
+        this.callLayout = function (_event) {
 
-            var idView = event.associatedData.idView;
-            var layoutName = event.associatedData.layoutName;
+            var idView = _event.associatedData.idView;
+            var layoutName = _event.associatedData.layoutName;
 
 
             //save for undo
@@ -311,10 +311,10 @@ var TP = TP || {};
         };
 
 
-        this.callLayoutSendQuery = function (event) {
+        this.callLayoutSendQuery = function (_event) {
 
-            var source = event.associatedData.source;
-            var params = event.associatedData.params;
+            var source = _event.associatedData.source;
+            var params = _event.associatedData.params;
 
             __g__.sendQuery({
                 parameters: params,
@@ -328,10 +328,10 @@ var TP = TP || {};
         }
 
 
-        this.AnswerCallLayout = function (event) {
+        this.AnswerCallLayout = function (_event) {
 
-            var idView = event.associatedData.target;
-            var data = event.associatedData.data;
+            var idView = _event.associatedData.target;
+            var data = _event.associatedData.data;
 
             objectReferences.UpdateViewsObject.applyLayoutFromData(data, idView);
         }
@@ -364,10 +364,10 @@ var TP = TP || {};
         // and moves the given graph accordingly
         // floatAlgorithmName, the name of the tulip algorithm we want to call
         // graphName, the string value corresponding to the graph
-        this.callFloatAlgorithm = function (event) {
+        this.callFloatAlgorithm = function (_event) {
 
-            var floatAlgorithmName = event.associatedData.floatAlgorithmName;
-            var idView = event.associatedData.idView;
+            var floatAlgorithmName = _event.associatedData.floatAlgorithmName;
+            var idView = _event.associatedData.idView;
 
             var floatParams = {
                 type: "float",
@@ -385,10 +385,10 @@ var TP = TP || {};
         }
 
 
-        this.FloatAlgorithmSendQuery = function (event) {
+        this.FloatAlgorithmSendQuery = function (_event) {
 
-            var source = event.associatedData.source;
-            var params = event.associatedData.params;
+            var source = _event.associatedData.source;
+            var params = _event.associatedData.params;
 
             __g__.sendQuery({
                 parameters: params,
@@ -402,9 +402,9 @@ var TP = TP || {};
         }
 
 
-        this.AnswerFloatAlgorithm = function (event) {
-            var idView = event.associatedData.target;
-            var data = event.associatedData.data;
+        this.AnswerFloatAlgorithm = function (_event) {
+            var idView = _event.associatedData.target;
+            var data = _event.associatedData.data;
 
             objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView);
         }

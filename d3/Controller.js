@@ -185,29 +185,29 @@ var TP = TP || {};
 
             tmpController.transitionState(messageName);
 
-            var event = new CustomEvent(messageName);
+            var _event = new CustomEvent(messageName);
             if (object != null) {
-                event.associatedData = object;
+               _event.associatedData = object;
             }
             else
-                event.associatedData = {};
+               _event.associatedData = {};
 
 
             if (source != null)
-                event.associatedData.source = source;
+               _event.associatedData.source = source;
             else
-                event.associatedData.source = nameC;
+               _event.associatedData.source = nameC;
 
             if (targetController != null)
-                event.associatedData.target = targetController;
+               _event.associatedData.target = targetController;
             else
-                event.associatedData.target = nameC;
+               _event.associatedData.target = nameC;
 
 
             if (targetController == null)
-                document.getElementById(listenerState).dispatchEvent(event);
+                document.getElementById(listenerState).dispatchEvent(_event);
             else
-                document.getElementById("handlerState" + targetController).dispatchEvent(event);
+                document.getElementById("handlerState" + targetController).dispatchEvent(_event);
 
         }
 

@@ -111,9 +111,9 @@ var TP = TP || {};
         };
 
 
-        g.dragNode = function (event) {
+        g.dragNode = function (_event) {
             var tab1 = [];
-            tab1[0] = event.associatedData.node;
+            tab1[0] = _event.associatedData.node;
             tab1[1] = null;
             tab1[2] = null;
 
@@ -121,8 +121,8 @@ var TP = TP || {};
         }
 
 
-        g.showHideLabelNode = function (event) {
-            var dragTarget = event.associatedData.node;
+        g.showHideLabelNode = function (_event) {
+            var dragTarget = _event.associatedData.node;
             var currentNode = dragTarget.data()[0];
             var labelTarget = g.svg.select("text.node" + currentNode.baseID);
             var nodeTarget = dragTarget.select("circle.node");
@@ -142,8 +142,8 @@ var TP = TP || {};
         };
 
 
-        g.showLabelNode = function (event) {
-            g.svg.selectAll("text.snippet").data([event.associatedData.data]).enter()
+        g.showLabelNode = function (_event) {
+            g.svg.selectAll("text.snippet").data([_event.associatedData.data]).enter()
                 .append("text")
                 .attr("dx", function (dd) {
                     return dd.currentX

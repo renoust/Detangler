@@ -37,14 +37,14 @@ var TP = TP || {};
 
 
         __g__.initStates = function () {
-            __g__.controller.addState({name: "mouseoverBarChartRect", bindings: null, func: function (event) {/*assert(true, "mouseoverBarChartRect");*/
-                TP.BarChart().mouseoverBarChartRect(event);
+            __g__.controller.addState({name: "mouseoverBarChartRect", bindings: null, func: function (_event) {/*assert(true, "mouseoverBarChartRect");*/
+                TP.BarChart().mouseoverBarChartRect(_event);
             }}, "all", true);
-            __g__.controller.addState({name: "mouseoutBarChartRect", bindings: null, func: function (event) {/*assert(true, "mouseoutBarChartRect");*/
-                TP.BarChart().mouseoutBarChartRect(event);
+            __g__.controller.addState({name: "mouseoutBarChartRect", bindings: null, func: function (_event) {/*assert(true, "mouseoutBarChartRect");*/
+                TP.BarChart().mouseoutBarChartRect(_event);
             }}, "all", true);
-            __g__.controller.addState({name: "mouseclickBarChartRect", bindings: null, func: function (event) {/*assert(true, "mouseclickBarChartRect");*/
-                TP.BarChart().mouseclickBarChartRect(event);
+            __g__.controller.addState({name: "mouseclickBarChartRect", bindings: null, func: function (_event) {/*assert(true, "mouseclickBarChartRect");*/
+                TP.BarChart().mouseclickBarChartRect(_event);
             }}, "all", true);
 
             __g__.controller.setCurrentState(null);

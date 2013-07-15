@@ -359,7 +359,7 @@ var TP = TP || {};
             $("<button/>", {id: "toggle" + ID, text: "Move", style: 'right:15px'}).appendTo(titlebar);
 
 
-            $('#toggle' + ID).button().click(function (event) {
+            $('#toggle' + ID).button().click(function _event) {
                 var interact = $(this).button("option", "label");
                 if (interact == "Move") {
                     $(this).button("option", "label", "Select");
@@ -374,7 +374,7 @@ var TP = TP || {};
 
             $('#toggle' + ID).attr("idView", ID);
 
-            //$("#toggle"+ID).click(function(event){event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase:event.data}, event]);})
+            //$("#toggle"+ID).click(function_event)_event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase_event.data},_event]);})
 
 
             var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()

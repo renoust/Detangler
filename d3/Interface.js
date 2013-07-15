@@ -247,9 +247,9 @@ var TP = TP || {};
         }
 
 
-        this.addInfoBox = function (event) {
+        this.addInfoBox = function (_event) {
 
-            var node = event.associatedData.node;
+            var node = _event.associatedData.node;
 
             //console.log(d)
             $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
