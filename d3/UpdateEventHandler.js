@@ -75,7 +75,7 @@ var TP = TP || {};
         		if(tab[i].typeView != null && tab[i].typeEvent != null && tab[i].func != null){
         			tabTmp[tab[i].typeView] = new Object();
         			tabTmp[tab[i].typeView][tab[i].typeEvent] = tab[i].func;
-        			console.log(tabTmp);
+        			
         		}
         			//console.log("tab[i].typeView : ", tab[i].typeView, "tab[i].typeEvent : ", tab[i].typeEvent, "tab[i].func : ", tab[i].func)
         	}
