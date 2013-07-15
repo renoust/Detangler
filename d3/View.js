@@ -292,7 +292,7 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.visuPane();
             }
 
-            elem = document.getElementById("bouton" + ID);
+            var elem = document.getElementById("bouton" + ID);
             if (elem) elem.parentNode.removeChild(elem);
             elem = $("div[aria-describedby='zone" + ID + "']");
             //console.log(elem)

@@ -85,7 +85,7 @@ or just-->
 
   // This function removes an element of the page by its id
   function remove(id) {
-    elem = document.getElementById(id);
+    var elem = document.getElementById(id);
     if (elem)
       return elem.parentNode.removeChild(elem);
     else

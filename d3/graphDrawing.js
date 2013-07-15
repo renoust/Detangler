@@ -403,7 +403,7 @@ var TP = TP || {};
             });
 
             var delta = 0.00000000000000000001 //to avoid division by 0
-            scale = Math.min.apply(null, [w / (Xminmax[1] - Xminmax[0] + delta), h / (Yminmax[1] - Yminmax[0] + delta)])
+            var scale = Math.min.apply(null, [w / (Xminmax[1] - Xminmax[0] + delta), h / (Yminmax[1] - Yminmax[0] + delta)])
             node.forEach(function (d) {
                 d.x = (d.x - Xminmax[0]) * scale + frame;
                 d.y = (d.y - Yminmax[0]) * scale + frame;

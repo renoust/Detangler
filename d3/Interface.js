@@ -308,7 +308,7 @@ var TP = TP || {};
         this.addPanelMenu = function (header) {
             //assert(true,'Interface -> addPanelMenu')
 
-            menuNum = contxt.menuNum++;
+            var menuNum = contxt.menuNum++;
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
             $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
@@ -484,9 +484,10 @@ var TP = TP || {};
                 param = tab[i][1];
                 evnt = tab[i][2];
 
+                var fam = null;
                 if (param == '') {
                     fam = $('<li/>', {class: 'form'}).appendTo('#' + menu);
-                    button = $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam)
                     $(button).click(evnt.click);
                 } else {
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);

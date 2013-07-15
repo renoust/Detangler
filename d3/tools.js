@@ -124,7 +124,7 @@ var TP = TP || {};
             //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
-            typeGraph = TP.Context().view[target].getType();
+            var typeGraph = TP.Context().view[target].getType();
             TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph);
             TP.Context().view[target].getGraph().links(data.links, typeGraph);
             TP.Context().view[target].getGraph().edgeBinding();

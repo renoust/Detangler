@@ -37,7 +37,7 @@ var TP = TP || {};
                     })
                     .success(function (data, b) {
                         objectReferences.ToolObject.addBaseID(data, "id")
-                        jsonData = JSON.stringify(data)
+                        var jsonData = JSON.stringify(data)
                         objectReferences.ToolObject.loadJSON(data, target)
                         TP.Client().createTulipGraph(jsonData, target);
 
@@ -137,7 +137,7 @@ var TP = TP || {};
         // returns and displays it.
         // json, the initial json string corresponding to the graph.
         this.createTulipGraph = function (json, target) {
-            params = {
+            var params = {
                 type: "creation",
                 graph: json
             }

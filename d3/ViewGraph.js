@@ -150,7 +150,7 @@ var TP = TP || {};
             //TP.Context().setStypeEventByDefault(ID);
             __g__.buttonTreatment();
 
-            elem = document.getElementById("bouton" + __g__.ID);
+            var elem = document.getElementById("bouton" + __g__.ID);
             if (elem) elem.parentNode.removeChild(elem);
             elem = $("div[aria-describedby='zone" + __g__.ID + "']");
             //console.log(elem)
