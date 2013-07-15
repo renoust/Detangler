@@ -11,15 +11,15 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Interface = function () {
+        //assert(false, 'Interface')
         var __g__ = this;
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
+            //assert(false, 'Interface -> includeFormParam')
+
             myinput = svg.append("foreignObject")
                 .attr("width", 100)
                 .attr("height", 100)
@@ -38,6 +38,8 @@ var TP = TP || {};
 
 
         this.eraseAllInterface = function (target) {
+            //assert(false, 'Interface -> eraseAllInterface')
+
             var cGraph = null
             var svg = null
 
@@ -68,6 +70,8 @@ var TP = TP || {};
 
 
         this.selectWeightProperty = function (group) {
+            //assert(true, 'Interface -> selectWeightProperty')
+
             group.append("foreignObject")
                 .attr("x", 10)
                 .attr("y", 20)
@@ -91,6 +95,8 @@ var TP = TP || {};
 
 
         this.holdSVGInteraction = function (target) {
+            //assert(true, 'Interface -> holdSVGInteraction')
+
             objectReferences.InteractionObject.removeZoom(target);
             objectReferences.InteractionObject.removeLasso(target);
         }
@@ -190,7 +196,7 @@ var TP = TP || {};
          .attr("dx", 5)
          .attr("dy", 15)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "Weight property"
          })
          .style("font-family", TP.Context().defaultTextFont)
@@ -204,7 +210,7 @@ var TP = TP || {};
          .attr("dx", 50)
          .attr("dy", 115)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "WX"
          })
          .style("font-family", "EntypoRegular")
@@ -273,11 +279,9 @@ var TP = TP || {};
         }
 
 
-        this.addInfoBox = function (event) {
-
+        this.addInfoBox = function (_event) {
             var node = event.associatedData.node;
             $("#infoNodes ul").empty();
-            
             for (var k in node) {
                 $('#infoNodes ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
             }
@@ -285,6 +289,7 @@ var TP = TP || {};
 
 
         this.setCombinedForeground = function (target) {
+            //assert(true, 'Interface -> setCombinedForeground')
             TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
@@ -312,6 +317,7 @@ var TP = TP || {};
 
 
         this.toggleCombinedForeground = function (target) {
+            //assert(true, 'Interface -> toggleCombinedForeground')
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -403,62 +409,60 @@ var TP = TP || {};
 
         this.togglePanelMenu = function(){
             $('div.toggleButton').click(function (e) {
-        var src = event.srcElement.parentNode.parentNode;
-        console.log(src)
-        var menuNum = src.id.split('-')[1];
-        var menu = $('#menu-' + menuNum);
-        console.log(menu)
-        console.log($(src))
-        var parent = src.parentNode;
-        var button = $(this);
-        if (parent.className === 'nosidebar') {
-            button.eq(0).toggleClass('open')
-            /*button.text('<');*/
-            $(parent).eq(0).toggleClass('nosidebar sidebar')
-            //parent.className='sidebar';
-            $('.cont').each(function () {
-                $(this).css('left', 0)
-            })
-            menu.css('z-index', 102)
-        }
-        else if (parent.className === 'sidebar') {
+                var src = event.srcElement.parentNode.parentNode;
+                var menuNum = src.id.split('-')[1];
+                var menu = $('#menu-' + menuNum);
+                var parent = src.parentNode;
+                var button = $(this);
 
-            if (menu.css('z-index') == 102) {
-                /*button.text('>');*/
-                button.eq(0).toggleClass('open')
+                if (parent.className === 'nosidebar') {
+                    button.eq(0).toggleClass('open')
+                    /*button.text('<');*/
+                    $(parent).eq(0).toggleClass('nosidebar sidebar')
+                    //parent.className='sidebar';
+                    $('.cont').each(function () {
+                        $(this).css('left', 0)
+                    })
+                    menu.css('z-index', 102)
+                }
+                else if (parent.className === 'sidebar') {
 
-                //console.log($(parent))
-                $(parent).eq(0).toggleClass('nosidebar sidebar')
-                //              parent.className = 'nosidebar';
-                $('.cont').each(function () {
-                    $(this).css('z-index', 0)
-                    $(this).css('left', -301)
-                })
-            }
-            else {
-                $('.toggleButton').each(function () {
-                    /*$(this).text('>') */
+                    if (menu.css('z-index') == 102) {
+                        /*button.text('>');*/
+                        button.eq(0).toggleClass('open')
 
-                    console.log($(this).eq(0).className)
-                    $(this).eq(0).removeClass('open')
-                })
-                $('.cont').each(function () {
-                    $(this).css('z-index', 101)
-                })
-                menu.css('z-index', 102);
-                /*button.text('<')*/
-                button.eq(0).toggleClass('open')
-                //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
+                        //console.log($(parent))
+                        $(parent).eq(0).toggleClass('nosidebar sidebar')
+                        //              parent.className = 'nosidebar';
+                        $('.cont').each(function () {
+                            $(this).css('z-index', 0)
+                            $(this).css('left', -301)
+                        })
+                    }
+                    else {
+                        $('.toggleButton').each(function () {
+                            /*$(this).text('>') */
 
-            }
-        }
-        else console.log('FAIL: toggle panel');
-    });
+                            //console.log($(this).eq(0).className)
+                            $(this).eq(0).removeClass('open')
+                        })
+                        $('.cont').each(function () {
+                            $(this).css('z-index', 101)
+                        })
+                        menu.css('z-index', 102);
+                        /*button.text('<')*/
+                        button.eq(0).toggleClass('open')
+                        //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
+
+                    }
+                }
+                else console.log('FAIL: toggle panel');
+            });
         }
 
         this.addPanelMenu = function (header) {
 
-            menuNum = contxt.menuNum++;
+            var menuNum = contxt.menuNum++;
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
@@ -560,30 +564,12 @@ var TP = TP || {};
             this.toggleAccordion('navView');
         }
 
-        /*this.colorChange = function(){
-            
-            var f = $.farbtastic('#picker');
-            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').hasClass('selected')) {
-                    TP.Context().view[TP.Context().activeView].setNodesColor(f.color);
-                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "node", TP.Context().view[TP.Context().activeView].getNodesColor());
-                } else if ($('#clinks').hasClass('colorwell') && $('#clinks').hasClass('selected')) {
-                    TP.Context().view[TP.Context().activeView].setLinksColor(f.color);
-                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "link", TP.Context().view[TP.Context().activeView].getLinksColor());
-                } else if ($('#cbg').hasClass('colorwell') && $('#cbg').hasClass('selected')) {
-                    TP.Context().view[TP.Context().activeView].setBgColor(f.color);
-                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "bg", TP.Context().view[TP.Context().activeView].getBgColor());
-                } else if ($('#clabels').hasClass('colorwell') && $('#clabels').hasClass('selected')) {
-                    TP.Context().view[TP.Context().activeView].setLabelsColor(f.color);
-                    objectReferences.VisualizationObject.changeColor(TP.Context().activeView, "label", TP.Context().view[TP.Context().activeView].getLabelsColor());
-                }
-        }*/
-
 
         this.createElements = function(tab, parentId){
             var par = $(parentId)
             for(k in tab){
                 if($("#"+tab[k][1].id).length!=0){
-                    assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
+                    // assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
                 }
                 switch(tab[k][0]){
                     case 0: // select
@@ -673,9 +659,10 @@ var TP = TP || {};
                 param = tab[i][1];
                 evnt = tab[i][2];
 
+                var fam = null;
                 if (param == '') {
                     fam = $('<li/>', {class: 'form'}).appendTo('#' + menu);
-                    button = $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam)
                     $(button).click(evnt.click);
                 } else {
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);
@@ -696,7 +683,8 @@ var TP = TP || {};
         }
 
 
-        this.callbackMenu = function(param, evnt){
+        this.callbackMenu = function (param, evnt) {
+            //assert(true, 'Interface -> call')
             var res = {}
             var key, val, data;
 
@@ -748,7 +736,7 @@ var TP = TP || {};
                 res[key] = $(this).spinner('value')
             })
 
-            console.log(res)
+            //console.log(res)
             evnt.call(res)
         }
 

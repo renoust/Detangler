@@ -42,7 +42,7 @@ var TP = TP || {};
             if (current != null && current.operation != null)
                 current.operation.executeState();
 
-            console.log("current : " + current.name)
+            //console.log("current : " + current.name)
         }
 
         this.backState = function () {
@@ -55,7 +55,7 @@ var TP = TP || {};
                 if (tmp != null)
                     tmp.operation.deleteState();
                 current = tmp.avant;
-                console.log("current : " + current.name);
+                //console.log("current : " + current.name);
                 if (current == null)
                     first = null;
             }

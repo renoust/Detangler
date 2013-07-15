@@ -4,11 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var ViewTemplate = function (id, groupe, svgs, name, type, idAssociation, bouton) {
 
         var __g__ = this;
@@ -107,6 +102,8 @@ var TP = TP || {};
                 __g__.tabLinks[linkType] = new Array();
                 __g__.tabLinks[linkType].push(view);
             }
+            //assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
+            //console.log("tabLinks : ", __g__.tabLinks)
         }
 
 
@@ -148,6 +145,7 @@ var TP = TP || {};
                     __g__.setAssociatedView(tmp2.getType(), tmp2);
 
                 }
+                //console.log(TP.Context().view[__g__.idAssociation]);
             }
 
             if (__g__.typeView == "substrate") {
@@ -165,6 +163,8 @@ var TP = TP || {};
 
             //assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
 
+            var dialogTop = 235;
+            var dialogRight = 260;
             if (__g__.typeView === "substrate") {
                 TP.Context().activeView = __g__.ID;
                 dialogTop = 16;
@@ -174,15 +174,14 @@ var TP = TP || {};
                 dialogTop = 16;
                 dialogRight = 100;
             }
-            else {
-                dialogTop = 235;
-                dialogRight = 260;
-            }
+
+            //console.log("tppppppppppppppppp", dialogTop);
 
             $("<div/>", {id: "zone" + __g__.ID, title: name}).appendTo("html");
 
             __g__.dialog = $("[id=zone" + __g__.ID + "]");
-
+            //console.log(dialog);
+            //console.log('TOTO', __g__.dialog.parent())
             __g__.dialog.dialog({
                 id: "btn-cancel",
                 height: TP.Context().dialogHeight,
@@ -239,6 +238,7 @@ var TP = TP || {};
             __g__.dialog.parent().click(function () {
                 var oldID = TP.Context().activeView
                 TP.Context().activeView = __g__.ID;
+                //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
                     TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
                     TP.Context().InterfaceObject.visuPane(__g__.hashButton, 'update')

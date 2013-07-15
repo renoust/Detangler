@@ -4,7 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var eventHandler = function () {
 
         var __g__ = this;
@@ -51,7 +50,7 @@ var TP = TP || {};
 
             var data = objectStore.getData(elem);
 
-            console.log(data)
+            //console.log(data)
 
             if (data == null) return;
 
@@ -90,10 +89,10 @@ var TP = TP || {};
 
                 //assert(true, "dispatcher")
 
-                data.dispatcher = function (event) {
-                    //event = fixEvent(event);
+                data.dispatcher = function (_event) {
+                    //_event = fixEvent(_event);
 
-                    var handlers = data.handlers[event.type];
+                    var handlers = data.handlers[_event.type];
 
                     //console.log(handlers);
 
@@ -103,11 +102,11 @@ var TP = TP || {};
 
                          for(var n = 0; n < end; n++){
                          if(handlers[n] != null)
-                         handlers[n].call(elem, event);
+                         handlers[n].call(elem, _event);
                          }
                          */
                         if (handlers.available == true)
-                            handlers.call(elem, event);
+                            handlers.call(elem, _event);
                     }
                 };
             }
@@ -115,7 +114,7 @@ var TP = TP || {};
             //assert(true, "avantaddEventListener")
 
 //			if(data.handlers[type].length == 1){
-            assert(true, "addEventListener")
+            //assert(true, "addEventListener")
             if (document.addEventListener) { //for DOM
                 //assert(true, "addEventListener")
                 data.addEventListener(type, data.dispatcher, false);
