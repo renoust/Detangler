@@ -19,8 +19,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
     var GraphDrawing = function (_graph, _svg, currentViewID) {
 
         // g, the return variable
@@ -113,9 +111,9 @@ var TP = TP || {};
         };
 
 
-        g.dragNode = function (event) {
+        g.dragNode = function (_event) {
             var tab1 = [];
-            tab1[0] = event.associatedData.node;
+            tab1[0] = _event.associatedData.node;
             tab1[1] = null;
             tab1[2] = null;
 
@@ -123,8 +121,8 @@ var TP = TP || {};
         }
 
 
-        g.showHideLabelNode = function (event) {
-            var dragTarget = event.associatedData.node;
+        g.showHideLabelNode = function (_event) {
+            var dragTarget = _event.associatedData.node;
             var currentNode = dragTarget.data()[0];
             var labelTarget = g.svg.select("text.node" + currentNode.baseID);
             var nodeTarget = dragTarget.select("circle.node");
@@ -144,8 +142,8 @@ var TP = TP || {};
         };
 
 
-        g.showLabelNode = function (event) {
-            g.svg.selectAll("text.snippet").data([event.associatedData.data]).enter()
+        g.showLabelNode = function (_event) {
+            g.svg.selectAll("text.snippet").data([_event.associatedData.data]).enter()
                 .append("text")
                 .attr("dx", function (dd) {
                     return dd.currentX
@@ -405,7 +403,7 @@ var TP = TP || {};
             });
 
             var delta = 0.00000000000000000001 //to avoid division by 0
-            scale = Math.min.apply(null, [w / (Xminmax[1] - Xminmax[0] + delta), h / (Yminmax[1] - Yminmax[0] + delta)])
+            var scale = Math.min.apply(null, [w / (Xminmax[1] - Xminmax[0] + delta), h / (Yminmax[1] - Yminmax[0] + delta)])
             node.forEach(function (d) {
                 d.x = (d.x - Xminmax[0]) * scale + frame;
                 d.y = (d.y - Yminmax[0]) * scale + frame;
@@ -639,13 +637,13 @@ var TP = TP || {};
 
             var scaleMin = 3.0
             var scaleMax = 12.0
-            console.log("params: ", params)
+            //console.log("params: ", params)
             var parameter = ""
             if (params.metric) parameter = params.metric;
             if (params.scaleMin) scaleMin = params.scaleMin;
             if (params.scaleMax) scaleMax = params.scaleMax;
 
-            console.log("params.metric : ", params.metric)
+            //console.log("params.metric : ", params.metric)
 
             if (parameter == "") return
 
@@ -654,9 +652,9 @@ var TP = TP || {};
             var valMax = null
             g.cGraph.nodes()
                 .forEach(function (n) {
-                    console.log("node:", n)
+                    //console.log("node:", n)
                     val = eval("n." + parameter);
-                    console.log("val:", val)
+                    //console.log("val:", val)
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -710,7 +708,7 @@ var TP = TP || {};
             g.cGraph = _graph
             //console.log(g.cGraph);
             //we would like it better as a parameter
-            assert(false, "turlututu");
+            //assert(false, "turlututu");
             scaleMin = 3.0
             scaleMax = 12.0
 
@@ -1074,7 +1072,7 @@ var TP = TP || {};
                     return true;
                 return false;
             }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             var labels = g.svg.selectAll("text.node").attr("visibility", "visible").style("fill", TP.Context().view[currentViewID].getLabelsColor());
             var labelsArray = []
             var iterArray = []

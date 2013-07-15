@@ -18,11 +18,6 @@
 // interface...
 
 
-
-
-
-
-
 var TulipPosy = function (originalJSON) {
 
     var objectReferences = TP.ObjectReferences();
@@ -142,14 +137,16 @@ var TulipPosy = function (originalJSON) {
         ['Scatter plot', '', {click: function () {
             TP.Context().view[target].getController().sendMessage("drawScatterPlot")
         }}, "Open View"],
+        ['Scatter plot nvd3', '', {click: function () {
+            TP.Context().view[target].getController().sendMessage("drawScatterPlotNVD3")
+        }}, "Open View"],
         ['Data', '', {click: function () {
             objectReferences.VisualizationObject.drawDataBase(target)
-        }}, "Open View"],
+        }}, "Open View"]
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', target)}}],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', target)}}],        
         // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
         // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(target)}}],
-
     ]
 
     var array2 = [
@@ -218,7 +215,7 @@ var TulipPosy = function (originalJSON) {
         }}, "Open View"],
         ['Data', '', {click: function () {
             objectReferences.VisualizationObject.drawDataBase(target1)
-        }}, "Open View"],
+        }}, "Open View"]
         // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',target1)}}],
         // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(target1)}}],
         // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(target1)}}],
@@ -270,11 +267,11 @@ var TulipPosy = function (originalJSON) {
 
     $('div.toggleButton').click(function (e) {
         var src = event.srcElement.parentNode.parentNode;
-        console.log(src)
+        //console.log(src)
         var menuNum = src.id.split('-')[1];
         var menu = $('#menu-' + menuNum);
-        console.log(menu)
-        console.log($(src))
+        //console.log(menu)
+        //console.log($(src))
         var parent = src.parentNode;
         var button = $(this);
         if (parent.className === 'nosidebar') {
@@ -305,7 +302,7 @@ var TulipPosy = function (originalJSON) {
                 $('.toggleButton').each(function () {
                     /*$(this).text('>') */
 
-                    console.log($(this).eq(0).className)
+                    //console.log($(this).eq(0).className)
                     $(this).eq(0).removeClass('open')
                 })
                 $('.cont').each(function () {
@@ -363,9 +360,9 @@ var TulipPosy = function (originalJSON) {
     // if it is a given file we load it normally
     // other wise we load the default function
     if (originalJSON != null && originalJSON != "") {
-        console.log('originalJSON not null', originalJSON)
+        //console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {
-            console.log('query is in json', originalJSON)
+            //console.log('query is in json', originalJSON)
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
             objectReferences.ClientObject.loadData(recievedGraph, target);
         } else if ('file' in originalJSON) {

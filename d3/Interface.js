@@ -11,17 +11,14 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Interface = function () {
-        assert(false, 'Interface')
+        //assert(false, 'Interface')
         var __g__ = this;
         var contxt = TP.Context();
         var objectReferences = TP.ObjectReferences();
 
         this.includeFormParam = function (target) {
-            assert(false, 'Interface -> includeFormParam')
+            //assert(false, 'Interface -> includeFormParam')
             myinput = svg.append("foreignObject")
                 .attr("width", 100)
                 .attr("height", 100)
@@ -40,7 +37,7 @@ var TP = TP || {};
 
 
         this.eraseAllInterface = function (target) {
-            assert(false, 'Interface -> eraseAllInterface')
+            //assert(false, 'Interface -> eraseAllInterface')
             var cGraph = null
             var svg = null
 
@@ -72,7 +69,7 @@ var TP = TP || {};
 
 
         this.selectWeightProperty = function (group) {
-            assert(true, 'Interface -> selectWeightProperty')
+            //assert(true, 'Interface -> selectWeightProperty')
             group.append("foreignObject")
                 .attr("x", 10)
                 .attr("y", 20)
@@ -97,7 +94,7 @@ var TP = TP || {};
 
 
         this.holdSVGInteraction = function (target) {
-            assert(true, 'Interface -> holdSVGInteraction')
+            //assert(true, 'Interface -> holdSVGInteraction')
             objectReferences.InteractionObject.removeZoom(target);
             objectReferences.InteractionObject.removeLasso(target);
         }
@@ -199,7 +196,7 @@ var TP = TP || {};
          .attr("dx", 5)
          .attr("dy", 15)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "Weight property"
          })
          .style("font-family", TP.Context().defaultTextFont)
@@ -213,7 +210,7 @@ var TP = TP || {};
          .attr("dx", 50)
          .attr("dy", 115)
          .textvar TP = TP || {};
-(function () {
+         (function () {
          return "WX"
          })
          .style("font-family", "EntypoRegular")
@@ -250,9 +247,9 @@ var TP = TP || {};
         }
 
 
-        this.addInfoBox = function (event) {
+        this.addInfoBox = function (_event) {
 
-            var node = event.associatedData.node;
+            var node = _event.associatedData.node;
 
             //console.log(d)
             $('#infoNodes').html("<p> NODE INFORMATIONS: </p><ul>");
@@ -266,7 +263,7 @@ var TP = TP || {};
 
 
         this.setCombinedForeground = function (target) {
-            assert(true, 'Interface -> setCombinedForeground')
+            //assert(true, 'Interface -> setCombinedForeground')
             TP.Context().combined_foreground = target;
             var toggleBtnText = ""
             if (target == "substrate") {
@@ -296,7 +293,7 @@ var TP = TP || {};
 
 
         this.toggleCombinedForeground = function (target) {
-            assert(true, 'Interface -> toggleCombinedForeground')
+            //assert(true, 'Interface -> toggleCombinedForeground')
             if (TP.Context().combined_foreground == "substrate") {
                 __g__.setCombinedForeground("catalyst");
             } else if (TP.Context().combined_foreground == "catalyst") {
@@ -311,7 +308,7 @@ var TP = TP || {};
         this.addPanelMenu = function (header) {
             //assert(true,'Interface -> addPanelMenu')
 
-            menuNum = contxt.menuNum++;
+            var menuNum = contxt.menuNum++;
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
             $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
@@ -343,7 +340,7 @@ var TP = TP || {};
             i = 0;
             $('<ul/>', {id: 'nav'}).appendTo(content);
             for (var key in buttons) {
-                console.log("Buttons: ", buttons)
+                //console.log("Buttons: ", buttons)
                 fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
                 $('<a/>', {text: key}).appendTo(fam)
                 $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
@@ -487,9 +484,10 @@ var TP = TP || {};
                 param = tab[i][1];
                 evnt = tab[i][2];
 
+                var fam = null;
                 if (param == '') {
                     fam = $('<li/>', {class: 'form'}).appendTo('#' + menu);
-                    button = $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam)
                     $(button).click(evnt.click);
                 } else {
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);
@@ -530,7 +528,7 @@ var TP = TP || {};
 
 
         this.callbackMenu = function (param, evnt) {
-            assert(true, 'Interface -> call')
+            //assert(true, 'Interface -> call')
             var res = {}
             var key = null;
             var val = null;

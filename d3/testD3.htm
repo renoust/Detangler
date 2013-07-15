@@ -42,11 +42,18 @@
 <!--
 <script src="http://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
--->
 <script src="local/jquery.js"></script>
 <script src="local/jqui.js"></script>
 <script src="local/d3.v2.js"></script>
 <script src="lasso.js"></script>
+-->
+<link rel="stylesheet" href="local/nv.d3.css" type="text/css" media="screen">
+
+<script src="local/jquery-1.9.1.js"></script>
+<script src="local/jquery-ui-1.10.2.js"></script>
+<script src="local/d3.v3.min.js"></script>
+<script src="local/nv.d3.js"></script>
+
 <script>
 
 
@@ -65,114 +72,54 @@
         d3.select(this).attr("value", "toto")
       });
 
-  $var TP = TP || {};
-(function () {
-    $("#dialog").dialog();
+  $("#dialog").dialog();
 
+  nv.addGraph(function () {
+    var chart = nv.models.scatterChart()
+        .showDistX(true)
+        .showDistY(true)
+        .color(d3.scale.category10().range());
+
+    chart.xAxis.tickFormat(d3.format('.02f'))
+    chart.yAxis.tickFormat(d3.format('.02f'))
+
+    d3.select('#dialog').append("svg")
+        .datum(randomData(4, 40))
+        .transition().duration(500)
+        .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
   });
 
 
-  /*
-   $("#dialog").append("dialog").attr("id", "dbox")
-
-   $("#dbox").dialog({
-   autoOpen: false,
-   width: 400,
-   buttons: [
-   {
-   text: "Ok",
-   click: function() {
-   $( this ).dialog( "close" );
-   }
-   },
-   {
-   text: "Cancel",
-   click: function() {
-   $( this ).dialog( "close" );
-   }
-   }
-   ]
-   });
-   */
-  var svg = d3.select("#dialog").data([1]).append("svg:svg")
-      .attr("id", "svgScene")
-      .attr("width", 400)
-      .attr("height", 400)
-
-  var node = svg.selectAll("node").data(data).enter()
-
-  node.append("svg:circle")
-      .attr("class", "node.circle")
-      .attr("cx", function (d, i) {
-        return i * 100;
-      })
-      .attr("cy", function (d, i) {
-        return i * 100;
-      })
-      .attr("r", 5)
-
-  node.append("svg:text")
-      .attr("class", "node.text")
-      .attr("dx", function (d, i) {
-        return 10;
-      })
-      .attr("dy", function (d, i) {
-        return 100;
-      })
-      .text(function (d) {
-        return "@"
-      })
-      .style("fill", "blue").style("font-family", /*"Arial"*/"EntypoRegular").style("font-size", 50)
-
-
-  nodes = d3.selectAll("circle").transition().delay(function (d, i) {
-    return i * 1000
-  })
-      .attr("cx", function (d, i) {
-        console.log("updating");
-        console.log(d);
-        return 300;
-      })
-
-  var myL = lasso(svg);
-
-  svg.on("mouseup", function (d) {
-    console.log("up");
-    //myL.mouseUp(d3.mouse(this))
-  });
-
-  svg.on("mousedown", function (d) {
-    console.log("down");
-    //myL.mouseDown(d3.mouse(this));
-    var e = window.event
-    //alert("CharCode value: "+e.keyCode)
-    console.log("Character: " + e.ctrlKey)//String.fromCharCode(e.charCode))
-  });
-
-  svg.on("mousemove", function (d) {
-    //myL.mouseMove(d3.mouse(this))
-  });
-
-  /*
-   svg.on("keydown", function(d){console.log('d:',d)});
-   svg.onkeypress=function(e){
-   var e=window.event || e
-   alert("CharCode value: "+e.charCode)
-   alert("Character: "+String.fromCharCode(e.charCode))
-   }
+  /**************************************
+   * Simple test data generator
    */
 
+  function randomData(groups, points) { //# groups,# points per group
+    var data = [],
+        shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
+        random = d3.random.normal();
 
-  var charfield = document.getElementById("svgScene")
-  console.log(charfield)
+    for (i = 0; i < groups; i++) {
+      data.push({
+        key: 'Group ' + i,
+        values: []
+      });
 
-  document.onkeydown = function (e) {
-    var e = window.event || e
-    console.log(e.ctrlKey)
-    console.log(e.keyCode)
+      for (j = 0; j < points; j++) {
+        data[i].values.push({
+          x: random(), y: random(), size: Math.random()
+          //, shape: shapes[j % 6]
+        });
+      }
+    }
+
+    return data;
   }
 
-  console.log(d3.selectAll("circle"))
 
 </script>
 <body>

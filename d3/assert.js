@@ -12,7 +12,7 @@ var TP = TP || {};
     };
 
     this.Test = function (name, fn) {
-        console.log("%c" + name + ":", "color: blue");
+        //console.log("%c" + name + ":", "color: blue");
         if (fn !== undefined) fn();
     };
 
@@ -26,7 +26,7 @@ var TP = TP || {};
         }
 
         var elapsed = new Date().getTime() - start;
-        console.log("%cElapsed time: " + elapsed + " on " + iterations + " iteration(s)", "color: blue");
+        //console.log("%cElapsed time: " + elapsed + " on " + iterations + " iteration(s)", "color: blue");
     }
 
 

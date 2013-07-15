@@ -9,12 +9,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var tabTypeEvent = [];
@@ -298,7 +292,7 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.visuPane();
             }
 
-            elem = document.getElementById("bouton" + ID);
+            var elem = document.getElementById("bouton" + ID);
             if (elem) elem.parentNode.removeChild(elem);
             elem = $("div[aria-describedby='zone" + ID + "']");
             //console.log(elem)
@@ -334,7 +328,7 @@ var TP = TP || {};
                 TP.Context().dialogTop = 235;
                 TP.Context().dialogRight = 260;
             }
-            console.log(TP.Context().dialogTop)
+            //console.log(TP.Context().dialogTop)
 
             /****  création du dialog ****/
                 //document.getElementById("container").innerHTML += "<div id='zone" + target + "' title='" + target + "' ></div>";
@@ -365,7 +359,7 @@ var TP = TP || {};
             $("<button/>", {id: "toggle" + ID, text: "Move", style: 'right:15px'}).appendTo(titlebar);
 
 
-            $('#toggle' + ID).button().click(function (event) {
+            $('#toggle' + ID).button().click(function (_event) {
                 var interact = $(this).button("option", "label");
                 if (interact == "Move") {
                     $(this).button("option", "label", "Select");
@@ -380,7 +374,7 @@ var TP = TP || {};
 
             $('#toggle' + ID).attr("idView", ID);
 
-            //$("#toggle"+ID).click(function(event){event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase:event.data}, event]);})
+            //$("#toggle"+ID).click(function_event)_event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase_event.data},_event]);})
 
 
             var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
@@ -593,7 +587,7 @@ var TP = TP || {};
 
                 }
 
-                console.log(TP.Context().view[idAssociation]);
+                //console.log(TP.Context().view[idAssociation]);
 
 
             }

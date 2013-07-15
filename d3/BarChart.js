@@ -2,21 +2,15 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-
     var BarChart = function () {
 
 
         var __g__ = this;
 
-        __g__.mouseoverBarChartRect = function (event) {
-            var targetView = event.associatedData.targetView
-            var obj = event.associatedData.obj
-            var svg = event.associatedData.svg
+        __g__.mouseoverBarChartRect = function (_event) {
+            var targetView =_event.associatedData.targetView
+            var obj =_event.associatedData.obj
+            var svg =_event.associatedData.svg
 
             obj.style('fill', 'red');
             //if(click == 0){
@@ -44,12 +38,12 @@ var TP = TP || {};
             //}			
         }
 
-        __g__.mouseoutBarChartRect = function (event) {
+        __g__.mouseoutBarChartRect = function (_event) {
 
-            var targetView = event.associatedData.targetView;
-            var obj = event.associatedData.obj;
-            var svg = event.associatedData.svg;
-            var tabClick = event.associatedData.tabClick;
+            var targetView =_event.associatedData.targetView;
+            var obj =_event.associatedData.obj;
+            var svg =_event.associatedData.svg;
+            var tabClick =_event.associatedData.tabClick;
 
             var value = obj.data()[0];
 
@@ -77,12 +71,12 @@ var TP = TP || {};
         }
 
 
-        __g__.mouseclickBarChartRect = function (event) {
+        __g__.mouseclickBarChartRect = function (_event) {
 
-            var obj = event.associatedData.obj;
-            var tabClick = event.associatedData.tabClick;
-            var svg = event.associatedData.svg;
-            var targetView = event.associatedData.targetView;
+            var obj =_event.associatedData.obj;
+            var tabClick =_event.associatedData.tabClick;
+            var svg =_event.associatedData.svg;
+            var targetView =_event.associatedData.targetView;
 
             //click = 1;
             var value = obj.data()[0];
@@ -135,11 +129,11 @@ var TP = TP || {};
         }
 
 
-        __g__.drawBarChart = function (event) {
+        __g__.drawBarChart = function (_event) {
 
 
-            var target = event.associatedData.source;
-            var smell = event.associatedData.smell;
+            var target =_event.associatedData.source;
+            var smell =_event.associatedData.smell;
 
 
             var svg = null
@@ -160,21 +154,21 @@ var TP = TP || {};
             }
 
 
-            assert(true, "erreur1");
+            //assert(true, "erreur1");
 
             var id = "" + TP.Context().getIndiceView();
 
-            console.log("iddddddddddddddddddddddd : " + id)
+            //console.log("iddddddddddddddddddddddd : " + id)
 
             TP.Context().view[id] = new TP.ViewBarchart(id, TP.view[target].getGroup(), null,
                 new Array("svg_BarChart", null, width, height, "svg_BarChart_" + smell + "_" + id), "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
 
-            console.log(TP.Context().view[id]);
+            //console.log(TP.Context().view[id]);
 
             TP.Context().view[id].addView();
             TP.Context().view[id].buildLinks();
 
-            assert(true, "erreur2");
+            //assert(true, "erreur2");
 
             var chart = null;
             chart = TP.Context().view[id].getSvg();

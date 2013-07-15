@@ -4,11 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
     var ViewTemplate = function (id, groupe, svgs, name, type, idAssociation, bouton) {
 
         var __g__ = this;
@@ -53,7 +48,7 @@ var TP = TP || {};
                 var end = bouton.length;
 
                 for (var p = 0; p < end; p++) {
-                    console.log(bouton[p][3]);
+                    //console.log(bouton[p][3]);
 
                     if (__g__.hashButton[bouton[p][3]] != null) {
                         __g__.hashButton[bouton[p][3]].push(bouton[p]);
@@ -67,7 +62,7 @@ var TP = TP || {};
             }
 
             if (__g__.typeView === "substrate") {
-                console.log("boutons:", bouton)
+                //console.log("boutons:", bouton)
                 TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashButton, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
                 TP.ObjectReferences().InterfaceObject.visuPane();
@@ -113,8 +108,8 @@ var TP = TP || {};
                 __g__.tabLinks[linkType].push(view);
             }
 
-            assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
-            console.log("tabLinks : ", __g__.tabLinks)
+            //assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
+            //console.log("tabLinks : ", __g__.tabLinks)
 
         }
 
@@ -158,7 +153,7 @@ var TP = TP || {};
 
                 }
 
-                console.log(TP.Context().view[__g__.idAssociation]);
+                //console.log(TP.Context().view[__g__.idAssociation]);
             }
 
             if (__g__.typeView == "substrate") {
@@ -174,8 +169,10 @@ var TP = TP || {};
 
         __g__.createDialog = function () {
 
-            assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
+            //assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
 
+            var dialogTop = 235;
+            var dialogRight = 260;
             if (__g__.typeView === "substrate") {
                 TP.Context().activeView = __g__.ID;
                 dialogTop = 16;
@@ -185,18 +182,14 @@ var TP = TP || {};
                 dialogTop = 16;
                 dialogRight = 100;
             }
-            else {
-                dialogTop = 235;
-                dialogRight = 260;
-            }
 
-            console.log("tppppppppppppppppp", dialogTop);
+            //console.log("tppppppppppppppppp", dialogTop);
 
             $("<div/>", {id: "zone" + __g__.ID, title: name}).appendTo("html");
 
             __g__.dialog = $("[id=zone" + __g__.ID + "]");
             //console.log(dialog);
-            console.log('TOTO', __g__.dialog.parent())
+            //console.log('TOTO', __g__.dialog.parent())
             __g__.dialog.dialog({
                 id: "btn-cancel",
                 height: TP.Context().dialogHeight,
@@ -258,7 +251,7 @@ var TP = TP || {};
             __g__.dialog.parent().click(function () {
                 var oldID = TP.Context().activeView
                 TP.Context().activeView = __g__.ID;
-                console.log("hashbuttons: ", __g__.hashButton)
+                //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
                     TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
                 }
