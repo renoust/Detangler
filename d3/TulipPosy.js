@@ -25,21 +25,9 @@ var TulipPosy = function (originalJSON) {
 
     TP.Context().clearInterface();
 
-    var viewIndex = "" + TP.Context().getIndiceView();
-    var viewIndex1 = "" + TP.Context().getIndiceView();
-    var viewIndex2 = "" + TP.Context().getIndiceView();
-
-    var viewIndexMap = [];
-    var viewIndex1Map = [];
-    var viewIndex2Map = [];
-
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
-    var type1 = "Layout";
-    var type2 = "Measures";
-    var type3 = "Vizualisation";
-    var type4 = "Others";
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
     // types:   0:select    3:textfield     6:text
@@ -69,6 +57,8 @@ var TulipPosy = function (originalJSON) {
             }
         }]
     ];*/
+
+    /*
 
     var paramSizeMap = [
         [4, {id:"sizemap"},{
@@ -107,205 +97,21 @@ var TulipPosy = function (originalJSON) {
         [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
 
 
-
-    var array1 = [
-        /*['TEST', '', {call: function (res) {
-            console.log(res)
-        }}, "Layout"],*/
-        ['Force layout', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: viewIndex})
-        }}, "Layout"],
-        ['Sync layouts', '', {click: function () {
-            objectReferences.ClientObject.syncLayouts(viewIndex)
-        }}, "Layout"],
-        ['MDS layout', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: 'MDS', idView: viewIndex})
-        }}, "Layout"],
-        ['Tulip layout algorithm', tl, {call: function (layout) {
-            TP.Context().view[viewIndex].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: viewIndex})
-        }}, "Layout"],
-
-        ['Induced subgraph', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("sendSelection", {json: objectReferences.ClientObject.getSelection(viewIndex), idView: viewIndex})
-        }}, "Selection"],
-        ['Delete selection', '', {click: function () {
-            objectReferences.InteractionObject.delSelection(viewIndex)
-        }}, "Selection"],
-        ['Toggle selection', '', {click: function () {
-            objectReferences.InteractionObject.toggleSelection(viewIndex)
-        }}, 'Selection'],
-
-        ['Center view', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage('resetView');
-        }}, "View"],
-        ['Reset size', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("resetSize")
-        }}, "View"],
-        ['Hide labels', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("Hide labels")
-        }}, "View"],
-        ['Hide links', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("Hide links")
-        }}, "View"],
-        ['Arrange labels', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("arrangeLabels")
-        }}, "View"],
-        ['Rotation', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("rotateGraph")
-        }}, "View"],
-        ['Size mapping', paramSizeMap, {call: function (scales) {
-            TP.Context().view[viewIndex].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales})
-        }}, "View"],
-        ['zoom in', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-        }}, "View"],
-        ['zoom out', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-        }}, "View"],
-        ['Color settings', colorSettings,null, "View"],
-
-        ['Degree', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: viewIndex})
-        }}, "Measure"],
-        ['Betweenness centrality', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: viewIndex})
-        }}, "Measure"],
-        ['Tulip measure', tl, {call: function (algo) {
-            TP.Context().view[viewIndex].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: viewIndex})
-        }}, "Measure"],
-
-        ['Bipartite analysis', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("analyseGraph", {viewIndex: viewIndex, tabCatalyst: tabCatalyst})
-        }}, "Open View"],
-        ['Horizontal barchart', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("drawBarChart", {smell: 'base'})
-        }}, "Open View"],
-        ['Barchart', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("drawBarChart", {smell: 'rotate'})
-        }}, "Open View"],
-        ['Scatter plot', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("drawScatterPlot")
-        }}, "Open View"],
-        ['Scatter plot nvd3', '', {click: function () {
-            TP.Context().view[viewIndex].getController().sendMessage("drawScatterPlotNVD3")
-        }}, "Open View"],
-        ['Data', '', {click: function () {
-            objectReferences.VisualizationObject.drawDataBase(viewIndex)
-        }}, "Open View"]
-        // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', viewIndex)}}],
-        // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', viewIndex)}}],        
-        // ['b13','node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox()}}],
-        // ['b16','labels forward','',{click:function(){objectReferences.VisualizationObject.bringLabelsForward(viewIndex)}}],
-    ]
-
-    var array2 = [
-
-        ['Force layout', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: viewIndex1})
-        }}, "Layout"],
-        ['Server update layout', '', {click: function () {
-            objectReferences.ClientObject.updateLayout(viewIndex1)
-        }}, "Layout"],
-        ['Tulip layout algorithm', tl, {call: function (layout) {
-            TP.Context().view[target].getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: target1})
-        }}, "Layout"],
-
-        ['Operator ' + TP.Context().tabOperator["catalyst"], '', {click: function () {
-            objectReferences.InteractionObject.toggleCatalystSyncOperator(viewIndex1)
-        }}, "Selection"],
-        ['Toggle selection', '', {click: function () {
-            objectReferences.InteractionObject.toggleSelection(viewIndex1)
-        }}, 'Selection'],
-
-        ['Center view', '', {click: function () {
-            TP.Context().view[target].getController().sendMessage('resetView');
-        }}, "View"],
-        ['Reset size', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("resetSize")
-        }}, "View"],
-        ['Hide labels', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("Hide labels")
-        }}, "View"],
-        ['Hide links', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("Hide links")
-        }}, "View"],
-        ['Arrange labels', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("arrangeLabels")
-        }}, "View"],
-        ['Rotation', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("rotateGraph")
-        }}, "View"],
-        ['Zoom in', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-        }}, "View"],
-        ['Zoom out', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-        }}, "View"],
-
-        ['Size mapping', paramSizeMap, {call: function (scales) {
-            TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: contxt.activeView, scales: scales})
-        }}, "View"],
-
-        ['Color settings', colorSettings, null, "View"],
-        
-
-        ['Degree', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: viewIndex1})
-        }}, "Measure"],
-        ['Betweenness. centrality', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: viewIndex1})
-        }}, "Measure"],
-        ['Weight mapping', '', {click: function (scales) {
-            TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'weight', idView: contxt.activeView, scales: scales})
-        }}, "Measure"],
-        ['Entanglement mapping', '', {click: function (scales) {
-            TP.Context().view[viewIndex1].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: contxt.activeView, scales: scales})
-        }}, "Measure"],
-        ['Tulip measure', tl, {call: function (algo) {
-            TP.Context().view[target].getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: target1})
-        }}, "Measure"],
-
-        ['Horizontal barchart', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("drawBarChart", {smell: 'base'})
-        }}, "Open View"],
-        ['Barchart', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("drawBarChart", {smell: 'rotate'})
-        }}, "Open View"],
-        ['ScatterPlot', '', {click: function () {
-            TP.Context().view[viewIndex1].getController().sendMessage("drawScatterPlot")
-        }}, "Open View"],
-        ['Data', '', {click: function () {
-            objectReferences.VisualizationObject.drawDataBase(viewIndex1)
-        }}, "Open View"]
-        // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',viewIndex1)}}],
-        // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(viewIndex1)}}],
-        // ['b10','Node information','',{click:function(){objectReferences.InterfaceObject.attachInfoBox(viewIndex1)}}],
-        //['b14','ent. color','',{click:function(){objectReferences.VisualizationObject.colorMapping('entanglementIndice', viewIndex1)}}],
-        //['b15','computeMatrix','',{click:function(){objectReferences.VisualizationObject.buildEdgeMatrices()}}],
-    ]
+    */
 
 
-    var myView = new TP.ViewGraph({id:viewIndex, 
-                                   interactorList:array1, 
-                                   name:name + " - substrate", 
-                                   nodeColor:"#a0522d", 
-                                   linkColor:"#808080", 
-                                   backgroundColor:"#FFFFFF", 
-                                   labelColor:"#000000", 
-                                   nodeShape:"rect", 
-                                   type:"substrate"});
-    TP.Context().view[viewIndex].addView();
-    TP.Context().view[viewIndex].buildLinks();
+    var viewGraphSubstrate = new TP.ViewGraphSubstrate({//id:viewIndex, 
+                                                        //interactorList:array1, 
+                                                        name:name + " - substrate", 
+                                                        nodeColor:"#a0522d", 
+                                                        linkColor:"#808080", 
+                                                        backgroundColor:"#FFFFFF", 
+                                                        labelColor:"#000000", 
+                                                        nodeShape:"rect", 
+                                                        type:"substrate"});
+    viewGraphSubstrate.addView();
+    viewGraphSubstrate.buildLinks();
 
-    var tabCatalyst = [viewIndex1, 
-                       array2, 
-                       name + " - catalyst", 
-                       "#4682b4", 
-                       "#808080", 
-                       "#FFFFFF", 
-                       "#000000", 
-                       "circle", 
-                       "catalyst"];
 
     $('#undo').click(function () {
         TP.Context().changeStack.undo();
@@ -323,21 +129,36 @@ var TulipPosy = function (originalJSON) {
         if ('query' in originalJSON) {
             //console.log('query is in json', originalJSON)
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
-            objectReferences.ClientObject.loadData(recievedGraph, viewIndex);
+            TP.ObjectReferences().ClientObject.loadData(recievedGraph, viewGraphSubstrate.getID());
         } else if ('file' in originalJSON) {
-            objectReferences.ClientObject.loadData(originalJSON.file, viewIndex);
-        } else objectReferences.ClientObject.loadData(null, viewIndex);
+            TP.ObjectReferences().ClientObject.loadData(originalJSON.file, viewGraphSubstrate.getID());
+        } else TP.ObjectReferences().ClientObject.loadData(null, viewGraphSubstrate.getID());
     }
     else {
-        objectReferences.ClientObject.loadData(null, viewIndex)
+        TP.ObjectReferences().ClientObject.loadData(null, viewGraphSubstrate.getID())
     }
 
 
     if ($('#analyse').is(':checked')) {
-        TP.Context().view[viewIndex].getController().sendMessage("analyseGraph", {target: viewIndex, tabCatalyst: tabCatalyst});
+                    ['Bipartite analysis', '', {click: function () {
+                __g__.getController().sendMessage("analyseGraph", (function(){
+                    var params = __g__.viewGraphCatalystParameters()
+                    params.idSourceAssociatedView = __g__.getID();
+                    return {viewIndex: __g__.getID(), 
+                            viewGraphCatalystParameters: params}
+                     })())
+            }}, "Open View"],
+
+        viewGraphSubstrate.getController().sendMessage("analyseGraph", (function(){
+                    var params = viewGraphSubstrate.viewGraphCatalystParameters()
+                    params.idSourceAssociatedView = viewGraphSubstrate.getID();
+                    return {viewIndex: viewGraphSubstrate.getID(), 
+                            viewGraphCatalystParameters: params}
+                     })());
+                     //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
     }
     if ($('#sync').is(':checked')) {
-        objectReferences.ClientObject.syncLayouts(viewIndex)
+        TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
     }
 
     //check if Google Chrome browser is used, if not, warn the user

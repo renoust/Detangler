@@ -13,19 +13,19 @@ var TP = TP || {};
     
         //checking parameters
              
-        if (!('id' in parameters) || parameters.id == undefined)
+        if (!('id' in parameters) || parameters.id === undefined)
             parameters.id = String(TP.Context().getIndiceView());
         
-        if (!('name' in parameters) || parameters.name == undefined) 
+        if (!('name' in parameters) || parameters.name === undefined) 
             parameters.name = "View"+id;
         
-        if (!('type' in parameters) || parameters.type == undefined)
+        if (!('type' in parameters) || parameters.type === undefined)
             parameters.type = null;
         
-        if (!('idSourceAssociatedView' in parameters) || parameters.idSourceAssociatedView == undefined)
+        if (!('idSourceAssociatedView' in parameters) || parameters.idSourceAssociatedView === undefined)
             parameters.idSourceAssociatedView = null;
         
-        if(!('interactorList' in parameters) || parameters.interactorList == undefined)
+        if(!('interactorList' in parameters) || parameters.interactorList === undefined)
             parameters.interactorList = null;
         
  

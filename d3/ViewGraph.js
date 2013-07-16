@@ -10,20 +10,20 @@ var TP = TP || {};
 
         var __g__ = new TP.ViewTemplate(parameters);
         
-        if(!('nodeColor' in parameters) || parameters.nodeColor == undefined)
+        if(!('nodeColor' in parameters) || parameters.nodeColor === undefined)
             parameters.nodeColor = "steelblue"
             
-        if(!('linkColor' in parameters) || parameters.linkColor == undefined)
+        if(!('linkColor' in parameters) || parameters.linkColor === undefined)
             parameters.linkColor = "lightgrey"
             
-        if (!('backgroundColor' in parameters) || parameters.backgroundColor == undefined)
+        if (!('backgroundColor' in parameters) || parameters.backgroundColor === undefined)
             parameters.backgroundColor = "white"
 
-        if (!('labelColor' in parameters) || parameters.labelColor == undefined)
+        if (!('labelColor' in parameters) || parameters.labelColor === undefined)
             parameters.labelColor = "black"
             
         //todo rename viewNodes to nodeShape
-        if (!('nodeShape' in parameters) || parameters.nodeShape == undefined)
+        if (!('nodeShape' in parameters) || parameters.nodeShape === undefined)
             parameters.nodeShape = null
          
 

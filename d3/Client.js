@@ -157,16 +157,16 @@ var TP = TP || {};
         // entanglement indices computed.
         this.analyseGraph = function (_event) {
 
-            var idView = _event.associatedData.source;
-            var tabCatalyst = _event.associatedData.tabCatalyst;
+            var idViewSource = _event.associatedData.source;
+            var viewGraphCatalystParameters = _event.associatedData.viewGraphCatalystParameters
 
-            if (TP.Context().view[idView].getType() !== "substrate") {
+            if (TP.Context().view[idViewSource].getType() !== "substrate") {
                 assert(false, "not substrate type");
                 return;
             }
 
 
-            if (TP.Context().view[idView].getAssociatedView("catalyst") == null && tabCatalyst.length != null) {
+            if (TP.Context().view[idViewSource].getAssociatedView("catalyst") == null && Object.keys(viewGraphCatalystParameters).length != null) {
 
                 //assert(false, tabCatalyst[0])
                 //assert(false, tabCatalyst[8])
@@ -174,19 +174,23 @@ var TP = TP || {};
 
                 //console.log(tabCatalyst);
 
-                var myView = new TP.ViewGraph({id:tabCatalyst[0], 
-                                               interactorList:tabCatalyst[1], 
-                                               name:tabCatalyst[2], 
-                                               nodeColor:tabCatalyst[3], 
-                                               linkColor:tabCatalyst[4], 
-                                               backgroundColor:tabCatalyst[5], 
-                                               labelColor:tabCatalyst[6], 
-                                               nodeShape:tabCatalyst[7], 
-                                               type:tabCatalyst[8], 
-                                               idSourceAssociatedView:idView});
-                                               
-                TP.Context().view[tabCatalyst[0]].buildLinks();
-                TP.Context().view[tabCatalyst[0]].addView();
+                /*
+                var myView = new TP.ViewGraphCatalyst({id:tabCatalyst[0], 
+                                                       name:tabCatalyst[2], 
+                                                       nodeColor:tabCatalyst[3], 
+                                                       linkColor:tabCatalyst[4], 
+                                                       backgroundColor:tabCatalyst[5], 
+                                                       labelColor:tabCatalyst[6], 
+                                                       nodeShape:tabCatalyst[7], 
+                                                       type:tabCatalyst[8], 
+                                                       idSourceAssociatedView:idView});
+                 */                              
+
+                var myView = new TP.ViewGraphCatalyst(viewGraphCatalystParameters);
+
+
+                myView.buildLinks();
+                myView.addView();
 
             }
 
@@ -194,7 +198,7 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
-                target: idView,//'substrate',
+                target: idViewSource,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
 
@@ -203,7 +207,7 @@ var TP = TP || {};
             //console.log(TP.Context().view[idView]);
             //console.log(TP.Context().view[idView].getController());
 
-            TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
+            TP.Context().view[idViewSource].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
 
         }
 

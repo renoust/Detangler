@@ -9,7 +9,7 @@ var TP = TP || {};
         
         var __g__ = new TP.ViewTemplate(parameters);
 
-        if (!('typeBarchart' in parameters) || parameters.typeBarchart == undefined)
+        if (!('typeBarchart' in parameters) || parameters.typeBarchart === undefined)
             parameters.typeBarchart = 'barchart'
 
         __g__.typeBarChart = parameters.typeBarchart;
