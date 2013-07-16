@@ -3,7 +3,7 @@
 var TP = TP || {};
 (function () {
 
-    var StateTree = function () {
+    var StateGraph = function () {
 
         var __g__ = this;
 
@@ -11,7 +11,7 @@ var TP = TP || {};
         var rootP = {};
         var saveState = new Object();
 
-        __g__.getStateTree = function () {
+        __g__.getStateGraph = function () {
             return hashTabNode;
         }
 
@@ -202,5 +202,5 @@ var TP = TP || {};
 
         return __g__;
     }
-    TP.StateTree = StateTree;
+    TP.StateGraph = StateGraph;
 })(TP);

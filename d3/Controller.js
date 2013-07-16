@@ -11,27 +11,27 @@ var TP = TP || {};
         var listenerState = null;
         var typeC = null;
 
-        var StateTree = null;
+        var StateGraph = null;
         var eventHandlerObject = null;
 
         var currentState = null;
-		
-		
-		__g__.getElem = function()
-		{
-			console.log("curent view's listener : ", eventHandlerObject.getElem(listenerState));
-		}
-		
-		__g__.getStateTree = function()
-		{
-			return StateTree;
-		}
-		
-		__g__.getListenerState = function()
-		{
-			return listenerState;
-		}
-		
+
+
+        __g__.getElem = function()
+        {
+            console.log("curent view's listener : ", eventHandlerObject.getElem(listenerState));
+        }
+        
+        __g__.getStateGraph = function()
+        {
+            return StateGraph;
+        }
+        
+        __g__.getListenerState = function()
+        {
+            return listenerState;
+        }
+        
         __g__.addEvent = function (type, fn) {
             eventHandlerObject.addEvent(listenerState, type, fn);
         }
@@ -39,12 +39,12 @@ var TP = TP || {};
         __g__.removeEvent = function (type) {
             eventHandlerObject.removeEvent(listenerState, type);
         }
-		
-		__g__.goBackEvent = function(nameEvent)
-		{
-			eventHandlerObject.goBackEvent(listenerState, nameEvent)
-		}
-		
+        
+        __g__.goBackEvent = function(nameEvent)
+        {
+            eventHandlerObject.goBackEvent(listenerState, nameEvent)
+        }
+        
         __g__.addStates = function () {
 
             if (typeC === "view") {
@@ -65,7 +65,7 @@ var TP = TP || {};
         	if(targetView != null){
         		var view = TP.Context().view[targetView];
         		if(view != null){
-        			sGraph = view.getController().getStateTree();
+        			sGraph = view.getController().getStateGraph();
         			listenerName = view.getController().getListenerState();
         		}
         		else{
@@ -74,19 +74,19 @@ var TP = TP || {};
         		}
         	}
         	else{
-        		sGraph = StateTree;
+        		sGraph = StateGraph;
         		listenerName = listenerState;
         	}
         	
         	if(sGraph != null && listenerName != null){
         	
-	            console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
-	            sGraph.addState(node, nodeRoot, useless, activate);
-	            
-	            if(targetView != null)
-	            	TP.Context().view[targetView].getController().addEvent(node.name, node.func);
-	            else
-	               	__g__.addEvent(node.name, node.func);
+                console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
+                sGraph.addState(node, nodeRoot, useless, activate);
+                
+                if(targetView != null)
+                	TP.Context().view[targetView].getController().addEvent(node.name, node.func);
+                else
+                   	__g__.addEvent(node.name, node.func);
 
            	}
            	else{
@@ -98,16 +98,16 @@ var TP = TP || {};
 
         __g__.deleteState = function(nameState)
         {
-            StateTree.deleteState(nameState);			
+            StateGraph.deleteState(nameState);			
         }
         
         __g__.goBackState = function(nameState){
-            StateTree.goBackState(nameState);
+            StateGraph.goBackState(nameState);
         }
         
 
         __g__.getInfoState = function (name) {
-            return StateTree.getInfoState(name);
+            return StateGraph.getInfoState(name);
         }
 
         __g__.isActivate = function (name) {
@@ -115,11 +115,11 @@ var TP = TP || {};
         }
 
         __g__.enableState = function (state) {
-            StateTree.enableState(state);
+            StateGraph.enableState(state);
         }
 
         __g__.disableState = function (state) {
-            StateTree.disableState(state);
+            StateGraph.disableState(state);
         }
 
         __g__.setCurrentState = function (name) {
@@ -136,19 +136,19 @@ var TP = TP || {};
             listenerState = "handlerState" + nameC;
             typeC = typeController;
 
-            StateTree = new TP.StateTree();
+            StateGraph = new TP.StateGraph();
             eventHandlerObject = new TP.eventHandler();
             currentState = null;
 
 
             $("#Controller").append('<div id=' + listenerState + '></div>');
 
-            //StateTree.initStateTree(typeC);
+            //StateGraph.initStateTree(typeC);
             __g__.addStates();
             //console.log(listenerState);
             eventHandlerObject.addElement(listenerState, $("[id=" + listenerState + "]")[0]);
 
-            var tabInit = StateTree.getStateTree();
+            var tabInit = StateGraph.getStateGraph();
 
             //console.log("tabInit : ");
             //console.log(tabInit);
@@ -173,7 +173,7 @@ var TP = TP || {};
 
             //console.log("currentState : "+currentState)
 
-            var State = StateTree.getInfoState(cState);
+            var State = StateGraph.getInfoState(cState);
 			
             if (State == null)
                 return false;
@@ -199,19 +199,19 @@ var TP = TP || {};
         }
 
         __g__.isBindingToAll = function (cState) {
-            var State = StateTree.getInfoState(cState);
+            var State = StateGraph.getInfoState(cState);
             return State.bindings["all"] !== undefined;
         }
 
         __g__.transitionState = function (cState) {
-            var State = StateTree.getInfoState(cState);
+            var State = StateGraph.getInfoState(cState);
 
             if (State.useless !== true)
                 currentState = cState;
         }
 
         __g__.getTree = function () {
-            return StateTree.getStateTree();
+            return StateGraph.getStateGraph();
         }
 
         __g__.sendMessage = function (messageName, object, targetController, source) //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principale"
@@ -299,7 +299,7 @@ var TP = TP || {};
             listenerState = null;
             typeC = null;
 
-            StateTree = null;
+            StateGraph = null;
             eventHandlerObject = null;
 
             currentState = null;
