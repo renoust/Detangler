@@ -4,16 +4,23 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewNVD3Template = function (id, bouton, name, type, idAssociation) {
+    var ViewNVD3Template = function (parameters){//id, bouton, name, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
+        //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
+
+        var __g__ = new TP.ViewTemplate({id:parameters.id, 
+                                         name:parameters.name, 
+                                         type:parameters.type, 
+                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
+                                         interactorList:parameters.interactorList});
+
 
         __g__.addView = function () {
 
             if (__g__.controller != null)
                 __g__.controller.initListener(__g__.ID, "view");
 
-            __g__.buttonTreatment();
+            __g__.interactorListTreatment();
             __g__.createDialog();
 
 
@@ -66,8 +73,10 @@ var TP = TP || {};
 
             var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewNVD3Template(id, null,
-                new Array("svg_NVD3", null, width, height, "svg_NVD3_" + id), "NVD3_" + TP.view[target].getName(), "nvd3", target);
+            TP.Context().view[id] = new TP.ViewNVD3Template({id:id, 
+                                                            name:"NVD3_" + TP.view[target].getName(), 
+                                                            type:"nvd3", 
+                                                            idSourceAssociatedView:target});
             TP.Context().view[id].addView();
 
             //TP.Context().view[id].buildLinks();

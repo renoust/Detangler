@@ -2,11 +2,22 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewBarchart = function (id, bouton, name, type, idAssociation, typeBarchart) {
+    //typeBarchart
+    var ViewBarchart = function (parameters){//id, bouton, name, type, idAssociation, typeBarchart) {
 
-        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
+        //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
-        __g__.typeBarChart = typeBarchart;
+        if (!('typeBarchart' in parameters))
+            parameters.typeBarchart = 'barchart'
+        
+        var __g__ = new TP.ViewTemplate({id:parameters.id, 
+                                         name:parameters.name, 
+                                         type:parameters.type, 
+                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
+                                         interactorList:parameters.interactorList});
+
+
+        __g__.typeBarChart = parameters.typeBarchart;
 
 		__g__.updateEventHandler = new TP.UpdateEventHandler("barchart", __g__.ID);
 
@@ -19,7 +30,7 @@ var TP = TP || {};
             if (__g__.controller != null)
                 __g__.controller.initListener(__g__.ID, "view");
 
-            __g__.buttonTreatment();
+            __g__.interactorListTreatment();
             __g__.createDialog();
 
             __g__.svg = d3.select("#zone" + __g__.ID)

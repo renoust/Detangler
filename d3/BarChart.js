@@ -161,8 +161,11 @@ var TP = TP || {};
 
             //console.log("iddddddddddddddddddddddd : " + id)
 
-            TP.Context().view[id] = new TP.ViewBarchart(id, null,
-                "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
+            TP.Context().view[id] = new TP.ViewBarchart({id:id,
+                                                         name:"BarChart_" + smell + "_" + TP.view[target].getName(), 
+                                                         type:"barchart", 
+                                                         idSourceAssociatedView:target, 
+                                                         typeBarchart:smell});
 
             //console.log(TP.Context().view[id]);
 

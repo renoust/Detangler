@@ -74,6 +74,17 @@ var TP = TP || {};
         __g__.tabOperator[1] = "OR";
 
 
+        __g__.dataTypes = {none:"NONE",
+                           substrate:"SUBSTRATE",
+                           catalyst:"CATALYST"
+                           }
+        
+        __g__.viewTypes = {substrate:"SUBSTRATE",
+                           catalyst:"CATALYST",
+                           barchart:"BARCHART"            
+        }
+        
+
         __g__.getViewGraph = function (viewID) {
             return __g__.tabGraph["graph_" + viewID];
         };

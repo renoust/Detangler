@@ -3,17 +3,41 @@
 var TP = TP || {};
 (function () {
 
-    var ViewGraph = function (id, bouton, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+    // {id:id, name:name, type:type, idSourceAssociatedView:idSourceAssociatedView, interactorList:interactorList}
+    var ViewGraph = function (parameters) {
+        
+        //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
+        
+        if(!('nodeColor' in parameters))
+            parameters.nodeColor = "steelblue"
+            
+        if(!('linkColor' in parameters))
+            parameters.linkColor = "lightgrey"
+            
+        if (!('backgroundColor' in parameters))
+            parameters.backgroundColor = "white"
 
-        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
+        if (!('labelColor' in parameters))
+            parameters.labelColor = "black"
+            
+        //todo rename viewNodes to nodeShape
+        if (!('nodeShape' in parameters))
+            parameters.nodeShape = null
+         
+        var __g__ = new TP.ViewTemplate({id:parameters.id, 
+                                         name:parameters.name, 
+                                         type:parameters.type, 
+                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
+                                         interactorList:parameters.interactorList});
 
-        __g__.nodesColor = nodesC;
-        __g__.linksColor = linksC;
-        __g__.bgColor = bgC;
-        __g__.labelsColor = labelC;
-        __g__.viewNodes = null;
+        __g__.nodesColor = parameters.nodeColor;
+        __g__.linksColor = parameters.linkColor;
+        __g__.bgColor = parameters.backgroundColor;
+        __g__.labelsColor = parameters.labelColor;
+        
+        __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;
-        __g__.DataTranslation = null;
+        __g__.dataTranslation = null;
 
         __g__.selectMode = null;
         __g__.moveMode = null;
@@ -34,11 +58,11 @@ var TP = TP || {};
         }
 
         __g__.getDataTranslation = function () {
-            return __g__.DataTranslation;
+            return __g__.dataTranslation;
         }
 
         __g__.setDataTranslation = function (value) {
-            __g__.DataTranslation = value;
+            __g__.dataTranslation = value;
         }
 
 
@@ -150,7 +174,7 @@ var TP = TP || {};
                 __g__.controller.initListener(__g__.ID, "view");
 
             //TP.Context().setStypeEventByDefault(ID);
-            __g__.buttonTreatment();
+            __g__.interactorListTreatment();
 
             var elem = document.getElementById("bouton" + __g__.ID);
             if (elem) elem.parentNode.removeChild(elem);
@@ -199,12 +223,10 @@ var TP = TP || {};
             function add() {
                 if (__g__.ID != null) {
 
-                    if (view_nodes != null)
-                        __g__.viewNodes = view_nodes;
-                    else
+                    if (__g__.viewNodes == null)
                         __g__.viewNodes = "rect";
 
-                    __g__.DataTranslation = [0, 0];
+                    __g__.dataTranslation = [0, 0];
                     //TP.Context().tabNodeColor[target] = nodesC;
                     //TP.Context().tabLinkColor[target] = linksC;
                     //TP.Context().tabBgColor[target] = bgC;
@@ -261,7 +283,7 @@ var TP = TP || {};
             __g__.labelsColor = null;
             __g__.viewNodes = null;
             __g__.lasso = null;
-            __g__.DataTranslation = null;
+            __g__.dataTranslation = null;
 
             __g__.selectMode = null;
             __g__.moveMode = null;

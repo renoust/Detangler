@@ -174,7 +174,16 @@ var TP = TP || {};
 
                 //console.log(tabCatalyst);
 
-                TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], idView);
+                TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph({id:tabCatalyst[0], 
+                                                                      interactorList:tabCatalyst[1], 
+                                                                      name:tabCatalyst[2], 
+                                                                      nodeColor:tabCatalyst[3], 
+                                                                      linkColor:tabCatalyst[4], 
+                                                                      backgroundColor:tabCatalyst[5], 
+                                                                      labelColor:tabCatalyst[6], 
+                                                                      nodeShape:tabCatalyst[7], 
+                                                                      type:tabCatalyst[8], 
+                                                                      idSourceAssociatedView:idView});
                 TP.Context().view[tabCatalyst[0]].buildLinks();
                 TP.Context().view[tabCatalyst[0]].addView();
 
