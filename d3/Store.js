@@ -48,7 +48,7 @@ var TP = TP || {};
 
         this.removeData = function (name) {
 
-            cache[name] = null; //provisory. Later, different object could have their own delete methode.
+            delete cache[name]; //provisory. Later, different object could have their own delete methode.
 
         }
 
