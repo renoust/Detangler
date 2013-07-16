@@ -4,7 +4,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var eventHandler = function () {
 
         var __g__ = this;
@@ -14,10 +13,10 @@ var TP = TP || {};
         var saveEvent = new Object();
 
 
-		__g__.getElem = function(name)
-		{
-			return objectStore.getData(name);
-		}
+        __g__.getElem = function(name)
+        {
+            return objectStore.getData(name);
+        }
 
         __g__.setMessAvailable = function (elem, type) {
             var data = objectStore.getData(elem);
@@ -57,14 +56,14 @@ var TP = TP || {};
 
             var data = objectStore.getData(elem);
 
-            console.log(data)
+            //console.log(data)
 
             if (data == null) return;
 
             if (!data.handlers) data.handlers = {};
 
-			if(saveEvent[type] != null)
-				delete saveEvent[type];
+            if(saveEvent[type] != null)
+                delete saveEvent[type];
 
             if (!data.handlers[type])
             //data.handlers[type] = [];
@@ -99,10 +98,10 @@ var TP = TP || {};
 
                 //assert(true, "dispatcher")
 
-                data.dispatcher = function (event) {
-                    //event = fixEvent(event);
+                data.dispatcher = function (_event) {
+                    //_event = fixEvent(_event);
 
-                    var handlers = data.handlers[event.type];
+                    var handlers = data.handlers[_event.type];
 
                     //console.log(handlers);
 
@@ -112,11 +111,11 @@ var TP = TP || {};
 
                          for(var n = 0; n < end; n++){
                          if(handlers[n] != null)
-                         handlers[n].call(elem, event);
+                         handlers[n].call(elem, _event);
                          }
                          */
                         if (handlers.available == true)
-                            handlers.call(elem, event);
+                            handlers.call(elem, _event);
                     }
                 };
             }
@@ -124,7 +123,7 @@ var TP = TP || {};
             //assert(true, "avantaddEventListener")
 
 //			if(data.handlers[type].length == 1){
-            assert(true, "addEventListener")
+            //assert(true, "addEventListener")
             if (document.addEventListener) { //for DOM
                 //assert(true, "addEventListener")
                 data.addEventListener(type, data.dispatcher, false);
@@ -148,7 +147,7 @@ var TP = TP || {};
             }
 
             var data = objectStore.getData(elem);
-			/*
+            /*
             if (typeof id === "number") {
                 var handlers = data.handlers[type];
 
@@ -183,14 +182,14 @@ var TP = TP || {};
                     data.detachEvent("on" + type, data.dispatcher);
                 }
             }*/
-			
-			
-			if(data.handlers[type] != null)
-			{
-				saveEvent[type] = data.handlers[type];
-				
-				delete data.handlers[type];
-				
+
+
+            if(data.handlers[type] != null)
+            {
+                saveEvent[type] = data.handlers[type];
+
+                delete data.handlers[type];
+
                 if (document.removeEventListener) {
                     data.removeEventListener(type, data.dispatcher, false);
                 }
@@ -198,9 +197,9 @@ var TP = TP || {};
                 if (document.detachEvent) {
                     data.detachEvent("on" + type, data.dispatcher);
                 }
-                				
-			}
-			
+                
+            }
+
             if (isEmpty(data.handlers)) {
                 delete data.handlers;
                 delete data.dispatcher;

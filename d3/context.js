@@ -8,10 +8,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
     var Context = function () {
         var __g__ = this;
 
@@ -88,7 +84,12 @@ var TP = TP || {};
             return tmp;
         };
 
-        __g__.GroupOfView = new Object();
+
+        __g__.registerView = function (viewInstance)
+        {
+            var viewID = String(__g__.getIndiceView());
+            __g__.view[viewID] = viewInstance;
+        }
 
 
         __g__.clearInterface = function () {
@@ -126,22 +127,22 @@ var TP = TP || {};
         }
 
         __g__.initStates = function () {
-            assert(true, "type of controller principal");
+            //assert(true, "type of controller principal");
 
-            __g__.controller.addState({name: "callLayoutSendQuery", bindings: null, func: function (event) {/*assert(true, "callLayoutSendQuery");*/
-                TP.Client().callLayoutSendQuery(event);
+            __g__.controller.addState({name: "callLayoutSendQuery", bindings: null, func: function (_event) {/*assert(true, "callLayoutSendQuery");*/
+                TP.Client().callLayoutSendQuery(_event);
             }}, "all");
-            __g__.controller.addState({name: "selectionSendQuery", bindings: null, func: function (event) {/*assert(true, "selectionSendQuery");*/
-                TP.Client().selectionSendQuery(event);
+            __g__.controller.addState({name: "selectionSendQuery", bindings: null, func: function (_event) {/*assert(true, "selectionSendQuery");*/
+                TP.Client().selectionSendQuery(_event);
             }}, "all");
-            __g__.controller.addState({name: "FloatAlgorithmSendQuery", bindings: null, func: function (event) {/*assert(true, "FloatAlgorithmSendQuery");*/
-                TP.Client().FloatAlgorithmSendQuery(event);
+            __g__.controller.addState({name: "FloatAlgorithmSendQuery", bindings: null, func: function (_event) {/*assert(true, "FloatAlgorithmSendQuery");*/
+                TP.Client().FloatAlgorithmSendQuery(_event);
             }}, "all");
-            __g__.controller.addState({name: "analyseGraphSendQuery", bindings: null, func: function (event) {/*assert(true, "analyseGraphSendQuery");*/
-                TP.Client().analyseGraphSendQuery(event);
+            __g__.controller.addState({name: "analyseGraphSendQuery", bindings: null, func: function (_event) {/*assert(true, "analyseGraphSendQuery");*/
+                TP.Client().analyseGraphSendQuery(_event);
             }}, "all");
-            __g__.controller.addState({name: "mouseoverInfoBox", bindings: null, func: function (event) {/*assert(true, "mouseoverInfoBox");*/
-                TP.Interface().addInfoBox(event);
+            __g__.controller.addState({name: "mouseoverInfoBox", bindings: null, func: function (_event) {/*assert(true, "mouseoverInfoBox");*/
+                TP.Interface().addInfoBox(_event);
             }}, "all");
         }
 

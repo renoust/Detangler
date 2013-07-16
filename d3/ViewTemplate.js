@@ -4,16 +4,10 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
-
-
-    var ViewTemplate = function (id, groupe, svgs, name, type, idAssociation, bouton) {
+    var ViewTemplate = function (id, name, type, idAssociation, bouton) {
 
         var __g__ = this;
 
-        __g__.tabDataSvg = svgs;
         __g__.controller = new TP.Controller();
         __g__.tabLinks = new Object();
         __g__.graphDrawing = null;
@@ -26,7 +20,6 @@ var TP = TP || {};
         __g__.dialog = null;
         __g__.titlebar = null;
         __g__.idAssociation = idAssociation;
-        __g__.viewGroup = groupe;
 
         var sourceSelection = null;
         var targetSelection = null;
@@ -53,8 +46,6 @@ var TP = TP || {};
                 var end = bouton.length;
 
                 for (var p = 0; p < end; p++) {
-                    console.log(bouton[p][3]);
-
                     if (__g__.hashButton[bouton[p][3]] != null) {
                         __g__.hashButton[bouton[p][3]].push(bouton[p]);
                     }
@@ -62,22 +53,15 @@ var TP = TP || {};
                         __g__.hashButton[bouton[p][3]] = [];
                         __g__.hashButton[bouton[p][3]].push(bouton[p]);
                     }
-
                 }
             }
 
             if (__g__.typeView === "substrate") {
-                console.log("boutons:", bouton)
                 TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashButton, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
-                TP.ObjectReferences().InterfaceObject.visuPane();
+                TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashButton,'create');
+                TP.ObjectReferences().InterfaceObject.togglePanelMenu();
             }
-
-
-        }
-
-        __g__.getGroup = function () {
-            return __g__.viewGroup;
         }
 
         __g__.getSvg = function () {
@@ -112,10 +96,8 @@ var TP = TP || {};
                 __g__.tabLinks[linkType] = new Array();
                 __g__.tabLinks[linkType].push(view);
             }
-
-            assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
-            console.log("tabLinks : ", __g__.tabLinks)
-
+            //assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
+            //console.log("tabLinks : ", __g__.tabLinks)
         }
 
 
@@ -157,10 +139,10 @@ var TP = TP || {};
                     __g__.setAssociatedView(tmp2.getType(), tmp2);
 
                 }
-
-                console.log(TP.Context().view[__g__.idAssociation]);
+                //console.log(TP.Context().view[__g__.idAssociation]);
             }
 
+            /*
             if (__g__.typeView == "substrate") {
                 TP.Context().GroupOfView[__g__.viewGroup] = [];
                 TP.Context().GroupOfView[__g__.viewGroup]["substrate"] = __g__;
@@ -168,14 +150,16 @@ var TP = TP || {};
             else {
                 TP.Context().GroupOfView[__g__.viewGroup][__g__.typeView] = __g__;
             }
-
+            */
         }
 
 
         __g__.createDialog = function () {
 
-            assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
+            //assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
 
+            var dialogTop = 235;
+            var dialogRight = 260;
             if (__g__.typeView === "substrate") {
                 TP.Context().activeView = __g__.ID;
                 dialogTop = 16;
@@ -185,18 +169,14 @@ var TP = TP || {};
                 dialogTop = 16;
                 dialogRight = 100;
             }
-            else {
-                dialogTop = 235;
-                dialogRight = 260;
-            }
 
-            console.log("tppppppppppppppppp", dialogTop);
+            //console.log("tppppppppppppppppp", dialogTop);
 
             $("<div/>", {id: "zone" + __g__.ID, title: name}).appendTo("html");
 
             __g__.dialog = $("[id=zone" + __g__.ID + "]");
             //console.log(dialog);
-            console.log('TOTO', __g__.dialog.parent())
+            //console.log('TOTO', __g__.dialog.parent())
             __g__.dialog.dialog({
                 id: "btn-cancel",
                 height: TP.Context().dialogHeight,
@@ -226,10 +206,8 @@ var TP = TP || {};
 
                 var fullheight = $('#container').height() - 2;
                 var fullwidth = $('#container').width() - 3;
-                //console.log(dialog.parent().width() + " - " + fullwidth);
-                //console.log(dialog.parent());
                 if (__g__.dialog.parent().width() != fullwidth) {
-                    //console.log(1);
+
                     __g__.dialog.dialog({
                         width: fullwidth,
                         height: fullheight,
@@ -237,16 +215,13 @@ var TP = TP || {};
                     });
                 }
                 else {
-                    //console.log(2);
+
                     __g__.dialog.dialog({
                         width: TP.Context().dialogWidth,
                         height: TP.Context().dialogHeight,
                         position: "right-" + dialogRight + " top+" + dialogTop,
                     });
                 }
-                //console.log(TP.Context().dialogTop);
-
-                //$(this).height()=fullheight;
             });
 
 
@@ -258,9 +233,10 @@ var TP = TP || {};
             __g__.dialog.parent().click(function () {
                 var oldID = TP.Context().activeView
                 TP.Context().activeView = __g__.ID;
-                console.log("hashbuttons: ", __g__.hashButton)
+                //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
                     TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
+                    TP.Context().InterfaceObject.visuPane(__g__.hashButton, 'update')
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
                 TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
@@ -268,55 +244,47 @@ var TP = TP || {};
                     $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 })
                 __g__.titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
-
-
-                /*console.log($.jPicker.List[0].color.active.val('hex'), __g__.nodesColor)
-                 $.jPicker.List[0].color.active.val('hex', __g__.nodesColor);
-                 $.jPicker.List[1].color.active.val('hex', __g__.linksColor);
-                 $.jPicker.List[2].color.active.val('hex', __g__.bgColor);*/
-
-                //TP.ObjectReferences().Interface().addInfoButton(ID);
             });
 
             $("#zone" + __g__.ID).parent().appendTo("#container")
 
         }
 
-			__g__.updateOtherViews = function(obj, message){ //propagation of updateEvent
+            __g__.updateOtherViews = function(obj, message){ //propagation of updateEvent
 
-				console.log("updateOtherViews")
-				
-				var tabLinks = __g__.getTabLinks();	
-				
-				var data = (obj.associatedData.data != null) ? obj.associatedData.data:null;
-				var source = obj.associatedData.source;
-					
-				for(var key in tabLinks)
-				{
-					for(var i = 0; i < tabLinks[key].length; i++)
-					{
-						if(tabLinks[key][i].getID() != source){ //we check if the view we are going to send message isn't the source view'
-							
-							//console.log("idDest : "+tabLinks[key][i].getID());
-							//console.log("idSource : "+obj.associatedData.target);
-							
-							//check sended Data
-							
-							__g__.controller.sendMessage("updateView", {type:obj.associatedData.type, data:data}, tabLinks[key][i].getID());		
-						}
-					}
-				}
-			}
-	   
+                console.log("updateOtherViews")
 
-			__g__.modifUpdate = null;
-			
-	   
-	   
-		   __g__.updateView = function(event){
-		   		__g__.modifUpdate();
-		   		__g__.updateOtherViews(event, true);
-		   }  	
+                var tabLinks = __g__.getTabLinks();	
+
+                var data = (obj.associatedData.data != null) ? obj.associatedData.data:null;
+                var source = obj.associatedData.source;
+
+                for(var key in tabLinks)
+                {
+                    for(var i = 0; i < tabLinks[key].length; i++)
+                    {
+                        if(tabLinks[key][i].getID() != source){ //we check if the view we are going to send message isn't the source view'
+                            
+                            //console.log("idDest : "+tabLinks[key][i].getID());
+                            //console.log("idSource : "+obj.associatedData.target);
+
+                            //check sended Data
+                            
+                            __g__.controller.sendMessage("updateView", {type:obj.associatedData.type, data:data}, tabLinks[key][i].getID());
+                            }
+                    }
+                }
+            }
+   
+
+            __g__.modifUpdate = null;
+
+   
+   
+           __g__.updateView = function(event){
+                __g__.modifUpdate();
+                __g__.updateOtherViews(event, true);
+           }
 
         __g__.removeViewTemplate = function () {
 

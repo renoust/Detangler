@@ -2,7 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
     var stateSelect = function (args) {
 
         var __g__ = this;

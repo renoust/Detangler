@@ -1,6 +1,7 @@
 <html>
 <head>
   <script src="local/editablegrid-2.0.1.js"></script>
+
   <link rel="stylesheet" href="css/editablegrid-2.0.1.css" type="text/css" media="screen">
 
   <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
@@ -9,12 +10,16 @@
   <link rel="stylesheet" href="css/style.css" type="text/css">
   <link rel="stylesheet" href="css/menu.css" type="text/css">
 
+  <link rel="stylesheet" href="local/nv.d3.css" type="text/css" media="screen">
+
+
   <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
   <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
   <script type="text/javascript" src="local/d3.v3.min.js"></script>
   <script type="text/javascript" src="local/jpicker-1.1.6.min.js"></script>
   <script type="text/javascript" src="local/farbtastic.js"></script>
   <script type="text/javascript" src="local/colorbrewer.js"></script>
+  <script type="text/javascript" src="local/nv.d3.js"></script>
 
   <script type="text/javascript" src="DataTreatment.js"></script>
   <script type="text/javascript" src="UpdateEventHandler.js"></script>
@@ -33,6 +38,7 @@
   <script type="text/javascript" src="ViewBarchart.js"></script>
   <script type="text/javascript" src="ViewGraph.js"></script>
   <script type="text/javascript" src="ViewScatterPlot.js"></script>
+  <script type="text/javascript" src="ViewNVD3.js"></script>
   <script type="text/javascript" src="ViewTemplate.js"></script>
   <script type="text/javascript" src="context.js"></script>
   <script type="text/javascript" src="eventHandler.js"></script>
@@ -44,7 +50,7 @@
   <script type="text/javascript" src="stateSelect.js"></script>
   <script type="text/javascript" src="tools.js"></script>
   <script type="text/javascript" src="assert.js"></script>
-  <script type="text/javascript" src="View.js"></script>
+  <script type="text/javascript" src="View.js"></script> 
   <script type="text/javascript" src="TulipPosy.js"></script>
 
 
@@ -54,7 +60,7 @@
 <script>
   // This function removes an element of the page by its id
   function remove(id) {
-    elem = document.getElementById(id);
+    var elem = document.getElementById(id);
     if (elem)
       return elem.parentNode.removeChild(elem);
     else
@@ -76,7 +82,7 @@
         $("ul.submenu").slideUp("normal", function () {
           $(this).parent().removeClass("open")
         });
-        console.log()
+        //console.log()
         $(this).next("ul.submenu").slideDown("normal", function () {
           $(this).parent().addClass("open")
         });
@@ -84,7 +90,7 @@
       e.preventDefault();
     });
     $('ul.submenu').mouseleave(function () {
-      console.log('mouseout');
+      //console.log('mouseout');
       $('ul.submenu').slideUp("normal", function () {
         $(this).parent().removeClass("open")
       });
@@ -141,10 +147,6 @@
   //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
 
   TP.Context().initController("principal", "principal");
-
-  $('#opfile').click(function (e) {
-    $('#files').click();
-  });
 
 </script>
 <script type="text/javascript" src="load.js"></script>

@@ -39,7 +39,7 @@ var testView = function (nbView, nbBouton) {
                 });
         }
 
-        new View(tab, new Array("svg", 960, 500, target + i), target + i,
+        new View(tab, target + i,
             contxt.application, i);
     }
 

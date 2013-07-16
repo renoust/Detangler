@@ -14,15 +14,15 @@ var TP = TP || {};
         var __g__ = this;
 
 
-        __g__.mouseoverScatterPlot = function (event) {
+        __g__.mouseoverScatterPlot = function (_event) {
 
-            var selection = event.associatedData.obj;
-            var targetView = event.associatedData.targetView;
-            var scatter = event.associatedData.scatter;
-            var svg = event.associatedData.svg;
-            var id = event.associatedData.id;
-            var x = event.associatedData.x;
-            var y = event.associatedData.y;
+            var selection = _event.associatedData.obj;
+            var targetView = _event.associatedData.targetView;
+            var scatter = _event.associatedData.scatter;
+            var svg = _event.associatedData.svg;
+            var id = _event.associatedData.id;
+            var x = _event.associatedData.x;
+            var y = _event.associatedData.y;
 
             selection.style('fill', 'red');
 
@@ -70,14 +70,14 @@ var TP = TP || {};
         }
 
 
-        __g__.mouseoutScatterPlot = function (event) {
+        __g__.mouseoutScatterPlot = function (_event) {
 
-            var selection = event.associatedData.obj;
-            var targetView = event.associatedData.targetView;
-            var scatter = event.associatedData.scatter;
-            var svg = event.associatedData.svg;
-            var id = event.associatedData.id;
-            var tabClick = event.associatedData.tabClick;
+            var selection = _event.associatedData.obj;
+            var targetView = _event.associatedData.targetView;
+            var scatter = _event.associatedData.scatter;
+            var svg = _event.associatedData.svg;
+            var id = _event.associatedData.id;
+            var tabClick = _event.associatedData.tabClick;
 
             var tab = selection.data()[0];
 
@@ -107,10 +107,10 @@ var TP = TP || {};
         }
 
 
-        __g__.mouseclickScatterPlot = function (event) {
+        __g__.mouseclickScatterPlot = function (_event) {
 
-            var selection = event.associatedData.obj;
-            var tabClick = event.associatedData.tabClick;
+            var selection = _event.associatedData.obj;
+            var tabClick = _event.associatedData.tabClick;
 
             var tab = selection.data()[0];
 
@@ -126,14 +126,14 @@ var TP = TP || {};
             }
         }
 
-        __g__.zoomScatterPlot = function (event) {
+        __g__.zoomScatterPlot = function (_event) {
 
-            var scatter = event.associatedData.scatter;
-            var xAxis = event.associatedData.xAxis;
-            var yAxis = event.associatedData.yAxis;
-            var x = event.associatedData.x;
-            var y = event.associatedData.y;
-            var id = event.associatedData.id;
+            var scatter = _event.associatedData.scatter;
+            var xAxis = _event.associatedData.xAxis;
+            var yAxis = _event.associatedData.yAxis;
+            var x = _event.associatedData.x;
+            var y = _event.associatedData.y;
+            var id = _event.associatedData.id;
 
             scatter.selectAll(".x_axis_scatterPlot" + id)
                 .call(xAxis);
@@ -151,9 +151,9 @@ var TP = TP || {};
                 .attr("r", 3.5)
         };
 
-        __g__.drawScatterPlot = function (event) {
+        __g__.drawScatterPlot = function (_event) {
 
-            var target = event.associatedData.source;
+            var target = _event.associatedData.source;
 
             var svg = null
             svg = TP.Context().view[target].getSvg();
@@ -174,8 +174,8 @@ var TP = TP || {};
 
             var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewScatterPlot(id, TP.view[target].getGroup(), null,
-                new Array("svg_Scatter_Plot", null, width, height, "svg_Scatter_Plott_" + id), "Scatter_Plot_" + TP.view[target].getName(), "scatter_plot", target);
+            TP.Context().view[id] = new TP.ViewScatterPlot(id, null,
+                 "Scatter_Plot_" + TP.view[target].getName(), "scatter_plot", target);
             TP.Context().view[id].addView();
             TP.Context().view[id].buildLinks();
 

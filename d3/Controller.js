@@ -2,9 +2,6 @@ var TP = TP || {};
 (function () {
 
 
-
-
-
     var Controller = function () {
 
 
@@ -96,20 +93,18 @@ var TP = TP || {};
            		assert(false, "sGraph or/and listenerName isn't defined !!")
            		return;
            	}
-           	
             //we can call addEvent after addState to simplifie Event insersion
         }
 
-		
-		__g__.deleteState = function(nameState)
-		{
-			StateTree.deleteState(nameState);			
-		}
-		
-		__g__.goBackState = function(nameState){
-			StateTree.goBackState(nameState);
-		}
-		
+        __g__.deleteState = function(nameState)
+        {
+            StateTree.deleteState(nameState);			
+        }
+        
+        __g__.goBackState = function(nameState){
+            StateTree.goBackState(nameState);
+        }
+        
 
         __g__.getInfoState = function (name) {
             return StateTree.getInfoState(name);
@@ -149,18 +144,18 @@ var TP = TP || {};
             $("#Controller").append('<div id=' + listenerState + '></div>');
 
             //StateTree.initStateTree(typeC);
-            __g__.addStates(); //init state of the current view
-            console.log(listenerState);
+            __g__.addStates();
+            //console.log(listenerState);
             eventHandlerObject.addElement(listenerState, $("[id=" + listenerState + "]")[0]);
 
             var tabInit = StateTree.getStateTree();
 
-            console.log("tabInit : ");
-            console.log(tabInit);
+            //console.log("tabInit : ");
+            //console.log(tabInit);
 
             for (var key in tabInit) {
-                console.log(key);
-                console.log(tabInit[key]);
+                //console.log(key);
+                //console.log(tabInit[key]);
                 __g__.addEvent(tabInit[key].name, tabInit[key].func);
             }
             /*
@@ -255,29 +250,29 @@ var TP = TP || {};
 
             tmpController.transitionState(messageName);
 
-            var event = new CustomEvent(messageName);
+            var _event = new CustomEvent(messageName);
             if (object != null) {
-                event.associatedData = object;
+               _event.associatedData = object;
             }
             else
-                event.associatedData = {};
+               _event.associatedData = {};
 
 
             if (source != null)
-                event.associatedData.source = source;
+               _event.associatedData.source = source;
             else
-                event.associatedData.source = nameC;
+               _event.associatedData.source = nameC;
 
             if (targetController != null)
-                event.associatedData.target = targetController;
+               _event.associatedData.target = targetController;
             else
-                event.associatedData.target = nameC;
+               _event.associatedData.target = nameC;
 
 
             if (targetController == null)
-                document.getElementById(listenerState).dispatchEvent(event);
+                document.getElementById(listenerState).dispatchEvent(_event);
             else
-                document.getElementById("handlerState" + targetController).dispatchEvent(event);
+                document.getElementById("handlerState" + targetController).dispatchEvent(_event);
 
         }
 

@@ -9,30 +9,30 @@ var xhr = new XMLHttpRequest();
 
 // uploads the file and send it to TulipPosy
 var file_object;
-console.log(url)
+//console.log(url)
 
 TulipPosy()
 
 document.getElementById('files').addEventListener('change', function (e) {
     var file = this.files[0];
-    console.log('logging file before sending: ', this.files[0])
+    //console.log('logging file before sending: ', this.files[0])
     xhr.file = file; // not necessary if you create scopes like this
     xhr.addEventListener('progress', function (e) {
         var done = e.position || e.loaded,
             total = e.totalSize || e.total;
-        console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
+        //console.log('xhr progress: ' + (Math.floor(done / total * 1000) / 10) + '%');
     }, false);
     if (xhr.upload) {
         xhr.upload.onprogress = function (e) {
             var done = e.position || e.loaded,
                 total = e.totalSize || e.total;
-            console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
+            //console.log('xhr.upload progress: ' + done + ' / ' + total + ' = ' + (Math.floor(done / total * 1000) / 10) + '%');
         };
     }
 
     xhr.onreadystatechange = function (e) {
         if (4 == this.readyState && this.status == 200) {
-            console.log(['xhr upload complete', e]);
+            //console.log(['xhr upload complete', e]);
             /*
              remove("svg_substrate");
              remove("svg_combined");
