@@ -285,17 +285,15 @@ var TulipPosy = function (originalJSON) {
     ]
 
 
-
-
-    TP.Context().view[viewIndex] = new TP.ViewGraph({id:viewIndex, 
-                                                     interactorList:array1, 
-                                                     name:name + " - substrate", 
-                                                     nodeColor:"#a0522d", 
-                                                     linkColor:"#808080", 
-                                                     backgroundColor:"#FFFFFF", 
-                                                     labelColor:"#000000", 
-                                                     nodeShape:"rect", 
-                                                     type:"substrate"});
+    var myView = new TP.ViewGraph({id:viewIndex, 
+                                   interactorList:array1, 
+                                   name:name + " - substrate", 
+                                   nodeColor:"#a0522d", 
+                                   linkColor:"#808080", 
+                                   backgroundColor:"#FFFFFF", 
+                                   labelColor:"#000000", 
+                                   nodeShape:"rect", 
+                                   type:"substrate"});
     TP.Context().view[viewIndex].addView();
     TP.Context().view[viewIndex].buildLinks();
 

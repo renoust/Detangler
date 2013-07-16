@@ -172,12 +172,14 @@ var TP = TP || {};
             var width = 960 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
 
-            var id = "" + TP.Context().getIndiceView();
+            //var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewScatterPlot({id:id, 
+            var myView = new TP.ViewScatterPlot({//id:id, 
                                                             name:"Scatter_Plot_" + TP.view[target].getName(), 
                                                             type:"scatter_plot", 
                                                             idSourceAssociatedView:target});
+            var id = myView.getID();
+            
             TP.Context().view[id].addView();
             TP.Context().view[id].buildLinks();
 

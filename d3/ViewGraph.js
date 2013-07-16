@@ -7,28 +7,25 @@ var TP = TP || {};
     var ViewGraph = function (parameters) {
         
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
+
+        var __g__ = new TP.ViewTemplate(parameters);
         
-        if(!('nodeColor' in parameters))
+        if(!('nodeColor' in parameters) || parameters.nodeColor == undefined)
             parameters.nodeColor = "steelblue"
             
-        if(!('linkColor' in parameters))
+        if(!('linkColor' in parameters) || parameters.linkColor == undefined)
             parameters.linkColor = "lightgrey"
             
-        if (!('backgroundColor' in parameters))
+        if (!('backgroundColor' in parameters) || parameters.backgroundColor == undefined)
             parameters.backgroundColor = "white"
 
-        if (!('labelColor' in parameters))
+        if (!('labelColor' in parameters) || parameters.labelColor == undefined)
             parameters.labelColor = "black"
             
         //todo rename viewNodes to nodeShape
-        if (!('nodeShape' in parameters))
+        if (!('nodeShape' in parameters) || parameters.nodeShape == undefined)
             parameters.nodeShape = null
          
-        var __g__ = new TP.ViewTemplate({id:parameters.id, 
-                                         name:parameters.name, 
-                                         type:parameters.type, 
-                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
-                                         interactorList:parameters.interactorList});
 
         __g__.nodesColor = parameters.nodeColor;
         __g__.linksColor = parameters.linkColor;

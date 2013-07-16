@@ -6,16 +6,11 @@ var TP = TP || {};
     var ViewBarchart = function (parameters){//id, bouton, name, type, idAssociation, typeBarchart) {
 
         //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
-
-        if (!('typeBarchart' in parameters))
-            parameters.typeBarchart = 'barchart'
         
-        var __g__ = new TP.ViewTemplate({id:parameters.id, 
-                                         name:parameters.name, 
-                                         type:parameters.type, 
-                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
-                                         interactorList:parameters.interactorList});
+        var __g__ = new TP.ViewTemplate(parameters);
 
+        if (!('typeBarchart' in parameters) || parameters.typeBarchart == undefined)
+            parameters.typeBarchart = 'barchart'
 
         __g__.typeBarChart = parameters.typeBarchart;
 

@@ -6,11 +6,7 @@ var TP = TP || {};
 
         //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
-        var __g__ = new TP.ViewTemplate({id:parameters.id, 
-                                         name:parameters.name, 
-                                         type:parameters.type, 
-                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
-                                         interactorList:parameters.interactorList});
+        var __g__ = new TP.ViewTemplate(parameters);
 
 
 

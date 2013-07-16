@@ -8,11 +8,7 @@ var TP = TP || {};
 
         //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
-        var __g__ = new TP.ViewTemplate({id:parameters.id, 
-                                         name:parameters.name, 
-                                         type:parameters.type, 
-                                         idSourceAssociatedView:parameters.idSourceAssociatedView, 
-                                         interactorList:parameters.interactorList});
+        var __g__ = new TP.ViewTemplate(parameters);
 
 
         __g__.addView = function () {
@@ -71,14 +67,19 @@ var TP = TP || {};
             var width = 960 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
 
-            var id = "" + TP.Context().getIndiceView();
+            //var id = "" + TP.Context().getIndiceView();
 
-            TP.Context().view[id] = new TP.ViewNVD3Template({id:id, 
-                                                            name:"NVD3_" + TP.view[target].getName(), 
-                                                            type:"nvd3", 
-                                                            idSourceAssociatedView:target});
+            //TP.Context().view[id] = 
+            var myView = new TP.ViewNVD3Template({//id:id, 
+                                                  name:"NVD3_" + TP.view[target].getName(), 
+                                                  type:"nvd3", 
+                                                  idSourceAssociatedView:target});
+                                                
+            var id = myView.getID();
+            
             TP.Context().view[id].addView();
 
+            
             //TP.Context().view[id].buildLinks();
             
             nv.addGraph(function() {

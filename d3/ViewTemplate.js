@@ -8,30 +8,27 @@ var TP = TP || {};
     //parameters {id:id, name:name, type:type, idSourceAssociatedView:idSourceAssociatedView, interactorList:interactorList}
 
     var ViewTemplate = function (parameters) {
-    var __g__ = this;
+        
+        var __g__ = this;
     
         //checking parameters
              
-        if (!('id' in parameters))
+        if (!('id' in parameters) || parameters.id == undefined)
             parameters.id = String(TP.Context().getIndiceView());
         
-        if (!('name' in parameters)) 
+        if (!('name' in parameters) || parameters.name == undefined) 
             parameters.name = "View"+id;
         
-        if (!('type' in parameters))
+        if (!('type' in parameters) || parameters.type == undefined)
             parameters.type = null;
         
-        if (!('idSourceAssociatedView' in parameters))
+        if (!('idSourceAssociatedView' in parameters) || parameters.idSourceAssociatedView == undefined)
             parameters.idSourceAssociatedView = null;
         
-        if(!('interactorList' in parameters))
+        if(!('interactorList' in parameters) || parameters.interactorList == undefined)
             parameters.interactorList = null;
         
-        
-        
-        
-        var __g__ = this;
-        
+ 
         __g__.controller = new TP.Controller();
         __g__.tabLinks = new Object();
         __g__.graphDrawing = null;
@@ -61,6 +58,9 @@ var TP = TP || {};
                 }
             }
         }
+
+        //registers the view
+        TP.Context().view[__g__.ID] = __g__;
 
 
         var sourceSelection = null;
