@@ -11,7 +11,13 @@ var TP = TP || {};
 
         var objectStore = new TP.Store();
         var nextGuid = 1;
+        var saveEvent = new Object();
 
+
+		__g__.getElem = function(name)
+		{
+			return objectStore.getData(name);
+		}
 
         __g__.setMessAvailable = function (elem, type) {
             var data = objectStore.getData(elem);
@@ -41,7 +47,7 @@ var TP = TP || {};
             objectStore.removeData(name);
         }
 
-        __g__.addEvent = function (elem, type, fn, fnID) //fonction took from book "JavaScript Ninja" from John Resig and Bear Bibeault (page 301)
+        __g__.addEvent = function (elem, type, fn/*, fnID*/) //fonction took from book "JavaScript Ninja" from John Resig and Bear Bibeault (page 301)
         {
 
             if (elem == null || type == null || fn == null) {
@@ -56,6 +62,9 @@ var TP = TP || {};
             if (data == null) return;
 
             if (!data.handlers) data.handlers = {};
+
+			if(saveEvent[type] != null)
+				delete saveEvent[type];
 
             if (!data.handlers[type])
             //data.handlers[type] = [];
@@ -128,7 +137,7 @@ var TP = TP || {};
         }
 
 
-        __g__.removeEvent = function (elem, type, id) {
+        __g__.removeEvent = function (elem, type/*, id*/) {
             function isEmpty(object) {
 
                 for (var key in object) {
@@ -139,7 +148,7 @@ var TP = TP || {};
             }
 
             var data = objectStore.getData(elem);
-
+			/*
             if (typeof id === "number") {
                 var handlers = data.handlers[type];
 
@@ -160,8 +169,8 @@ var TP = TP || {};
                 for (var n = 0; n < end; n++) {
                     delete handlers[n];
                 }
-            }
-
+            }			
+			
             if (data.handlers[type].length === 0) {
 
                 delete data.handlers[type];
@@ -173,14 +182,40 @@ var TP = TP || {};
                 if (document.detachEvent) {
                     data.detachEvent("on" + type, data.dispatcher);
                 }
-            }
+            }*/
+			
+			
+			if(data.handlers[type] != null)
+			{
+				saveEvent[type] = data.handlers[type];
+				
+				delete data.handlers[type];
+				
+                if (document.removeEventListener) {
+                    data.removeEventListener(type, data.dispatcher, false);
+                }
 
+                if (document.detachEvent) {
+                    data.detachEvent("on" + type, data.dispatcher);
+                }
+                				
+			}
+			
             if (isEmpty(data.handlers)) {
                 delete data.handlers;
                 delete data.dispatcher;
             }
         }
-
+        
+        
+        __g__.goBackEvent = function(nameElem, nameEvent)
+        {
+        	if(saveEvent[nameEvent] != null){
+        		__g__.addEvent(nameElem, nameEvent, saveEvent[nameEvent]);
+        	}
+        	else
+        		assert(false, "the event's type isn't defined");
+        }
 
         return __g__;
     }

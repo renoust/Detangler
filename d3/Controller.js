@@ -18,15 +18,36 @@ var TP = TP || {};
         var eventHandlerObject = null;
 
         var currentState = null;
-
-        __g__.addEvent = function (name, type, fn) {
-            eventHandlerObject.addEvent(name, type, fn);
+		
+		
+		__g__.getElem = function()
+		{
+			console.log("curent view's listener : ", eventHandlerObject.getElem(listenerState));
+		}
+		
+		__g__.getStateTree = function()
+		{
+			return StateTree;
+		}
+		
+		__g__.getListenerState = function()
+		{
+			return listenerState;
+		}
+		
+        __g__.addEvent = function (type, fn) {
+            eventHandlerObject.addEvent(listenerState, type, fn);
         }
 
-        __g__.removeEvent = function (name, type, id) {
-            eventHandlerObject.removeEvent(name, type, id);
+        __g__.removeEvent = function (type) {
+            eventHandlerObject.removeEvent(listenerState, type);
         }
-
+		
+		__g__.goBackEvent = function(nameEvent)
+		{
+			eventHandlerObject.goBackEvent(listenerState, nameEvent)
+		}
+		
         __g__.addStates = function () {
 
             if (typeC === "view") {
@@ -38,11 +59,57 @@ var TP = TP || {};
                 assert(false, "type of controller isn't supported");
         }
 
-        __g__.addState = function (node, nodeRoot, useless, activate) {
-            console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
-            StateTree.addState(node, nodeRoot, useless, activate);
+
+        __g__.addState = function (node, nodeRoot, useless, activate, targetView) {
+        	
+        	var sGraph = null;
+        	var listenerName = null;
+        	
+        	if(targetView != null){
+        		var view = TP.Context().view[targetView];
+        		if(view != null){
+        			sGraph = view.getController().getStateTree();
+        			listenerName = view.getController().getListenerState();
+        		}
+        		else{
+        			assert(false, "targetView does'nt exist !!");
+        			return;
+        		}
+        	}
+        	else{
+        		sGraph = StateTree;
+        		listenerName = listenerState;
+        	}
+        	
+        	if(sGraph != null && listenerName != null){
+        	
+	            console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
+	            sGraph.addState(node, nodeRoot, useless, activate);
+	            
+	            if(targetView != null)
+	            	TP.Context().view[targetView].getController().addEvent(node.name, node.func);
+	            else
+	               	__g__.addEvent(node.name, node.func);
+
+           	}
+           	else{
+           		assert(false, "sGraph or/and listenerName isn't defined !!")
+           		return;
+           	}
+           	
             //we can call addEvent after addState to simplifie Event insersion
         }
+
+		
+		__g__.deleteState = function(nameState)
+		{
+			StateTree.deleteState(nameState);			
+		}
+		
+		__g__.goBackState = function(nameState){
+			StateTree.goBackState(nameState);
+		}
+		
 
         __g__.getInfoState = function (name) {
             return StateTree.getInfoState(name);
@@ -82,7 +149,7 @@ var TP = TP || {};
             $("#Controller").append('<div id=' + listenerState + '></div>');
 
             //StateTree.initStateTree(typeC);
-            __g__.addStates();
+            __g__.addStates(); //init state of the current view
             console.log(listenerState);
             eventHandlerObject.addElement(listenerState, $("[id=" + listenerState + "]")[0]);
 
@@ -94,7 +161,7 @@ var TP = TP || {};
             for (var key in tabInit) {
                 console.log(key);
                 console.log(tabInit[key]);
-                __g__.addEvent(listenerState, tabInit[key].name, tabInit[key].func);
+                __g__.addEvent(tabInit[key].name, tabInit[key].func);
             }
             /*
              var tmp = StateTree.getRoot();
@@ -112,11 +179,11 @@ var TP = TP || {};
             //console.log("currentState : "+currentState)
 
             var State = StateTree.getInfoState(cState);
-
+			
             if (State == null)
                 return false;
 
-            if (currentState === null) {
+            if (currentState == null) {
                 return true;
             }
 
@@ -180,7 +247,7 @@ var TP = TP || {};
             }
 
             if (access === false) {
-                //console.log("currentState : "+currentState)
+                console.log("currentState : "+currentState)
                 assert(false, "access denied : " + messageName);
                 return;
             }
@@ -214,7 +281,7 @@ var TP = TP || {};
 
         }
 
-
+/*
         __g__.modifyFunc = function(name, func)
         {
         	var oldFunc = StateTree.modifyFunc(name, func); //we modify 
@@ -229,7 +296,7 @@ var TP = TP || {};
        	{
        		return eventHandlerObject.getFuncEvent(listenerState, name);
        	}
-
+*/
 
         __g__.remove = function () {
             d3.select("#" + listenerState + "").remove();
