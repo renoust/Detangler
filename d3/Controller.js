@@ -58,41 +58,41 @@ var TP = TP || {};
 
 
         __g__.addState = function (node, nodeRoot, useless, activate, targetView) {
-        	
-        	var sGraph = null;
-        	var listenerName = null;
-        	
-        	if(targetView != null){
-        		var view = TP.Context().view[targetView];
-        		if(view != null){
-        			sGraph = view.getController().getStateGraph();
-        			listenerName = view.getController().getListenerState();
-        		}
-        		else{
-        			assert(false, "targetView does'nt exist !!");
-        			return;
-        		}
-        	}
-        	else{
-        		sGraph = StateGraph;
-        		listenerName = listenerState;
-        	}
-        	
-        	if(sGraph != null && listenerName != null){
-        	
+        
+            var sGraph = null;
+            var listenerName = null;
+            
+            if(targetView != null){
+                var view = TP.Context().view[targetView];
+                if(view != null){
+                    sGraph = view.getController().getStateGraph();
+                    listenerName = view.getController().getListenerState();
+                }
+                else{
+                    assert(false, "targetView does'nt exist !!");
+                    return;
+                }
+            }
+            else{
+                sGraph = StateGraph;
+                listenerName = listenerState;
+            }
+            
+            if(sGraph != null && listenerName != null){
+            
                 console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
                 sGraph.addState(node, nodeRoot, useless, activate);
                 
                 if(targetView != null)
-                	TP.Context().view[targetView].getController().addEvent(node.name, node.func);
+                    TP.Context().view[targetView].getController().addEvent(node.name, node.func);
                 else
                    	__g__.addEvent(node.name, node.func);
 
-           	}
-           	else{
-           		assert(false, "sGraph or/and listenerName isn't defined !!")
-           		return;
-           	}
+            }
+            else{
+                assert(false, "sGraph or/and listenerName isn't defined !!")
+                return;
+            }
             //we can call addEvent after addState to simplifie Event insersion
         }
 
@@ -174,7 +174,7 @@ var TP = TP || {};
             //console.log("currentState : "+currentState)
 
             var State = StateGraph.getInfoState(cState);
-			
+
             if (State == null)
                 return false;
 
