@@ -169,6 +169,27 @@ th{
 	border-collapse: collapse;
 }
 
+.dataTable{
+	table-layout:fixed;
+	border-collapse: collapse;
+}
+
+.dataTable th{
+	width: 100px;
+}
+.dataTable td{
+	padding:0px;
+	width:100px;
+	overflow:auto;
+	vertical-align: center;
+	height: 20px;
+}
+ .editData{
+ 	vertical-align: top;
+}
+
+
+
 
 
 /***************************** Information zone ******************************/

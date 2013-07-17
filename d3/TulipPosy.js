@@ -43,8 +43,9 @@ var TulipPosy = function (originalJSON) {
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
     // types:   0:select    3:textfield     6:text
-    //          1:radio     4:slider
+    //          1:radio     4:slider        7:color picker
     //          2:checkbox  5:spinner
+
     /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}]],
     [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}]],
     [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]],
@@ -71,6 +72,11 @@ var TulipPosy = function (originalJSON) {
     ];*/
 
     var paramSizeMap = [
+        /*[0,{id:"paramSize"},[
+            {value:"viewMetric", text:"viewMetric"},
+            {value:"weight", text:"weight"},
+            {value:"entanglementIndice", text:"entanglementIndice"}
+        ]],*/
         [4, {id:"sizemap"},{
                 range: true,
                 min: 0,
