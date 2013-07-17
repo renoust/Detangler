@@ -1,25 +1,67 @@
 //pile de gestion d'Etat
 
 var TP = TP || {};
+
+
 (function () {
 
+    //parameters {id:id, name:name, type:type, idSourceAssociatedView:idSourceAssociatedView, interactorList:interactorList}
 
-    var ViewTemplate = function (id, name, type, idAssociation, bouton) {
-
+    var ViewTemplate = function (parameters) {
+        
         var __g__ = this;
-
+    
+        //checking parameters
+             
+        if (!('id' in parameters) || parameters.id === undefined)
+            parameters.id = String(TP.Context().getIndiceView());
+        
+        if (!('name' in parameters) || parameters.name === undefined) 
+            parameters.name = "View"+id;
+        
+        if (!('type' in parameters) || parameters.type === undefined)
+            parameters.type = null;
+        
+        if (!('idSourceAssociatedView' in parameters) || parameters.idSourceAssociatedView === undefined)
+            parameters.idSourceAssociatedView = null;
+        
+        if(!('interactorList' in parameters) || parameters.interactorList === undefined)
+            parameters.interactorList = null;
+        
+ 
         __g__.controller = new TP.Controller();
         __g__.tabLinks = new Object();
         __g__.graphDrawing = null;
-        __g__.ID = id;
+        __g__.ID = parameters.id;
         __g__.viewInitialized = null;
-        __g__.name = name;
-        __g__.typeView = type;
+        __g__.name = parameters.name;
+        __g__.typeView = parameters.type;
         __g__.svg = null;
-        __g__.hashButton = new Object();
+        __g__.hashInteractorList = new Object();
         __g__.dialog = null;
         __g__.titlebar = null;
-        __g__.idAssociation = idAssociation;
+        __g__.idSourceAssociatedView = parameters.idSourceAssociatedView;
+
+
+        //loads hash of interactors
+        if (parameters.interactorList != null) {
+
+            var end = parameters.interactorList.length;
+
+            for (var p = 0; p < end; p++) {
+                if (__g__.hashInteractorList[parameters.interactorList[p][3]] != null) {
+                    __g__.hashInteractorList[parameters.interactorList[p][3]].push(parameters.interactorList[p]);
+                }
+                else {
+                    __g__.hashInteractorList[parameters.interactorList[p][3]] = [];
+                    __g__.hashInteractorList[parameters.interactorList[p][3]].push(parameters.interactorList[p]);
+                }
+            }
+        }
+
+        //registers the view
+        TP.Context().view[__g__.ID] = __g__;
+
 
         var sourceSelection = null;
         var targetSelection = null;
@@ -40,26 +82,12 @@ var TP = TP || {};
             targetSelection = _selection;
         }
 
-        __g__.buttonTreatment = function () {
-            if (bouton != null) {
-
-                var end = bouton.length;
-
-                for (var p = 0; p < end; p++) {
-                    if (__g__.hashButton[bouton[p][3]] != null) {
-                        __g__.hashButton[bouton[p][3]].push(bouton[p]);
-                    }
-                    else {
-                        __g__.hashButton[bouton[p][3]] = [];
-                        __g__.hashButton[bouton[p][3]].push(bouton[p]);
-                    }
-                }
-            }
+        __g__.interactorListTreatment = function () {
 
             if (__g__.typeView === "substrate") {
-                TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashButton, 'create');
+                TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashInteractorList, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
-                TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashButton,'create');
+                TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashInteractorList,'create');
                 TP.ObjectReferences().InterfaceObject.togglePanelMenu();
             }
         }
@@ -88,7 +116,7 @@ var TP = TP || {};
             return __g__.ID;
         }
 
-        __g__.setAssociatedView = function (linkType, view) {
+        __g__.addAssociatedView = function (linkType, view) {
             if (__g__.tabLinks[linkType] != null) {
                 __g__.tabLinks[linkType].push(view);
             }
@@ -96,8 +124,6 @@ var TP = TP || {};
                 __g__.tabLinks[linkType] = new Array();
                 __g__.tabLinks[linkType].push(view);
             }
-            //assert(false, "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUULLLLLLLLLLLMMMMMMAAAAAAAAAAAJJJJJJJJJJJJ")
-            //console.log("tabLinks : ", __g__.tabLinks)
         }
 
 
@@ -121,42 +147,38 @@ var TP = TP || {};
         }
 
 
+        __g__.updateLinks = function (idSourceAssociatedView)
+        {
+            if (__g__.idSourceAssociatedView != null) {
+                var tmp = TP.Context().view[idSourceAssociatedView];
+                tmp.addAssociatedView(__g__.typeView, __g__);
+                __g__.addAssociatedView(tmp.getType(), tmp);
+            }
+        }
+
         __g__.buildLinks = function () {
-            if (__g__.idAssociation != null) {
+            if (__g__.idSourceAssociatedView != null) {
 
                 if (__g__.typeView !== "combined") {
-                    var tmp = TP.Context().view[__g__.idAssociation];
-                    tmp.setAssociatedView(__g__.typeView, __g__);
-                    __g__.setAssociatedView(tmp.getType(), tmp);
+                    var tmp = TP.Context().view[__g__.idSourceAssociatedView];
+                    tmp.addAssociatedView(__g__.typeView, __g__);
+                    __g__.addAssociatedView(tmp.getType(), tmp);
                 }
                 else {
-                    var tmp1 = TP.Context().view[__g__.idAssociation[0]];
-                    var tmp2 = TP.Context().view[__g__.idAssociation[1]];
+                    var tmp1 = TP.Context().view[__g__.idSourceAssociatedView[0]];
+                    var tmp2 = TP.Context().view[__g__.idSourceAssociatedView[1]];
 
-                    tmp1.setAssociatedView(__g__.typeView, __g__);
-                    tmp2.setAssociatedView(__g__.typeView, __g__);
-                    __g__.setAssociatedView(tmp1.getType(), tmp1);
-                    __g__.setAssociatedView(tmp2.getType(), tmp2);
+                    tmp1.addAssociatedView(__g__.typeView, __g__);
+                    tmp2.addAssociatedView(__g__.typeView, __g__);
+                    __g__.addAssociatedView(tmp1.getType(), tmp1);
+                    __g__.addAssociatedView(tmp2.getType(), tmp2);
 
                 }
-                //console.log(TP.Context().view[__g__.idAssociation]);
             }
-
-            /*
-            if (__g__.typeView == "substrate") {
-                TP.Context().GroupOfView[__g__.viewGroup] = [];
-                TP.Context().GroupOfView[__g__.viewGroup]["substrate"] = __g__;
-            }
-            else {
-                TP.Context().GroupOfView[__g__.viewGroup][__g__.typeView] = __g__;
-            }
-            */
         }
 
 
         __g__.createDialog = function () {
-
-            //assert(false, "tttttttttttttttttttttttttttttttttttype : " + __g__.typeView)
 
             var dialogTop = 235;
             var dialogRight = 260;
@@ -170,18 +192,15 @@ var TP = TP || {};
                 dialogRight = 100;
             }
 
-            //console.log("tppppppppppppppppp", dialogTop);
 
-            $("<div/>", {id: "zone" + __g__.ID, title: name}).appendTo("html");
+            $("<div/>", {id: "zone" + __g__.ID, title: __g__.name}).appendTo("html");
 
             __g__.dialog = $("[id=zone" + __g__.ID + "]");
-            //console.log(dialog);
-            //console.log('TOTO', __g__.dialog.parent())
             __g__.dialog.dialog({
                 id: "btn-cancel",
                 height: TP.Context().dialogHeight,
                 width: TP.Context().dialogWidth,
-                position: "right-" + dialogRight + " top+" + dialogTop, /*{my: "center", at: "center", of: "#container"}*/
+                position: "right-" + dialogRight + " top+" + dialogTop, 
             }).parent().resizable({
                     containment: "#container"
                 }).draggable({
@@ -235,8 +254,8 @@ var TP = TP || {};
                 TP.Context().activeView = __g__.ID;
                 //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
-                    TP.Context().InterfaceObject.interactionPane(__g__.hashButton, 'update')
-                    TP.Context().InterfaceObject.visuPane(__g__.hashButton, 'update')
+                    TP.Context().InterfaceObject.interactionPane(__g__.hashInteractorList, 'update')
+                    TP.Context().InterfaceObject.visuPane(__g__.hashInteractorList, 'update')
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
                 TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
@@ -275,14 +294,13 @@ var TP = TP || {};
                     }
                 }
             }
-            
-            
+
+
         __g__.removeViewTemplate = function () {
 
             d3.select("#zone" + __g__.ID).remove();
 
             __g__.controller.remove();
-            __g__.tabDataSvg = null;
             __g__.controller = null;
             __g__.tabLinks = null;
             __g__.graphDrawing = null;
@@ -291,14 +309,13 @@ var TP = TP || {};
             __g__.name = null;
             __g__.typeView = null;
             __g__.svg = null;
-            __g__.hashButton = null;
+            __g__.hashInteractorList = null;
             __g__.dialog = null;
             __g__.titlebar = null;
-            __g__.idAssociation = null;
-            __g__.viewGroup = null;
+            __g__.idSourceAssociatedView = null;
 
         }
-
+        
         __g__.addView = function () {
         }
 
@@ -306,4 +323,5 @@ var TP = TP || {};
     }
 
     TP.ViewTemplate = ViewTemplate;
+    
 })(TP);

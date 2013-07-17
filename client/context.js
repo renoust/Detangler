@@ -64,6 +64,9 @@ var TP = TP || {};
 
         __g__.sessionSid = 0;
 
+		__g__.tulipLayoutAlgorithms = {};
+		__g__.tulipDoubleAlgorithms = {};
+
         __g__.substrateProperties = {};
         __g__.substrateWeightProperty = null;
 
@@ -73,6 +76,17 @@ var TP = TP || {};
         __g__.tabOperator["catalyst"] = "OR";
         __g__.tabOperator[1] = "OR";
 
+
+        __g__.dataTypes = {none:"NONE",
+                           substrate:"SUBSTRATE",
+                           catalyst:"CATALYST"
+                           }
+        
+        __g__.viewTypes = {substrate:"SUBSTRATE",
+                           catalyst:"CATALYST",
+                           barchart:"BARCHART"            
+        }
+        
 
         __g__.getViewGraph = function (viewID) {
             return __g__.tabGraph["graph_" + viewID];
@@ -125,7 +139,26 @@ var TP = TP || {};
 
             }
         }
+        
+        __g__.updateTulipLayoutAlgorithms = function(layoutList)
+        {       
+            for (var index in layoutList) {
+                key = layoutList[index]
+                if (!(key in __g__.tulipLayoutAlgorithms))
+                    __g__.tulipLayoutAlgorithms[key] = {}
+            }
+        }
+        
+        __g__.updateTulipDoubleAlgorithms = function(doubleList)
+        {       
+            for (var index in doubleList) {
+                key = doubleList[index]
+                if (!(key in __g__.tulipDoubleAlgorithms))
+                    __g__.tulipDoubleAlgorithms[key] = {}
+            }
+        }
 
+        
         __g__.initStates = function () {
             //assert(true, "type of controller principal");
 
@@ -144,6 +177,16 @@ var TP = TP || {};
             __g__.controller.addState({name: "mouseoverInfoBox", bindings: null, func: function (_event) {/*assert(true, "mouseoverInfoBox");*/
                 TP.Interface().addInfoBox(_event);
             }}, "all");
+            __g__.controller.addState({name:"getPlugins", bindings:null, func:function(_event){
+                TP.Client().getPlugins(_event);
+            }}, "all");
+            __g__.controller.addState({name:"getPluginsSendQuery", bindings:null, func:function(_event){
+                TP.Client().getPluginsSendQuery(_event);
+            }}, "all");            
+            __g__.controller.addState({name:"answerGetPlugins", bindings:null, func:function(_event){
+                TP.Client().answerGetPlugins(_event);
+            }}, "all");
+        
         }
 
         __g__.initController = function (ID, typeC) {

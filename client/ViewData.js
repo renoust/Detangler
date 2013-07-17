@@ -13,7 +13,7 @@ var TP = TP || {};
             if (__g__.controller != null)
                 __g__.controller.initListener(__g__.ID, "view");
 
-            __g__.buttonTreatment();
+            __g__.interactorListTreatment();
             __g__.createDialog();
         }
 

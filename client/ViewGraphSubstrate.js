@@ -3,280 +3,182 @@
 var TP = TP || {};
 (function () {
 
-    var ViewGraph = function (id, bouton, name, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
-
-        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
-
-        __g__.nodesColor = nodesC;
-        __g__.linksColor = linksC;
-        __g__.bgColor = bgC;
-        __g__.labelsColor = labelC;
-        __g__.viewNodes = null;
-        __g__.lasso = null;
-        __g__.DataTranslation = null;
-
-        __g__.selectMode = null;
-        __g__.moveMode = null;
-        __g__.showLabels = null;
-        __g__.showLinks = null;
-        __g__.nodeInformation = null;
-
-        __g__.metric_BC = null;
-        __g__.metric_SP = null;
-        __g__.combined_foreground = null;
-        __g__.acceptedGraph = [];
-        __g__.graph = null;
+    // {id:id, name:name, type:type, idSourceAssociatedView:idSourceAssociatedView, interactorList:interactorList}
+    var ViewGraphSubstrate = function (parameters) {
         
-        __g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
+        //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
+        var __g__ = this;
         
-        __g__.getGraph = function () {
-            return __g__.graph;
+        
+        var paramSizeMap = [
+            [4, {id:"sizemap"},{
+                    range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 3, 12 ],
+                    change: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    },
+                    slide: function() {
+                        var value = $("#sizemap").slider("values",0);
+                        var value2 = $("#sizemap").slider("values",1);
+                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
+                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
+                    }
+                },
+                "scale: "
+            ]
+        ];
+    
+        var tl = [
+            [3,{id:"selectedAlgo"}]
+        ];
+    
+        var colorSettings = [
+            [1,{id:"color"},[
+                {id:"cnodes", name:"color", class:"colorwell", text:"Nodes Color"},
+                {id:"clinks", name:"color", class:"colorwell", text:"Links Color"},
+                {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
+                {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
+            ],
+            [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
+        ];
+        
+        /*
+        var tabCatalyst = [1,//__g__.getID(), 
+                        null,
+                       name + " - catalyst", 
+                       "#4682b4", 
+                       "#808080", 
+                       "#FFFFFF", 
+                       "#000000", 
+                       "circle", 
+                       "catalyst"];
+        */
+                      
+        var _viewGraphCatalystParameters = {
+            name:name + " - catalyst", 
+            nodeColor:"#4682b4", 
+            linkColor:"#808080", 
+            backgroundColor:"#FFFFFF", 
+            labelColor:"#000000", 
+            nodeShape:"circle", 
+            type:"catalyst"
         }
-
-        __g__.getDataTranslation = function () {
-            return __g__.DataTranslation;
-        }
-
-        __g__.setDataTranslation = function (value) {
-            __g__.DataTranslation = value;
-        }
-
-
-        __g__.setMetric_BC = function (value) {
-            __g__.metric_BC = value;
-        }
-
-        __g__.getMetric_BC = function () {
-            return __g__.metric_BC;
-        }
-
-        __g__.setMetric_SP = function (value) {
-            __g__.metric_SP = value;
-        }
-
-        __g__.getMetric_SP = function () {
-            return __g__.metric_SP;
-        }
-
-        __g__.setLasso = function (value) {
-            __g__.lasso = value;
-        }
-
-        __g__.getLasso = function (value) {
-            return __g__.lasso;
-        }
-
-        __g__.getNodesColor = function () {
-            return __g__.nodesColor;
-        }
-
-        __g__.setNodesColor = function (value) {
-            __g__.nodesColor = value;
-        }
-
-        __g__.getLinksColor = function () {
-            return __g__.linksColor;
-        }
-
-        __g__.setLinksColor = function (value) {
-            __g__.linksColor = value;
-        }
-
-        __g__.getBgColor = function () {
-            return __g__.bgColor;
-        }
-
-        __g__.setBgColor = function (value) {
-            __g__.bgColor = value;
-        }
-
-        __g__.getLabelsColor = function () {
-            return __g__.labelsColor;
-        }
-
-        __g__.setLabelsColor = function (value) {
-            __g__.labelsColor = value;
-        }
-
-        __g__.getViewNodes = function () {
-            return __g__.viewNodes;
-        }
-
-        __g__.getSelectMode = function () {
-            return __g__.selectMode;
-        }
-
-        __g__.setSelectMode = function (value) {
-            __g__.selectMode = value;
-        }
-
-        __g__.getMoveMode = function () {
-            return __g__.moveMode;
-        }
-
-        __g__.setMoveMode = function (value) {
-            __g__.moveMode = value;
-        }
-
-        __g__.getShowLabels = function () {
-            return __g__.showLabels;
-        }
-
-        __g__.setShowLabels = function (value) {
-            __g__.showLabels = value;
-        }
-
-
-        __g__.getShowLinks = function () {
-            return __g__.showLinks;
-        }
-
-        __g__.setShowLinks = function (value) {
-            __g__.showLinks = value;
-        }
-
-        __g__.getNodeInformation = function () {
-            return __g__.nodeInformation;
-        }
-
-        __g__.setNodeInformation = function (value) {
-            __g__.nodeInformation = value;
-        }
-
-        __g__.addView = function () {
-
-            //controller = new TP.Controller();
-            if (__g__.controller != null)
-                __g__.controller.initListener(__g__.ID, "view");
-
-            //TP.Context().setStypeEventByDefault(ID);
-            __g__.buttonTreatment();
-
-            var elem = document.getElementById("bouton" + __g__.ID);
-            if (elem) elem.parentNode.removeChild(elem);
-            elem = $("div[aria-describedby='zone" + __g__.ID + "']");
-            //console.log(elem)
-            if (elem != [])elem.remove();
-
-
-            /**************************
-             * Views
-             **************************/
-
-            /****  création du dialog ****/
-
-            __g__.createDialog();
-
-            /****   en-tête du dialog   ****/
-
-
-            /*$("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        */
-            $("<button/>", {id: "toggle" + __g__.ID, text: "Move", style: 'right:15px'}).appendTo(__g__.titlebar);
-
-            var minWidth = __g__.dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
-            __g__.dialog.parents('.ui-dialog').find('.ui-button').each(function () {
-                minWidth += $(this).width()
-            })
-            __g__.dialog.dialog({minWidth: minWidth + 25})
-
-            $('#toggle' + __g__.ID).button().click(function (_event) {
-                var interact = $(this).button("option", "label");
-                if (interact == "Move") {
-                    $(this).button("option", "label", "Select");
-                }
-                else {
-                    $(this).button("option", "label", "Move");
-                }
-                //TP.Context().stateStack[ID].executeCurrentState();
-                TP.ObjectReferences().InterfaceObject.toggleSelectMove(__g__.ID);
-            });
-
-
-            $('#toggle' + __g__.ID).attr("idView", __g__.ID);
-
-            //$("#toggle"+ID).click(function(_event){_event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:_event.type, viewBase:_event.data}, _event]);})
-
-            function add() {
-                if (__g__.ID != null) {
-
-                    if (view_nodes != null)
-                        __g__.viewNodes = view_nodes;
-                    else
-                        __g__.viewNodes = "rect";
-
-                    __g__.DataTranslation = [0, 0];
-                    //TP.Context().tabNodeColor[target] = nodesC;
-                    //TP.Context().tabLinkColor[target] = linksC;
-                    //TP.Context().tabBgColor[target] = bgC;
-
-                    __g__.selectMode = false;
-                    __g__.moveMode = true;
-                    __g__.showLabels = true;
-                    __g__.showLinks = true;
-                    __g__.nodeInformation = true;
-
-                    TP.Interaction().createLasso(__g__.ID);
-                    //TP.Interaction().addZoom(ID);
-                    TP.Interface().toggleSelectMove(__g__.ID);
-                }
-            }
-
-                //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)
-                __g__.svg = d3.select("#zone" + __g__.ID)
-                    .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .attr("id", "svg"+__g__.ID)
-                    .attr("idView", __g__.ID);
-
-
-                //.attr("viewBox", "0 0 500 600");
-
-                TP.Context().tabGraph["graph_" + __g__.ID] = new TP.Graph();
-                __g__.graph = TP.Context().tabGraph["graph_" + __g__.ID];
-
-                add();
-
-                //TP.Context().tabType[target] = typeView;
-
-                if (__g__.typeView == "combined") {
-                    __g__.combined_foreground = "substrate";
-                }
-
+        
+        
+        var interactors = [
+            /*['TEST', '', {call: function (res) {
+                console.log(res)
+            }}, "Layout"],*/
+            ['Force layout', '', {click: function () {
+                __g__.getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: __g__.getID()})
+            }}, "Layout"],
+            ['Sync layouts', '', {click: function () {
+                TP.ObjectReferences().ClientObject.syncLayouts(__g__.getID())
+            }}, "Layout"],
+            ['MDS layout', '', {click: function () {
+                __g__.getController().sendMessage('callLayout', {layoutName: 'MDS', idView: __g__.getID()})
+            }}, "Layout"],
+            ['Tulip layout algorithm', tl, {call: function (layout) {
+                __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
+            }}, "Layout"],
+            ['Tulip layout list','',{click:function(){
+                TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms})
+            }}, "Layout"],
+    
+            ['Induced subgraph', '', {click: function () {
+                __g__.getController().sendMessage("sendSelection", {json: TP.ObjectReferences().ClientObject.getSelection(__g__.getID()), idView: __g__.getID()})
+            }}, "Selection"],
+            ['Delete selection', '', {click: function () {
+                TP.ObjectReferences().InteractionObject.delSelection(__g__.getID())
+            }}, "Selection"],
+            ['Toggle selection', '', {click: function () {
+                TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
+            }}, 'Selection'],
+    
+            ['Center view', '', {click: function () {
+                __g__.getController().sendMessage('resetView');
+            }}, "View"],
+            ['Reset size', '', {click: function () {
+                __g__.getController().sendMessage("resetSize")
+            }}, "View"],
+            ['Hide labels', '', {click: function () {
+                __g__.getController().sendMessage("Hide labels")
+            }}, "View"],
+            ['Hide links', '', {click: function () {
+                __g__.getController().sendMessage("Hide links")
+            }}, "View"],
+            ['Arrange labels', '', {click: function () {
+                __g__.getController().sendMessage("arrangeLabels")
+            }}, "View"],
+            ['Rotation', '', {click: function () {
+                __g__.getController().sendMessage("rotateGraph")
+            }}, "View"],
+            ['Size mapping', paramSizeMap, {call: function (scales) {
+                __g__.getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales})
+            }}, "View"],
+            ['zoom in', '', {click: function () {
+                __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
+            }}, "View"],
+            ['zoom out', '', {click: function () {
+                __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
+            }}, "View"],
+            ['Color settings', colorSettings,null, "View"],
+    
+            ['Degree', '', {click: function () {
+                __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: __g__.getID()})
+            }}, "Measure"],
+            ['Betweenness centrality', '', {click: function () {
+                __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: __g__.getID()})
+            }}, "Measure"],
+            ['Tulip measure', tl, {call: function (algo) {
+                __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: __g__.getID()})
+            }}, "Measure"],
+    
+            ['Bipartite analysis', '', {click: function () {
+                __g__.getController().sendMessage("analyseGraph", (function(){
+                    var params = __g__.viewGraphCatalystParameters()
+                    params.idSourceAssociatedView = __g__.getID();
+                    return {viewIndex: __g__.getID(), 
+                            viewGraphCatalystParameters: params}
+                     })())
+            }}, "Open View"],
+            ['Horizontal barchart', '', {click: function () {
+                __g__.getController().sendMessage("drawBarChart", {smell: 'base'})
+            }}, "Open View"],
+            ['Barchart', '', {click: function () {
+                __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'})
+            }}, "Open View"],
+            ['Scatter plot', '', {click: function () {
+                __g__.getController().sendMessage("drawScatterPlot")
+            }}, "Open View"],
+            ['Scatter plot nvd3', '', {click: function () {
+                __g__.getController().sendMessage("drawScatterPlotNVD3")
+            }}, "Open View"],
+            ['Data', '', {click: function () {
+                __g__.getController().sendMessage("drawDataBase")
+            }}, "Open View"]
+            // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],
+            // ['b5','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random', __g__.getID())}}],        
+            // ['b13','node information','',{click:function(){TP.ObjectReferences().InterfaceObject.attachInfoBox()}}],
+            // ['b16','labels forward','',{click:function(){TP.ObjectReferences().VisualizationObject.bringLabelsForward(__g__.getID())}}],
+        ]
+        
+        parameters.interactorList = interactors;
             
-
-            __g__.viewInitialized = 1;
-
-            __g__.graphDrawing = new TP.GraphDrawing(__g__.graph, __g__.svg, __g__.ID);
-
+        var __g__ = new TP.ViewGraph(parameters);
+       
+       
+        __g__.viewGraphCatalystParameters = function()
+        {
+            return _viewGraphCatalystParameters;
         }
 
-        __g__.remove = function () {
-
-            __g__.removeViewTemplate();
-
-            __g__.nodesColor = null;
-            __g__.linksColor = null;
-            __g__.bgColor = null;
-            __g__.labelsColor = null;
-            __g__.viewNodes = null;
-            __g__.lasso = null;
-            __g__.DataTranslation = null;
-
-            __g__.selectMode = null;
-            __g__.moveMode = null;
-            __g__.showLabels = null;
-            __g__.showLinks = null;
-            __g__.nodeInformation = null;
-
-            __g__.metric_BC = null;
-            __g__.metric_SP = null;
-            __g__.combined_foreground = null;
-            __g__.acceptedGraph = null;
-            __g__.graph = null;
-        }
-
-
+        
         __g__.initStates = function () {
 
             __g__.controller.addState({name: "zoneApparu", bindings: ["nodeSelected", "selectionVide", "arrangeLabels"], func: function (_event) {/*assert(true, "zoneApparu");*/
@@ -320,7 +222,7 @@ var TP = TP || {};
                 TP.Lasso().mousemoveMouseDown(_event);
             }});
 
-            __g__.controller.addState({name: "arrangeLabels", bindings: ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping", "movingZoomDrag"], func: function (_event) {/*assert(true, "arrangeLabels"); */
+            __g__.controller.addState({name: "arrangeLabels", bindings: ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], func: function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
             }}, "all");
 
@@ -434,17 +336,16 @@ var TP = TP || {};
             }}, "all", true);
 
             __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(_event){
-                /*console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateOtherViews(_event);
-            }}, "all", true)		
-
+                console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateOtherViews(_event);
+            }}, "all", true)        
+            
             __g__.controller.addState({name : "updateView", bindings : null, func:function(_event){
-                /*console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
+                console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
             }}, "all", true)
-
+            
             __g__.controller.addState({name : "drawDataBase", bindings : null, func:function(_event){
                 TP.Visualization().drawDataBase(_event);
             }}, "all", true)
-
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
             __g__.controller.setCurrentState("select");
@@ -454,5 +355,5 @@ var TP = TP || {};
         return __g__;
     }
 
-    TP.ViewGraph = ViewGraph;
+    TP.ViewGraphSubstrate = ViewGraphSubstrate;
 })(TP);

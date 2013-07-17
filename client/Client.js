@@ -157,16 +157,16 @@ var TP = TP || {};
         // entanglement indices computed.
         this.analyseGraph = function (_event) {
 
-            var idView = _event.associatedData.source;
-            var tabCatalyst = _event.associatedData.tabCatalyst;
+            var idViewSource = _event.associatedData.source;
+            var viewGraphCatalystParameters = _event.associatedData.viewGraphCatalystParameters
 
-            if (TP.Context().view[idView].getType() !== "substrate") {
+            if (TP.Context().view[idViewSource].getType() !== "substrate") {
                 assert(false, "not substrate type");
                 return;
             }
 
 
-            if (TP.Context().view[idView].getAssociatedView("catalyst") == null && tabCatalyst.length != null) {
+            if (TP.Context().view[idViewSource].getAssociatedView("catalyst") == null && Object.keys(viewGraphCatalystParameters).length != null) {
 
                 //assert(false, tabCatalyst[0])
                 //assert(false, tabCatalyst[8])
@@ -174,9 +174,23 @@ var TP = TP || {};
 
                 //console.log(tabCatalyst);
 
-                TP.Context().view[tabCatalyst[0]] = new TP.ViewGraph(tabCatalyst[0], tabCatalyst[1], tabCatalyst[2], tabCatalyst[3], tabCatalyst[4], tabCatalyst[5], tabCatalyst[6], tabCatalyst[7], tabCatalyst[8], idView);
-                TP.Context().view[tabCatalyst[0]].buildLinks();
-                TP.Context().view[tabCatalyst[0]].addView();
+                /*
+                var myView = new TP.ViewGraphCatalyst({id:tabCatalyst[0], 
+                                                       name:tabCatalyst[2], 
+                                                       nodeColor:tabCatalyst[3], 
+                                                       linkColor:tabCatalyst[4], 
+                                                       backgroundColor:tabCatalyst[5], 
+                                                       labelColor:tabCatalyst[6], 
+                                                       nodeShape:tabCatalyst[7], 
+                                                       type:tabCatalyst[8], 
+                                                       idSourceAssociatedView:idView});
+                 */                              
+
+                var myView = new TP.ViewGraphCatalyst(viewGraphCatalystParameters);
+
+
+                myView.buildLinks();
+                myView.addView();
 
             }
 
@@ -184,7 +198,7 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
-                target: idView,//'substrate',
+                target: idViewSource,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
 
@@ -193,7 +207,7 @@ var TP = TP || {};
             //console.log(TP.Context().view[idView]);
             //console.log(TP.Context().view[idView].getController());
 
-            TP.Context().view[idView].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
+            TP.Context().view[idViewSource].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
 
         }
 
@@ -281,6 +295,56 @@ var TP = TP || {};
         }
 
 
+        this.getPlugins = function (_event) {
+            
+            var pluginType = _event.associatedData.pluginType;
+            var endHandler = _event.associatedData.endHandler;
+            //save for undo
+            //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
+           // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+            
+            var pluginParams = {
+                type: pluginType
+            };
+            
+            var params = {
+                sid: contxt.sessionSid,
+                type: 'plugin',
+                parameters: JSON.stringify(pluginParams)
+            };
+
+            TP.Context().getController().sendMessage("getPluginsSendQuery",{params:params, endHandler:endHandler}, "principal")
+                        
+        };
+        
+        this.getPluginsSendQuery = function(_event)
+        {
+           
+           var params = _event.associatedData.params;
+           var endHandler = _event.associatedData.endHandler;
+
+           __g__.sendQuery({
+               parameters: params,
+               success: function (data) {
+                   TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
+                }
+            });
+             
+        }
+        
+        this.answerGetPlugins = function(_event)
+        {
+            //console.log("Je suis dans answer getPlugins");
+            
+            var data = _event.associatedData.data;
+            var endHandler = _event.associatedData.endHandler;
+            
+            assert(true, "Grabbed algorithms:")
+            console.log(data)
+            endHandler.call(TP.Context(), data)
+        }
+
+
         // This function calls a layout algorithm of a graph through tulip, 
         // and moves the given graph accordingly
         // layoutName, the name of the tulip layout we want to call
@@ -309,6 +373,7 @@ var TP = TP || {};
             TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery", {params: params}, "principal")
 
         };
+        
 
 
         this.callLayoutSendQuery = function (_event) {

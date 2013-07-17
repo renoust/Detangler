@@ -2,18 +2,20 @@ var TP = TP || {};
 (function () {
 
 
-    var ViewScatterPlot = function (id, bouton, name, type, idAssociation) {
+    var ViewScatterPlot = function (parameters){//id, bouton, name, type, idAssociation) {
 
-        var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
-        
+        //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
+
+        var __g__ = new TP.ViewTemplate(parameters);
+
         __g__.updateEventHandler = new TP.UpdateEventHandler("scatterPlot", __g__.ID);
-        
+
         __g__.addView = function () {
 
             if (__g__.controller != null)
                 __g__.controller.initListener(__g__.ID, "view");
 
-            __g__.buttonTreatment();
+            __g__.interactorListTreatment();
             __g__.createDialog();
 
             __g__.svg = d3.select("#zone" + __g__.ID)

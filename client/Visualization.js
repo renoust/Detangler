@@ -459,7 +459,7 @@ var TP = TP || {};
             
             //TP.Context().view[id] = new TP.View(id, null,
                  //"DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
-            TP.Context().view[id] = new TP.ViewData(id, null, "DataBase" + TP.view[target].getName(), "data", target);
+            TP.Context().view[id] = new TP.ViewData({id:id, name:"DataBase" + TP.view[target].getName(), type:"data", idSourceAssociatedView:target});
             TP.Context().view[id].addView();
 
             keys = [];

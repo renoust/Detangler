@@ -80,7 +80,7 @@ var TP = TP || {};
             
             if(sGraph != null && listenerName != null){
             
-                console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
+                //console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
                 sGraph.addState(node, nodeRoot, useless, activate);
                 
                 if(targetView != null)

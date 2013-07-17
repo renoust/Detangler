@@ -157,12 +157,17 @@ var TP = TP || {};
 
             //assert(true, "erreur1");
 
-            var id = "" + TP.Context().getIndiceView();
+            //var id = "" + TP.Context().getIndiceView();
 
             //console.log("iddddddddddddddddddddddd : " + id)
 
-            TP.Context().view[id] = new TP.ViewBarchart(id, null,
-                "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
+            var myView = new TP.ViewBarchart({//id:id,
+                                              name:"BarChart_" + smell + "_" + TP.view[target].getName(), 
+                                              type:"barchart", 
+                                              idSourceAssociatedView:target, 
+                                              typeBarchart:smell});
+
+            var id = myView.getID();
 
             //console.log(TP.Context().view[id]);
 
