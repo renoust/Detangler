@@ -449,9 +449,8 @@ var TP = TP || {};
             var target = _event.associatedData.source;
             
             var svg = TP.Context().view[target].getSvg();
-            nodes = svg.selectAll('g.node').data()
+            var nodes = svg.selectAll('g.node').data()
 
-            //creation of a new view
             var margin = {top: 20, right: 15, bottom: 60, left: 60}
             var width = 960 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
@@ -462,89 +461,114 @@ var TP = TP || {};
             TP.Context().view[id] = new TP.ViewData({id:id, name:"DataBase" + TP.view[target].getName(), type:"data", idSourceAssociatedView:target});
             TP.Context().view[id].addView();
 
-            keys = [];
-            var table = $('<table/>', {id: 'dataTable', class: 'testgrid', style: 'width:100%'}).appendTo('#zone' + id)
-            var colgroup = $('<colgroup/>', {id: 'groupe'}).appendTo(table);
-            var thead = $('<thead/>').appendTo(table)
-            var tbody = $('<tbody/>').appendTo(table)
-            var head = $('<tr/>').appendTo(thead)
+            var sort_asc = true;
+            drawTable('#zone'+id, nodes)
+            var table;
 
+            function drawTable(zone, nodes){
+                table = $('<table/>', {id: 'table' + id, class:'dataTable'}).appendTo('#zone' + id)
+                var thead = $('<thead/>').appendTo(table)
+                var tbody = $('<tbody/>').appendTo(table)
+                var head = $('<tr/>').appendTo(thead)
+                var fields = getFields(nodes);
 
-            for (var i = 0; i < nodes.length; i++) {
-                for (var key in nodes[0]) {
-                    if (keys.indexOf(key) == -1) {  //a key is unique
-                        keys.push(key);
-                        document.getElementById('groupe').innerHTML += '<col style="width:100px"/>';
-                        head.append('<th class="ui-resizable">' + key + '</th>')
+                for (f in fields){
+                    var th = $('<th/>').appendTo(head);
+                    
+                    th.html(fields[f]);
+                    th.click(function(){
+                        nodes.sort(sortByColumn(this.innerHTML,sort_asc));
+                        sort_asc = !sort_asc;
+                        table.remove()
+                        drawTable(zone, nodes)
+                    })
+                }
+
+                for (n in nodes){
+                    var tr = $('<tr/>',{id: "TR"+n}).appendTo(tbody)
+                    for (f in fields){
+                        var td = $("<td/>").appendTo(tr);
+                        td.html(nodes[n][fields[f]]);
+                        td.click(function(a,b){
+                            return function () {
+                                if (table[0].rows[0].cells[b].innerHTML!='baseID'){
+                                    toggleInput($(this))
+                                }
+                            }
+                        }(n,f))
                     }
                 }
             }
-            var map = []
-            var ligne = []
 
-            for (var i = 0; i < nodes.length; i++) {
-                for (var key in nodes[i]) {
-                    ligne.push(nodes[i][key])
-                }
-                map.push(ligne)
-                ligne = []
-            }
-            for (var i = 0; i < map.length; i++) {
-                var l = $('<tr/>', {id: 'TR' + i}).appendTo(tbody)
-                for (var j = 0; j < map[i].length; j++) {
-                    l.append('<td>' + map[i][j] + '</td>')
-                }
-            }
-
-            for (var r = 0; r < table[0].rows.length; r++) {
-                for (var c = 0; c < table[0].rows[r].cells.length; c++) {
-
-                    $(table[0].rows[r].cells[c]).change(function (a, b) {
-                        return function () {
-                            updateData(a, b)
-                        }
-                    }(r, c));
-                }
-            }
-
-            function updateData(r, c) {
-                newVal = table[0].rows[r].cells[c].childNodes[0].value;
-                hcol = $("tr").find("th:eq(" + c + ")")[0].childNodes[0].innerHTML
-                bID = table[0].rows[r].cells[0].innerHTML
-
+            function getFields(nodes){
+                var fields = [];
                 for (var i = 0; i < nodes.length; i++) {
-                    //console.log(bID, nodes[i].baseID)
-                    if (nodes[i].baseID == bID) {
-                        nodes[i][hcol] = newVal;
-                        //console.log(nodes[i])
+                    for (var f in nodes[0]) {
+                        if (fields.indexOf(f) == -1) {  //a key is unique
+                            fields.push(f);
+                        }
                     }
                 }
-
+                return fields;
             }
 
-            editableGrid = new EditableGrid("DemoGridAttach");
+            function toggleInput(cell){
+                if(cell.hasClass('editData')) return;
+                else{
+                    var width = cell.innerWidth();
+                    var height = cell.innerHeight();
+                    var text = cell.text();
+                  
+                    cell.css('height',height)
+                    cell.width(width)
+                    cell.text("");
 
-            // we build and load the metadata in Javascript
-            editableGrid.load({ metadata: [
-                { name: "baseID", datatype: "integer", editable: false},
-                { name: "descriptors", datatype: "string", editable: true },
-                { name: "vewLabels", datatype: "string", editable: true },
-                { name: "label", datatype: "string", editable: true },
-                { name: "currentY", datatype: "double", editable: true},
-                { name: "currentX", datatype: "double", editable: true },
-                { name: "y", datatype: "double", editable: true },
-                { name: "x", datatype: "double", editable: true },
-                { name: "id", datatype: "double", editable: true },
-                { name: "_type", datatype: "string", editable: true }
-            ]});
-            for (i in editableGrid.columns) {
-                editableGrid.columns[i].thousands_separator = ''
+                    var input = $("<input/>").appendTo(cell)
+                    $(input).height(height-5);
+                    $(input).width($(cell).width()-4);
+                    input.attr("value",text)
+
+                    input.focus();
+                    input.blur(function(){
+                        updateData($(this))
+                    })
+                    input.keyup(function (e) {
+                        if (e.keyCode == 13) { //enter key
+                            updateData($(this))
+                        }
+                    });
+                    cell.addClass('editData')
+                }
             }
-            // then we attach to the HTML table and render it
-            editableGrid.attachToHTMLTable('dataTable');
-            editableGrid.renderGrid();
-            $('#dataTable').resizable();
+
+            function updateData(input){
+                var cell = input.parent();
+                var col = cell.index();
+                var hcol = table[0].rows[0].cells[col].innerHTML;
+                var row = cell.parent().index('tr');
+
+                cell.text(input.val());
+                cell.removeClass('editData')
+                input.remove();
+
+                var bID = eval(table[0].rows[row].cells[0].innerHTML);
+                for (n in nodes){
+                    if (nodes[n].baseID===bID){
+                        nodes[n][hcol] = cell.text();
+                    }
+                }
+            }
+
+            function sortByColumn(field, reverse, primer){
+                var key = function (x) {return x[field]};
+                return function (a,b) {
+                    var A = key(a), B = key(b);
+                    return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];                  
+                }
+            }
         }
+
+
 
 
         this.changeColor = function () {

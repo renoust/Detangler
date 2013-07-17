@@ -642,7 +642,6 @@ var TP = TP || {};
             if (params.metric) parameter = params.metric;
             if (params.scaleMin) scaleMin = params.scaleMin;
             if (params.scaleMax) scaleMax = params.scaleMax;
-
             //console.log("params.metric : ", params.metric)
 
             if (parameter == "") return
@@ -654,6 +653,7 @@ var TP = TP || {};
                 .forEach(function (n) {
                     //console.log("node:", n)
                     val = eval("n." + parameter);
+                    if(!val)val = 3;
                     //console.log("val:", val)
                     if (valMin == null | val < valMin)
                         valMin = val;
@@ -670,24 +670,29 @@ var TP = TP || {};
             var dom = [valMin, valMax]
             var range = [scaleMin, scaleMax]
             var scale = d3.scale.linear().domain(dom).range(range)
-
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
 
             node.select("circle.node").attr("r", function (d) {
-                return scale(eval('d.' + parameter));
+                var val = eval('d.'+parameter);
+                if(!val)val = 3;
+                return scale(val);
 
             })
             //error: d n'a plus de ViewMetric par défaut...
             node.select("rect.node")
                 .attr("width", function (d) {
                     //console.log(d)
-                    return 2 * scale(eval('d.' + parameter))
+                    var val = eval('d.'+parameter);
+                    if(!val)val = 3;
+                    return 2 * scale(val)
                 })
                 .attr("height", function (d) {
-                    return 2 * scale(eval('d.' + parameter))
+                    var val = eval('d.'+parameter);
+                    if(!val)val = 3;
+                    return 2 * scale(val)
                 })
 
             var link = g.svg.selectAll("g.link")

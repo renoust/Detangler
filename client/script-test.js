@@ -4,7 +4,7 @@
  * @authors Anne Laure Mesure
  * @created March 2013
  ***********************************************************************/
-
+/*
 
 $("#menu1-content").accordion({
     collapsible: true,
@@ -18,9 +18,7 @@ $(".slider").slider({
     min: 0,
     max: 500,
     values: [ 75, 300 ],
-    /*slide: function( event, ui ) {
-     $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-     }*/
+
 });
 
 
