@@ -57,7 +57,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         #self.sessionMan.start()
         self.utilGraphMan = graphManager()
         newPath = path.split("/")
-        newPath[len(newPath)-1] = "d3"
+        newPath[len(newPath)-1] = "client"
         self.currentPath = "/".join(newPath)+"/"
         print "current path=",self.currentPath
     # the graph manager instance allows many pure graph manipulation
@@ -101,9 +101,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
             print "FILE found!", self.currentPath+arg
             abspath = os.path.abspath(self.currentPath)
             mime_type, encoding = mimetypes.guess_type(self.currentPath+arg)
-            print "mime type", mime_type
-            if mime_type:
-                self.set_header("Content-Type", 'text/javascript')
+            
             f = open(self.currentPath+arg, 'r')
             self.set_header("Content-type", mime_type)
             self.write(f.read())#.encode('utf-8'))
