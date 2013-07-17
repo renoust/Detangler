@@ -2,9 +2,6 @@
 -exposing filtered set of shapes
 -drag offset
 -resize brush
-
--pointer-events: none on blurred view
--disable user-select
  */
 
 d3.custom = d3.custom || {};
@@ -23,7 +20,8 @@ d3.custom.Lasso = function module(){
     var rectIsAlive = true;
     var shapes = null;
     var lassoGroup = null;
-    var g = null
+    var g = null;
+    var dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
 
     function exports(svg){
 
@@ -62,6 +60,7 @@ d3.custom.Lasso = function module(){
                 var bbox = this.getBBox();
                 mouseOffsetX = bbox.x - mousePos[0];
                 mouseOffsetY = bbox.y - mousePos[1];
+                dispatch.brushDragStart();
             });
 
 //        d3.select('body')
@@ -81,6 +80,7 @@ d3.custom.Lasso = function module(){
                     display: 'block',
                     d: 'M' + rectPoints.join('L') + 'Z'
                 });
+                dispatch.brushDrawStart();
             })
             .on('mousemove.drawLasso', function(d, i){
                 if(isPressedOnLasso || !isPressedOnBg) return;
@@ -118,6 +118,7 @@ d3.custom.Lasso = function module(){
                 }
                 //            findIntersect(shapes, d3.select('.lasso'));
                 findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                dispatch.brushDrawMove();
             })
             .on('mousemove.dragLasso', function(d, i){
                 if(!isPressedOnLasso) return;
@@ -131,8 +132,11 @@ d3.custom.Lasso = function module(){
                 });
                 //            findIntersect(shapes, d3.select('.lasso'));
                 findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                dispatch.brushDragMove();
             })
             .on('mouseup', function(d, i){
+                //            findIntersect(shapes, d3.select('.lasso'));
+                findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
                 if(!isPressedOnLasso && isPressedOnBg && !movedOnBg){
                     lassoPoints = [];
                     lasso.attr({display: 'none'});
@@ -152,8 +156,8 @@ d3.custom.Lasso = function module(){
                     rectBrush.classed('lasso', isRectangle);
                     lasso.classed('lasso', !isRectangle);
                 }
-                //            findIntersect(shapes, d3.select('.lasso'));
-                findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                if(isPressedOnLasso) dispatch.brushDragEnd();
+                else dispatch.brushDrawEnd();
                 isPressedOnLasso = false;
                 isPressedOnBg = false;
                 movedOnBg = false;
@@ -231,6 +235,8 @@ d3.custom.Lasso = function module(){
         shapes = _x;
         return this;
     };
+
+    d3.rebind(exports, dispatch, "on");
 
     return exports;
 };

@@ -259,16 +259,20 @@ var TP = TP || {};
 
             __g__.graphDrawing = new TP.GraphDrawing(__g__.graph, __g__.svg, __g__.ID);
 
-            __g__.lasso = d3.custom.Lasso();
+            __g__.lasso = d3.custom.Lasso()
+                .on("brushDrawStart", function(d, i){ console.log("brushDrawStart"); })
+                .on("brushDrawMove", function(d, i){ console.log("brushDrawMove"); })
+                .on("brushDrawEnd", function(d, i){ console.log("brushDrawEnd"); })
+                .on("brushDragStart", function(d, i){ console.log("brushDragStart"); })
+                .on("brushDragMove", function(d, i){ console.log("brushDragMove"); })
+                .on("brushDragEnd", function(d, i){ console.log("brushDragEnd"); });
 
             __g__.svg.on('mouseover', function(d, i){
-                var nodeSelection = d3.select(this).selectAll('.glyph .node');
-                __g__.lasso.shapes(nodeSelection);
-            });
+                    var nodeSelection = d3.select(this).selectAll('.glyph .node');
+                    __g__.lasso.shapes(nodeSelection);
+                })
+
             __g__.svg.call(__g__.lasso)
-
-            console.log(__g__);
-
 
         }
 
