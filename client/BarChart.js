@@ -35,7 +35,8 @@ var TP = TP || {};
             //.enter()
 
             //console.log(node);
-            //}			
+            //}
+            TP.Context().view[event.associatedData.source].getController().sendMessage("updateOtherView", {data:obj.data()[0], type:"simpleSelect"});		
         }
 
         __g__.mouseoutBarChartRect = function (_event) {
@@ -156,12 +157,17 @@ var TP = TP || {};
 
             //assert(true, "erreur1");
 
-            var id = "" + TP.Context().getIndiceView();
+            //var id = "" + TP.Context().getIndiceView();
 
             //console.log("iddddddddddddddddddddddd : " + id)
 
-            TP.Context().view[id] = new TP.ViewBarchart(id, TP.view[target].getGroup(), null,
-                new Array("svg_BarChart", null, width, height, "svg_BarChart_" + smell + "_" + id), "BarChart_" + smell + "_" + TP.view[target].getName(), "barchart", target, smell);
+            var myView = new TP.ViewBarchart({//id:id,
+                                              name:"BarChart_" + smell + "_" + TP.view[target].getName(), 
+                                              type:"barchart", 
+                                              idSourceAssociatedView:target, 
+                                              typeBarchart:smell});
+
+            var id = myView.getID();
 
             //console.log(TP.Context().view[id]);
 

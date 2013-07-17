@@ -444,7 +444,10 @@ var TP = TP || {};
         };
 
 
-        this.drawDataBase = function (target) {
+        this.drawDataBase = function (_event) {
+            
+            var target = _event.associatedData.source;
+            
             var svg = TP.Context().view[target].getSvg();
             var nodes = svg.selectAll('g.node').data()
 
@@ -452,8 +455,10 @@ var TP = TP || {};
             var width = 960 - margin.left - margin.right;
             var height = 500 - margin.top - margin.bottom;
             var id = "" + TP.Context().getIndiceView();
-            TP.Context().view[id] = new TP.View(id, TP.view[target].getGroup(), null,
-                new Array("svg_DataBase", null, width, height, "DataBase" + id), "DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
+            
+            //TP.Context().view[id] = new TP.View(id, null,
+                 //"DataBase" + TP.view[target].getName(), null, null, null, null, null, "DataBase", target);
+            TP.Context().view[id] = new TP.ViewData({id:id, name:"DataBase" + TP.view[target].getName(), type:"data", idSourceAssociatedView:target});
             TP.Context().view[id].addView();
 
             var sort_asc = true;

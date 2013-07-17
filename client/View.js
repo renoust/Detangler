@@ -9,16 +9,12 @@ var TP = TP || {};
 (function () {
 
 
-    var View = function (id, groupe, bouton, svgs, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
+    var View = function (id, bouton, target, nodesC, linksC, bgC, labelC, view_nodes, type, idAssociation) {
 
         var tabTypeEvent = [];
 
         //assert(bouton != null && svgs != null && target != null && application != null, "parametres ok!");
         var __g__ = this;
-
-        var tabDataSvg = svgs;
-        var viewGroup = groupe;
-        //TP.Context().view[target] = __g__;
 
         var controller = null;
         var svg = null;
@@ -87,10 +83,6 @@ var TP = TP || {};
             return graphDrawing;
         }
 
-
-        __g__.getGroup = function () {
-            return viewGroup;
-        }
 
         __g__.viewInitialized = function () {
             return viewInitialized;
@@ -488,73 +480,17 @@ var TP = TP || {};
                 //$(this).height()=fullheight;
             });
 
-            function add() {
-                if (ID != null) {
-
-                    if (view_nodes != null)
-                        viewNodes = view_nodes;
-                    else
-                        viewNodes = "rect";
-
-                    DataTranslation = [0, 0];
-                    //TP.Context().tabNodeColor[target] = nodesC;
-                    //TP.Context().tabLinkColor[target] = linksC;
-                    //TP.Context().tabBgColor[target] = bgC;
-
-                    selectMode = false;
-                    moveMode = true;
-                    showLabels = true;
-                    showLinks = true;
-                    nodeInformation = true;
-
-                    TP.Interaction().createLasso(ID);
-                    //TP.Interaction().addZoom(ID);
-                    TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
-                    //  __g__.getController().sendMessage("select");
-
-                    if (typeView == "substrate") {
-                        //objectReferences.InteractionObject.addZoom(target);
-                        //TP.Interface().addEntanglementFeedback(ID);
-                    }
-                    //TP.Context().stateStack[ID] = new TP.States();
-                    //TP.Context().stateStack[ID].addState('select', new TP.stateSelect(ID));
-                    //TP.Context().stateStack[ID].executeCurrentState();
-                }
-            }
-
-            if (tabDataSvg[0] == "svg" && tabDataSvg[1] == "graph") {
-
-                //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)
-                svg = d3.select("#zone" + ID)
-                    .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .attr("id", tabDataSvg[4])
-                    .attr("idView", ID);
 
 
-                //.attr("viewBox", "0 0 500 600");
 
-                TP.Context().tabGraph["graph_" + ID] = new TP.Graph();
-                graph = TP.Context().tabGraph["graph_" + ID];
-
-                add();
-
-                //TP.Context().tabType[target] = typeView;
-
-                if (typeView == "combined") {
-                    combined_foreground = "substrate";
-                }
-
-            }
-
+            /*
             if (typeView == "substrate") {
                 TP.Context().GroupOfView[viewGroup] = [];
                 TP.Context().GroupOfView[viewGroup]["substrate"] = __g__;
             }
             else {
                 TP.Context().GroupOfView[viewGroup][typeView] = __g__;
-            }
+            }*/
 
             $("#zone" + ID).parent().appendTo("#container")
 
