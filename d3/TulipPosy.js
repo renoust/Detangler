@@ -190,7 +190,7 @@ var TulipPosy = function (originalJSON) {
             TP.Context().view[viewIndex].getController().sendMessage("drawScatterPlotNVD3")
         }}, "Open View"],
         ['Data', '', {click: function () {
-            objectReferences.VisualizationObject.drawDataBase(viewIndex)
+            TP.Context().view[viewIndex].getController().sendMessage("drawDataBase")
         }}, "Open View"]
         // ['b3','circular layout','',{click:function(){objectReferences.ClientObject.callLayout('Circular', viewIndex)}}],
         // ['b5','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random', viewIndex)}}],        
@@ -274,8 +274,9 @@ var TulipPosy = function (originalJSON) {
         ['ScatterPlot', '', {click: function () {
             TP.Context().view[viewIndex1].getController().sendMessage("drawScatterPlot")
         }}, "Open View"],
+
         ['Data', '', {click: function () {
-            objectReferences.VisualizationObject.drawDataBase(viewIndex1)
+            TP.Context().view[viewIndex1].getController().sendMessage("drawDataBase")
         }}, "Open View"]
         // ['b3','random layout','',{click:function(){objectReferences.ClientObject.callLayout('Random',viewIndex1)}}],
         // ['b4','reset view','',{click:function(){objectReferences.VisualizationObject.resetView(viewIndex1)}}],

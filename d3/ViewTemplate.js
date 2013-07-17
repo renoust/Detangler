@@ -252,7 +252,7 @@ var TP = TP || {};
 
             __g__.updateOtherViews = function(obj, message){ //propagation of updateEvent
 
-                console.log("updateOtherViews")
+                //console.log("updateOtherViews")
 
                 var tabLinks = __g__.getTabLinks();	
 
@@ -275,17 +275,8 @@ var TP = TP || {};
                     }
                 }
             }
-   
-
-            __g__.modifUpdate = null;
-
-   
-   
-           __g__.updateView = function(event){
-                __g__.modifUpdate();
-                __g__.updateOtherViews(event, true);
-           }
-
+            
+            
         __g__.removeViewTemplate = function () {
 
             d3.select("#zone" + __g__.ID).remove();
