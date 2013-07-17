@@ -14,7 +14,7 @@ var TP = TP || {};
 
         __g__.typeBarChart = parameters.typeBarchart;
 
-		__g__.updateEventHandler = new TP.UpdateEventHandler("barchart", __g__.ID);
+        __g__.updateEventHandler = new TP.UpdateEventHandler("barchart", __g__.ID);
 
         __g__.getTypeBarChart = function () {
             return __g__.typeBarChart;
@@ -43,9 +43,9 @@ var TP = TP || {};
             __g__.typeBarChart = null;
         }
 
-		__g__.modifUpdate = function(){
-			assert(true, "je suis la vue Barchart : "+__g__.ID)
-		}	
+        __g__.modifUpdate = function(){
+            assert(true, "je suis la vue Barchart : "+__g__.ID)
+        }
 
         __g__.initStates = function () {
             __g__.controller.addState({name: "mouseoverBarChartRect", bindings: null, func: function (_event) {/*assert(true, "mouseoverBarChartRect");*/
@@ -58,13 +58,13 @@ var TP = TP || {};
                 TP.BarChart().mouseclickBarChartRect(_event);
             }}, "all", true);
             
-			__g__.controller.addState({name : "updateOtherView", bindings : null, func:function(event){
-				console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateOtherViews(event);
-			}}, "all", true)		
-			
-			__g__.controller.addState({name : "updateView", bindings : null, func:function(event){
-				console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
-			}}, "all", true)
+            __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(event){
+                console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateOtherViews(event);
+            }}, "all", true)		
+
+            __g__.controller.addState({name : "updateView", bindings : null, func:function(event){
+                console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
+            }}, "all", true)
 
             __g__.controller.setCurrentState(null);
 

@@ -3,15 +3,15 @@
 var TP = TP || {};
 (function () {
 
-
-    var StateTree = function () {
+    var StateGraph = function () {
 
         var __g__ = this;
 
         var hashTabNode = new Object();
         var rootP = {};
+        var saveState = new Object();
 
-        __g__.getStateTree = function () {
+        __g__.getStateGraph = function () {
             return hashTabNode;
         }
 
@@ -45,6 +45,9 @@ var TP = TP || {};
                 return;
             }
 
+            if(saveState[node.name] != null){
+                delete saveState[node.name];
+            }
 
             if (hashTabNode[node.name] == null) {
                 hashTabNode[node.name] = {name: node.name, root: {}, bindings: {}, func: null, specialRoot: false, activate: true, useless: false};
@@ -97,7 +100,7 @@ var TP = TP || {};
                         }
                         else {
                             hashTabNode[node.name].bindings = new Object();
-                            hashTabNode[node.name].bindings[tmp[key]] = null;
+                            hashTabNode[node.name].bindings[tmp[key]] = true;
                             hashTabNode[node.name].specialRoot = true;
                             break;
                         }
@@ -121,7 +124,83 @@ var TP = TP || {};
         }
 
 
+        __g__.deleteState = function(name){
+
+            if(hashTabNode[name] != null){
+
+                saveState[name] = hashTabNode[name];
+                delete hashTabNode[name];
+
+                if(saveState[name].bindings["all"] == null){
+
+                    for(var key in saveState[name].bindings){
+                        if(hashTabNode[key] != null){
+                            if(hashTabNode[key].root[name] != null)
+                                delete hashTabNode[key].root[name];
+                        }
+                        else if(saveState[key] != null){
+                            if(saveState[key].root[name] != null)
+                                delete saveState[key].root[name];
+                        }
+                    }
+                }
+            }
+            else{
+                assert(false, "state does'nt exist !!!")
+                return;
+            }
+        }
+
+
+        __g__.goBackState = function(name)
+        {
+            var bindings = new Array();
+            var node = null;
+            var nodeRoot = null;
+            var useless = null;
+            var activate = null;
+
+            if(saveState[name] != null){
+
+                for(var key in saveState[name].bindings)
+                    bindings.push(key);				
+
+                node = {name:saveState[name].name, bindings:bindings, func:saveState[name].func}
+
+                if(saveState[name].specialRoot == true){
+                    nodeRoot = (saveState[name].root["all"] != null) ? "all":null;
+                }
+                else
+                    nodeRoot = null;
+
+                useless = saveState[name].useless;
+
+                activate = saveState[name].activate;
+
+                console.log("node : ",node, "useless : ",useless, "activate : ", activate);
+
+                var tmp = saveState[name]; //because saveState[name] is deleted in addState;
+
+                __g__.addState(node, nodeRoot, useless, activate);
+
+                if(hashTabNode[name] != null){
+                    for(var key in tmp.root)
+                        hashTabNode[name].root[key] = tmp.root[key];
+
+                    delete tmp;
+                }
+                else{
+                    assert(false, "problem with State adding");
+                }
+                
+            }
+            else{
+                assert(false, "state does'nt exist")
+            }
+        }
+
+
         return __g__;
     }
-    TP.StateTree = StateTree;
+    TP.StateGraph = StateGraph;
 })(TP);

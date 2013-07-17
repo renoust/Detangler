@@ -586,7 +586,7 @@ var TP = TP || {};
             if (!TP.Context().view[target].getMoveMode())
                 return;
 
-            var cible = d3.select("#svg_" + target)[0][0]
+            var cible = d3.select("#svg" + target)[0][0]
 
             var cGraph = TP.Context().view[target].getGraph();
             var svg = TP.Context().view[target].getSvg();
@@ -682,9 +682,9 @@ var TP = TP || {};
 
             if (!TP.Context().view[target].getMoveMode())
                 return;
-
-            data_translation[0] = d3._event.dx + data_translation[0];
-            data_translation[1] = d3._event.dy + data_translation[1];
+			
+            data_translation[0] = _event.associatedData.dx + data_translation[0];
+            data_translation[1] = _event.associatedData.dy + data_translation[1];
 
             var nodeDatum = svg.selectAll("g.node").data()
 
@@ -789,7 +789,7 @@ var TP = TP || {};
 
             svg.call(d3.behavior.drag()
                 .on("drag", function () {
-                    TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg});
+                    TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg, dx:d3.event.dx, dy:d3.event.dy});
                 })
                 .on("dragend", function () {
                     TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data: data_translation, svg: svg});

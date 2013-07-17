@@ -268,38 +268,44 @@ var TP = TP || {};
             $("#zone" + __g__.ID).parent().appendTo("#container")
 
         }
-    
+
             __g__.updateOtherViews = function(obj, message){ //propagation of updateEvent
-                
-                var tabLinks = __g__.getTabLinks();    
-                
+
+                //console.log("updateOtherViews")
+
+                var tabLinks = __g__.getTabLinks();	
+
                 var data = (obj.associatedData.data != null) ? obj.associatedData.data:null;
                 var source = obj.associatedData.source;
-                    
+
                 for(var key in tabLinks)
                 {
                     for(var i = 0; i < tabLinks[key].length; i++)
                     {
                         if(tabLinks[key][i].getID() != source){ //we check if the view we are going to send message isn't the source view'
-                                                        
+                            
+                            //console.log("idDest : "+tabLinks[key][i].getID());
+                            //console.log("idSource : "+obj.associatedData.target);
+
                             //check sended Data
                             
-                            __g__.controller.sendMessage("updateView", {type:obj.associatedData.type, data:data}, tabLinks[key][i].getID());        
-                        }
+                            __g__.controller.sendMessage("updateView", {type:obj.associatedData.type, data:data}, tabLinks[key][i].getID());
+                            }
                     }
                 }
             }
-       
-        
+   
+
             __g__.modifUpdate = null;
-            
-       
-       
-           __g__.updateView = function(event){
-                   __g__.modifUpdate();
-                   __g__.updateOtherViews(event, true);
-           }      
-        
+
+   
+   
+           __g__.updateView = function(_event){
+                __g__.modifUpdate();
+                __g__.updateOtherViews(_event, true);
+           }
+
+
         __g__.removeViewTemplate = function () {
 
             d3.select("#zone" + __g__.ID).remove();

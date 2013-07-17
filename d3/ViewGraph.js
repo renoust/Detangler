@@ -47,9 +47,9 @@ var TP = TP || {};
         __g__.combined_foreground = null;
         __g__.acceptedGraph = [];
         __g__.graph = null;
-		
-		__g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
-		
+        
+        __g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
+        
         __g__.getGraph = function () {
             return __g__.graph;
         }
@@ -345,7 +345,7 @@ var TP = TP || {};
                 TP.Lasso().mousemoveMouseDown(_event);
             }});
 
-            __g__.controller.addState({name: "arrangeLabels", bindings: ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], func: function (_event) {/*assert(true, "arrangeLabels"); */
+            __g__.controller.addState({name: "arrangeLabels", bindings: ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping", "movingZoomDrag"], func: function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
             }}, "all");
 
@@ -458,13 +458,13 @@ var TP = TP || {};
                 TP.Interaction().brushstart(_event);
             }}, "all", true);
 
-			__g__.controller.addState({name : "updateOtherView", bindings : null, func:function(_event){
-				console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateOtherViews(_event);
-			}}, "all", true)		
-			
-			__g__.controller.addState({name : "updateView", bindings : null, func:function(_event){
-				console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
-			}}, "all", true)
+            __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(_event){
+                console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateOtherViews(_event);
+            }}, "all", true)		
+
+            __g__.controller.addState({name : "updateView", bindings : null, func:function(_event){
+                console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
+            }}, "all", true)
 
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
