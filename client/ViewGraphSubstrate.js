@@ -184,59 +184,60 @@ var TP = TP || {};
             __g__.controller.addState({name: "zoneApparu", bindings: ["nodeSelected", "selectionVide", "arrangeLabels"], func: function (_event) {/*assert(true, "zoneApparu");*/
                 TP.Interaction().checkIntersect(_event);
             }});
-            __g__.controller.addState({name: "nodeSelected", bindings: ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], func: function (_event) {/*assert(true, "nodeSelected");*/
+            __g__.controller.addState({name: "nodeSelected", bindings: [/*"mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"*/], func: function (_event) {/*assert(true, "nodeSelected");*/
                 TP.Interaction().nodeSelected(_event);
             }});
-            __g__.controller.addState({name: "selectionVide", bindings: ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], func: function (_event) {/*assert(true, "selectionVide");*/
+            __g__.controller.addState({name: "selectionVide", bindings: [/*"mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown",*/ "sizeMapping"], func: function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
             }});
 
-            __g__.controller.addState({name: "mouseupLasso", bindings: ["zoneApparu", "mousedownLasso", "mousemoveLasso"], func: function (_event) {/*assert(true, "mouseupLasso");*/
+            /*
+            __g__.controller.addState({name: "mouseupLasso", bindings: ["zoneApparu", "mousedownLasso", "mousemoveLasso"], func: function (_event) {
                 __g__.controller.disableState("mouseupLasso");
                 _event.associatedData.myL.canMouseUp(_event.associatedData.mouse);
             }});
-            __g__.controller.addState({name: "mousedownLasso", bindings: ["mousemoveLasso", "mouseupLasso"], func: function (_event) {/*assert(true, "mousedownLasso");*/
+            __g__.controller.addState({name: "mousedownLasso", bindings: ["mousemoveLasso", "mouseupLasso"], func: function (_event) {
                 __g__.controller.enableState("mouseupLasso");
                 _event.associatedData.myL.canMouseDown(_event.associatedData.mouse);
             }});
-            __g__.controller.addState({name: "mousemoveLasso", bindings: ["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], func: function (_event) {/*assert(true, "mousemoveLasso");*/
+            __g__.controller.addState({name: "mousemoveLasso", bindings: ["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], func: function (_event) {
                 _event.associatedData.myL.canMouseMove(_event.associatedData.mouse);
             }});
 
             __g__.controller.addState({name: "mouseoverMouseDown", bindings: ["mousedownMouseDown", "mousemoveLasso", "mousemoveMouseDown"], func: function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {
-                    /*assert(true, "mouseoverMouseDown");*/
                     __g__.controller.disableState("mousemoveLasso");
                     TP.Lasso().mouseoverMouseDown(_event);
                 }
             }});
 
-            __g__.controller.addState({name: "mouseoutMouseDown", bindings: ["mousemoveLasso"], func: function (_event) {/*assert(true, "mouseoutMouseDown");*/
+            __g__.controller.addState({name: "mouseoutMouseDown", bindings: ["mousemoveLasso"], func: function (_event) {
                 __g__.controller.enableState("mousemoveLasso");
                 TP.Lasso().mouseoutMouseDown(_event);
             }});
-            __g__.controller.addState({name: "mousedownMouseDown", bindings: ["mousemoveMouseDown"], func: function (_event) {/*assert(true, "mousedownMouseDown");*/
+            __g__.controller.addState({name: "mousedownMouseDown", bindings: ["mousemoveMouseDown"], func: function (_event) {
                 TP.Lasso().mousedownMouseDown(_event);
             }});
-            __g__.controller.addState({name: "mousemoveMouseDown", bindings: ["mousemoveMouseDown", "mouseoutMouseDown", "mousedownMouseDown", "mouseupMouseDown", "zoneApparu", "mousemoveLasso"], func: function (_event) {/*assert(true, "mousemoveMouseDown");*/
+            __g__.controller.addState({name: "mousemoveMouseDown", bindings: ["mousemoveMouseDown", "mouseoutMouseDown", "mousedownMouseDown", "mouseupMouseDown", "zoneApparu", "mousemoveLasso"], func: function (_event) {
                 TP.Lasso().mousemoveMouseDown(_event);
             }});
+            */
 
-            __g__.controller.addState({name: "arrangeLabels", bindings: ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], func: function (_event) {/*assert(true, "arrangeLabels"); */
+            __g__.controller.addState({name: "arrangeLabels", bindings: [/*"mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", */"sizeMapping"], func: function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
             }}, "all");
 
-            __g__.controller.addState({name: "mouseupMouseDown", bindings: ["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], func: function (_event) {/*assert(true, "mouseupMouseDown");*/
+            __g__.controller.addState({name: "mouseupMouseDown", bindings: [/*"mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"*/], func: function (_event) {/*assert(true, "mouseupMouseDown");*/
                 TP.Lasso().mouseupMouseDown(_event);
             }});
 
 
             __g__.controller.addState({name: "move", bindings: ["movingZoomDrag"], func: function (_event) {/*assert(true, "move");*/
-                TP.Interaction().removeLasso(_event);
+                //TP.Interaction().removeLasso(_event);
                 TP.Interaction().addZoom(_event)
             }}, "all");
-            __g__.controller.addState({name: "select", bindings: ["mousemoveLasso"], func: function (_event) {/*assert(true, "select");*/
-                TP.Interaction().addLasso(_event);
+            __g__.controller.addState({name: "select", bindings: [/*"mousemoveLasso"*/], func: function (_event) {/*assert(true, "select");*/
+                //TP.Interaction().addLasso(_event);
                 TP.Interaction().removeZoom(_event)
             }}, "all");
 

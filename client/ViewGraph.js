@@ -234,7 +234,7 @@ var TP = TP || {};
                     __g__.showLinks = true;
                     __g__.nodeInformation = true;
 
-                    TP.Interaction().createLasso(__g__.ID);
+                    //TP.Interaction().createLasso(__g__.ID);
                     //TP.Interaction().addZoom(ID);
                     TP.Interface().toggleSelectMove(__g__.ID);
                 }
