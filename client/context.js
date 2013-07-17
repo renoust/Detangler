@@ -179,14 +179,7 @@ var TP = TP || {};
             }}, "all");
             __g__.controller.addState({name:"getPlugins", bindings:null, func:function(_event){
                 TP.Client().getPlugins(_event);
-            }}, "all");
-            __g__.controller.addState({name:"getPluginsSendQuery", bindings:null, func:function(_event){
-                TP.Client().getPluginsSendQuery(_event);
-            }}, "all");            
-            __g__.controller.addState({name:"answerGetPlugins", bindings:null, func:function(_event){
-                TP.Client().answerGetPlugins(_event);
-            }}, "all");
-        
+            }}, "all");        
         }
 
         __g__.initController = function (ID, typeC) {

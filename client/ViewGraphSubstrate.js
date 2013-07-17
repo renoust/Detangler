@@ -87,7 +87,7 @@ var TP = TP || {};
                 __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
             }}, "Layout"],
             ['Tulip layout list','',{click:function(){
-                TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms})
+                __g__.getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms}, 'principal')
             }}, "Layout"],
     
             ['Induced subgraph', '', {click: function () {
