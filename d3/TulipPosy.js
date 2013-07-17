@@ -138,6 +138,8 @@ var TulipPosy = function (originalJSON) {
         TP.ObjectReferences().ClientObject.loadData(null, viewGraphSubstrate.getID())
     }
 
+	TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout",endHandler:TP.Context().updateTulipLayoutAlgorithms})
+	TP.Context().getController().sendMessage('getPlugins', {pluginType:"double",endHandler:TP.Context().updateTulipDoubleAlgorithms})
 
     if ($('#analyse').is(':checked')) {
                     ['Bipartite analysis', '', {click: function () {

@@ -295,6 +295,56 @@ var TP = TP || {};
         }
 
 
+        this.getPlugins = function (_event) {
+            
+            var pluginType = _event.associatedData.pluginType;
+            var endHandler = _event.associatedData.endHandler;
+            //save for undo
+            //var data_save = {nodes : TP.Context().getViewGraph(graphName).nodes(), links : TP.Context().getViewGraph(graphName).links()};
+           // var undo = function(){objectReferences.UpdateViewsObject.applyLayoutFromData(data_save, graphName);}
+            
+            var pluginParams = {
+                type: pluginType
+            };
+            
+            var params = {
+                sid: contxt.sessionSid,
+                type: 'plugin',
+                parameters: JSON.stringify(pluginParams)
+            };
+
+            TP.Context().getController().sendMessage("getPluginsSendQuery",{params:params, endHandler:endHandler}, "principal")
+                        
+        };
+        
+        this.getPluginsSendQuery = function(_event)
+        {
+           
+           var params = _event.associatedData.params;
+           var endHandler = _event.associatedData.endHandler;
+
+           __g__.sendQuery({
+               parameters: params,
+               success: function (data) {
+                   TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
+                }
+            });
+             
+        }
+        
+        this.answerGetPlugins = function(_event)
+        {
+            //console.log("Je suis dans answer getPlugins");
+            
+            var data = _event.associatedData.data;
+            var endHandler = _event.associatedData.endHandler;
+            
+            assert(true, "Grabbed algorithms:")
+            console.log(data)
+            endHandler.call(TP.Context(), data)
+        }
+
+
         // This function calls a layout algorithm of a graph through tulip, 
         // and moves the given graph accordingly
         // layoutName, the name of the tulip layout we want to call
@@ -323,6 +373,7 @@ var TP = TP || {};
             TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery", {params: params}, "principal")
 
         };
+        
 
 
         this.callLayoutSendQuery = function (_event) {

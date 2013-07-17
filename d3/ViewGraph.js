@@ -301,7 +301,6 @@ var TP = TP || {};
 		assert(true, "je suis la vue Graph : "+__g__.ID)
 	}
 
-
         __g__.initStates = function () {
 
             __g__.controller.addState({name: "zoneApparu", bindings: ["nodeSelected", "selectionVide", "arrangeLabels"], func: function (_event) {/*assert(true, "zoneApparu");*/
@@ -325,7 +324,8 @@ var TP = TP || {};
             __g__.controller.addState({name: "mousemoveLasso", bindings: ["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], func: function (_event) {/*assert(true, "mousemoveLasso");*/
                 _event.associatedData.myL.canMouseMove(_event.associatedData.mouse);
             }});
-
+            
+                        
             __g__.controller.addState({name: "mouseoverMouseDown", bindings: ["mousedownMouseDown", "mousemoveLasso", "mousemoveMouseDown"], func: function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {
                     /*assert(true, "mouseoverMouseDown");*/
