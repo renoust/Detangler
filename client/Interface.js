@@ -650,14 +650,14 @@ var TP = TP || {};
         }
 
 
-        this.createArrayButtons = function (tab, pane) {
+        this.createArrayButtons = function (buttonsData, pane) {
             var menu = pane;
             var label, param, evnt;
 
-            for (var i = 0; i < tab.length; i++) {
-                label = tab[i][0];
-                param = tab[i][1];
-                evnt = tab[i][2];
+            for (var i = 0; i < buttonsData.length; i++) {
+                label = buttonsData[i].interactorLabel;
+                param = buttonsData[i].interactorParameters;
+                evnt = buttonsData[i].callbackBehavior;
 
                 var fam = null;
                 if (param == '') {
