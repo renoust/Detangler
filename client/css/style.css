@@ -1,7 +1,20 @@
 /********************************* General ***********************************/
 *{font-family: Verdana,Arial,sans-serif;}
 
-body{margin:0px;}
+body{
+    margin:0px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+}
+
+.enable-text-selection{
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    user-select: all;
+    -ms-user-select: all;
+}
 
 li{list-style-type:none}
 
