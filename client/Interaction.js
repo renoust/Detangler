@@ -23,7 +23,7 @@ var TP = TP || {};
         // the brush intersection function, and applies actions to the 
         // selected target.
         // target, the string value of the target svg view         
-        this.createLasso = function (target) {
+        this.createLasso_deprecated = function (target) {
             if (!target)
                 return
 
@@ -51,14 +51,14 @@ var TP = TP || {};
              }*/
 
             //TP.Context().tabLasso[target] = new TP.Lasso(svg);
-            TP.Context().view[target].setLasso(new TP.Lasso(target));
-            myL = TP.Context().view[target].getLasso();
+            //TP.Context().view[target].setLasso(new TP.Lasso(target));
+            //myL = TP.Context().view[target].getLasso();
 
-            myL.canMouseUp = __g__.MouseUp
+            //myL.canMouseUp = __g__.MouseUp
 
-            myL.canMouseMove = __g__.MouseMove
+            //myL.canMouseMove = __g__.MouseMove
 
-            myL.canMouseDown = __g__.MouseDown
+            //myL.canMouseDown = __g__.MouseDown
 
         }
 
@@ -83,7 +83,7 @@ var TP = TP || {};
         // once the selection is made, it applies the synchronization
         // function syncGraph() to the selected nodes
         // selection colors are hardcoded but this should be changed
-        this.checkIntersect = function (object) {
+        this.checkIntersect_deprecated = function (object) {
 
             //assert(true, "checkIntersect");
 
@@ -182,7 +182,7 @@ var TP = TP || {};
         //console.log("selection list: ", selList, " with length ", selList.length)
 
 
-        this.nodeSelected = function (object) {
+        this.nodeSelected_deprecated = function (object) {
 
             if (!object)
                 return
@@ -406,7 +406,7 @@ var TP = TP || {};
         }
 
 
-        __g__.brushstart = function (_event) {
+        __g__.brushstart_deprecated = function (_event) {
 
             var svg = _event.associatedData.svg;
             svg.classed("selecting", true);
@@ -417,7 +417,7 @@ var TP = TP || {};
         // This function associate a d3.svg.brush element to select nodes in a 
         // view target, the string value of the target svg view 
         // This function is deprecated but one can activate it anytime
-        this.addBrush = function (target) {
+        this.addBrush_deprecated = function (target) {
 
 
             var svg = null
@@ -515,7 +515,7 @@ var TP = TP || {};
         // Applies the lasso interactor to a specific svg target as callback
         // to the mouse events.
         // target, the string value of the target svg view         
-        this.addLasso = function (_event) {
+        this.addLasso_deprecated = function (_event) {
 
             var target = null;
 
@@ -559,7 +559,7 @@ var TP = TP || {};
         // Removes the lasso interactor from a specific svg target's callbacks 
         //to its mouse events.
         // target, the string value of the target svg view         
-        this.removeLasso = function (_event) {
+        this.removeLasso_deprecated = function (_event) {
 
             var target = null;
 

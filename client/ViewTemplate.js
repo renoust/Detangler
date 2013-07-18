@@ -49,14 +49,15 @@ var TP = TP || {};
             var end = parameters.interactorList.length;
 
             for (var p = 0; p < end; p++) {
-                if (__g__.hashInteractorList[parameters.interactorList[p][3]] != null) {
-                    __g__.hashInteractorList[parameters.interactorList[p][3]].push(parameters.interactorList[p]);
+                if (__g__.hashInteractorList[parameters.interactorList[p].interactorGroup] != null) {
+                    __g__.hashInteractorList[parameters.interactorList[p].interactorGroup].push(parameters.interactorList[p]);
                 }
                 else {
-                    __g__.hashInteractorList[parameters.interactorList[p][3]] = [];
-                    __g__.hashInteractorList[parameters.interactorList[p][3]].push(parameters.interactorList[p]);
+                    __g__.hashInteractorList[parameters.interactorList[p].interactorGroup] = [];
+                    __g__.hashInteractorList[parameters.interactorList[p].interactorGroup].push(parameters.interactorList[p]);
                 }
             }
+            //console.log(parameters.interactorList, __g__.hashInteractorList);
         }
 
         //registers the view
