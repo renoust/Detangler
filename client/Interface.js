@@ -340,17 +340,20 @@ var TP = TP || {};
 
 
         this.tileDialog = function(tabView, x, y, h, w, sens){
+            console.log("BEGIN", tabView, x, y, h, w, sens)
             var length = tabView.length;
             if(length==1){
                 drawDialog(x,y,h,w,tabView[0])
-                //return x;
+                return x;
             }else{
                 tmp = changesens(h,w,sens)
                 hbis = tmp.h;
                 wbis = tmp.w;
                 s1 = this.tileDialog(tabView.slice(0,length/2), x,y,hbis,wbis,!sens)
+                console.log("MIDDLE",tabView, x, y, h, w, sens)
                 s2 = this.tileDialog(tabView.slice(length/2, length), x+(w-wbis), y+(h-hbis),hbis,wbis,!sens);
             }
+            console.log("END",tabView, x, y, h, w, sens)
             function changesens(h,w,sens){
                 if(sens)
                     return {h:h/2, w:w};
@@ -498,13 +501,17 @@ var TP = TP || {};
                 tgbutton.addClass('open')
                 $('<h3/>', {text: 'Interactions'}).appendTo(tgbutton);
                 content = $("#" + menu + " .menu-content");
-            }
-            content.css('margin', 0)
-
-            i = 0;
+            }            
             $('<ul/>', {id: 'nav',class:'nav'}).appendTo(content);
+
+            if (buttons.hasOwnProperty('undefined')){
+                console.log('tot')
+                this.createArrayButtons(buttons.undefined,'nav')
+            }
+            i = 0;
             for (var key in buttons) {
-                if(key!="View"){
+                if(key!="View" && key!='undefined'){
+
                     fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
                     $('<a/>', {text: key}).appendTo(fam)
                     $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
@@ -520,6 +527,8 @@ var TP = TP || {};
             var content = $("#" + menu + " .menu-content");
             var tgbutton = $('#' + menu).find('.toggleButton')
             $('<h3/>', {text: 'Informations'}).appendTo(tgbutton);
+
+            content.css("margin",10)
 
             $('<div/>', {id: 'entanglement-cont'}).appendTo('#' + content.attr('id'))
             $('<div/>', {id: 'infoView'}).appendTo('#' + content.attr('id'));
@@ -651,6 +660,7 @@ var TP = TP || {};
 
 
         this.createArrayButtons = function (buttonsData, pane) {
+            console.log(buttonsData)
             var menu = pane;
             var label, param, evnt;
 
