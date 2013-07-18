@@ -36,7 +36,8 @@ d3.custom.Lasso = function module(){
                 stroke: 'black',
                 fill: 'red',
                 'fill-opacity': 0.2,
-                display: 'none'
+                display: 'none',
+                'fill-rule': 'evenodd'
             })
             .on('mousedown', function(d, i){
                 isPressedOnLasso = true;
@@ -52,7 +53,8 @@ d3.custom.Lasso = function module(){
                 stroke: 'black',
                 fill: 'red',
                 'fill-opacity': 0.2,
-                display: 'none'
+                display: 'none',
+                'fill-rule': 'evenodd'
             })
             .on('mousedown', function(d, i){
                 isPressedOnLasso = true;
@@ -63,9 +65,7 @@ d3.custom.Lasso = function module(){
                 dispatch.brushDragStart();
             });
 
-//        d3.select('body')
-        svg
-            .on('mousedown.drawLasso', function(d, i){
+        svg.on('mousedown.drawLasso', function(d, i){
                 if(isPressedOnLasso) return;
                 isPressedOnBg = true;
                 if(!!d3.select('.lasso')[0][0]){
@@ -73,7 +73,6 @@ d3.custom.Lasso = function module(){
                     rectBrush.attr({width: 0, height: 0});
                     lasso.attr({display: 'none'});
                 }
-//                var mousePos = d3.mouse(d3.select('body').node());
                 var mousePos = d3.mouse(svg.node());
                 rectPoints = [mousePos, mousePos, mousePos, mousePos]
                 rectBrush.attr({
@@ -91,7 +90,6 @@ d3.custom.Lasso = function module(){
                     rectBrush.attr({display: 'none'});
                 }
                 movedOnBg = true;
-//                var mousePos = d3.mouse(d3.select('body').node());
                 var mousePos = d3.mouse(svg.node());
                 if((skip++ % skipNum) >= skipNum - 1){
                     lassoPoints.push([mousePos[0], mousePos[1]]);
@@ -116,13 +114,11 @@ d3.custom.Lasso = function module(){
                     rectBrush.attr({display: 'none'});
                     rectIsAlive = false;
                 }
-                //            findIntersect(shapes, d3.select('.lasso'));
-                findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
-                dispatch.brushDrawMove();
+                var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                dispatch.brushDrawMove(selectedSet);
             })
             .on('mousemove.dragLasso', function(d, i){
                 if(!isPressedOnLasso) return;
-//                var mousePos = d3.mouse(d3.select('body').node());
                 var mousePos = d3.mouse(svg.node());
                 var bbox = d3.select('.lasso').node().getBBox();
                 var newPosX = mousePos[0] - bbox.x + mouseOffsetX;
@@ -130,13 +126,11 @@ d3.custom.Lasso = function module(){
                 lassoGroup.attr({
                     transform: 'translate(' + newPosX + ' ' + newPosY + ')'
                 });
-                //            findIntersect(shapes, d3.select('.lasso'));
-                findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
-                dispatch.brushDragMove();
+                var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                dispatch.brushDragMove(selectedSet);
             })
             .on('mouseup', function(d, i){
-                //            findIntersect(shapes, d3.select('.lasso'));
-                findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
+                var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
                 if(!isPressedOnLasso && isPressedOnBg && !movedOnBg){
                     lassoPoints = [];
                     lasso.attr({display: 'none'});
@@ -156,8 +150,8 @@ d3.custom.Lasso = function module(){
                     rectBrush.classed('lasso', isRectangle);
                     lasso.classed('lasso', !isRectangle);
                 }
-                if(isPressedOnLasso) dispatch.brushDragEnd();
-                else dispatch.brushDrawEnd();
+                if(isPressedOnLasso) dispatch.brushDragEnd(selectedSet);
+                else dispatch.brushDrawEnd(selectedSet);
                 isPressedOnLasso = false;
                 isPressedOnBg = false;
                 movedOnBg = false;
@@ -165,53 +159,50 @@ d3.custom.Lasso = function module(){
     }
 
     function findAllIntersect(shapes, polygon, lasso){
-        shapes.each(function(d, i){
-            findIntersect(d3.select(this), polygon, lasso);
-        });
+        var selectedShapesByBBox = findIntersectBBox(shapes, polygon, lasso);
+        return findIntersectCenter(selectedShapesByBBox, polygon, lasso);
     }
 
-    function findIntersect(shape, polygon, lasso){
-        var i, j;
-        var c = 0;
+    function findIntersectCenter(shapes, polygon, lasso){
+        var i, j, x, y, w, c, polyX, polyY, polyPrevX, polyPrevY, shapeBBox;
         var lassoTranslate = d3.transform(lasso.attr('transform')).translate;
-        var shapeBBox = shape.node().getBBox();
-        var x = shapeBBox.x + shapeBBox.width / 2 - lassoTranslate[0];
-        var y = shapeBBox.y + shapeBBox.height / 2 - lassoTranslate[1];
-        var end1 = polygon.length;
-        var end2 = end1 - 1;
-        var polyX, polyY, polyPrevX, polyPrevY;
-        for(i = 0, j = end2; i < end1; j = i++){
-            polyY = polygon[i][1];
-            polyX = polygon[i][0];
-            polyPrevY = polygon[j][1];
-            polyPrevX = polygon[j][0];
-            if((((polyY <= y) && (y < polyPrevY)) || ((polyPrevY <= y) && (y < polyY))) &&
-                (x < (polyPrevX - polyX) * (y - polyY) / (polyPrevY - polyY) + polyX)){
-                c = !c;
+
+        return shapes.filter(function(){
+            shapeBBox = this.getBBox();
+            x = shapeBBox.x + shapeBBox.width/2 - lassoTranslate[0];
+            y = shapeBBox.y + shapeBBox.height/2 - lassoTranslate[1];
+            w = shapeBBox.width;
+            var end1 = polygon.length;
+            var end2 = end1 - 1;
+            c = false;
+            for(i = 0, j = end2; i < end1; j = i++){
+                polyY = polygon[i][1];
+                polyX = polygon[i][0];
+                polyPrevY = polygon[j][1];
+                polyPrevX = polygon[j][0];
+                if((((polyY <= y) && (y < polyPrevY)) || ((polyPrevY <= y) && (y < polyY))) &&
+                    (x < (polyPrevX - polyX) * (y - polyY) / (polyPrevY - polyY) + polyX)){
+                    c = !c;
+                }
             }
-        }
-        shape.style({fill: function(d, i){
-            return c ? 'limegreen' : 'skyblue';
-        }});
+            return c;
+        });
     }
 
-    function findIntersectBBox(shapes, lasso){
-        var bbox = lasso.node().getBBox();
-        var lassoTranslate = d3.transform(lassoGroup.attr('transform')).translate;
-        var lassoX = bbox.x + lassoTranslate[0];
-        var lassoY = bbox.y + lassoTranslate[1];
-        var intersected = shapes.filter(function(d, i){
-            var selectionBBox = this.getBBox();
-            var rectX = selectionBBox.x;
-            var rectY = selectionBBox.y;
-            var rectW = selectionBBox.width;
-            var rectH = selectionBBox.height;
-            return rectX + rectW > lassoX && rectX < lassoX + bbox.width
-                && rectY + rectH > lassoY && rectY < lassoY + bbox.height;
+    function findIntersectBBox(shapes, polygon, lasso){
+        var lassoTranslate = d3.transform(lasso.attr('transform')).translate;
+        var lassoBBox = lasso.node().getBBox();
+        var lassoX = lassoBBox.x + lassoTranslate[0];
+        var lassoY = lassoBBox.y + lassoTranslate[1];
+        return shapes.filter(function(d, i){
+            var shapeBBox = this.getBBox();
+            var shapeX = shapeBBox.x;
+            var shapeY = shapeBBox.y;
+            var shapeW = shapeBBox.width;
+            var shapeH = shapeBBox.height;
+            return shapeX + shapeW > lassoX && shapeX < lassoX + lassoBBox.width
+                && shapeY + shapeH > lassoY && shapeY < lassoY + lassoBBox.height;
         });
-        shapes.style({fill: 'skyblue'});
-        intersected.style({fill: 'red'});
-        return intersected;
     }
 
     function isRect(d, i){
