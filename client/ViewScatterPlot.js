@@ -8,7 +8,7 @@ var TP = TP || {};
 
         var __g__ = new TP.ViewTemplate(parameters);
 
-
+        __g__.updateEventHandler = new TP.UpdateEventHandler("scatterPlot", __g__.ID);
 
         __g__.addView = function () {
 
@@ -52,11 +52,11 @@ var TP = TP || {};
 
 
             __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(_event){
-                console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateOtherViews(_event);
+                /*console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateOtherViews(_event);
             }}, "all", true)		
 
             __g__.controller.addState({name : "updateView", bindings : null, func:function(_event){
-                console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
+                /*console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
             }}, "all", true)			
 
             __g__.controller.setCurrentState(null);

@@ -296,15 +296,8 @@ var TP = TP || {};
             __g__.graph = null;
         }
 
+         __g__.initStates = function () {
 
-	__g__.modifUpdate = function()
-	{
-		assert(true, "je suis la vue Graph : "+__g__.ID)
-	}
-
-        __g__.initStates = function () {
-
-           
         }
 
         return __g__;

@@ -126,7 +126,7 @@ var TP = TP || {};
                 __g__.getController().sendMessage("drawScatterPlot")
             }}, interactorGroup:"Open View"},
             {interactorLabel:'Data', interactorParameters: '', callbackBehavior: {click: function () {
-                TP.ObjectReferences().VisualizationObject.drawDataBase(__g__.getID())
+                __g__.getController().sendMessage("drawDataBase")
             }}, interactorGroup:"Open View"}
             // ['b3','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random',viewIndex1)}}],
             // ['b4','reset view','',{click:function(){TP.ObjectReferences().VisualizationObject.resetView(viewIndex1)}}],
@@ -299,6 +299,9 @@ var TP = TP || {};
                 console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
             }}, "all", true)
 
+            __g__.controller.addState({name : "drawDataBase", bindings : null, func:function(_event){
+                TP.Visualization().drawDataBase(_event);
+            }}, "all", true)
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
             __g__.controller.setCurrentState("select");

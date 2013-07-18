@@ -295,16 +295,6 @@ var TP = TP || {};
                     }
                 }
             }
-   
-
-            __g__.modifUpdate = null;
-
-   
-   
-           __g__.updateView = function(_event){
-                __g__.modifUpdate();
-                __g__.updateOtherViews(_event, true);
-           }
 
 
         __g__.removeViewTemplate = function () {
