@@ -85,13 +85,20 @@ var TP = TP || {};
             if (data.handlers[type] === null) {
                 //if(!fn.id) fn.id = (fnID != null) ? fnID : nextGuid++;
                 //data.handlers[type].push(fn);
-                fn.available = true;
-                data.handlers[type] = fn;
+                var funcTmp = function(){}
+                if(fn != null && (fn.isPrototypeOf === funcTmp.isPrototypeOf)){
+                    fn.available = true;
+                    data.handlers[type] = fn;
+                }
+                else{
+                    assert(false, "there is no function or fn parametter isn't a function type")
+                    return false;
+                }
             }
             else {
                 //assert(false, "a reference to similar function already exist")
-                assert(false, "function already exist")
-                return;
+                assert(false, "Event already exist")
+                return false;
             }
 
             if (!data.dispatcher) {
@@ -132,7 +139,7 @@ var TP = TP || {};
                 data.attachEvent("on" + type, data.dispatcher);
             }
             //}
-
+            return true;
         }
 
 

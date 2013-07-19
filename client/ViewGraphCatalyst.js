@@ -141,166 +141,166 @@ var TP = TP || {};
 
         __g__.initStates = function () {
 
-            __g__.controller.addEventState("zoneApparu", ["nodeSelected", "selectionVide", "arrangeLabels"], function (_event) {/*assert(true, "zoneApparu");*/
+            __g__.controller.addEventState("zoneApparu",  function (_event) {/*assert(true, "zoneApparu");*/
                 TP.Interaction().checkIntersect(_event);
-            }, null, null, true);
-            __g__.controller.addEventState("nodeSelected", ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], function (_event) {/*assert(true, "nodeSelected");*/
+            }, {bindings:["nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
+            __g__.controller.addEventState("nodeSelected",  function (_event) {/*assert(true, "nodeSelected");*/
                 TP.Interaction().nodeSelected(_event);
-            }, null, null, true);
-            __g__.controller.addEventState("selectionVide", ["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], function (_event) {/*assert(true, "selectionVide");*/
+            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
+            __g__.controller.addEventState("selectionVide",  function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
-            }, null, null, true);
+            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("mouseupLasso", ["zoneApparu", "mousedownLasso", "mousemoveLasso"], function (_event) {/*assert(true, "mouseupLasso");*/
+            __g__.controller.addEventState("mouseupLasso",  function (_event) {/*assert(true, "mouseupLasso");*/
                 __g__.controller.disableState("mouseupLasso");
                 _event.associatedData.myL.canMouseUp(_event.associatedData.mouse);
-            }, null, null, true);
+            }, {bindings:["zoneApparu", "mousedownLasso", "mousemoveLasso"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("mousedownLasso", ["mousemoveLasso", "mouseupLasso"], function (_event) {/*assert(true, "mousedownLasso");*/
+            __g__.controller.addEventState("mousedownLasso",  function (_event) {/*assert(true, "mousedownLasso");*/
                 __g__.controller.enableState("mouseupLasso");
                 _event.associatedData.myL.canMouseDown(_event.associatedData.mouse);
-            }, null, null, true);
+            }, {bindings:["mousemoveLasso", "mouseupLasso"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("mousemoveLasso", ["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], function (_event) {/*assert(true, "mousemoveLasso");*/
+            __g__.controller.addEventState("mousemoveLasso",  function (_event) {/*assert(true, "mousemoveLasso");*/
                 _event.associatedData.myL.canMouseMove(_event.associatedData.mouse);
-            }, null, null, true);
+            }, {bindings:["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("mouseoverMouseDown", ["mousedownMouseDown", "mousemoveLasso", "mousemoveMouseDown"], function (_event) {
+            __g__.controller.addEventState("mouseoverMouseDown",  function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {
                     /*assert(true, "mouseoverMouseDown");*/
                     __g__.controller.disableState("mousemoveLasso");
                     TP.Lasso().mouseoverMouseDown(_event);
                 }
-            }, null, null, true);
+            }, {bindings:["mousedownMouseDown", "mousemoveLasso", "mousemoveMouseDown"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("mouseoutMouseDown", ["mousemoveLasso"], function (_event) {/*assert(true, "mouseoutMouseDown");*/
+            __g__.controller.addEventState("mouseoutMouseDown",  function (_event) {/*assert(true, "mouseoutMouseDown");*/
                 __g__.controller.enableState("mousemoveLasso");
                 TP.Lasso().mouseoutMouseDown(_event);
-            }, null, null, true);
-            __g__.controller.addEventState("mousedownMouseDown", ["mousemoveMouseDown"], function (_event) {/*assert(true, "mousedownMouseDown");*/
+            }, {bindings:["mousemoveLasso"], fromAll:null, useless:null, activate:true});
+            __g__.controller.addEventState("mousedownMouseDown",  function (_event) {/*assert(true, "mousedownMouseDown");*/
                 TP.Lasso().mousedownMouseDown(_event);
-            }, null, null, true);
-            __g__.controller.addEventState("mousemoveMouseDown", ["mousemoveMouseDown", "mouseoutMouseDown", "mousedownMouseDown", "mouseupMouseDown", "zoneApparu", "mousemoveLasso"], function (_event) {/*assert(true, "mousemoveMouseDown");*/
+            }, {bindings:["mousemoveMouseDown"], fromAll:null, useless:null, activate:true});
+            __g__.controller.addEventState("mousemoveMouseDown",  function (_event) {/*assert(true, "mousemoveMouseDown");*/
                 TP.Lasso().mousemoveMouseDown(_event);
-            }, null, null, true);
+            }, {bindings:["mousemoveMouseDown", "mouseoutMouseDown", "mousedownMouseDown", "mouseupMouseDown", "zoneApparu", "mousemoveLasso"], fromAll:null, useless:null, activate:true});
 
-            __g__.controller.addEventState("arrangeLabels", ["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], function (_event) {/*assert(true, "arrangeLabels"); */
+            __g__.controller.addEventState("arrangeLabels",  function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
-            }, true, null, true);
+            }, {bindings:["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:true, useless:null, activate:true});
 
-            __g__.controller.addEventState("mouseupMouseDown", ["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], function (_event) {/*assert(true, "mouseupMouseDown");*/
+            __g__.controller.addEventState("mouseupMouseDown",  function (_event) {/*assert(true, "mouseupMouseDown");*/
                 TP.Lasso().mouseupMouseDown(_event);
-            }, null, null, true);
+            }, {bindings:["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], fromAll:null, useless:null, activate:true});
 
 
-            __g__.controller.addEventState("move", ["movingZoomDrag"], function (_event) {/*assert(true, "move");*/
+            __g__.controller.addEventState("move",  function (_event) {/*assert(true, "move");*/
                 TP.Interaction().removeLasso(_event);
                 TP.Interaction().addZoom(_event)
-            }, true, null, true);
-            __g__.controller.addEventState("select", ["mousemoveLasso"], function (_event) {/*assert(true, "select");*/
+            }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
+            __g__.controller.addEventState("select",  function (_event) {/*assert(true, "select");*/
                 TP.Interaction().addLasso(_event);
                 TP.Interaction().removeZoom(_event)
-            }, true, null, true);
+            }, {bindings:["mousemoveLasso"], fromAll:true, useless:null, activate:true});
 
-            __g__.controller.addEventState("movingZoomDrag", ["movingZoomDragEnd", "movingZoomDrag"], function (_event) {/*assert(true, "movingZoomDrag");*/
+            __g__.controller.addEventState("movingZoomDrag",  function (_event) {/*assert(true, "movingZoomDrag");*/
                 TP.Interaction().movingZoomDrag(_event);
-            }, null, null, true);
+            }, {bindings:["movingZoomDragEnd", "movingZoomDrag"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("movingZoomDragEnd", ["movingZoomDrag"], function (_event) {/*assert(true, "movingZoomDragEnd"); */
                 TP.Interaction().movingZoomDragEnd(_event);
-            }, null, null, true);
+            }, {bindings:["movingZoomDrag"], fromAll:null, useless:null, activate:true});
 
 
-            __g__.controller.addEventState("callLayout", null, function (_event) {/*assert(true, "callLayout");*/
+            __g__.controller.addEventState("callLayout",  function (_event) {/*assert(true, "callLayout");*/
                 TP.Client().callLayout(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("AnswerCallLayout", null, function (_event) {/*assert(true, "AnswerCallLayout"); */
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("AnswerCallLayout",  function (_event) {/*assert(true, "AnswerCallLayout"); */
                 TP.Client().AnswerCallLayout(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("sendSelection", null, function (_event) {/*assert(true, "sendSelection");*/
+            __g__.controller.addEventState("sendSelection",  function (_event) {/*assert(true, "sendSelection");*/
                 TP.Client().sendSelection(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("answerSendSelection", null, function (_event) {/*assert(true, "answerSendSelection");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("answerSendSelection",  function (_event) {/*assert(true, "answerSendSelection");*/
                 TP.Client().answerSendSelection(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("resetView", null, function (_event) {/*assert(true, "resetView");*/
+            __g__.controller.addEventState("resetView",  function (_event) {/*assert(true, "resetView");*/
                 TP.Visualization().resetView(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("callFloatAlgorithm", null, function (_event) {/*assert(true, "callFloatAlgorithm");*/
+            __g__.controller.addEventState("callFloatAlgorithm",  function (_event) {/*assert(true, "callFloatAlgorithm");*/
                 TP.Client().callFloatAlgorithm(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("AnswerFloatAlgorithm", null, function (_event) {/*assert(true, "AnswerFloatAlgorithm");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("AnswerFloatAlgorithm",  function (_event) {/*assert(true, "AnswerFloatAlgorithm");*/
                 TP.Client().AnswerFloatAlgorithm(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("resetSize", null, function (_event) {/*assert(true, "resetSize");*/
+            __g__.controller.addEventState("resetSize",  function (_event) {/*assert(true, "resetSize");*/
                 TP.Visualization().resetSize(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("Hide labels", null, function (_event) {/*assert(true, "Hide labels");*/
+            __g__.controller.addEventState("Hide labels",  function (_event) {/*assert(true, "Hide labels");*/
                 TP.Visualization().showhideLabels(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("Hide links", null, function (_event) {/*assert(true, "Hide links");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("Hide links",  function (_event) {/*assert(true, "Hide links");*/
                 TP.Visualization().showhideLinks(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("rotateGraph", null, function (_event) {/*assert(true, "rotateGraph");*/
+            __g__.controller.addEventState("rotateGraph",  function (_event) {/*assert(true, "rotateGraph");*/
                 TP.Visualization().rotateGraph(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("drawBarChart", null, function (_event) {/*assert(true, "drawBarChart");*/
+            __g__.controller.addEventState("drawBarChart",  function (_event) {/*assert(true, "drawBarChart");*/
                 TP.BarChart().drawBarChart(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("drawScatterPlot", null, function (_event) {/*assert(true, "drawScatterPlot");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("drawScatterPlot",  function (_event) {/*assert(true, "drawScatterPlot");*/
                 TP.ScatterPlot().drawScatterPlot(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("drawScatterPlotNVD3", null, function (_event) {/*assert(true, "drawScatterPlot");*/
+            __g__.controller.addEventState("drawScatterPlotNVD3",  function (_event) {/*assert(true, "drawScatterPlot");*/
                 //this.nvd3 = new TP.ViewNVD3(_event);
                 //this.nvd3.setGraph(__g__.graph)
                 TP.ViewNVD3().drawScatterPlot(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("runZoom", null, function (_event) {/*assert(true, "runZoom");*/
+            __g__.controller.addEventState("runZoom",  function (_event) {/*assert(true, "runZoom");*/
                 TP.Interaction().runZoom(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("sizeMapping", null, function (_event) {/*assert(true, "sizeMapping");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("sizeMapping",  function (_event) {/*assert(true, "sizeMapping");*/
                 TP.Visualization().sizeMapping(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("dragNode", null, function (_event) {/*assert(true, "dragNode");*/
+            __g__.controller.addEventState("dragNode",  function (_event) {/*assert(true, "dragNode");*/
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().dragNode(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("showHideLabelNode", null, function (_event) {/*assert(true, "showHideLabelNode");*/
+            __g__.controller.addEventState("showHideLabelNode",  function (_event) {/*assert(true, "showHideLabelNode");*/
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().showHideLabelNode(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("mouseoverShowLabelNode", null, function (_event) {/*assert(true, "mouseoverShowLabelNode");*/
+            __g__.controller.addEventState("mouseoverShowLabelNode",  function (_event) {/*assert(true, "mouseoverShowLabelNode");*/
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().showLabelNode(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("mouseOutNode", null, function (_event) {/*assert(true, "mouseOutNode");*/
+            __g__.controller.addEventState("mouseOutNode",  function (_event) {/*assert(true, "mouseOutNode");*/
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().mouseOutNode();
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("brushstart", null, function (_event) {/*assert(true, "brushstart");*/
+            __g__.controller.addEventState("brushstart",  function (_event) {/*assert(true, "brushstart");*/
                 TP.Interaction().brushstart(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
-            __g__.controller.addEventState("updateOtherView", null, function(_event){
+            __g__.controller.addEventState("updateOtherView",  function(_event){
                 console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateOtherViews(_event);
-            }, true, true, true)        
+            }, {bindings:null, fromAll:true, useless:true, activate:true})        
             
-            __g__.controller.addEventState("updateView", null, function(_event){
+            __g__.controller.addEventState("updateView",  function(_event){
                 console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type); __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
-            }, true, true, true)
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
 
-            __g__.controller.addEventState("drawDataBase", null, function(_event){
+            __g__.controller.addEventState("drawDataBase",  function(_event){
                 TP.Visualization().drawDataBase(_event);
-            }, true, true, true)
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
             __g__.controller.setCurrentState("select");

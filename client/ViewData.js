@@ -11,7 +11,7 @@ var TP = TP || {};
         __g__.addView = function () {
 
             if (__g__.controller != null)
-                __g__.controller.initListener(__g__.ID, "view");
+                __g__.controller.initController(__g__.ID, "view");
 
             __g__.interactorListTreatment();
             __g__.createDialog();
@@ -23,13 +23,13 @@ var TP = TP || {};
         
         __g__.initStates = function () {
             
-            __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(event){
+            __g__.controller.addEventState("updateOtherView",  function(event){
                 /*console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateOtherViews(event);
-            }}, "all", true)
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
 
-            __g__.controller.addState({name : "updateView", bindings : null, func:function(event){
+            __g__.controller.addEventState("updateView",  function(event){
                 /*console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
-            }}, "all", true)
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
 
             __g__.controller.setCurrentState(null);
 

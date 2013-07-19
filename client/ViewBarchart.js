@@ -45,23 +45,23 @@ var TP = TP || {};
         
         __g__.initStates = function () {
             
-            __g__.controller.addEventState("mouseoverBarChartRect", null, function (_event) {/*assert(true, "mouseoverBarChartRect");*/
+            __g__.controller.addEventState("mouseoverBarChartRect",  function (_event) {/*assert(true, "mouseoverBarChartRect");*/
                 TP.BarChart().mouseoverBarChartRect(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("mouseoutBarChartRect", null, function (_event) {/*assert(true, "mouseoutBarChartRect");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("mouseoutBarChartRect",  function (_event) {/*assert(true, "mouseoutBarChartRect");*/
                 TP.BarChart().mouseoutBarChartRect(_event);
-            }, true, true, true);
-            __g__.controller.addEventState("mouseclickBarChartRect", null, function (_event) {/*assert(true, "mouseclickBarChartRect");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("mouseclickBarChartRect",  function (_event) {/*assert(true, "mouseclickBarChartRect");*/
                 TP.BarChart().mouseclickBarChartRect(_event);
-            }, true, true, true);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
             
-            __g__.controller.addEventState("updateOtherView", null, function(event){
+            __g__.controller.addEventState("updateOtherView",  function(event){
                 /*console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateOtherViews(event);
-            }, true, true, true)		
+            }, {bindings:null, fromAll:true, useless:true, activate:true})		
 
-            __g__.controller.addEventState("updateView", null, function(event){
+            __g__.controller.addEventState("updateView",  function(event){
                 /*console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
-            }, true, true, true)
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
 
             __g__.controller.setCurrentState(null);
 

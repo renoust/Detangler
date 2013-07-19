@@ -34,7 +34,7 @@ var TP = TP || {};
         }
         
         __g__.addEvent = function (type, fn) {
-            __g__.eventHandlerObject.addEvent(nameC, type, fn);
+            return __g__.eventHandlerObject.addEvent(nameC, type, fn);
         }
 
         __g__.deleteEvent = function (type) {
@@ -58,7 +58,28 @@ var TP = TP || {};
         }
 
 
-        __g__.addEventState = function (name, bindings, func, fromAll, useless, activate, targetView) {            
+        __g__.addEventState = function (name, func, parametersState, targetView) {            
+            
+            //bindings, fromAll, useless, activate
+            var hasState = false;
+            var bindings = null;
+            var fromAll = null;
+            var useless = null;
+            var activate = true;
+            
+            if(parametersState != null)
+            {
+                hasState = true;
+                
+                if(('bindings' in parametersState))
+                    bindings = parametersState.bindings;                    
+                if(('fromAll' in parametersState))
+                    fromAll = parametersState.fromAll; 
+                if(('useless' in parametersState))
+                    useless = parametersState.useless; 
+                if(('activate' in parametersState))
+                    activate = parametersState.activate;                 
+            }
             
             var sGraph = null;
             var listenerName = null;
@@ -82,15 +103,27 @@ var TP = TP || {};
             if(sGraph != null && listenerName != null){
             
                 //console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
-                if(activate != null)
-                    sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);
-                else
-                    assert(true, "you asked to don't have state creating");
+                
+                var success = false;
                 
                 if(targetView != null)
-                    TP.Context().view[targetView].getController().addEvent(name, func);
+                    success = TP.Context().view[targetView].getController().addEvent(name, func);
                 else
-                   __g__.addEvent(name, func);
+                   success = __g__.addEvent(name, func);
+                   
+                //console.log("success : "+success)      
+                
+                if(hasState === true){
+                    if(success === true){
+                        sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);
+                    }
+                    else{
+                        assert(false, "state isn't added beacause event already exit in eventHandler since an other insertion or event can't be created")
+                        return;
+                    }
+                }
+                else
+                    assert(true, "you asked to don't have state creating");
 
             }
             else{
@@ -272,7 +305,7 @@ var TP = TP || {};
             else
             {
                 assert(true, "message can pass => state cheking is disabled for it");
-                return;                 
+                //return;                 
             }
             
             var _event = new CustomEvent(messageName);
