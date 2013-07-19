@@ -13,7 +13,7 @@ var TP = TP || {};
         __g__.addView = function () {
 
             if (__g__.controller != null)
-                __g__.controller.initListener(__g__.ID, "view");
+                __g__.controller.initController(__g__.ID, "view");
 
             __g__.interactorListTreatment();
             __g__.createDialog();
@@ -34,30 +34,30 @@ var TP = TP || {};
 
         __g__.initStates = function () {
 
-            __g__.controller.addState({name: "mouseoverScatterPlot", bindings: null, func: function (_event) {/*assert(true, "mouseoverScatterPlot");*/
+            __g__.controller.addEventState("mouseoverScatterPlot", null, function (_event) {/*assert(true, "mouseoverScatterPlot");*/
                 TP.ScatterPlot().mouseoverScatterPlot(_event);
-            }}, "all", true);
+            }, true, true, true);
 
-            __g__.controller.addState({name: "mouseoutScatterPlot", bindings: null, func: function (_event) {/*assert(true, "mouseoutScatterPlot");*/
+            __g__.controller.addEventState("mouseoutScatterPlot", null, function (_event) {/*assert(true, "mouseoutScatterPlot");*/
                 TP.ScatterPlot().mouseoutScatterPlot(_event);
-            }}, "all", true);
+            }, true, true, true);
 
-            __g__.controller.addState({name: "mouseclickScatterPlot", bindings: null, func: function (_event) {/*assert(true, "mouseclickScatterPlot");*/
+            __g__.controller.addEventState("mouseclickScatterPlot", null, function (_event) {/*assert(true, "mouseclickScatterPlot");*/
                 TP.ScatterPlot().mouseclickScatterPlot(_event);
-            }}, "all", true);
+            }, true, true, true);
 
-            __g__.controller.addState({name: "zoomScatterPlot", bindings: null, func: function (_event) {/*assert(true, "zoomScatterPlot");*/
+            __g__.controller.addEventState("zoomScatterPlot", null, function (_event) {/*assert(true, "zoomScatterPlot");*/
                 TP.ScatterPlot().zoomScatterPlot(_event);
-            }}, "all", true);
+            }, true, true, true);
 
 
-            __g__.controller.addState({name : "updateOtherView", bindings : null, func:function(_event){
+            __g__.controller.addEventState("updateOtherView",  null, function(_event){
                 /*console.log("avant otherViews : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateOtherViews(_event);
-            }}, "all", true)		
+            }, true, true, true)		
 
-            __g__.controller.addState({name : "updateView", bindings : null, func:function(_event){
+            __g__.controller.addEventState("updateView", null, function(_event){
                 /*console.log("avant updateViewGraph : source = ", _event.associatedData.source, " target : ", _event.associatedData.target, " data : ", _event.associatedData.data, " type : ", _event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
-            }}, "all", true)			
+            }, true, true, true)			
 
             __g__.controller.setCurrentState(null);
 

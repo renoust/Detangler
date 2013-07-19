@@ -290,7 +290,7 @@ var TP = TP || {};
         }
 
         this.arrangeLabels = function (_event) {
-
+            
             var target = _event.associatedData.source;
 
             var cGraph = null

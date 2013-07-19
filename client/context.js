@@ -162,35 +162,35 @@ var TP = TP || {};
         __g__.initStates = function () {
             //assert(true, "type of controller principal");
 
-            __g__.controller.addState({name: "callLayoutSendQuery", bindings: null, func: function (_event) {/*assert(true, "callLayoutSendQuery");*/
+            __g__.controller.addEventState("callLayoutSendQuery", null, function (_event) {/*assert(true, "callLayoutSendQuery");*/
                 TP.Client().callLayoutSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "selectionSendQuery", bindings: null, func: function (_event) {/*assert(true, "selectionSendQuery");*/
+            }, true, null, true);
+            __g__.controller.addEventState("selectionSendQuery", null, function (_event) {/*assert(true, "selectionSendQuery");*/
                 TP.Client().selectionSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "FloatAlgorithmSendQuery", bindings: null, func: function (_event) {/*assert(true, "FloatAlgorithmSendQuery");*/
+            }, true, null, true);
+            __g__.controller.addEventState("FloatAlgorithmSendQuery", null, function (_event) {/*assert(true, "FloatAlgorithmSendQuery");*/
                 TP.Client().FloatAlgorithmSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "analyseGraphSendQuery", bindings: null, func: function (_event) {/*assert(true, "analyseGraphSendQuery");*/
+            }, true, null, true);
+            __g__.controller.addEventState("analyseGraphSendQuery", null, function (_event) {/*assert(true, "analyseGraphSendQuery");*/
                 TP.Client().analyseGraphSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "mouseoverInfoBox", bindings: null, func: function (_event) {/*assert(true, "mouseoverInfoBox");*/
+            }, true, null, true);
+            __g__.controller.addEventState("mouseoverInfoBox", null, function (_event) {/*assert(true, "mouseoverInfoBox");*/
                 TP.Interface().addInfoBox(_event);
-            }}, "all");
-            __g__.controller.addState({name:"getPlugins", bindings:null, func:function(_event){
+            }, true, null, true);
+            __g__.controller.addEventState("getPlugins", null, function(_event){
                 TP.Client().getPlugins(_event);
-            }}, "all");
-            __g__.controller.addState({name:"getPluginsSendQuery", bindings:null, func:function(_event){
+            }, true, null, true);
+            __g__.controller.addEventState("getPluginsSendQuery", null, function(_event){
                 TP.Client().getPluginsSendQuery(_event);
-            }}, "all");            
-            __g__.controller.addState({name:"answerGetPlugins", bindings:null, func:function(_event){
+            }, true, null, true);            
+            __g__.controller.addEventState("answerGetPlugins", null, function(_event){
                 TP.Client().answerGetPlugins(_event);
-            }}, "all");
+            }, true, null, true);
         
         }
 
         __g__.initController = function (ID, typeC) {
-            __g__.controller.initListener(ID, typeC);
+            __g__.controller.initController(ID, typeC);
         }
 
         __g__.getController = function () {
