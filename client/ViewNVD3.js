@@ -14,7 +14,7 @@ var TP = TP || {};
         __g__.addView = function () {
 
             if (__g__.controller != null)
-                __g__.controller.initListener(__g__.ID, "view");
+                __g__.controller.initController(__g__.ID, "view");
 
             __g__.interactorListTreatment();
             __g__.createDialog();
