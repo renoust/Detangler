@@ -41,11 +41,28 @@ var TP = TP || {};
             hashTabNode[state].activate = false;
         }
 
-
-        __g__.addState = function (node, fromAll, useless, activate) // nodeRoot is present for special root like "all", "principal" (message from principal controller) or "otherController" (message from
-            // other controller). useless specifies if the node must be register as currentState in State's chain or not. For example, if a state
-            //doesn't involve any changements about the current state, we don't put it in the state's chain as current State.
+        //useless specifies if the node must be register as currentState in State's chain or not. For example, if a state
+        //doesn't involve any changements about the current state, we don't put it in the state's chain as current State.
+        __g__.addState = function (node, fromAll, useless, activate) 
         {
+            
+            if((fromAll != null) && (fromAll != true) &&  (fromAll != false))
+            {
+                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                return;
+            }
+            if((useless != null) && (useless != true) &&  (useless != false))
+            {
+                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                return;
+            }
+            if((activate != null) && (activate != true) &&  (activate != false))
+            {
+                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                return;
+            }
+            
+            
             if (node == null || node.name == null) {
                 assert(false, "State are no name or there is node object default")
                 return;
@@ -236,6 +253,21 @@ var TP = TP || {};
             }
         }
 
+        
+        __g__.isUseless = function(nameState, value)
+        {
+            if((value != true) || (value != false))
+            {
+                assert(false, "bad value !!!");
+                return -1;
+            }
+             
+            if(hashTabNode[nameState] != null)
+            {
+                hashTabNode[nameState].useless = value
+            }
+        }
+        
 
         return __g__;
     }

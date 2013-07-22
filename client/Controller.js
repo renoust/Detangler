@@ -46,6 +46,7 @@ var TP = TP || {};
             __g__.eventHandlerObject.goBackEvent(nameC, nameEvent)
         }
         
+                              
         __g__.addStates = function () {
 
             if (typeC === "view") {
@@ -56,7 +57,7 @@ var TP = TP || {};
             else
                 assert(false, "type of controller isn't supported");
         }
-
+        
 
         __g__.addEventState = function (name, func, parametersState, targetView) {            
             
@@ -72,13 +73,13 @@ var TP = TP || {};
                 hasState = true;
                 
                 if(('bindings' in parametersState))
-                    bindings = parametersState.bindings;                    
+                    bindings = parametersState.bindings;
                 if(('fromAll' in parametersState))
                     fromAll = parametersState.fromAll; 
                 if(('useless' in parametersState))
-                    useless = parametersState.useless; 
+                    useless = parametersState.useless;
                 if(('activate' in parametersState))
-                    activate = parametersState.activate;                 
+                    activate = parametersState.activate;
             }
             
             var sGraph = null;
@@ -118,7 +119,7 @@ var TP = TP || {};
                         sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);
                     }
                     else{
-                        assert(false, "state isn't added beacause event already exit in eventHandler since an other insertion or event can't be created")
+                        assert(false, "state isn't added because event already exit in eventHandler since an other insertion or event can't be created")
                         return;
                     }
                 }
@@ -135,21 +136,59 @@ var TP = TP || {};
         
         //__g__.addEventState(name, )
 
-        __g__.deleteState = function(nameState)
+        __g__.addState = function(name, func, parametersState)
         {
-            if(currentState  == nameState)
-                currentState = beforeCurrentState;
+            
+            var bindings = null;
+            var fromAll = null;
+            var useless = null;
+            var activate = true;
+            
+            if(parametersState != null)
+            {
                 
-            __g__.stateGraph.deleteState(nameState);
+                if(('bindings' in parametersState))
+                    bindings = parametersState.bindings;
+                if(('fromAll' in parametersState))
+                    fromAll = parametersState.fromAll; 
+                if(('useless' in parametersState))
+                    useless = parametersState.useless;
+                if(('activate' in parametersState))
+                    activate = parametersState.activate;
+            }
+            
+            var sGraph = __g__.getStateGraph();
+            var listenerName = __g__.getNameController();
+            
+            sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);            
+            
+        }
+                
+        
+        __g__.deleteEventState = function(nameState){                
+            __g__.deleteState(nameState);
             __g__.deleteEvent(nameState);
         }
         
-        __g__.goBackState = function(nameState){
-            __g__.stateGraph.goBackState(nameState);
+        __g__.goBackEventState = function(nameState){
+            __g__.goBackState(nameState);
             __g__.goBackEvent(nameState);
         }
         
-
+        
+        __g__.goBackState = function(nameState){
+            __g__.stateGraph.goBackState(nameState);
+        }
+        
+        
+        __g__.deleteState = function(nameState){
+            if(currentState  == nameState)
+                currentState = beforeCurrentState;
+                
+            __g__.stateGraph.deleteState(nameState);            
+        }
+                
+        
         __g__.getInfoState = function (name) {
             return __g__.stateGraph.getInfoState(name);
         }
@@ -236,56 +275,52 @@ var TP = TP || {};
             //console.log(__g__.stateGraph)
             
             if (State.useless !== true){
-                beforeCurrentState = currentState
-                currentState = cState;                
+                if(cState != currentState){
+                    beforeCurrentState = currentState
+                    currentState = cState;
+                }            
             }
-        }        
+        }
         
-
-        __g__.sendMessage = function (messageName, object, targetController, source) //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principale"
-            //same thing for view, type just the view ID("0", "1", "2")
-        {
+        
+        __g__.isUseless = function(cState, value){
+            __g__.stateGraph.isUseless(cState, value);
+        }
+        
+        //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
+        //same thing for view, type just the view ID("0", "1", "2")        
+        __g__.sendMessage = function (messageName, object, targetController, source){
 
             if (source != null && targetController == null) {
                 assert(false, "error !!!! source is specified, but not targetController");
                 return;
             }
             
-            //console.log("messageName : "+ messageName);
-            
             var access = false;
             var tmpController = null;
-            /*
-            if(messageName === "arrangeLabels"){
-            console.log("targetController : "+targetController)
-            console.log("type : "+ typeof(targetController))
-            }
-            */
 
             if (targetController != null) {
                 if (targetController === "principal") {
                     tmpController = TP.Context().getController();
                 }
                 else {
-                    //console.log("toto1")
                     tmpController = TP.Context().view[""+targetController].getController();
-                    //console.log("tmpController : ",tmpController)
-                    //console.log("getStateGraph() : ", tmpController.getStateGraph().getStateGraph())
                 }
             }
             else {
                 tmpController = __g__;                
             }
-            
-            //console.log("message : "+messageName);
-            //console.log("tmpController : ",tmpController.getNameController())
-            //console.log("tmpController.getStateGraph() : ", tmpController.getStateGraph());
+
+            //if no message are available, we don't send message            
+            if(tmpController.eventIsAvailable(messageName) === false)
+            {
+                assert(false, "no event are available for this message. Even if state is present (or not), message will be not sent !!!");
+                return -1;
+            }         
             
             var canContinue = tmpController.getStateGraph().isBindWithState(messageName);
                         
             if(canContinue === true){
-                
-                //assert(true, "message can pass for state checking");
                 
                 access = tmpController.getStateAccess(messageName);
                 
@@ -294,7 +329,7 @@ var TP = TP || {};
                     assert(false, "access denied : " + messageName);
                     return;
                 }
-    
+                
                 tmpController.transitionState(messageName);
                 
             }
@@ -305,7 +340,6 @@ var TP = TP || {};
             else
             {
                 assert(true, "message can pass => state cheking is disabled for it");
-                //return;                 
             }
             
             var _event = new CustomEvent(messageName);
@@ -324,33 +358,19 @@ var TP = TP || {};
             if (targetController != null)
                _event.associatedData.target = targetController;
             else
-               _event.associatedData.target = idView;
-
-
+               _event.associatedData.target = idView;               
+            
             if (targetController == null)
                 document.getElementById(nameC).dispatchEvent(_event);
             else
                 document.getElementById("handlerState" + targetController).dispatchEvent(_event);
 
         }
-
-/*
-        __g__.modifyFunc = function(name, func)
-        {
-        	var oldFunc = StateTree.modifyFunc(name, func); //we modify 
-        	eventHandlerObject.modifyFunc(nameC, name, func);
-        	eventHandlerObject.setMessAvailable(nameC, name); //we put available the added function 
-        	
-        	return oldFunc;
+         
+        __g__.eventIsAvailable = function(eventName){
+            return __g__.eventHandlerObject.eventIsAvailable(nameC, eventName);
         }
         
-        
-       	__g__.getFuncEvent = function(name)
-       	{
-           return eventHandlerObject.getFuncEvent(nameC, name);
-       	}
-*/
-
         __g__.remove = function () {
             
             d3.select("#" + nameC + "").remove();

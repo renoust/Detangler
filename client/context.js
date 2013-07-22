@@ -115,7 +115,7 @@ var TP = TP || {};
                 d3.selectAll(".jPicker").remove();
                 $('#wrap')[0].className = 'sidebar';
                 $.jPicker.List.splice(0, 3)
-
+                 
                 for (var key in __g__.view) {
                     __g__.view[key].remove();
                     __g__.view[key] = null;
