@@ -289,22 +289,22 @@ var TP = TP || {};
         
         //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
         //same thing for view, type just the view ID("0", "1", "2")        
-        __g__.sendMessage = function (messageName, object, targetController, source){
+        __g__.sendMessage = function (messageName, object, idViewDestination, idViewSource){
 
-            if (source != null && targetController == null) {
-                assert(false, "error !!!! source is specified, but not targetController");
+            if (idViewSource != null && idViewDestination == null) {
+                assert(false, "error !!!! idViewSource is specified, but not idViewDestination");
                 return;
             }
             
             var access = false;
             var tmpController = null;
 
-            if (targetController != null) {
-                if (targetController === "principal") {
+            if (idViewDestination != null) {
+                if (idViewDestination === "principal") {
                     tmpController = TP.Context().getController();
                 }
                 else {
-                    tmpController = TP.Context().view[""+targetController].getController();
+                    tmpController = TP.Context().view[""+idViewDestination].getController();
                 }
             }
             else {
@@ -337,10 +337,10 @@ var TP = TP || {};
                 assert(false, "message can't pass => state is associated with an other state but function 'addState' has'nt been called for it");
                 return;
             }
-            else
-            {
-                assert(true, "message can pass => state cheking is disabled for it");
-            }
+            //else
+            //{
+                //assert(true, "message can pass => state cheking is disabled for it");
+            //}
             
             var _event = new CustomEvent(messageName);
             if (object != null) {
@@ -350,20 +350,20 @@ var TP = TP || {};
                _event.associatedData = {};
 
 
-            if (source != null)
-               _event.associatedData.source = source;
+            if (idViewSource != null)
+               _event.associatedData.source = idViewSource;
             else
                _event.associatedData.source = idView;
 
-            if (targetController != null)
-               _event.associatedData.target = targetController;
+            if (idViewDestination != null)
+               _event.associatedData.target = idViewDestination;
             else
                _event.associatedData.target = idView;               
             
-            if (targetController == null)
+            if (idViewDestination == null)
                 document.getElementById(nameC).dispatchEvent(_event);
             else
-                document.getElementById("handlerState" + targetController).dispatchEvent(_event);
+                document.getElementById("handlerState" + idViewDestination).dispatchEvent(_event);
 
         }
          
