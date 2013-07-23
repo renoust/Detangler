@@ -11,23 +11,13 @@ var TP = TP || {};
         
         
         var paramSizeMap = [
-            [4, {id:"sizemap"},{
+            [4, 
+                {id:"sizemap"},
+                {
                     range: true,
                     min: 0,
                     max: 99,
                     values: [ 3, 12 ],
-                    change: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    },
-                    slide: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    }
                 },
                 "scale: "
             ]
@@ -47,6 +37,16 @@ var TP = TP || {};
             [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
         ];
         
+        var setting = [
+            [4, {id:"fontsize"},
+                {
+                    min: 0,
+                    max: 99,
+                    values: 12
+                },
+                "Labels size:"
+            ],
+            [7,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
         /*
         var tabCatalyst = [1,//__g__.getID(), 
                         null,
@@ -58,7 +58,20 @@ var TP = TP || {};
                        "circle", 
                        "catalyst"];
         */
-                      
+
+        /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}],"b","a"],
+            [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}],"b","a"],
+            [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}],"b","a"],
+            [3, {id:"text"},null,"b","a"],
+            [5, {id:"spinner"},null,"b","a"],
+            [4,{id:'slider',class:'slider'},
+                {   range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 3, 12 ],
+                },"b","a"]
+            ];*/
+
         var _viewGraphCatalystParameters = {
             name:name + " - catalyst", 
             nodeColor:"#4682b4", 
@@ -71,6 +84,7 @@ var TP = TP || {};
         
         
         var interactors = [
+            //{interactorLabel:'TEST', interactorParameters: bigtest, callbackBehavior:null},
             {interactorLabel:'Force layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: __g__.getID()})
             }}, interactorGroup:"Layout"},
@@ -125,6 +139,9 @@ var TP = TP || {};
                 __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
             }}, interactorGroup:"View"},
             {interactorLabel:'Color settings', interactorParameters: colorSettings,callbackBehavior:null, interactorGroup:"View"},
+            /*{interactorLabel:'Nodes settings', interactorParameters: setting, callbackBehavior:{call: function (value) {
+                 __g__.getController().sendMessage("changeNodesSettings", {value: value, idView: __g__.getID()})
+            }}, interactorGroup:"View"},*/
 
             {interactorLabel:'Degree', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: __g__.getID()})
@@ -348,6 +365,9 @@ var TP = TP || {};
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
             __g__.controller.setCurrentState("select");
 
+            __g__.controller.addState({name: "changeNodesSettings", bindings:null, func:function(_event){
+                TP.Visualization().changeNodesSettings(_event);
+            }}, "all", true)
         }
 
         return __g__;

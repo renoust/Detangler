@@ -16,23 +16,6 @@ body{
     -ms-user-select: all;
 }
 
-li{list-style-type:none}
-
-p{font-weight:bold;}
-
-td{
-	border-width:1px;
- 	border-style:solid; 
- 	width:50%;
-	font-size: 0.7em
-}
-th{
-	border-width:1px;
- 	border-style:solid; 
- 	width:50%;
-	background: #cccccc;
-}
-
 /********************************** Body *************************************/
 #wrap{
 	overflow: hidden;
@@ -88,7 +71,6 @@ th{
 
 }
 #menu .hmenu a, {
-	
 /*	background-image: url(myTheme/state-default.png);*/
 }
 #menu .open a,{
@@ -124,7 +106,7 @@ th{
 
 /******************************** Workspace **********************************/
 #container {
-	padding-left: 20px;
+	/*padding-left: 20px;*/
 	height: 100%;
 	bottom: 0px;
 	border:1px solid #666666;
@@ -139,10 +121,10 @@ th{
 	font-size: 0.8em;
 }
 
-.ui-dialog .ui-dialog-titlebar{
+/*.ui-dialog .ui-dialog-titlebar{
 	padding:0 10 0 10;
 	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
-}
+}*/
 
 .ui-dialog .ui-dialog-title {
 	width: auto ;
@@ -164,6 +146,14 @@ th{
 
 .ui-dialog .ui-dialog-content{
 	padding:2px;
+}
+
+.ui-dialog .ui-dialog-titlebar.active{
+	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
+}
+.ui-dialog .ui-dialog-titlebar {
+	padding: 2 10 ;
+	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
 }
 
 .node.text, .snippet{
@@ -189,14 +179,23 @@ th{
 
 .dataTable th{
 	width: 100px;
+	border-width:1px;
+ 	border-style:solid; 
+ 	width:50%;
+	background: #cccccc;
 }
 .dataTable td{
-	padding:0px;
 	width:100px;
+	height: 20px;
+	padding:0px;
 	overflow:auto;
 	vertical-align: center;
-	height: 20px;
+	border-width:1px;
+ 	border-style:solid; 
+	font-size: 0.7em	
 }
+
+
  .editData{
  	vertical-align: top;
 }

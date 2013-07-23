@@ -430,11 +430,7 @@ var TP = TP || {};
                 //console.log(colorNode);
                 //console.log(colorLink);
                 //console.log(colorBg);
-                //console.log($.jPicker.List[0])
-                //console.log($.jPicker.List[0].color.active.val('hex'), nodesColor)
-                //$.jPicker.List[0].color.active.val('hex', nodesColor);
-                //$.jPicker.List[1].color.active.val('hex', linksColor);
-                //$.jPicker.List[2].color.active.val('hex', bgColor);
+
 
                 //$("#color1").css("text",nodesColor)
 

@@ -195,11 +195,11 @@ var TP = TP || {};
 
 
             __g__.controller.addState({name: "move", bindings: ["movingZoomDrag"], func: function (_event) {/*assert(true, "move");*/
-                TP.Interaction().removeLasso(_event);
+                //TP.Interaction().removeLasso(_event);
                 TP.Interaction().addZoom(_event)
             }}, "all");
             __g__.controller.addState({name: "select", bindings: ["mousemoveLasso"], func: function (_event) {/*assert(true, "select");*/
-                TP.Interaction().addLasso(_event);
+                //TP.Interaction().addLasso(_event);
                 TP.Interaction().removeZoom(_event)
             }}, "all");
 
