@@ -580,11 +580,13 @@ var TP = TP || {};
             var target = _event.associatedData.source;
             var wheelDelta = _event.associatedData.wheelDelta;
             var mousePos = _event.associatedData.mousePos;
+            
+            
 
             //assert(true, "wheelData : " + wheelDelta)
 
-            if (!TP.Context().view[target].getMoveMode())
-                return;
+            //if (!TP.Context().view[target].getMoveMode())
+               // return;
 
             var cible = d3.select("#svg" + target)[0][0]
 
@@ -780,13 +782,13 @@ var TP = TP || {};
             });
             //svg.on("drag", movingZoom(target));
 
-
+/*
             var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
 
             data_translation = [translation_tab[0], translation_tab[1]]
 
             //console.log(data_translation );
-
+         
             svg.call(d3.behavior.drag()
                 .on("drag", function () {
                     TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg, dx:d3.event.dx, dy:d3.event.dy});
@@ -795,7 +797,7 @@ var TP = TP || {};
                     TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data: data_translation, svg: svg});
                 })
             );
-
+*/
             /*
              svg.on("keydown", function(){
              console.log(d3.event.keyCode);
@@ -812,6 +814,45 @@ var TP = TP || {};
 
         }
 
+        this.addMove = function(_event)
+        {
+            
+            var target = null;
+
+            target = _event.associatedData.source;
+
+            var svg = null;
+            var cGraph = null;
+
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
+                                    
+            var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+
+            data_translation = [translation_tab[0], translation_tab[1]]
+                        
+            svg.call(d3.behavior.drag()
+                .on("drag", function () {
+                    TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg, dx:d3.event.dx, dy:d3.event.dy});
+                })
+                .on("dragend", function () {
+                    TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data: data_translation, svg: svg});
+                })
+            );
+        }
+        
+        this.removeMove = function(_event)
+        {
+            var target = null;
+
+            target = _event.associatedData.source;
+
+            var svg = null
+            svg = TP.Context().view[target].getSvg();
+
+
+            svg.on("mousedown.drag", null);          
+        }
 
         this.toggleSelection = function (_currentViewID) {
             //console.log(this);

@@ -41,6 +41,7 @@ var TP = TP || {};
             __g__.removeViewTemplate();
 
             __g__.typeBarChart = null;
+            __g__.updateEventHandler = null;
         }
         
         __g__.initStates = function () {

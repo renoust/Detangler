@@ -19,6 +19,7 @@ var TP = TP || {};
 
         __g__.remove = function () {
             __g__.removeViewTemplate();
+            __g__.updateEventHandler = null
         }
         
         __g__.initStates = function () {

@@ -193,13 +193,14 @@ var TP = TP || {};
             }, {bindings:["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], fromAll:null, useless:null, activate:true});
 
 
-            __g__.controller.addEventState("move",  function (_event) {/*assert(true, "move");*/
+            __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/                
                 TP.Interaction().removeLasso(_event);
-                TP.Interaction().addZoom(_event)
+                TP.Interaction().addMove(_event);
             }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
-            __g__.controller.addEventState("select",  function (_event) {/*assert(true, "select");*/
+            __g__.controller.addEventState("Select",  function (_event) {/*assert(true, "select");*/   
                 TP.Interaction().addLasso(_event);
-                TP.Interaction().removeZoom(_event)
+                TP.Interaction().removeMove(_event);
+                TP.Interaction().addZoom(_event);                
             }, {bindings:["mousemoveLasso"], fromAll:true, useless:null, activate:true});
 
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {/*assert(true, "movingZoomDrag");*/
@@ -265,7 +266,7 @@ var TP = TP || {};
 
             __g__.controller.addEventState("runZoom",  function (_event) {/*assert(true, "runZoom");*/
                 TP.Interaction().runZoom(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            });
             __g__.controller.addEventState("sizeMapping",  function (_event) {/*assert(true, "sizeMapping");*/
                 TP.Visualization().sizeMapping(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
