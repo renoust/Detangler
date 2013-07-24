@@ -164,6 +164,10 @@ p{
 	margin:0 0 0 20;
 }
 
+.hidden{
+	visibility: hidden;
+}
+
 /******************************** Entanglement **********************************/
 
 #entanglement-cont{	

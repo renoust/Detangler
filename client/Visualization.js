@@ -8,7 +8,6 @@
 var TP = TP || {};
 (function () {
 
-
     var Visualization = function () {
         var __g__ = this;
         var contxt = TP.Context();
@@ -553,6 +552,7 @@ var TP = TP || {};
                     if (nodes[n].baseID===bID){
                         nodes[n][hcol] = cell.text();
                     }
+                TP.Context().view[target].getGraphDrawing().arrangeLabels();;
                 }
             }
 
@@ -572,6 +572,7 @@ var TP = TP || {};
             var IDView = TP.Context().activeView;
             var view = TP.Context().view[IDView];
             var cGraph = view.getGraph();
+            //console.log($('#picker'))
             var f = $.farbtastic('#picker');
 
             if ($('#cnodes').hasClass('colorwell') && $('#cnodes').is(":checked")) {
@@ -589,19 +590,23 @@ var TP = TP || {};
             }
         }
 
-        this.changeNodesSettings = function(_event) {
+        /*this.changeNodesSettings = function(_event) {
             var id = TP.Context().activeView;
             var view = TP.Context().view[id];
             var cGraph = view.getGraph();
+            console.log("data: ",_event.associatedData)
+            //console.log($('#npicker'))
+            var f = $.farbtastic('#npicker');
 
-            view.getGraphDrawing().changeSettingsLabels(id, cGraph, "font-size", _event.associatedData.value.fontsize.val1)
-            
-            //view.getGraphDrawing().changeSettingsLabels(id, cGraph, 'font-size', value)
-        }
+            if (_event.associatedData) {
+                view.getGraphDrawing().changeSettingsLabels(id, cGraph, "font-size", _event.associatedData.value.fontsize.val1)
+            }
 
-        this.changeSettings = function(element, property, value){
-            element.css(property, value)
-        }
+            view.setNodesColor(f.color);
+            view.getGraphDrawing().changeColor(id, cGraph, "node", view.getNodesColor());
+        }*/
+
+        
 
         return __g__;
     }

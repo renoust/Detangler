@@ -34,7 +34,7 @@ var TP = TP || {};
                 {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
                 {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
             ],
-            [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
+            [6,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
         ];
         
         var setting = [
@@ -46,7 +46,7 @@ var TP = TP || {};
                 },
                 "Labels size:"
             ],
-            [7,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+            [6,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
         /*
         var tabCatalyst = [1,//__g__.getID(), 
                         null,

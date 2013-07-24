@@ -65,43 +65,6 @@
     else
       return
   }
-
-  //$(document).ready(function() {
-
-
-  $(document).ready(function (e) {
-    $(".submenu:not('.open_at_load')").hide();
-    $("li.hmenu > a").click(function (e) {
-      if ($(this).next("ul.submenu:visible").length != 0) {
-        $(this).next("ul.submenu").slideUp("normal", function () {
-          $(this).parent().removeClass("open")
-        });
-      }
-      else {
-        $("ul.submenu").slideUp("normal", function () {
-          $(this).parent().removeClass("open")
-        });
-        //console.log()
-        $(this).next("ul.submenu").slideDown("normal", function () {
-          $(this).parent().addClass("open")
-        });
-      }
-      e.preventDefault();
-    });
-    $('ul.submenu').mouseleave(function () {
-      //console.log('mouseout');
-      $('ul.submenu').slideUp("normal", function () {
-        $(this).parent().removeClass("open")
-      });
-
-    })
-    $('#opfile').click(function (e) {
-      $('#files').click();
-      e.preventDefault();
-    })
-
-  });
-
 </script>
 
 <div id='header'>
@@ -133,18 +96,10 @@
   <input id="files" type="file">
 </div>
 
-
 <div id="Controller"></div>
 
 <script>
-  $('#tile').click(function(){
-    var tab=[]
-    for(k in TP.Context().view)
-      tab.push(TP.Context().view[k]);
-    TP.Context().InterfaceObject.setPositionDialogs(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth(),true)
-  })
   //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
-
   TP.Context().initController("principal", "principal");
 
 </script>

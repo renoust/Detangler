@@ -28,6 +28,8 @@ var TulipPosy = function (originalJSON) {
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
+    TP.Context().InterfaceObject.setHeaderMenu();
+
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
     // types:   0:select    3:textfield     6:text
@@ -162,6 +164,13 @@ var TulipPosy = function (originalJSON) {
     if ($('#sync').is(':checked')) {
         TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
     }
+
+    $('#tile').click(function(){
+        var tab=[];
+        for( var k in TP.Context().view )
+            tab.push(TP.Context().view[k]);
+        TP.Context().InterfaceObject.setPositionDialogs(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth(),true);
+  })
 
     //check if Google Chrome browser is used, if not, warn the user
      if(!window.chrome){
