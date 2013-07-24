@@ -8,8 +8,8 @@ var TP = TP || {};
         var __g__ = this;
 
         var hashMapStates = new Object();
-        var hashMapSavedStates = new Object();        
-        var saveState = new Object();
+        var hashMapSavedStates = new Object();    
+        //var saveState = new Object();
         
 
         __g__.getStateGraph = function () {
@@ -38,7 +38,7 @@ var TP = TP || {};
 
         //useless specifies if the node must be register as currentState in State's chain or not. For example, if a state
         //doesn't involve any changements about the current state, we don't put it in the state's chain as current State.
-        __g__.addState = function (node, fromAll, useless, activate) 
+        __g__.addState = function (node, fromAll, useless, activate)
         {
             
             if((fromAll != null) && (fromAll != true) &&  (fromAll != false))
@@ -68,11 +68,26 @@ var TP = TP || {};
                 assert(false, "state already exist !!!")
                 return;
             }
-            
-            if(saveState[node.name] != null){
-                delete saveState[node.name];
-            }
 
+                //hashMapStates[node.name].specialRoot = true;
+
+
+            var tmp = null;
+            tmp = node.bindings;            
+            
+            if(tmp != null){
+                if(typeof(tmp) === "object"){
+                    if (Object.getPrototypeOf(tmp) != Object.getPrototypeOf([])) {
+                        assert(false, "'node.bindings' must be an array");
+                        return false;
+                    }                    
+                }
+                else{
+                    assert(false, "'node.bindings' must be an array");
+                    return false;
+                }
+            }
+                
             if (hashMapStates[node.name] == null) {
                 if(hashMapSavedStates[node.name] != null){
                     hashMapStates[node.name] = hashMapSavedStates[node.name];
@@ -81,71 +96,51 @@ var TP = TP || {};
                 else
                     hashMapStates[node.name] = {name: node.name, root: {}, bindings: {}, func: null, activate: true, useless: false};
             }
-
-                //hashMapStates[node.name].specialRoot = true;
-            if(fromAll != null)
-            {
-                hashMapStates[node.name].root = new Object(); //reinitialise hashtab if it was not empty
-                hashMapStates[node.name].root["all"] = true;
-            }
-
-            if (useless != null) {
+            
+            if(useless != null)
                 hashMapStates[node.name].useless = useless;
-            }
-
-            if (activate != null)
-                hashMapStates[node.name].activate = activate;
-
-            var tmp = null;
-            tmp = node.bindings;
+                
+            if(activate != null)
+                hashMapStates[node.name].activate = activate;           
             
             if (tmp != null) {
-
-                if (Object.getPrototypeOf(node.bindings) == Object.getPrototypeOf([])) {
-                    //tmp = node.bindings;
-
-                    //if(tmp != null){
-
-                    var end = tmp.length;
-
-                    for (var key = 0; key < end; key++) {
-                        if (tmp[key] != "all") {
-                            
-                            var stateTmp = null;
-                            var inGraph = null;
-                            
-                            if (hashMapStates[tmp[key]] == null) {
+  
+                var end = tmp.length;
+    
+                for (var key = 0; key < end; key++) {
+                    if (tmp[key] != "all") {
                                 
-                                if(hashMapSavedStates[tmp[key]] == null)
-                                    hashMapSavedStates[tmp[key]] = {name: tmp[key], root: {}, bindings: {}, func: null, activate: true, useless: false};
+                        var stateTmp = null;
+                        var inGraph = null;
+                            
+                        if (hashMapStates[tmp[key]] == null) {
                                     
-                                stateTmp = hashMapSavedStates[tmp[key]];
-                                inGraph = false;
-                            }
-                            else{
-                                stateTmp = hashMapStates[tmp[key]];
-                                inGraph = true;
-                            }
-
-                            hashMapStates[node.name].bindings[tmp[key]] = true;
-                                //assert(true, "binding with : '" + tmp[key] + "' added")
-
-                            if (stateTmp.root[node.name] == undefined && stateTmp.root["all"] == null)
-                                stateTmp.root[node.name] = true;
-                                
+                            if(hashMapSavedStates[tmp[key]] == null)
+                                hashMapSavedStates[tmp[key]] = {name: tmp[key], root: {}, bindings: {}, func: null, activate: true, useless: false};
+                                        
+                            stateTmp = hashMapSavedStates[tmp[key]];
+                            inGraph = false;
                         }
-                        else {
-                            hashMapStates[node.name].bindings = new Object();
-                            hashMapStates[node.name].bindings[tmp[key]] = true;
-                            //hashMapStates[node.name].specialRoot = true;
-                            break;
+                        else{
+                            stateTmp = hashMapStates[tmp[key]];
+                            inGraph = true;
                         }
-                        //hashMapStates[tmp[key]].bindings[node.name] = hashMapStates[node.name];
+    
+                        hashMapStates[node.name].bindings[tmp[key]] = true;
+                                    //assert(true, "binding with : '" + tmp[key] + "' added")
+    
+                        if (stateTmp.root[node.name] == undefined && stateTmp.root["all"] == null)
+                            stateTmp.root[node.name] = true;
+                                    
                     }
-                    //}
-                }
-                else
-                    assert(false, "'node.bindings' must be an array");
+                    else {
+                        hashMapStates[node.name].bindings = new Object();
+                        hashMapStates[node.name].bindings[tmp[key]] = true;
+                                //hashMapStates[node.name].specialRoot = true;
+                        break;
+                    }
+                            //hashMapStates[tmp[key]].bindings[node.name] = hashMapStates[node.name];
+                 }
             }
 
             if (node.func != null) {
@@ -156,8 +151,31 @@ var TP = TP || {};
                 else
                     assert(false, "one function already associated to the State")
             }
+            
+            if(fromAll === true)
+            {
+                var tmp =  hashMapStates[node.name].root;
+                
+                //console.log("tmp : ", tmp)
+                
+                for(var key in tmp){
+                    if(hashMapStates[key] != null){
+                        if(hashMapStates[key].bindings != null)
+                            if(hashMapStates[key].bindings[node.name] != null)
+                               delete hashMapStates[key].bindings[node.name];
+                    }
+                }
+                
+                hashMapStates[node.name].root = new Object(); //reinitialise hashtab if it was not empty
+                hashMapStates[node.name].root["all"] = true;
+            }
+            
+            
             //}
         }
+        
+        
+        
 
         __g__.isBindWithState = function(nameState){
             
@@ -173,81 +191,43 @@ var TP = TP || {};
         }
 
 
-        __g__.deleteState = function(name){
-
+        __g__.deleteState = function(name){ 
+            
             if(hashMapStates[name] != null){
 
-                saveState[name] = hashMapStates[name];
-                delete hashMapStates[name];
+                var tmp = hashMapStates[name];
+                
+                if(tmp.bindings["all"] == null){
 
-                if(saveState[name].bindings["all"] == null){
-
-                    for(var key in saveState[name].bindings){
+                    for(var key in tmp.bindings){
                         if(hashMapStates[key] != null){
                             if(hashMapStates[key].root[name] != null)
                                 delete hashMapStates[key].root[name];
                         }
-                        else if(saveState[key] != null){
-                            if(saveState[key].root[name] != null)
-                                delete saveState[key].root[name];
+                        else if(hashMapSavedStates[key] != null){
+                            if(hashMapSavedStates[key].root[name] != null)
+                                delete hashMapSavedStates[key].root[name];
+                        }
+                    }        
+                                      
+                }
+                if(tmp.root["all"] == null){
+                    for(var key in tmp.root){
+                        if(hashMapStates[key] != null){
+                            if(hashMapStates[key].bindings[name] != null)
+                                delete hashMapStates[key].bindings[name];
                         }
                     }
                 }
+                
+                delete hashMapStates[name];
+                delete tmp;
             }
             else{
-                assert(false, "state does'nt exist !!!")
+                assert(false, "warning : state : "+name+" does'nt exist !!!")
                 return;
             }
         }
-
-
-        __g__.goBackState = function(name)
-        {
-            var bindings = new Array();
-            var node = null;
-            var fromAll = null;
-            var useless = null;
-            var activate = null;
-
-            if(saveState[name] != null){
-
-                for(var key in saveState[name].bindings)
-                    bindings.push(key);				
-
-                node = {name:saveState[name].name, bindings:bindings, func:saveState[name].func}
-/*
-                if(saveState[name].specialRoot == true){
-                    nodeRoot = (saveState[name].root["all"] != null) ? "all":null;
-                }
-                else
-                    nodeRoot = null;
-*/
-                useless = saveState[name].useless;
-
-                activate = saveState[name].activate;
-
-                console.log("node : ",node, "useless : ",useless, "activate : ", activate);
-
-                var tmp = saveState[name]; //because saveState[name] is deleted in addState;
-
-                __g__.addState(node, fromAll, useless, activate);
-
-                if(hashMapStates[name] != null){
-                    for(var key in tmp.root)
-                        hashMapStates[name].root[key] = tmp.root[key];
-
-                    delete tmp;
-                }
-                else{
-                    assert(false, "problem with State adding");
-                }
-                
-            }
-            else{
-                assert(false, "state does'nt exist")
-            }
-        }
-
         
         __g__.isUseless = function(nameState, value)
         {
@@ -263,7 +243,90 @@ var TP = TP || {};
             }
         }
         
-
+        __g__.setFromAll = function(nameState, value)
+        {
+            
+            var stateTmp = hashMapStates[nameState];
+            
+            if(stateTmp != null){        
+                if(value === true)
+                {
+                    if(stateTmp.root["all"] == null)
+                    {
+                        var tmp =  stateTmp.root;
+                        
+                        //console.log("tmp : ", tmp)
+                        
+                        for(var key in tmp){
+                            if(hashMapStates[key] != null){
+                                if(hashMapStates[key].bindings != null)
+                                    if(hashMapStates[key].bindings[nameState] != null)
+                                       delete hashMapStates[key].bindings[nameState];
+                            }
+                        }
+                        
+                        stateTmp.root = new Object(); //reinitialise hashtab if it was not empty
+                        stateTmp.root["all"] = true;
+                    }
+                }
+                else if(value === false){
+                    if(stateTmp.root["all"] != null)
+                    {
+                        delete stateTmp.root["all"]
+                    }           
+                }
+            }
+            else{
+                assert(false, "state : "+nameState+" doesn't exist !!!")
+                return;
+            }
+        }
+        
+        __g__.addBinding = function(stateSource, stateDest)
+        { 
+            
+            var stateSourceTmp = null;
+            var stateDestTmp = null;
+            
+            
+            if(hashMapStates[stateSource] != null)
+            {                
+                stateSourceTmp = hashMapStates[stateSource];
+                 
+            }/*else if(hashMapSavedStates[stateSource] != null)
+            {
+                assert(false, "Warning : your stateSource : "+stateSource+" have an instance created in binding "
+                +"hashmap but isn't created in the main hashmap. Don't forgive use 'addEventState' or 'addState' to add it.");
+                stateSourceTmp = hashMapSavedStates[stateSource];
+            }*/
+            
+            if(hashMapStates[stateDest] != null)
+            {                
+                stateDestTmp = hashMapStates[stateDest];
+                 
+            }/*else if(hashMapSavedStates[stateDest] != null)
+            {
+                assert(false, "Warning : your stateDest : "+stateDest+" have an instance created in binding "
+                +"hashmap but isn't created in the main hashmap. Don't forgive use 'addEventState' or 'addState' to add it.");
+                stateDestTmp = hashMapSavedStates[stateDest];
+            }*/
+            
+            if((stateSourceTmp != null) && (stateDestTmp != null))
+            {
+               if(stateDestTmp.fromAll != true){
+                   stateSourceTmp.bindings[stateDest] = true;
+                   stateDestTmp.root[stateSource] = true;
+               }
+               assert(true, "links correctly added");
+            }
+            else
+            {
+                assert(false, "one of the state don't exist")
+                return;
+            }
+            
+        }
+        
         return __g__;
     }
     TP.StateGraph = StateGraph;

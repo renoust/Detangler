@@ -38,15 +38,9 @@ var TP = TP || {};
         }
 
         __g__.deleteEvent = function (type) {
-            __g__.eventHandlerObject.removeEvent(nameC, type);
+            __g__.eventHandlerObject.deleteEvent(nameC, type);
         }
-        
-        __g__.goBackEvent = function(nameEvent)
-        {
-            __g__.eventHandlerObject.goBackEvent(nameC, nameEvent)
-        }
-        
-                              
+                            
         __g__.addStates = function () {
 
             if (typeC === "view") {
@@ -170,17 +164,6 @@ var TP = TP || {};
             __g__.deleteEvent(nameState);
         }
         
-        __g__.goBackEventState = function(nameState){
-            __g__.goBackState(nameState);
-            __g__.goBackEvent(nameState);
-        }
-        
-        
-        __g__.goBackState = function(nameState){
-            __g__.stateGraph.goBackState(nameState);
-        }
-        
-        
         __g__.deleteState = function(nameState){
             if(currentState  == nameState)
                 currentState = beforeCurrentState;
@@ -203,6 +186,15 @@ var TP = TP || {};
 
         __g__.disableState = function (state) {
             __g__.stateGraph.disableState(state);
+        }
+
+        __g__.isUseless = function(cState, value){
+            __g__.stateGraph.isUseless(cState, value);
+        }
+        
+        __g__.setFromAll = function(cState, value)
+        {
+            __g__.stateGraph.setFromAll(cState, value);
         }
 
         __g__.setCurrentState = function (name) {
@@ -281,11 +273,7 @@ var TP = TP || {};
                 }            
             }
         }
-        
-        
-        __g__.isUseless = function(cState, value){
-            __g__.stateGraph.isUseless(cState, value);
-        }
+ 
         
         //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
         //same thing for view, type just the view ID("0", "1", "2")        
@@ -384,6 +372,11 @@ var TP = TP || {};
 
             currentState = null;
 
+        }
+        
+        __g__.addBinding = function(stateSource, stateDest)
+        {
+            __g__.stateGraph.addBinding(stateSource, stateDest);
         }
 
         return __g__;

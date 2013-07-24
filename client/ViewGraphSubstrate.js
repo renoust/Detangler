@@ -201,7 +201,7 @@ var TP = TP || {};
             }, {bindings:["mousemoveLasso", "mouseupLasso"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("mousemoveLasso",  function (_event) {/*assert(true, "mousemoveLasso");*/
                 _event.associatedData.myL.canMouseMove(_event.associatedData.mouse);
-            }, {bindings:["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["toto","mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
 
             __g__.controller.addEventState("mouseoverMouseDown",  function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {
