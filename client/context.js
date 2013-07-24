@@ -190,8 +190,15 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("simpleSelectionMade", function(_event){
-                console.log("SIMPLE SELECTION DETECTED: ", _event);
+                __g__.simpleSelectionReceived(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
+        }
+
+        __g__.simpleSelectionReceived = function(_event)
+        {
+            console.log("SIMPLE SELECTION DETECTED: ", _event);
+            _event.associatedData.source = "0";
+            TP.Interaction().updateViewFromSimpleSelection(_event);
         }
 
         __g__.initController = function (ID, typeC) {

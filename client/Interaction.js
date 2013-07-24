@@ -96,6 +96,7 @@ var TP = TP || {};
             var prevSelList = [];
 
             var __g = TP.Context().view[target].getLasso();
+
             var selList = []
             var e = window.event
             svg.selectAll("g.node")
@@ -218,6 +219,81 @@ var TP = TP || {};
                 prevSelList = selList.slice(0);
                 objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
             }
+        }
+
+
+        this.updateViewFromSimpleSelection = function (_event) {
+
+            //assert(true, "checkIntersect");
+
+
+            var currentViewID = _event.associatedData.source;
+            var svg = TP.Context().view[currentViewID].getSvg();
+
+            var prevSelList = [];
+
+            //selList should be here an array of nodes
+            var selList = _event.associatedData.selection;
+
+            //listening for keyboard event
+            var e = window.event
+
+            svg.selectAll("g.node").data(selList, function(d){return d.baseID;})
+
+                .classed("selected", true)
+
+               //should restore keyboard event handler to append/remove from selection
+               /*
+                if ((e.ctrlKey || e.metaKey) && d.selected == true)return true;
+
+                var intersects = __g.intersect(pointArray, x, y)
+                //if (intersects) console.log("node intersects", d)
+
+                if (e.shiftKey && intersects) {
+                    //console.log("shift pressed and intersects so return false");
+                    d.selected = false;
+                } else if (e.shiftKey && !intersects && d.selected == true) {
+                    //console.log("shift pressed and doesnt intersects and true so return true");
+                    d.selected = true;
+                } else {
+                    d.selected = intersects;
+                }
+                //console.log("returning selection:", d.selected)
+                return d.selected*/
+
+                .select("g.glyph")
+                .select(".node")
+                .style('fill', 'red');
+
+                 /*
+                 {
+                    if (e.ctrlKey && d.selected == true) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    }
+                    if (d.selected) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    } else {
+                    // if (d._type == "catalyst")
+                    // return TP.Context().tabNodeColor["catalyst"];
+                    // else
+                    // return TP.Context().tabNodeColor["substrate"];
+                        return TP.Context().view[target].getNodesColor();
+                    }
+                }*/
+
+            selList = []
+            _event.associatedData.selection.forEach(function(d){selList.push(d.baseID)});
+
+            selList.sort()
+            TP.Context().view[currentViewID].setSourceSelection(selList);
+
+            if (selList.length > 0)
+                TP.Context().view[currentViewID].getController().sendMessage("nodeSelected", {selList: selList, prevSelList: prevSelList});
+            else
+                TP.Context().view[currentViewID].getController().sendMessage("selectionVide", {selList: selList});
+
         }
 
 

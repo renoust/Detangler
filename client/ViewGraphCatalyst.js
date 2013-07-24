@@ -145,7 +145,7 @@ var TP = TP || {};
                 TP.Interaction().checkIntersect(_event);
             }, {bindings:["nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("nodeSelected",  function (_event) {/*assert(true, "nodeSelected");*/
-                TP.Interaction().nodeSelected(_event);
+                TP.Interaction().nodeSelected_deprecated(_event);
             }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("selectionVide",  function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
