@@ -96,6 +96,7 @@ var TP = TP || {};
             var prevSelList = [];
 
             var __g = TP.Context().view[target].getLasso();
+
             var selList = []
             var e = window.event
             svg.selectAll("g.node")
@@ -218,6 +219,81 @@ var TP = TP || {};
                 prevSelList = selList.slice(0);
                 objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
             }
+        }
+
+
+        this.updateViewFromSimpleSelection = function (_event) {
+
+            //assert(true, "checkIntersect");
+
+
+            var currentViewID = _event.associatedData.source;
+            var svg = TP.Context().view[currentViewID].getSvg();
+
+            var prevSelList = [];
+
+            //selList should be here an array of nodes
+            var selList = _event.associatedData.selection;
+
+            //listening for keyboard event
+            var e = window.event
+
+            svg.selectAll("g.node").data(selList, function(d){return d.baseID;})
+
+                .classed("selected", true)
+
+               //should restore keyboard event handler to append/remove from selection
+               /*
+                if ((e.ctrlKey || e.metaKey) && d.selected == true)return true;
+
+                var intersects = __g.intersect(pointArray, x, y)
+                //if (intersects) console.log("node intersects", d)
+
+                if (e.shiftKey && intersects) {
+                    //console.log("shift pressed and intersects so return false");
+                    d.selected = false;
+                } else if (e.shiftKey && !intersects && d.selected == true) {
+                    //console.log("shift pressed and doesnt intersects and true so return true");
+                    d.selected = true;
+                } else {
+                    d.selected = intersects;
+                }
+                //console.log("returning selection:", d.selected)
+                return d.selected*/
+
+                .select("g.glyph")
+                .select(".node")
+                .style('fill', 'red');
+
+                 /*
+                 {
+                    if (e.ctrlKey && d.selected == true) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    }
+                    if (d.selected) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    } else {
+                    // if (d._type == "catalyst")
+                    // return TP.Context().tabNodeColor["catalyst"];
+                    // else
+                    // return TP.Context().tabNodeColor["substrate"];
+                        return TP.Context().view[target].getNodesColor();
+                    }
+                }*/
+
+            selList = []
+            _event.associatedData.selection.forEach(function(d){selList.push(d.baseID)});
+
+            selList.sort()
+            TP.Context().view[currentViewID].setSourceSelection(selList);
+
+            if (selList.length > 0)
+                TP.Context().view[currentViewID].getController().sendMessage("nodeSelected", {selList: selList, prevSelList: prevSelList});
+            else
+                TP.Context().view[currentViewID].getController().sendMessage("selectionVide", {selList: selList});
+
         }
 
 
@@ -580,11 +656,13 @@ var TP = TP || {};
             var target = _event.associatedData.source;
             var wheelDelta = _event.associatedData.wheelDelta;
             var mousePos = _event.associatedData.mousePos;
+            
+            
 
             //assert(true, "wheelData : " + wheelDelta)
 
-            if (!TP.Context().view[target].getMoveMode())
-                return;
+            //if (!TP.Context().view[target].getMoveMode())
+               // return;
 
             var cible = d3.select("#svg" + target)[0][0]
 
@@ -780,13 +858,13 @@ var TP = TP || {};
             });
             //svg.on("drag", movingZoom(target));
 
-
+/*
             var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
 
             data_translation = [translation_tab[0], translation_tab[1]]
 
             //console.log(data_translation );
-
+         
             svg.call(d3.behavior.drag()
                 .on("drag", function () {
                     TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg, dx:d3.event.dx, dy:d3.event.dy});
@@ -795,7 +873,7 @@ var TP = TP || {};
                     TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data: data_translation, svg: svg});
                 })
             );
-
+*/
             /*
              svg.on("keydown", function(){
              console.log(d3.event.keyCode);
@@ -812,6 +890,45 @@ var TP = TP || {};
 
         }
 
+        this.addMove = function(_event)
+        {
+            
+            var target = null;
+
+            target = _event.associatedData.source;
+
+            var svg = null;
+            var cGraph = null;
+
+            svg = TP.Context().view[target].getSvg();
+            cGraph = TP.Context().view[target].getGraph();
+                                    
+            var translation_tab = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target];//eval("TP.Context().data_translation_"+target);
+
+            data_translation = [translation_tab[0], translation_tab[1]]
+                        
+            svg.call(d3.behavior.drag()
+                .on("drag", function () {
+                    TP.Context().view[target].getController().sendMessage("movingZoomDrag", {cGraph: cGraph, data: data_translation, svg: svg, dx:d3.event.dx, dy:d3.event.dy});
+                })
+                .on("dragend", function () {
+                    TP.Context().view[target].getController().sendMessage("movingZoomDragEnd", {data: data_translation, svg: svg});
+                })
+            );
+        }
+        
+        this.removeMove = function(_event)
+        {
+            var target = null;
+
+            target = _event.associatedData.source;
+
+            var svg = null
+            svg = TP.Context().view[target].getSvg();
+
+
+            svg.on("mousedown.drag", null);          
+        }
 
         this.toggleSelection = function (_currentViewID) {
             //console.log(this);

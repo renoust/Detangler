@@ -106,21 +106,36 @@ var TP = TP || {};
         // This function toggles the 'select' and 'move' modes for the 
         // interactors
         // target, the string value of the target svg view
-        this.toggleSelectMove = function (target) {
-            // assert(true, 'Interface -> toggleSelectMove')
-            if (!target) return;
+        this.toggleSelectMove = function (_event) {
+//            if (!target) return
+            
+            var target = _event.associatedData.source;
+            
+            if(target==null)
+                return;
+            
+            var view = null;
+            view = TP.Context().view[target];
 
-            var view = TP.Context().view[target];
-            var svg = view.getSvg();
+            var svg = null
+            svg = view.getSvg();
 
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
 
             if (TP.Context().view[target].getSelectMode()) {
-                view.getController().sendMessage("select"); //send Message "select" to the StateController
+            //     svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
+            //     svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor);
+            //     objectReferences.InteractionObject.addLasso(target);
+            //     view.getController().sendMessage("select"); //send Message "select" to the StateController
+            //     objectReferences.InteractionObject.removeZoom(target);
             }
             if (TP.Context().view[target].getMoveMode()) {
-                view.getController().sendMessage("move");
+            //     svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
+            //     svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
+            //     objectReferences.InteractionObject.removeLasso(target);
+            //     objectReferences.InteractionObject.addZoom(target);
+            //     view.getController().sendMessage("move");
             }
         }
 

@@ -86,13 +86,20 @@ var TP = TP || {};
             if (data.handlers[type] === null) {
                 //if(!fn.id) fn.id = (fnID != null) ? fnID : nextGuid++;
                 //data.handlers[type].push(fn);
-                fn.available = true;
-                data.handlers[type] = fn;
+                
+                if(fn.call){ //cheking if fn is a function or not
+                    fn.available = true;
+                    data.handlers[type] = fn;
+                }
+                else{
+                    assert(false, "there is no function or fn parametter isn't a function type")
+                    return false;
+                }
             }
             else {
                 //assert(false, "a reference to similar function already exist")
-                assert(false, "function already exist")
-                return;
+                assert(false, "Event already exist")
+                return false;
             }
 
             if (!data.dispatcher) {
@@ -117,6 +124,8 @@ var TP = TP || {};
                          */
                         if (handlers.available == true)
                             handlers.call(elem, _event);
+                        else
+                            assert(false, "function isn't available !!!")
                     }
                 };
             }
@@ -133,11 +142,12 @@ var TP = TP || {};
                 data.attachEvent("on" + type, data.dispatcher);
             }
             //}
-
+            return true;
         }
-
-
+        
+        
         __g__.removeEvent = function (elem, type/*, id*/) {
+            
             function isEmpty(object) {
 
                 for (var key in object) {
@@ -148,41 +158,6 @@ var TP = TP || {};
             }
 
             var data = objectStore.getData(elem);
-            /*
-            if (typeof id === "number") {
-                var handlers = data.handlers[type];
-
-                var end = handlers.length;
-
-                for (var n = 0; n < end; n++) {
-                    if (handlers[n].id != null)
-                        if (handlers[n].id === id)
-                            delete handlers[n];
-                }
-
-            }
-            if (id === "all") {
-                var handlers = data.handlers[type];
-
-                var end = handlers.length;
-
-                for (var n = 0; n < end; n++) {
-                    delete handlers[n];
-                }
-            }			
-			
-            if (data.handlers[type].length === 0) {
-
-                delete data.handlers[type];
-
-                if (document.removeEventListener) {
-                    data.removeEventListener(type, data.dispatcher, false);
-                }
-
-                if (document.detachEvent) {
-                    data.detachEvent("on" + type, data.dispatcher);
-                }
-            }*/
 
 
             if(data.handlers[type] != null)
@@ -210,11 +185,23 @@ var TP = TP || {};
         
         __g__.goBackEvent = function(nameElem, nameEvent)
         {
-        	if(saveEvent[nameEvent] != null){
-        		__g__.addEvent(nameElem, nameEvent, saveEvent[nameEvent]);
-        	}
-        	else
-        		assert(false, "the event's type isn't defined");
+            if(saveEvent[nameEvent] != null){
+                __g__.addEvent(nameElem, nameEvent, saveEvent[nameEvent]);
+            }
+            else
+                assert(false, "the event's type isn't defined");
+        }
+        
+        __g__.eventIsAvailable = function(nameElem, nameEvent)
+        {
+            var data = __g__.getElem(nameElem);
+            
+            if(data != null){
+                if(data.handlers[nameEvent] != null)
+                    return true;
+            }
+            
+            return false;
         }
 
         return __g__;
