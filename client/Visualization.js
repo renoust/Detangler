@@ -57,15 +57,14 @@ var TP = TP || {};
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
 
                 var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-                $('#bg')[0].style.cssText = "background-color:" + brewerSeq[index];
+                $("#bg").css("background-color",brewerSeq[index]);
             }
             else {
 
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
-                $('#bg')[0].style.cssText = "background-color:white";
-
+                $("#bg").css("background-color", "white")
             }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
@@ -408,7 +407,7 @@ var TP = TP || {};
             var parameter = _event.associatedData.parameter;
             var idView = _event.associatedData.idView;
             var scales = _event.associatedData.scales;
-
+            
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
@@ -575,19 +574,33 @@ var TP = TP || {};
             var cGraph = view.getGraph();
             var f = $.farbtastic('#picker');
 
-            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').hasClass('selected')) {
+            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').is(":checked")) {
                 view.setNodesColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "node", view.getNodesColor());
-            } else if ($('#clinks').hasClass('colorwell') && $('#clinks').hasClass('selected')) {
+            } else if ($('#clinks').hasClass('colorwell') && $('#clinks').is(":checked")) {
                 view.setLinksColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "link", view.getLinksColor());
-            } else if ($('#cbg').hasClass('colorwell') && $('#cbg').hasClass('selected')) {
+            } else if ($('#cbg').hasClass('colorwell') && $('#cbg').is(":checked")) {
                 view.setBgColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "bg", view.getBgColor());
-            } else if ($('#clabels').hasClass('colorwell') && $('#clabels').hasClass('selected')) {
+            } else if ($('#clabels').hasClass('colorwell') && $('#clabels').is(":checked")) {
                 view.setLabelsColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "label", view.getLabelsColor());
             }
+        }
+
+        this.changeNodesSettings = function(_event) {
+            var id = TP.Context().activeView;
+            var view = TP.Context().view[id];
+            var cGraph = view.getGraph();
+
+            view.getGraphDrawing().changeSettingsLabels(id, cGraph, "font-size", _event.associatedData.value.fontsize.val1)
+            
+            //view.getGraphDrawing().changeSettingsLabels(id, cGraph, 'font-size', value)
+        }
+
+        this.changeSettings = function(element, property, value){
+            element.css(property, value)
         }
 
         return __g__;

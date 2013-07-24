@@ -61,7 +61,7 @@ li{
 
 .nosidebar .cont{
 	left: -200px;
-	z-index: 0;
+	z-index: 200;
 }
 
 .close-button{
@@ -82,6 +82,10 @@ li{
 	padding: 0;
 	margin: 0;
 	font-size: 0.8em;
+}
+
+.nav li{
+	list-style-type:none;
 }
 
 .nav li.tglFamily > a{

@@ -141,7 +141,7 @@
     var tab=[]
     for(k in TP.Context().view)
       tab.push(TP.Context().view[k]);
-    TP.Context().InterfaceObject.tileDialog(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth()-20,true)
+    TP.Context().InterfaceObject.setPositionDialogs(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth(),true)
   })
   //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
 
