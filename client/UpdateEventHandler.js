@@ -179,46 +179,10 @@ var TP = TP || {};
         __g__.getInfo = function(){
             return __g__.tabAssociation;
         }
-        /*
-        __g__.switchFunction = function(name)
-        {
-            if(__g__.tabAssociation != null){
-                if(__g__.tabAssociation[name] != null){
 
-                    if(__g__.tabAssociation[name].lastFunc === null)
-                    __g__.tabAssociation[name].lastFunc = TP.Context().view[idView].getController().getFuncEvent(name);
-                    
-                    if(__g__.tabAssociation[name].lastFunc != null && __g__.tabAssociation[name].newFunc != null)
-                    {
-                        var tmp = __g__.tabAssociation[name].lastFunc;
-                        __g__.tabAssociation[name].lastFunc = __g__.tabAssociation[name].newFunc;
-                        __g__.tabAssociation[name].newFunc = tmp;
-
-                        var getFunc = TP.Context().view[idView].getController().modifyFunc(name, __g__.tabAssociation[name].lastFunc);
-                        
-                        return 1;
-                    }
-                }
-            }
-
-            return 0;
-        }
-        */
         __g__.treatUpdateEvent = function(event){
-            //console.log(event);
-            /*
-            var possible = __g__.switchFunction(event.associatedData.type);
-            if(possible === 1){
-                TP.Controller().sendMessage(event.associatedData.type, {data:event.associatedData.data}, event.associatedData.target, event.associatedData.target);
-                __g__.switchFunction(event.associatedData.type);
-            }
-            else
-                assert(false, "warning : process problem");
-            */
 
-            //console.log("type view : "+event.associatedData.source+" = ",TP.Context().view[event.associatedData.source].getType());
-            __g__.dataTreat(TP.Context().view[event.associatedData.source].getType(), event);		
-            //console.log("dataTreatment : ", __g__.dataTreatment)
+            __g__.dataTreat(TP.Context().view[event.associatedData.source].getType(), event);
             
             if(__g__.tabAssociation != null){
                 if(__g__.tabAssociation[event.associatedData.type] != null){

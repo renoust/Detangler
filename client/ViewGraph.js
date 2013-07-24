@@ -168,8 +168,7 @@ var TP = TP || {};
 
             //controller = new TP.Controller();
             if (__g__.controller != null)
-                //add states and events
-                __g__.controller.initListener(__g__.ID, "view");
+                __g__.controller.initController(__g__.ID, "view");
 
             //TP.Context().setStypeEventByDefault(ID);
             __g__.interactorListTreatment();
@@ -205,12 +204,14 @@ var TP = TP || {};
                 var interact = $(this).button("option", "label");
                 if (interact == "Move") {
                     $(this).button("option", "label", "Select");
+                    __g__.controller.sendMessage(interact)             
                 }
                 else {
                     $(this).button("option", "label", "Move");
+                    __g__.controller.sendMessage(interact)
                 }
                 //TP.Context().stateStack[ID].executeCurrentState();
-                TP.ObjectReferences().InterfaceObject.toggleSelectMove(__g__.ID);
+                //TP.ObjectReferences().InterfaceObject.toggleSelectMove(__g__.ID);
             });
 
 
@@ -239,6 +240,12 @@ var TP = TP || {};
                 .attr("id", "svg" + __g__.ID)
                 .attr("idView", __g__.ID);
 
+            /*
+                    TP.Interaction().createLasso(__g__.ID);
+                    //TP.Interaction().addZoom(ID);
+                    //TP.Interface().toggleSelectMove(__g__.ID);
+                    __g__.controller.sendMessage("Select");
+            */
 
             //.attr("viewBox", "0 0 500 600");
 
@@ -248,7 +255,7 @@ var TP = TP || {};
 
 //            TP.Interaction().createLasso(__g__.ID);
             //TP.Interaction().addZoom(ID);
-            TP.Interface().toggleSelectMove(__g__.ID);
+            //TP.Interface().toggleSelectMove(__g__.ID);
 
             //TP.Context().tabType[target] = typeView;
 
@@ -277,9 +284,10 @@ var TP = TP || {};
 
         }
 
-        __g__.remove = function(){
-
+        __g__.remove = function () {
+            
             __g__.removeViewTemplate();
+            __g__.updateEventHandler = null;
 
             __g__.nodesColor = null;
             __g__.linksColor = null;
@@ -301,6 +309,7 @@ var TP = TP || {};
             __g__.acceptedGraph = null;
             __g__.graph = null;
         }
+
 
          __g__.initStates = function () {
 

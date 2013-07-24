@@ -106,10 +106,15 @@ var TP = TP || {};
         // This function toggles the 'select' and 'move' modes for the 
         // interactors
         // target, the string value of the target svg view
-        this.toggleSelectMove = function (target) {
-            // assert(true, 'Interface -> toggleSelectMove')
-            if (!target) return
 
+        this.toggleSelectMove = function (_event) {
+//            if (!target) return
+            
+            var target = _event.associatedData.source;
+            
+            if(target==null)
+                return;
+            
             var view = null;
             view = TP.Context().view[target];
 
@@ -124,7 +129,7 @@ var TP = TP || {};
                 svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor);
                 //objectReferences.InteractionObject.addLasso(target);
 
-                view.getController().sendMessage("select"); //send Message "select" to the StateController
+                //view.getController().sendMessage("select"); //send Message "select" to the StateController
 
                 //objectReferences.InteractionObject.removeZoom(target);
             }
@@ -135,7 +140,7 @@ var TP = TP || {};
                 //objectReferences.InteractionObject.removeLasso(target);
                 //objectReferences.InteractionObject.addZoom(target);
 
-                view.getController().sendMessage("move");
+                //view.getController().sendMessage("move");
             }
         }
 

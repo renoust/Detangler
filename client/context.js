@@ -160,31 +160,42 @@ var TP = TP || {};
         __g__.initStates = function () {
             //assert(true, "type of controller principal");
 
-            __g__.controller.addState({name: "callLayoutSendQuery", bindings: null, func: function (_event) {/*assert(true, "callLayoutSendQuery");*/
+            __g__.controller.addEventState("callLayoutSendQuery", function (_event) {/*assert(true, "callLayoutSendQuery");*/
                 TP.Client().callLayoutSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "selectionSendQuery", bindings: null, func: function (_event) {/*assert(true, "selectionSendQuery");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("selectionSendQuery", function (_event) {/*assert(true, "selectionSendQuery");*/
                 TP.Client().selectionSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "FloatAlgorithmSendQuery", bindings: null, func: function (_event) {/*assert(true, "FloatAlgorithmSendQuery");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("FloatAlgorithmSendQuery", function (_event) {/*assert(true, "FloatAlgorithmSendQuery");*/
                 TP.Client().FloatAlgorithmSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "analyseGraphSendQuery", bindings: null, func: function (_event) {/*assert(true, "analyseGraphSendQuery");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+            __g__.controller.addEventState("analyseGraphSendQuery",  function (_event) {/*assert(true, "analyseGraphSendQuery");*/
                 TP.Client().analyseGraphSendQuery(_event);
-            }}, "all");
-            __g__.controller.addState({name: "mouseoverInfoBox", bindings: null, func: function (_event) {/*assert(true, "mouseoverInfoBox");*/
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("mouseoverInfoBox",  function (_event) {/*assert(true, "mouseoverInfoBox");*/
                 TP.Interface().addInfoBox(_event);
-            }}, "all");
-            __g__.controller.addState({name:"getPlugins", bindings:null, func:function(_event){
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("getPlugins",  function(_event){
                 TP.Client().getPlugins(_event);
-            }}, "all");
-            __g__.controller.addState({name:"simpleSelectionMade", bindings:null, func:function(_event){
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("getPluginsSendQuery",  function(_event){
+                TP.Client().getPluginsSendQuery(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("answerGetPlugins",  function(_event){
+                TP.Client().answerGetPlugins(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("simpleSelectionMade", function(_event){
                 console.log("SIMPLE SELECTION DETECTED: ", _event);
-            }}, "all");
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
         }
 
         __g__.initController = function (ID, typeC) {
-            __g__.controller.initListener(ID, typeC);
+            __g__.controller.initController(ID, typeC);
         }
 
         __g__.getController = function () {

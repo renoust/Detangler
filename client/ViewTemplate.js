@@ -289,15 +289,9 @@ var TP = TP || {};
                 {
                     for(var i = 0; i < tabLinks[key].length; i++)
                     {
-                        if(tabLinks[key][i].getID() != source){ //we check if the view we are going to send message isn't the source view'
-                            
-                            //console.log("idDest : "+tabLinks[key][i].getID());
-                            //console.log("idSource : "+obj.associatedData.target);
-
-                            //check sended Data
-                            
+                        if(tabLinks[key][i].getID() != source){
                             __g__.controller.sendMessage("updateView", {type:obj.associatedData.type, data:data}, tabLinks[key][i].getID());
-                            }
+                        }
                     }
                 }
             }

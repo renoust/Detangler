@@ -143,7 +143,10 @@ var TP = TP || {};
             //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
             TP.Controller().sendMessage("arrangeLabels", null, viewID, viewID);
             //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst");
-            TP.Controller().sendMessage("arrangeLabels", null, "catalyst", "catalyst");
+            if(TP.Context().view[viewID].getAssociatedView("catalyst")[0] != null){
+                var getCatalyst = TP.Context().view[viewID].getAssociatedView("catalyst")[0];
+                TP.Controller().sendMessage("arrangeLabels", null, getCatalyst, getCatalyst);
+            }
 
         }
 

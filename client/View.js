@@ -360,7 +360,7 @@ var TP = TP || {};
                     $(this).button("option", "label", "Move");
                 }
                 //TP.Context().stateStack[ID].executeCurrentState();
-                TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
+                //TP.ObjectReferences().InterfaceObject.toggleSelectMove(ID);
             });
 
 

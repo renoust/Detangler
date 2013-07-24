@@ -14,7 +14,7 @@ var TP = TP || {};
         __g__.addView = function () {
 
             if (__g__.controller != null)
-                __g__.controller.initListener(__g__.ID, "view");
+                __g__.controller.initController(__g__.ID, "view");
 
             __g__.interactorListTreatment();
             __g__.createDialog();
@@ -48,7 +48,7 @@ var TP = TP || {};
 
         __g__.initStates = function () {
             console.log("states view nvd3 initializing")
-            __g__.controller.addState({name:"simpleSelectionMadeView", bindings:null, func:function(_event){
+            __g__.controller.addEventState("simpleSelectionMadeView", function(_event){
                 console.log("SIMPLE SELECTION DETECTED IN VIEW: ", _event);
                 __g__.updateSelectionView(_event.associatedData.selection);
                 var graph = []
@@ -58,7 +58,7 @@ var TP = TP || {};
                 })
                 __g__.getController().sendMessage("simpleSelectionMade", {selection:graph, idView:__g__.getID()}, "principal", __g__.getID())
 
-            }}, "all");
+            });
             __g__.controller.setCurrentState(null);
 
         }
