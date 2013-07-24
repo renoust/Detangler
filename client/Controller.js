@@ -214,7 +214,7 @@ var TP = TP || {};
             return StateGraph.getStateGraph();
         }
 
-        __g__.sendMessage = function (messageName, object, targetController, source) //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principale"
+        __g__.sendMessage = function (messageName, object, targetController, source) //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
             //same thing for view, type just the view ID("0", "1", "2")
         {
 

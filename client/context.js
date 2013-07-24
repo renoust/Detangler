@@ -179,7 +179,10 @@ var TP = TP || {};
             }}, "all");
             __g__.controller.addState({name:"getPlugins", bindings:null, func:function(_event){
                 TP.Client().getPlugins(_event);
-            }}, "all");        
+            }}, "all");
+            __g__.controller.addState({name:"simpleSelectionMade", bindings:null, func:function(_event){
+                console.log("SIMPLE SELECTION DETECTED: ", _event);
+            }}, "all");
         }
 
         __g__.initController = function (ID, typeC) {
