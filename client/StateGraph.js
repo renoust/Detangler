@@ -65,7 +65,7 @@ var TP = TP || {};
             
             if (hashMapStates[node.name] != null)
             {
-                assert(false, "state already exist !!!")
+                assert(false, "state isn't added because it already exist !!!")
                 return;
             }
 
@@ -142,15 +142,6 @@ var TP = TP || {};
                             //hashMapStates[tmp[key]].bindings[node.name] = hashMapStates[node.name];
                  }
             }
-
-            if (node.func != null) {
-                if (hashMapStates[node.name].func == null) {
-                    hashMapStates[node.name].func = node.func;
-                    //assert(true, "the function just been associated to the State")
-                }
-                else
-                    assert(false, "one function already associated to the State")
-            }
             
             if(fromAll === true)
             {
@@ -172,10 +163,7 @@ var TP = TP || {};
             
             
             //}
-        }
-        
-        
-        
+        }        
 
         __g__.isBindWithState = function(nameState){
             
@@ -229,9 +217,9 @@ var TP = TP || {};
             }
         }
         
-        __g__.isUseless = function(nameState, value)
+        __g__.setUseless = function(nameState, value)
         {
-            if((value != true) || (value != false))
+            if((value != true) && (value != false))
             {
                 assert(false, "bad value !!!");
                 return -1;
@@ -240,6 +228,11 @@ var TP = TP || {};
             if(hashMapStates[nameState] != null)
             {
                 hashMapStates[nameState].useless = value
+            }
+            else
+            {
+                assert(false, "state doesn't exist !!!")
+                return -1;
             }
         }
         
