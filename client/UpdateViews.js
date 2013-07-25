@@ -339,11 +339,14 @@ var TP = TP || {};
 
         this.syncGraphRequestFromData = function (data, selection, graphName) {
 
+
+            console.log("within syncGraphRequestFromData")
+
             var graph = null
             var svg = null
             var targetView = null;
 
-            var find = false;
+            var associatedViewFound = false;
 
             var typeGraph = TP.Context().view[graphName].getType();
 
@@ -352,7 +355,7 @@ var TP = TP || {};
                 var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
                 graph = tmp[0].getGraph();
                 svg = tmp[0].getSvg();
-                find = true;
+                associatedViewFound = true;
                 //quick fix since we're not amanging multiple views yet
                 targetView = tmp[0].getID();
                 //}
@@ -363,13 +366,23 @@ var TP = TP || {};
                 var tmp = TP.Context().view[graphName].getAssociatedView("substrate");
                 graph = tmp[0].getGraph();
                 svg = tmp[0].getSvg();
-                find = true;
+                associatedViewFound = true;
                 targetView = tmp[0].getID();
                 // }
             }
 
+            if ('data' in data) {
+                TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
+                TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
 
-            if (find == false)
+                //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
+                //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
+                console.log("should be entering 'entanglement caught'");
+                objectReferences.VisualizationObject.entanglementCaught(graphName);
+
+            }
+
+            if (associatedViewFound == false)
                 return;
             //console.log("received data after synchronization: ")
             //console.log(data);
@@ -412,15 +425,7 @@ var TP = TP || {};
 
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
 
-            if ('data' in data) {
-                TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
-                TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
 
-                //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
-                //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-                objectReferences.VisualizationObject.entanglementCaught(graphName);
-
-            }
 
         }
 
