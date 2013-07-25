@@ -247,14 +247,25 @@ var TP = TP || {};
 
 
             __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/
-                
-                TP.Interaction().removeLasso(_event);
+                //deactivate the lasso
+                __g__.svg.on('mouseover', null);
+                __g__.lasso.reset();
+
+                //TP.Interaction().removeLasso(_event);
                 TP.Interaction().addMove(_event);                
                 
             }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
-            __g__.controller.addEventState("Select",  function (_event) {/*assert(true, "select");*/
-   
-                TP.Interaction().addLasso(_event);
+            __g__.controller.addEventState("Select",  function (_event) {
+                //activates the lasso
+
+                __g__.svg.on('mouseover', function(d, i){
+                    var nodeSelection = d3.select(this).selectAll('.glyph .node');
+                    __g__.lasso.shapes(nodeSelection);
+                })
+
+                __g__.svg.call(__g__.lasso);
+
+                //TP.Interaction().addLasso(_event);
                 TP.Interaction().removeMove(_event);
                 TP.Interaction().addZoom(_event);
                 //TP.Interaction().removeZoom(_event)

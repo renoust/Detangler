@@ -275,12 +275,13 @@ var TP = TP || {};
                 .on("brushDragMove", function(d, i){ console.log("brushDragMove"); })
                 .on("brushDragEnd", function(d, i){ console.log("brushDragEnd"); });
 
+            /*
             __g__.svg.on('mouseover', function(d, i){
                     var nodeSelection = d3.select(this).selectAll('.glyph .node');
                     __g__.lasso.shapes(nodeSelection);
-                })
+                })*/
 
-            __g__.svg.call(__g__.lasso)
+            //__g__.svg.call(__g__.lasso)
 
         }
 

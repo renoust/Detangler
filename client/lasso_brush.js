@@ -22,9 +22,11 @@ d3.custom.Lasso = function module(){
     var lassoGroup = null;
     var g = null;
     var dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
+    var currentSvg = null;
 
     function exports(svg){
 
+        currentSvg = svg;
         g = svg.append('g').classed('lasso-group', true);
 
         lassoGroup = g.attr({
@@ -68,6 +70,7 @@ d3.custom.Lasso = function module(){
         svg.on('mousedown.drawLasso', function(d, i){
                 if(isPressedOnLasso) return;
                 isPressedOnBg = true;
+
                 if(!!d3.select('.lasso')[0][0]){
                     lassoAlreadyDisplayed = true;
                     rectBrush.attr({width: 0, height: 0});
@@ -226,6 +229,32 @@ d3.custom.Lasso = function module(){
         shapes = _x;
         return this;
     };
+
+    exports.reset = function ()
+    {
+        if (!(currentSvg)) return;
+
+        console.log("svg:", currentSvg);
+        currentSvg.selectAll(".lasso-group").remove();
+        currentSvg.on('.drawLasso', null);
+
+        isPressedOnLasso = false;
+        isPressedOnBg = false;
+        movedOnBg = false;
+        skip = 0;
+        skipNum = 1;
+        lassoPoints = [];
+        rectPoints = [];
+        lassoAlreadyDisplayed = false;
+        mouseOffsetX = 0;
+        mouseOffsetY = 0;
+        rectIsAlive = true;
+        shapes = null;
+        lassoGroup = null;
+        g = null;
+        dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
+    };
+
 
     d3.rebind(exports, dispatch, "on");
 
