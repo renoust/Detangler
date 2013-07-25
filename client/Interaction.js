@@ -222,21 +222,27 @@ var TP = TP || {};
         }
 
 
-        this.updateViewFromSimpleSelection = function (_event) {
+        this.updateViewFromSimpleSelection = function (_viewID, _selection) {
 
             //assert(true, "checkIntersect");
 
 
-            var currentViewID = _event.associatedData.source;
+            var currentViewID = _viewID;
             var svg = TP.Context().view[currentViewID].getSvg();
 
             var prevSelList = [];
 
             //selList should be here an array of nodes
-            var selList = _event.associatedData.selection;
+            var selList = _selection;
 
             //listening for keyboard event
             var e = window.event
+
+            svg.selectAll("g.node")
+                .classed("selected", false)
+                    .select("g.glyph")
+                        .select(".node")
+                            .style('fill', function(){return TP.Context().view[_viewID].getNodesColor();});
 
             svg.selectAll("g.node").data(selList, function(d){return d.baseID;})
 
@@ -284,7 +290,7 @@ var TP = TP || {};
                 }*/
 
             selList = []
-            _event.associatedData.selection.forEach(function(d){selList.push(d.baseID)});
+            _selection.forEach(function(d){selList.push(d.baseID)});
 
             selList.sort()
             TP.Context().view[currentViewID].setSourceSelection(selList);
@@ -292,7 +298,7 @@ var TP = TP || {};
             if (selList.length > 0)
                 TP.Context().view[currentViewID].getController().sendMessage("nodeSelected", {selList: selList, prevSelList: prevSelList});
             else
-                TP.Context().view[currentViewID].getController().sendMessage("selectionVide", {selList: selList});
+                TP.Context().view[currentViewID].getController().sendMessage("emptySelection", {selList: selList});
 
         }
 

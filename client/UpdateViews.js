@@ -339,8 +339,6 @@ var TP = TP || {};
 
         this.syncGraphRequestFromData = function (data, selection, graphName) {
 
-            //assert(true, "syncGraphRequestFromData");
-
             var graph = null
             var svg = null
             var targetView = null;
@@ -368,16 +366,6 @@ var TP = TP || {};
                 find = true;
                 targetView = tmp[0].getID();
                 // }
-            }
-
-
-            if (typeGraph == 'combined' && TP.Context().view[graphName].getAssociatedView("combined") != null) {
-                //if(TP.Context().view[graphName].getAssociatedView("combined")[0].viewInitialized() == 1){
-                var tmp = TP.Context().view[graphName].getAssociatedView("combined");
-                graph = tmp[0].getGraph();
-                svg = tmp[0].getSvg();
-                find = true;
-                //}
             }
 
 
@@ -423,66 +411,6 @@ var TP = TP || {};
             TP.Context().view[targetView].setTargetSelection(nodeList);
 
             TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
-
-            if (typeGraph == 'combined') {
-                var svg_target;
-                var graph_target;
-                if (TP.Context().combined_foreground == 'substrate') {
-                    var tmp = TP.Context().view[graphName].getAssociatedView("substrate");
-                    svg_target = tmp[0].getSvg();
-                    graph_target = tmp[0].getGraph();
-                }
-                if (TP.Context().combined_foreground == 'catalyst') {
-                    var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
-                    svg_target = tmp[0].getSvg();
-                    graph_target = tmp[0].getGraph();
-                }
-
-                if (svg_target != null && graph_target != null) {
-                    var graph_drawing = TP.GraphDrawing(graph_target, svg_target, graphName);
-                    graph_drawing.show(tempGraph);
-                }
-            } else {
-
-                if (TP.Context().view[graphName].getAssociatedView("combined") != null) {
-
-                    var tmp = TP.Context().view[graphName].getAssociatedView("combined");
-
-                    var tempCombined = new TP.Graph();
-                    var nodeSelection = JSON.parse(selection)
-                        .nodes;
-                    var nodeSelList = [];
-                    nodeSelection.forEach(function (d) {
-                        nodeSelList.push(d.baseID);
-                    });
-                    var nodeTargetList = [];
-                    data.nodes.forEach(function (d) {
-                        nodeTargetList.push(d.baseID);
-                    });
-                    var dataType = (typeGraph == "substrate") ? "catalyst" : "substrate";
-                    tempCombined.nodes(data.nodes, dataType);
-                    tempCombined.addNodes(nodeSelection, graphName);
-                    var tempLinks = [];
-
-                    tmp[0].getGraph().links().forEach(function (d) {
-                        if (!d.source.baseID || !d.target.baseID) console.log(d);
-                        if (nodeSelList.indexOf(d.source.baseID) != -1 && nodeTargetList.indexOf(d.target.baseID) != -1 || nodeSelList.indexOf(d.target.baseID) != -1 && nodeTargetList.indexOf(d.source.baseID) != -1) {
-                            //console.log("selected:", d, d.source, d.target);
-                            tempLinks.push(d);
-                        }
-                    })
-
-                    tempCombined.links(tempLinks);
-
-                    var sub = TP.Context().view[graphName].getAssociatedView("substrate");
-                    var cat = TP.Context().view[graphName].getAssociatedView("catalyst")
-                    tempCombined.specialEdgeBinding(sub, cat);
-
-                    TP.Context().view[tmp[0].getID()].getGraphDrawing().show(tempCombined);
-
-                }
-            }
-
 
             if ('data' in data) {
                 TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];

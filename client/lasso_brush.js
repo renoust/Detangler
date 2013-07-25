@@ -252,7 +252,7 @@ d3.custom.Lasso = function module(){
         shapes = null;
         lassoGroup = null;
         g = null;
-        dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
+        //dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
     };
 
 

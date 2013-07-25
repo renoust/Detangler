@@ -195,15 +195,10 @@ var TP = TP || {};
         
         __g__.initStates = function () {
 
-            __g__.controller.addEventState("zoneApparu", function (_event) {
-                TP.Interaction().checkIntersect(_event);
-            }, {bindings:["toto","nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
-            __g__.controller.addEventState("nodeSelected", function (_event) {/*assert(true, "nodeSelected");*/
-                TP.Interaction().nodeSelected_deprecated(_event);
-            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:true, useless:null, activate:true});
-            __g__.controller.addEventState("selectionVide", function (_event) {/*assert(true, "selectionVide");*/
-                TP.Interaction().emptyListAction(_event);
-            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:null, useless:null, activate:true});
+            //__g__.controller.addEventState("zoneApparu", function (_event) {
+            //    TP.Interaction().checkIntersect(_event);
+            //}, {bindings:["toto","nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
+
 
             __g__.controller.addEventState("mouseupLasso",  function (_event) {/*assert(true, "mouseupLasso");*/
                 __g__.controller.disableState("mouseupLasso");
@@ -239,38 +234,13 @@ var TP = TP || {};
             
             __g__.controller.addEventState("arrangeLabels",  function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
-            }, {bindings:["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:true, useless:null, activate:true});
+            }, {bindings:["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:true, useless:null, activate:false});
 
             __g__.controller.addEventState("mouseupMouseDown",  function (_event) {/*assert(true, "mouseupMouseDown");*/
                 TP.Lasso().mouseupMouseDown(_event);
             }, {bindings:["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], fromAll:null, useless:null, activate:true});
 
 
-            __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/
-                //deactivate the lasso
-                __g__.svg.on('mouseover', null);
-                __g__.lasso.reset();
-
-                //TP.Interaction().removeLasso(_event);
-                TP.Interaction().addMove(_event);                
-                
-            }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
-            __g__.controller.addEventState("Select",  function (_event) {
-                //activates the lasso
-
-                __g__.svg.on('mouseover', function(d, i){
-                    var nodeSelection = d3.select(this).selectAll('.glyph .node');
-                    __g__.lasso.shapes(nodeSelection);
-                })
-
-                __g__.svg.call(__g__.lasso);
-
-                //TP.Interaction().addLasso(_event);
-                TP.Interaction().removeMove(_event);
-                TP.Interaction().addZoom(_event);
-                //TP.Interaction().removeZoom(_event)
-                
-            }, {bindings:["mousemoveLasso"], fromAll:true, useless:null, activate:true});
 
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {/*assert(true, "movingZoomDrag");*/
                 TP.Interaction().movingZoomDrag(_event);
@@ -380,11 +350,14 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true})
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
-            __g__.controller.setCurrentState("select");
 
             __g__.controller.addEventState("changeNodesSettings", function(_event){
                 TP.Visualization().changeNodesSettings(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true})
+
+
+
+            __g__.controller.setCurrentState("select");
         }
 
         return __g__;
