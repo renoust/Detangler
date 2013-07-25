@@ -62,6 +62,8 @@ var TP = TP || {};
                 var indexI = Math.round(TP.Context().entanglement_intensity * 5) % 6
                 var indexH = Math.round(TP.Context().entanglement_homogeneity * 5) % 6
                 $("#bg").css("background-color",brewerSeq[indexI]);
+                $("#entanglement-cont").css("border-color",brewerSeq[indexH]);
+
             }
             else {
 
@@ -69,6 +71,7 @@ var TP = TP || {};
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
                 $("#bg").css("background-color", "white")
+                $("#entanglement-cont").css("border-color","black");
             }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
