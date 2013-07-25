@@ -590,6 +590,14 @@ var TP = TP || {};
             }
         }
 
+        this.tulipLayout = function (_event) {
+            var id = TP.Context().activeView;
+            var view = TP.Context().view[id];
+            var cGraph = view.getGraph();
+            TP.Context().Client().callLayout(_event);
+
+        }
+
         /*this.changeNodesSettings = function(_event) {
             var id = TP.Context().activeView;
             var view = TP.Context().view[id];

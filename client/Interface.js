@@ -759,6 +759,25 @@ var TP = TP || {};
                         //par.append(tab[k][4])
                         var f = $.farbtastic('#'+attrElem.id);
                         f.linkTo(tab[k][5].func);
+                        break;
+
+                    case 7: //autocomplete
+                        var div = $('<input/>',attrElem).appendTo(parentId)
+                        div.autocomplete(attrChild)
+                            .bind('focus', function(){$(this).autocomplete('search');});
+                        var res = {}, key;
+                        div.autocomplete({
+                            select: function (event, ui) {
+                                
+                                    key = this.id;
+                                    console.log(key)
+                                    res[key] = ui.item.value;
+                                    console.log(res, evnt);
+                                    var c = evnt ? evnt.call(res) : null;
+                            }
+                        })                   
+                        break;
+
                 }
                 par.append(labelSuiv + "<br/>")
             }
