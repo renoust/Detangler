@@ -88,14 +88,14 @@ var TP = TP || {};
                 success = __g__.addEvent(name, func);
 
                 if(success === false){
-                    assert(false, "warning : event "+name+" isn't added because event already exist in eventHandler since an other insertion or event can't be created")
+                    assert(false, "warning : event isn't added because event already exist in eventHandler since an other insertion or event can't be created")
                 }
                 
                 if(hasState === true){
                     sGraph.addState({name:name, bindings:bindings}, fromAll, useless, activate);
                 }
                 else
-                    assert(true, "No state creation asked");
+                    assert(true, "you asked to don't have state creating");
 
             }
             else{
@@ -117,13 +117,13 @@ var TP = TP || {};
             if(parametersState != null)
             {
                 
-                if('bindings' in parametersState)
+                if(('bindings' in parametersState))
                     bindings = parametersState.bindings;
-                if('fromAll' in parametersState)
+                if(('fromAll' in parametersState))
                     fromAll = parametersState.fromAll; 
-                if('useless' in parametersState)
+                if(('useless' in parametersState))
                     useless = parametersState.useless;
-                if('activate' in parametersState)
+                if(('activate' in parametersState))
                     activate = parametersState.activate;
             }
             
@@ -198,9 +198,6 @@ var TP = TP || {};
             __g__.eventHandlerObject.addElement(nameC, $("[id=" + nameC + "]")[0]);
             
             __g__.addStates();
-            
-            if (typeC = "view")
-                currentState = "select"
         }
 
         __g__.getStateAccess = function (nameState) {
@@ -255,7 +252,7 @@ var TP = TP || {};
                 }            
             }
         }
-
+ 
         
         //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
         //same thing for view, type just the view ID("0", "1", "2")        

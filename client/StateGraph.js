@@ -307,8 +307,17 @@ var TP = TP || {};
             if((stateSourceTmp != null) && (stateDestTmp != null))
             {
                if(stateDestTmp.fromAll != true){
-                   stateSourceTmp.bindings[stateDest] = true;
-                   stateDestTmp.root[stateSource] = true;
+                   
+                   if(stateSourceTmp.bindings["all"] == null)                   
+                        stateSourceTmp.bindings[stateDest] = true;
+                   else
+                        assert(false, "warning : state "+stateSource+" is bind to 'all'");
+                   
+                   if(stateDestTmp.root["all"] == null)     
+                        stateDestTmp.root[stateSource] = true;
+                   else
+                        assert(false, "warning : state's root of "+stateDest+" is bind to 'all'");
+                        
                }
                assert(true, "links correctly added");
             }
