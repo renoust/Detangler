@@ -56,9 +56,9 @@ var TP = TP || {};
         __g__.addEventState = function (name, func, parametersState) {            
 
             var hasState = false;
-            var bindings = null;
-            var fromAll = null;
-            var useless = null;
+            var bindings = ["all"];
+            var fromAll = true;
+            var useless = false;
             var activate = true;
             
             if(parametersState != null)
@@ -109,9 +109,9 @@ var TP = TP || {};
         __g__.addState = function(nameState, parametersState)
         {
             
-            var bindings = null;
-            var fromAll = null;
-            var useless = null;
+            var bindings = ["all"];
+            var fromAll = true;
+            var useless = false;
             var activate = true;
             
             if(parametersState != null)
@@ -175,6 +175,7 @@ var TP = TP || {};
 
         __g__.setCurrentState = function (nameState) {
             currentState = nameState;
+            beforeCurrentState = currentState;
         }
 
         __g__.initController = function (ID, typeController) {
@@ -198,9 +199,6 @@ var TP = TP || {};
             __g__.eventHandlerObject.addElement(nameC, $("[id=" + nameC + "]")[0]);
             
             __g__.addStates();
-            
-            if (typeC = "view")
-                currentState = "select"
         }
 
         __g__.getStateAccess = function (nameState) {
@@ -247,12 +245,17 @@ var TP = TP || {};
             var State = __g__.stateGraph.getInfoState(nameState);
             
             //console.log(__g__.stateGraph)
-            
-            if (State.useless !== true){
-                if(nameState != currentState){
-                    beforeCurrentState = currentState
-                    currentState = nameState;
-                }            
+            if(State != null)
+            {
+                if (State.useless !== true){
+                    if(nameState != currentState){
+                        beforeCurrentState = currentState;
+                        currentState = nameState;
+                    }            
+                }
+            }
+            else{
+                assert(false, "State "+nameState+" doesn't exist")
             }
         }
  
@@ -304,8 +307,8 @@ var TP = TP || {};
                 
             }
             else if(canContinue === -1){
-                assert(false, "message can't pass => state is associated with an other state but function 'addState' has'nt been called for it");
-                return;
+                assert(false, "warning : state is associated with an other state but function 'addState' has'nt been called for it");
+                //return;
             }
             //else
             //{

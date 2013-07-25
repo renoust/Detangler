@@ -17,26 +17,21 @@ var TP = TP || {};
         {
             return objectStore.getData(name);
         }
-
-        __g__.setMessAvailable = function (elem, type) {
+/*
+        __g__.setEventAvailable = function (elem, type) {
             var data = objectStore.getData(elem);
 
             if (data.handlers[type] != null)
                 data.handlers[type].available = true;
         }
 
-        __g__.setMessNotAvailable = function (elem, type) {
+        __g__.setEventNotAvailable = function (elem, type) {
             var data = objectStore.getData(elem);
 
             if (data.handlers[type] != null)
                 data.handlers[type].available = false;
         }
-
-        __g__.setMessNotAvailable = function (type) {
-            tabNotAvailable[type] = tabAvailable[type];
-            tabAvailable[type] = null;
-        }
-
+*/
 
         __g__.addElement = function (name, elem) {
             return(objectStore.setData(name, elem));
@@ -84,7 +79,7 @@ var TP = TP || {};
                 //data.handlers[type].push(fn);
                 
                 if(fn.call){ //cheking if fn is a function or not
-                    fn.available = true;
+                    //fn.available = true;
                     data.handlers[type] = fn;
                 }
                 else{
@@ -116,12 +111,8 @@ var TP = TP || {};
                          for(var n = 0; n < end; n++){
                          if(handlers[n] != null)
                          handlers[n].call(elem, _event);
-                         }
-                         */
-                        if (handlers.available == true)
+                         }*/
                             handlers.call(elem, _event);
-                        else
-                            assert(false, "function isn't available !!!")
                     }
                 };
             }
