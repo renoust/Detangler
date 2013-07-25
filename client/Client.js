@@ -313,37 +313,20 @@ var TP = TP || {};
                 parameters: JSON.stringify(pluginParams)
             };
 
-            TP.Context().getController().sendMessage("getPluginsSendQuery",{params:params, endHandler:endHandler}, "principal")
+            //TP.Context().getController().sendMessage("getPluginsSendQuery",{params:params, endHandler:endHandler}, "principal")
+            __g__.sendQuery({
+               parameters: params,
+               success: function (data) {
+                   //TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
+                   assert(true, "Grabbed algorithms:")
+                    console.log(data)
+                    endHandler.call(TP.Context(), data)
+                }
+            });
                         
         };
         
-        this.getPluginsSendQuery = function(_event)
-        {
-           
-           var params = _event.associatedData.params;
-           var endHandler = _event.associatedData.endHandler;
-
-           __g__.sendQuery({
-               parameters: params,
-               success: function (data) {
-                   TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
-                }
-            });
-             
-        }
         
-        this.answerGetPlugins = function(_event)
-        {
-            //console.log("Je suis dans answer getPlugins");
-            
-            var data = _event.associatedData.data;
-            var endHandler = _event.associatedData.endHandler;
-            
-            assert(true, "Grabbed algorithms:")
-            console.log(data)
-            endHandler.call(TP.Context(), data)
-        }
-
 
         // This function calls a layout algorithm of a graph through tulip, 
         // and moves the given graph accordingly

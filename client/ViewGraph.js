@@ -219,57 +219,115 @@ var TP = TP || {};
 
             //$("#toggle"+ID).click(function(_event){_event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:_event.type, viewBase:_event.data}, _event]);})
 
-            function add() {
-                if (__g__.ID != null) {
+            if(__g__.viewNodes == null) __g__.viewNodes = "rect";
 
-                    if (__g__.viewNodes == null)
-                        __g__.viewNodes = "rect";
+            __g__.dataTranslation = [0, 0];
+            //TP.Context().tabNodeColor[target] = nodesC;
+            //TP.Context().tabLinkColor[target] = linksC;
+            //TP.Context().tabBgColor[target] = bgC;
 
-                    __g__.dataTranslation = [0, 0];
-                    //TP.Context().tabNodeColor[target] = nodesC;
-                    //TP.Context().tabLinkColor[target] = linksC;
-                    //TP.Context().tabBgColor[target] = bgC;
+            __g__.selectMode = false;
+            __g__.moveMode = true;
+            __g__.showLabels = true;
+            __g__.showLinks = true;
+            __g__.nodeInformation = true;
 
-                    __g__.selectMode = false;
-                    __g__.moveMode = true;
-                    __g__.showLabels = true;
-                    __g__.showLinks = true;
-                    __g__.nodeInformation = true;
+            //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)
+            __g__.svg = d3.select("#zone" + __g__.ID)
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("id", "svg" + __g__.ID)
+                .attr("idView", __g__.ID);
 
-                    TP.Interaction().createLasso(__g__.ID);
+
+                    //TP.Interaction().createLasso(__g__.ID);
                     //TP.Interaction().addZoom(ID);
                     //TP.Interface().toggleSelectMove(__g__.ID);
-                    __g__.controller.sendMessage("Select");
-                }
+
+
+            //.attr("viewBox", "0 0 500 600");
+
+            TP.Context().tabGraph["graph_" + __g__.ID] = new TP.Graph();
+            __g__.graph = TP.Context().tabGraph["graph_" + __g__.ID];
+
+
+//            TP.Interaction().createLasso(__g__.ID);
+            //TP.Interaction().addZoom(ID);
+            //TP.Interface().toggleSelectMove(__g__.ID);
+
+            //TP.Context().tabType[target] = typeView;
+
+            if(__g__.typeView == "combined"){
+                __g__.combined_foreground = "substrate";
             }
-
-                //TP.Context().tabSvg["svg_"+target] = d3.select("#zone" + target)
-                __g__.svg = d3.select("#zone" + __g__.ID)
-                    .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .attr("id", "svg"+__g__.ID)
-                    .attr("idView", __g__.ID);
-
-
-                //.attr("viewBox", "0 0 500 600");
-
-                TP.Context().tabGraph["graph_" + __g__.ID] = new TP.Graph();
-                __g__.graph = TP.Context().tabGraph["graph_" + __g__.ID];
-
-                add();
-
-                //TP.Context().tabType[target] = typeView;
-
-                if (__g__.typeView == "combined") {
-                    __g__.combined_foreground = "substrate";
-                }
-
-            
 
             __g__.viewInitialized = 1;
 
             __g__.graphDrawing = new TP.GraphDrawing(__g__.graph, __g__.svg, __g__.ID);
+
+
+            __g__.lasso = d3.custom.Lasso()
+
+
+
+
+            __g__.controller.addEventState("simpleSelectionMadeView", function(_event){
+                TP.Interaction().updateViewFromSimpleSelection(__g__.getID(), _event.associatedData.selection);
+            });
+
+
+            __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/
+                //deactivate the lasso
+                __g__.svg.on('mouseover', null);
+                __g__.lasso.reset();
+
+                //TP.Interaction().removeLasso(_event);
+                TP.Interaction().addMove(_event);
+
+            }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
+
+            __g__.controller.addEventState("Select",  function (_event) {
+                //activates the lasso
+                __g__.lasso.on("brushDrawStart", function(d, i){ console.log("brushDrawStart"); })
+                    .on("brushDrawMove", function(d, i){ console.log("brushDrawMove"); })
+                    .on("brushDrawEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDragStart", function(d, i){ console.log("brushDragStart"); })
+                    .on("brushDragMove", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDragEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); });
+
+                __g__.svg.on('mouseover', function(d, i){
+                    var nodeSelection = __g__.svg.selectAll('.glyph .node');
+                    __g__.lasso.shapes(nodeSelection);
+                })
+
+                __g__.svg.call(__g__.lasso);
+
+                //TP.Interaction().addLasso(_event);
+                TP.Interaction().removeMove(_event);
+                TP.Interaction().addZoom(_event);
+                //TP.Interaction().removeZoom(_event)
+
+            }, {bindings:["mousemoveLasso"], fromAll:true, useless:null, activate:true});
+
+
+            __g__.controller.addEventState("nodeSelected", function (_event) {/*assert(true, "nodeSelected");*/
+                TP.Interaction().nodeSelected_deprecated(_event);
+            }, {bindings:["emptySelection"], fromAll:true, useless:null, activate:true});
+
+            __g__.controller.addEventState("emptySelection", function (_event) {/*assert(true, "selectionVide");*/
+                TP.Interaction().emptyListAction(_event);
+            }, {bindings:["nodeSelected", "sizeMapping"], fromAll:null, useless:null, activate:true});
+
+            /*
+            __g__.svg.on('mouseover', function(d, i){
+                    var nodeSelection = d3.select(this).selectAll('.glyph .node');
+                    __g__.lasso.shapes(nodeSelection);
+                })*/
+
+            //__g__.svg.call(__g__.lasso)
+
+            __g__.controller.sendMessage("Select");
 
         }
 
@@ -297,6 +355,11 @@ var TP = TP || {};
             __g__.combined_foreground = null;
             __g__.acceptedGraph = null;
             __g__.graph = null;
+        }
+
+
+         __g__.initStates = function () {
+
         }
 
         return __g__;

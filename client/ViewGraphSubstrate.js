@@ -11,23 +11,13 @@ var TP = TP || {};
         
         
         var paramSizeMap = [
-            [4, {id:"sizemap"},{
+            [4, 
+                {id:"sizemap"},
+                {
                     range: true,
                     min: 0,
                     max: 99,
-                    values: [ 3, 12 ],
-                    change: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    },
-                    slide: function() {
-                        var value = $("#sizemap").slider("values",0);
-                        var value2 = $("#sizemap").slider("values",1);
-                        $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                        $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                    }
+                    values: [ 3, 12 ]
                 },
                 "scale: "
             ]
@@ -47,6 +37,16 @@ var TP = TP || {};
             [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
         ];
         
+        var setting = [
+            [4, {id:"fontsize"},
+                {
+                    min: 0,
+                    max: 99,
+                    values: 12
+                },
+                "Labels size:"
+            ],
+            [7,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
         /*
         var tabCatalyst = [1,//__g__.getID(), 
                         null,
@@ -58,7 +58,20 @@ var TP = TP || {};
                        "circle", 
                        "catalyst"];
         */
-                      
+
+        /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}],"b","a"],
+            [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}],"b","a"],
+            [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}],"b","a"],
+            [3, {id:"text"},null,"b","a"],
+            [5, {id:"spinner"},null,"b","a"],
+            [4,{id:'slider',class:'slider'},
+                {   range: true,
+                    min: 0,
+                    max: 99,
+                    values: [ 3, 12 ],
+                },"b","a"]
+            ];*/
+
         var _viewGraphCatalystParameters = {
             name:name + " - catalyst", 
             nodeColor:"#4682b4", 
@@ -71,97 +84,98 @@ var TP = TP || {};
         
         
         var interactors = [
-            /*['TEST', '', {call: function (res) {
-                console.log(res)
-            }}, "Layout"],*/
-            ['Force layout', '', {click: function () {
+            //{interactorLabel:'TEST', interactorParameters: bigtest, callbackBehavior:null},
+            {interactorLabel:'Force layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: __g__.getID()})
-            }}, "Layout"],
-            ['Sync layouts', '', {click: function () {
+            }}, interactorGroup:"Layout"},
+            {interactorLabel:'Sync layouts', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().ClientObject.syncLayouts(__g__.getID())
-            }}, "Layout"],
-            ['MDS layout', '', {click: function () {
+            }}, interactorGroup:"Layout"},
+            {interactorLabel:'MDS layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'MDS', idView: __g__.getID()})
-            }}, "Layout"],
-            ['Tulip layout algorithm', tl, {call: function (layout) {
+            }}, interactorGroup:"Layout"},
+            {interactorLabel:'Tulip layout algorithm', interactorParameters:tl, callbackBehavior:{call: function (layout) {
                 __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
-            }}, "Layout"],
-            ['Tulip layout list','',{click:function(){
-                TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms})
-            }}, "Layout"],
-    
-            ['Induced subgraph', '', {click: function () {
+            }}, interactorGroup:"Layout"},
+            {interactorLabel:'Tulip layout list',interactorParameters:'',callbackBehavior:{click:function(){
+                __g__.getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms}, 'principal')
+            }}, interactorGroup:"Layout"},
+
+            {interactorLabel:'Induced subgraph', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("sendSelection", {json: TP.ObjectReferences().ClientObject.getSelection(__g__.getID()), idView: __g__.getID()})
-            }}, "Selection"],
-            ['Delete selection', '', {click: function () {
+            }}, interactorGroup:"Selection"},
+            {interactorLabel:'Delete selection', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().InteractionObject.delSelection(__g__.getID())
-            }}, "Selection"],
-            ['Toggle selection', '', {click: function () {
+            }}, interactorGroup:"Selection"},
+            {interactorLabel:'Toggle selection', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
-            }}, 'Selection'],
-    
-            ['Center view', '', {click: function () {
+            }}, interactorGroup:"Selection"},
+
+            {interactorLabel:'Center view', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('resetView');
-            }}, "View"],
-            ['Reset size', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Reset size', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("resetSize")
-            }}, "View"],
-            ['Hide labels', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Hide labels', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("Hide labels")
-            }}, "View"],
-            ['Hide links', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Hide links', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("Hide links")
-            }}, "View"],
-            ['Arrange labels', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("arrangeLabels")
-            }}, "View"],
-            ['Rotation', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Rotation', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("rotateGraph")
-            }}, "View"],
-            ['Size mapping', paramSizeMap, {call: function (scales) {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Size mapping', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
                 __g__.getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales})
-            }}, "View"],
-            ['zoom in', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'zoom in', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-            }}, "View"],
-            ['zoom out', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'zoom out', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-            }}, "View"],
-            ['Color settings', colorSettings,null, "View"],
-    
-            ['Degree', '', {click: function () {
+            }}, interactorGroup:"View"},
+            {interactorLabel:'Color settings', interactorParameters: colorSettings,callbackBehavior:null, interactorGroup:"View"},
+            /*{interactorLabel:'Nodes settings', interactorParameters: setting, callbackBehavior:{call: function (value) {
+                 __g__.getController().sendMessage("changeNodesSettings", {value: value, idView: __g__.getID()})
+            }}, interactorGroup:"View"},*/
+
+            {interactorLabel:'Degree', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: __g__.getID()})
-            }}, "Measure"],
-            ['Betweenness centrality', '', {click: function () {
+            }}, interactorGroup:"Measure"},
+            {interactorLabel:'Betweenness centrality', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: __g__.getID()})
-            }}, "Measure"],
-            ['Tulip measure', tl, {call: function (algo) {
+            }}, interactorGroup:"Measure"},
+            {interactorLabel:'Tulip measure', interactorParameters: tl, callbackBehavior: {call: function (algo) {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: __g__.getID()})
-            }}, "Measure"],
-    
-            ['Bipartite analysis', '', {click: function () {
+            }}, interactorGroup:"Measure"},
+
+            {interactorLabel:'Bipartite analysis', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("analyseGraph", (function(){
                     var params = __g__.viewGraphCatalystParameters()
                     params.idSourceAssociatedView = __g__.getID();
                     return {viewIndex: __g__.getID(), 
                             viewGraphCatalystParameters: params}
                      })())
-            }}, "Open View"],
-            ['Horizontal barchart', '', {click: function () {
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Horizontal barchart', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawBarChart", {smell: 'base'})
-            }}, "Open View"],
-            ['Barchart', '', {click: function () {
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Barchart', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'})
-            }}, "Open View"],
-            ['Scatter plot', '', {click: function () {
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Scatter plot', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawScatterPlot")
-            }}, "Open View"],
-            ['Scatter plot nvd3', '', {click: function () {
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Scatter plot nvd3', interactorParameters:'', callbackBehavior:{click: function () {
                 __g__.getController().sendMessage("drawScatterPlotNVD3")
-            }}, "Open View"],
-            ['Data', '', {click: function () {
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Data', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawDataBase")
-            }}, "Open View"]
+            }}, interactorGroup:"Open View"}
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],
             // ['b5','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random', __g__.getID())}}],        
             // ['b13','node information','',{click:function(){TP.ObjectReferences().InterfaceObject.attachInfoBox()}}],
@@ -181,15 +195,10 @@ var TP = TP || {};
         
         __g__.initStates = function () {
 
-            __g__.controller.addEventState("zoneApparu", function (_event) {
-                TP.Interaction().checkIntersect(_event);
-            }, {bindings:["toto","nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
-            __g__.controller.addEventState("nodeSelected", function (_event) {/*assert(true, "nodeSelected");*/
-                TP.Interaction().nodeSelected(_event);
-            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
-            __g__.controller.addEventState("selectionVide", function (_event) {/*assert(true, "selectionVide");*/
-                TP.Interaction().emptyListAction(_event);
-            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:null, useless:null, activate:true});
+            //__g__.controller.addEventState("zoneApparu", function (_event) {
+            //    TP.Interaction().checkIntersect(_event);
+            //}, {bindings:["toto","nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
+
 
             __g__.controller.addEventState("mouseupLasso",  function (_event) {/*assert(true, "mouseupLasso");*/
                 __g__.controller.disableState("mouseupLasso");
@@ -205,7 +214,6 @@ var TP = TP || {};
 
             __g__.controller.addEventState("mouseoverMouseDown",  function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {
-                    /*assert(true, "mouseoverMouseDown");*/
                     __g__.controller.disableState("mousemoveLasso");
                     TP.Lasso().mouseoverMouseDown(_event);
                 }
@@ -226,27 +234,13 @@ var TP = TP || {};
             
             __g__.controller.addEventState("arrangeLabels",  function (_event) {/*assert(true, "arrangeLabels"); */
                 TP.Visualization().arrangeLabels(_event);
-            }, {bindings:["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:true, useless:null, activate:true});
+            }, {bindings:["mouseoverMouseDown", "mousemoveLasso", "mousemoveMouseDown", "mousedownMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:true, useless:null, activate:false});
 
             __g__.controller.addEventState("mouseupMouseDown",  function (_event) {/*assert(true, "mouseupMouseDown");*/
                 TP.Lasso().mouseupMouseDown(_event);
             }, {bindings:["mouseupLasso", "mousedownMouseDown", "mousemoveMouseDown", "mouseoutMouseDown"], fromAll:null, useless:null, activate:true});
 
 
-            __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/
-                
-                TP.Interaction().removeLasso(_event);
-                TP.Interaction().addMove(_event);                
-                
-            }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
-            __g__.controller.addEventState("Select",  function (_event) {/*assert(true, "select");*/
-   
-                TP.Interaction().addLasso(_event);
-                TP.Interaction().removeMove(_event);
-                TP.Interaction().addZoom(_event);
-                //TP.Interaction().removeZoom(_event)
-                
-            }, {bindings:["mousemoveLasso"], fromAll:true, useless:null, activate:true});
 
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {/*assert(true, "movingZoomDrag");*/
                 TP.Interaction().movingZoomDrag(_event);
@@ -356,8 +350,14 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true})
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
-            __g__.controller.setCurrentState("select");
 
+            __g__.controller.addEventState("changeNodesSettings", function(_event){
+                TP.Visualization().changeNodesSettings(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
+
+
+
+            __g__.controller.setCurrentState("select");
         }
 
         return __g__;

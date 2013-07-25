@@ -112,9 +112,8 @@ var TP = TP || {};
 
                 d3.selectAll(".ui-dialog").remove();
                 d3.selectAll(".cont").remove();
-                d3.selectAll(".jPicker").remove();
                 $('#wrap')[0].className = 'sidebar';
-                 
+
                 for (var key in __g__.view) {
                     __g__.view[key].remove();
                     __g__.view[key] = null;
@@ -173,19 +172,33 @@ var TP = TP || {};
             __g__.controller.addEventState("analyseGraphSendQuery",  function (_event) {/*assert(true, "analyseGraphSendQuery");*/
                 TP.Client().analyseGraphSendQuery(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
+
             __g__.controller.addEventState("mouseoverInfoBox",  function (_event) {/*assert(true, "mouseoverInfoBox");*/
                 TP.Interface().addInfoBox(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
+
             __g__.controller.addEventState("getPlugins",  function(_event){
                 TP.Client().getPlugins(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
+
             __g__.controller.addEventState("getPluginsSendQuery",  function(_event){
                 TP.Client().getPluginsSendQuery(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});            
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
             __g__.controller.addEventState("answerGetPlugins",  function(_event){
                 TP.Client().answerGetPlugins(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
-        
+
+            __g__.controller.addEventState("simpleSelectionMade", function(_event){
+                __g__.simpleSelectionReceived(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+        }
+
+        __g__.simpleSelectionReceived = function(_event)
+        {
+            console.log("SIMPLE SELECTION DETECTED: ", _event);
+            _event.associatedData.source = "0";
+            TP.Interaction().updateViewFromSimpleSelection(_event);
         }
 
         __g__.initController = function (ID, typeC) {

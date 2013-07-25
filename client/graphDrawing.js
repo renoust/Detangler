@@ -633,11 +633,9 @@ var TP = TP || {};
 
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph
-            //console.log(params)
 
             var scaleMin = 3.0
             var scaleMax = 12.0
-            //console.log("params: ", params)
             var parameter = ""
             if (params.metric) parameter = params.metric;
             if (params.scaleMin) scaleMin = params.scaleMin;
@@ -799,6 +797,15 @@ var TP = TP || {};
                 console.log("erreur g.changeColor");
 
             }
+        }
+
+        g.changeSettingsLabels = function(graphName, _graph, elem, value){
+            console.log(elem, value)
+            g.cGraph = _graph;
+            //console.log(elem, value)
+            g.svg.selectAll("text.node.text")
+                .style(elem,value)
+
         }
         /********************************** ON GOING ***********************************/
         //never used. Then there is still "substrate", "catalyst" etc.
@@ -1078,7 +1085,9 @@ var TP = TP || {};
                 return false;
             }
 
-            var labels = g.svg.selectAll("text.node").attr("visibility", "visible").style("fill", TP.Context().view[currentViewID].getLabelsColor());
+            var labels = g.svg.selectAll("text.node")
+                .attr("visibility", "visible")
+                .style("fill", TP.Context().view[currentViewID].getLabelsColor());
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")

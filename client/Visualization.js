@@ -57,15 +57,14 @@ var TP = TP || {};
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
 
                 var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-                $('#bg')[0].style.cssText = "background-color:" + brewerSeq[index];
+                $("#bg").css("background-color",brewerSeq[index]);
             }
             else {
 
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
-                $('#bg')[0].style.cssText = "background-color:white";
-
+                $("#bg").css("background-color", "white")
             }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
@@ -408,7 +407,7 @@ var TP = TP || {};
             var parameter = _event.associatedData.parameter;
             var idView = _event.associatedData.idView;
             var scales = _event.associatedData.scales;
-
+            
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
@@ -445,15 +444,11 @@ var TP = TP || {};
 
 
         this.drawDataBase = function (_event) {
-            
             var target = _event.associatedData.source;
             
             var svg = TP.Context().view[target].getSvg();
-            var nodes = svg.selectAll('g.node').data()
+            var nodes = svg.selectAll('g.node').data();
 
-            var margin = {top: 20, right: 15, bottom: 60, left: 60}
-            var width = 960 - margin.left - margin.right;
-            var height = 500 - margin.top - margin.bottom;
             var id = "" + TP.Context().getIndiceView();
             
             //TP.Context().view[id] = new TP.View(id, null,
@@ -462,49 +457,50 @@ var TP = TP || {};
             TP.Context().view[id].addView();
 
             var sort_asc = true;
-            drawTable('#zone'+id, nodes)
+            drawTable('#zone'+id, nodes);
             var table;
 
             function drawTable(zone, nodes){
-                table = $('<table/>', {id: 'table' + id, class:'dataTable'}).appendTo('#zone' + id)
-                var thead = $('<thead/>').appendTo(table)
-                var tbody = $('<tbody/>').appendTo(table)
-                var head = $('<tr/>').appendTo(thead)
+                table = $('<table/>', {id: 'table' + id, class:'dataTable'}).appendTo('#zone' + id);
+                var thead = $('<thead/>').appendTo(table);
+                var tbody = $('<tbody/>').appendTo(table);
+                var head = $('<tr/>').appendTo(thead);
                 var fields = getFields(nodes);
 
-                for (f in fields){
+                for (var f in fields){
                     var th = $('<th/>').appendTo(head);
                     
                     th.html(fields[f]);
                     th.click(function(){
                         nodes.sort(sortByColumn(this.innerHTML,sort_asc));
                         sort_asc = !sort_asc;
-                        table.remove()
-                        drawTable(zone, nodes)
-                    })
+                        table.remove();
+                        drawTable(zone, nodes);
+                    });
                 }
 
-                for (n in nodes){
-                    var tr = $('<tr/>',{id: "TR"+n}).appendTo(tbody)
-                    for (f in fields){
+                for (var n in nodes){
+                    var tr = $('<tr/>',{id: "TR"+n}).appendTo(tbody);
+                    for (var f in fields){
                         var td = $("<td/>").appendTo(tr);
                         td.html(nodes[n][fields[f]]);
                         td.click(function(a,b){
                             return function () {
-                                if (table[0].rows[0].cells[b].innerHTML!='baseID'){
-                                    toggleInput($(this))
+                                if (table[0].rows[0].cells[b].innerHTML!=='baseID'){
+                                    toggleInput($(this));
                                 }
                             }
-                        }(n,f))
+                        }(n,f));
                     }
                 }
             }
 
             function getFields(nodes){
                 var fields = [];
-                for (var i = 0; i < nodes.length; i++) {
-                    for (var f in nodes[0]) {
-                        if (fields.indexOf(f) == -1) {  //a key is unique
+                for(var n in nodes){
+                    for (var f in nodes[n]) {
+
+                        if (fields.indexOf(f) === -1) {  //a key is unique
                             fields.push(f);
                         }
                     }
@@ -513,31 +509,32 @@ var TP = TP || {};
             }
 
             function toggleInput(cell){
-                if(cell.hasClass('editData')) return;
-                else{
+                if(cell.hasClass('editData')) {
+                    return;
+                }else{
                     var width = cell.innerWidth();
                     var height = cell.innerHeight();
                     var text = cell.text();
                   
-                    cell.css('height',height)
-                    cell.width(width)
+                    cell.css('height',height);
+                    cell.width(width);
                     cell.text("");
 
-                    var input = $("<input/>").appendTo(cell)
+                    var input = $("<input/>").appendTo(cell);
                     $(input).height(height-5);
                     $(input).width($(cell).width()-4);
-                    input.attr("value",text)
+                    input.attr("value",text);
 
                     input.focus();
                     input.blur(function(){
-                        updateData($(this))
-                    })
+                        updateData($(this));
+                    });
                     input.keyup(function (e) {
-                        if (e.keyCode == 13) { //enter key
-                            updateData($(this))
+                        if (e.keyCode === 13) { //enter key
+                            updateData($(this));
                         }
                     });
-                    cell.addClass('editData')
+                    cell.addClass('editData');
                 }
             }
 
@@ -548,23 +545,23 @@ var TP = TP || {};
                 var row = cell.parent().index('tr');
 
                 cell.text(input.val());
-                cell.removeClass('editData')
+                cell.removeClass('editData');
                 input.remove();
 
                 var bID = eval(table[0].rows[row].cells[0].innerHTML);
-                for (n in nodes){
+                for (var n in nodes){
                     if (nodes[n].baseID===bID){
                         nodes[n][hcol] = cell.text();
                     }
                 }
             }
 
-            function sortByColumn(field, reverse, primer){
+            function sortByColumn(field, reverse){
                 var key = function (x) {return x[field]};
                 return function (a,b) {
                     var A = key(a), B = key(b);
                     return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];                  
-                }
+                };
             }
         }
 
@@ -577,19 +574,33 @@ var TP = TP || {};
             var cGraph = view.getGraph();
             var f = $.farbtastic('#picker');
 
-            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').hasClass('selected')) {
+            if ($('#cnodes').hasClass('colorwell') && $('#cnodes').is(":checked")) {
                 view.setNodesColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "node", view.getNodesColor());
-            } else if ($('#clinks').hasClass('colorwell') && $('#clinks').hasClass('selected')) {
+            } else if ($('#clinks').hasClass('colorwell') && $('#clinks').is(":checked")) {
                 view.setLinksColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "link", view.getLinksColor());
-            } else if ($('#cbg').hasClass('colorwell') && $('#cbg').hasClass('selected')) {
+            } else if ($('#cbg').hasClass('colorwell') && $('#cbg').is(":checked")) {
                 view.setBgColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "bg", view.getBgColor());
-            } else if ($('#clabels').hasClass('colorwell') && $('#clabels').hasClass('selected')) {
+            } else if ($('#clabels').hasClass('colorwell') && $('#clabels').is(":checked")) {
                 view.setLabelsColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "label", view.getLabelsColor());
             }
+        }
+
+        this.changeNodesSettings = function(_event) {
+            var id = TP.Context().activeView;
+            var view = TP.Context().view[id];
+            var cGraph = view.getGraph();
+
+            view.getGraphDrawing().changeSettingsLabels(id, cGraph, "font-size", _event.associatedData.value.fontsize.val1)
+            
+            //view.getGraphDrawing().changeSettingsLabels(id, cGraph, 'font-size', value)
+        }
+
+        this.changeSettings = function(element, property, value){
+            element.css(property, value)
         }
 
         return __g__;

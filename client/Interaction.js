@@ -23,7 +23,7 @@ var TP = TP || {};
         // the brush intersection function, and applies actions to the 
         // selected target.
         // target, the string value of the target svg view         
-        this.createLasso = function (target) {
+        this.createLasso_deprecated = function (target) {
             if (!target)
                 return
 
@@ -51,14 +51,14 @@ var TP = TP || {};
              }*/
 
             //TP.Context().tabLasso[target] = new TP.Lasso(svg);
-            TP.Context().view[target].setLasso(new TP.Lasso(target));
-            myL = TP.Context().view[target].getLasso();
+            //TP.Context().view[target].setLasso(new TP.Lasso(target));
+            //myL = TP.Context().view[target].getLasso();
 
-            myL.canMouseUp = __g__.MouseUp
+            //myL.canMouseUp = __g__.MouseUp
 
-            myL.canMouseMove = __g__.MouseMove
+            //myL.canMouseMove = __g__.MouseMove
 
-            myL.canMouseDown = __g__.MouseDown
+            //myL.canMouseDown = __g__.MouseDown
 
         }
 
@@ -83,7 +83,7 @@ var TP = TP || {};
         // once the selection is made, it applies the synchronization
         // function syncGraph() to the selected nodes
         // selection colors are hardcoded but this should be changed
-        this.checkIntersect = function (object) {
+        this.checkIntersect_deprecated = function (object) {
 
             //assert(true, "checkIntersect");
 
@@ -96,6 +96,7 @@ var TP = TP || {};
             var prevSelList = [];
 
             var __g = TP.Context().view[target].getLasso();
+
             var selList = []
             var e = window.event
             svg.selectAll("g.node")
@@ -182,7 +183,7 @@ var TP = TP || {};
         //console.log("selection list: ", selList, " with length ", selList.length)
 
 
-        this.nodeSelected = function (object) {
+        this.nodeSelected_deprecated = function (object) {
 
             if (!object)
                 return
@@ -218,6 +219,87 @@ var TP = TP || {};
                 prevSelList = selList.slice(0);
                 objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
             }
+        }
+
+
+        this.updateViewFromSimpleSelection = function (_viewID, _selection) {
+
+            //assert(true, "checkIntersect");
+
+
+            var currentViewID = _viewID;
+            var svg = TP.Context().view[currentViewID].getSvg();
+
+            var prevSelList = [];
+
+            //selList should be here an array of nodes
+            var selList = _selection;
+
+            //listening for keyboard event
+            var e = window.event
+
+            svg.selectAll("g.node")
+                .classed("selected", false)
+                    .select("g.glyph")
+                        .select(".node")
+                            .style('fill', function(){return TP.Context().view[_viewID].getNodesColor();});
+
+            svg.selectAll("g.node").data(selList, function(d){return d.baseID;})
+
+                .classed("selected", true)
+
+               //should restore keyboard event handler to append/remove from selection
+               /*
+                if ((e.ctrlKey || e.metaKey) && d.selected == true)return true;
+
+                var intersects = __g.intersect(pointArray, x, y)
+                //if (intersects) console.log("node intersects", d)
+
+                if (e.shiftKey && intersects) {
+                    //console.log("shift pressed and intersects so return false");
+                    d.selected = false;
+                } else if (e.shiftKey && !intersects && d.selected == true) {
+                    //console.log("shift pressed and doesnt intersects and true so return true");
+                    d.selected = true;
+                } else {
+                    d.selected = intersects;
+                }
+                //console.log("returning selection:", d.selected)
+                return d.selected*/
+
+                .select("g.glyph")
+                .select(".node")
+                .style('fill', 'red');
+
+                 /*
+                 {
+                    if (e.ctrlKey && d.selected == true) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    }
+                    if (d.selected) {
+                        selList.push(d.baseID)
+                        return 'red';
+                    } else {
+                    // if (d._type == "catalyst")
+                    // return TP.Context().tabNodeColor["catalyst"];
+                    // else
+                    // return TP.Context().tabNodeColor["substrate"];
+                        return TP.Context().view[target].getNodesColor();
+                    }
+                }*/
+
+            selList = []
+            _selection.forEach(function(d){selList.push(d.baseID)});
+
+            selList.sort()
+            TP.Context().view[currentViewID].setSourceSelection(selList);
+
+            if (selList.length > 0)
+                TP.Context().view[currentViewID].getController().sendMessage("nodeSelected", {selList: selList, prevSelList: prevSelList});
+            else
+                TP.Context().view[currentViewID].getController().sendMessage("emptySelection", {selList: selList});
+
         }
 
 
@@ -406,7 +488,7 @@ var TP = TP || {};
         }
 
 
-        __g__.brushstart = function (_event) {
+        __g__.brushstart_deprecated = function (_event) {
 
             var svg = _event.associatedData.svg;
             svg.classed("selecting", true);
@@ -417,7 +499,7 @@ var TP = TP || {};
         // This function associate a d3.svg.brush element to select nodes in a 
         // view target, the string value of the target svg view 
         // This function is deprecated but one can activate it anytime
-        this.addBrush = function (target) {
+        this.addBrush_deprecated = function (target) {
 
 
             var svg = null
@@ -515,7 +597,7 @@ var TP = TP || {};
         // Applies the lasso interactor to a specific svg target as callback
         // to the mouse events.
         // target, the string value of the target svg view         
-        this.addLasso = function (_event) {
+        this.addLasso_deprecated = function (_event) {
 
             var target = null;
 
@@ -559,7 +641,7 @@ var TP = TP || {};
         // Removes the lasso interactor from a specific svg target's callbacks 
         //to its mouse events.
         // target, the string value of the target svg view         
-        this.removeLasso = function (_event) {
+        this.removeLasso_deprecated = function (_event) {
 
             var target = null;
 

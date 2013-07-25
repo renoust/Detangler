@@ -11,7 +11,7 @@ var TP = TP || {};
 
         this.executeState = function () {
 
-            objectReferences.InterfaceObject.toggleSelectMove(args);
+            //objectReferences.InterfaceObject.toggleSelectMove(args);
 
         }
 

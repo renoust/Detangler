@@ -45,7 +45,8 @@ var TP = TP || {};
         {
 
             if (elem == null || type == null || fn == null) {
-                assert(false, "warning !!! parameters aren't completed or there are problems with its")
+                assert(false, "warning !!! parameters aren't completed or there are problems with its");
+                console.log("elem= ", elem, " type=",type, " fn=",fn);
                 return;
             }
 
