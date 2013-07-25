@@ -48,6 +48,9 @@ var TP = TP || {};
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
         this.entanglementCaught = function (CurrentViewID, nothing) {
+
+            console.log("entering 'entanglement caught function'")
+
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
             var target_source = CurrentViewID;
 
@@ -56,8 +59,9 @@ var TP = TP || {};
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
 
-                var index = Math.round(TP.Context().entanglement_intensity * 5) % 6
-                $("#bg").css("background-color",brewerSeq[index]);
+                var indexI = Math.round(TP.Context().entanglement_intensity * 5) % 6
+                var indexH = Math.round(TP.Context().entanglement_homogeneity * 5) % 6
+                $("#bg").css("background-color",brewerSeq[indexI]);
             }
             else {
 
@@ -71,12 +75,30 @@ var TP = TP || {};
              .transition()
              .style('fill-opacity', .5)
              .style("fill", brewerSeq[index])*/
-            d3.selectAll("rect.view").style("fill", brewerSeq[index])
-            d3.selectAll("rect.brush").style("fill", brewerSeq[index])
+            d3.selectAll("rect.view").style("fill", brewerSeq[indexI])
+                                     .style("stroke", brewerSeq[indexH]);
+            d3.selectAll("rect.brush").style("fill", brewerSeq[indexI])
+                                      .style("stroke", brewerSeq[indexH]);
             //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
 
-            if (TP.Context().view[target_source].getLasso())
-                TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
+            //if (TP.Context().view[target_source].getLasso())
+            //    TP.Context().view[target_source].getLasso().fillColor = brewerSeq[index]
+
+            Object.keys(TP.Context().view).forEach(function(k)
+            {
+                console.log("view: ",k, TP.Context().view[k].getType(), TP.Context().view[k].getType() in ["substrate", "catalyst"])
+
+                if (TP.Context().view[k].getType() in {"substrate":0, "catalyst":0})
+                {
+                    console.log("svg found: ", TP.Context().view[k].getSvg())
+                    TP.Context().view[k].getSvg()
+                        .selectAll(".lasso")
+                            .style('fill',brewerSeq[indexI])
+                            .style('stroke', brewerSeq[indexH]);
+                }
+            })
+
+
         }
         /*
          this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code

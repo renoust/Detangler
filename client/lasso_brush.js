@@ -36,8 +36,9 @@ d3.custom.Lasso = function module(){
             .attr({
                 'class': 'freeform-brush',
                 stroke: 'black',
-                fill: 'red',
-                'fill-opacity': 0.2,
+                'stroke-width': 2,
+                fill: 'black',
+                'fill-opacity': 0.5,
                 display: 'none',
                 'fill-rule': 'evenodd'
             })
@@ -53,8 +54,9 @@ d3.custom.Lasso = function module(){
             .attr({
                 'class': 'rect-brush',
                 stroke: 'black',
-                fill: 'red',
-                'fill-opacity': 0.2,
+                'stroke-width': 2,
+                fill: 'black',
+                'fill-opacity': 0.5,
                 display: 'none',
                 'fill-rule': 'evenodd'
             })
