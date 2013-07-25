@@ -56,9 +56,9 @@ var TP = TP || {};
         __g__.addEventState = function (name, func, parametersState) {            
 
             var hasState = false;
-            var bindings = ["all"];
-            var fromAll = true;
-            var useless = false;
+            var bindings = null;
+            var fromAll = null;
+            var useless = null;
             var activate = true;
             
             if(parametersState != null)
@@ -88,14 +88,14 @@ var TP = TP || {};
                 success = __g__.addEvent(name, func);
 
                 if(success === false){
-                    assert(false, "warning : event "+name+" isn't added because event already exist in eventHandler since an other insertion or event can't be created")
+                    assert(false, "warning : event isn't added because event already exist in eventHandler since an other insertion or event can't be created")
                 }
                 
                 if(hasState === true){
                     sGraph.addState({name:name, bindings:bindings}, fromAll, useless, activate);
                 }
                 else
-                    assert(true, "No state creation asked");
+                    assert(true, "you asked to don't have state creating");
 
             }
             else{
@@ -109,21 +109,21 @@ var TP = TP || {};
         __g__.addState = function(nameState, parametersState)
         {
             
-            var bindings = ["all"];
-            var fromAll = true;
-            var useless = false;
+            var bindings = null;
+            var fromAll = null;
+            var useless = null;
             var activate = true;
             
             if(parametersState != null)
             {
                 
-                if('bindings' in parametersState)
+                if(('bindings' in parametersState))
                     bindings = parametersState.bindings;
-                if('fromAll' in parametersState)
+                if(('fromAll' in parametersState))
                     fromAll = parametersState.fromAll; 
-                if('useless' in parametersState)
+                if(('useless' in parametersState))
                     useless = parametersState.useless;
-                if('activate' in parametersState)
+                if(('activate' in parametersState))
                     activate = parametersState.activate;
             }
             
@@ -175,7 +175,6 @@ var TP = TP || {};
 
         __g__.setCurrentState = function (nameState) {
             currentState = nameState;
-            beforeCurrentState = currentState;
         }
 
         __g__.initController = function (ID, typeController) {
@@ -245,20 +244,15 @@ var TP = TP || {};
             var State = __g__.stateGraph.getInfoState(nameState);
             
             //console.log(__g__.stateGraph)
-            if(State != null)
-            {
-                if (State.useless !== true){
-                    if(nameState != currentState){
-                        beforeCurrentState = currentState;
-                        currentState = nameState;
-                    }            
-                }
-            }
-            else{
-                assert(false, "State "+nameState+" doesn't exist")
+            
+            if (State.useless !== true){
+                if(nameState != currentState){
+                    beforeCurrentState = currentState
+                    currentState = nameState;
+                }            
             }
         }
-
+ 
         
         //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
         //same thing for view, type just the view ID("0", "1", "2")        
@@ -307,8 +301,8 @@ var TP = TP || {};
                 
             }
             else if(canContinue === -1){
-                assert(false, "warning : state is associated with an other state but function 'addState' has'nt been called for it");
-                //return;
+                assert(false, "message can't pass => state is associated with an other state but function 'addState' has'nt been called for it");
+                return;
             }
             //else
             //{
