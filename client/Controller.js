@@ -38,15 +38,9 @@ var TP = TP || {};
         }
 
         __g__.deleteEvent = function (type) {
-            __g__.eventHandlerObject.removeEvent(nameC, type);
+            __g__.eventHandlerObject.deleteEvent(nameC, type);
         }
-        
-        __g__.goBackEvent = function(nameEvent)
-        {
-            __g__.eventHandlerObject.goBackEvent(nameC, nameEvent)
-        }
-        
-                              
+                            
         __g__.addStates = function () {
 
             if (typeC === "view") {
@@ -59,9 +53,8 @@ var TP = TP || {};
         }
         
 
-        __g__.addEventState = function (name, func, parametersState, targetView) {            
-            
-            //bindings, fromAll, useless, activate
+        __g__.addEventState = function (name, func, parametersState) {            
+
             var hasState = false;
             var bindings = null;
             var fromAll = null;
@@ -84,44 +77,22 @@ var TP = TP || {};
             
             var sGraph = null;
             var listenerName = null;
-            
-            if(targetView != null){
-                var view = TP.Context().view[targetView];
-                if(view != null){
-                    sGraph = view.getController().getStateGraph();
-                    listenerName = view.getController().getNameController();
-                }
-                else{
-                    assert(false, "targetView does'nt exist !!");
-                    return;
-                }
-            }
-            else{
-                sGraph = __g__.stateGraph;
-                listenerName = nameC;
-            }
-            
+
+            sGraph = __g__.stateGraph;
+            listenerName = nameC;
+                
             if(sGraph != null && listenerName != null){
-            
-                //console.log("node : ", node, "nodeRoot : ", nodeRoot, "useless : ", useless, "activate : ", activate)
                 
                 var success = false;
                 
-                if(targetView != null)
-                    success = TP.Context().view[targetView].getController().addEvent(name, func);
-                else
-                   success = __g__.addEvent(name, func);
-                   
-                //console.log("success : "+success)      
+                success = __g__.addEvent(name, func);
+
+                if(success === false){
+                    assert(false, "warning : event "+name+" isn't added because event already exist in eventHandler since an other insertion or event can't be created")
+                }
                 
                 if(hasState === true){
-                    if(success === true){
-                        sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);
-                    }
-                    else{
-                        assert(false, "state isn't added because event already exit in eventHandler since an other insertion or event can't be created")
-                        return;
-                    }
+                    sGraph.addState({name:name, bindings:bindings}, fromAll, useless, activate);
                 }
                 else
                     assert(true, "you asked to don't have state creating");
@@ -131,12 +102,11 @@ var TP = TP || {};
                 assert(false, "sGraph or/and controller isn't defined or correctly initialised !!")
                 return;
             }
-            //we can call addEvent after addState to simplifie Event insersion
+            
         }
-        
-        //__g__.addEventState(name, )
 
-        __g__.addState = function(name, func, parametersState)
+
+        __g__.addState = function(nameState, parametersState)
         {
             
             var bindings = null;
@@ -160,7 +130,7 @@ var TP = TP || {};
             var sGraph = __g__.getStateGraph();
             var listenerName = __g__.getNameController();
             
-            sGraph.addState({name:name, func:func, bindings:bindings}, fromAll, useless, activate);            
+            sGraph.addState({name:nameState, bindings:bindings}, fromAll, useless, activate);            
             
         }
                 
@@ -170,17 +140,6 @@ var TP = TP || {};
             __g__.deleteEvent(nameState);
         }
         
-        __g__.goBackEventState = function(nameState){
-            __g__.goBackState(nameState);
-            __g__.goBackEvent(nameState);
-        }
-        
-        
-        __g__.goBackState = function(nameState){
-            __g__.stateGraph.goBackState(nameState);
-        }
-        
-        
         __g__.deleteState = function(nameState){
             if(currentState  == nameState)
                 currentState = beforeCurrentState;
@@ -189,24 +148,33 @@ var TP = TP || {};
         }
                 
         
-        __g__.getInfoState = function (name) {
-            return __g__.stateGraph.getInfoState(name);
+        __g__.getInfoState = function (nameState) {
+            return __g__.stateGraph.getInfoState(nameState);
         }
 
-        __g__.isActivate = function (name) {
-            return __g__.getInfoState(name).activate === true;
+        __g__.isActivate = function (nameState) {
+            return __g__.getInfoState(nameState).activate === true;
         }
 
-        __g__.enableState = function (state) {
-            __g__.stateGraph.enableState(state);
+        __g__.enableState = function (nameState) {
+            __g__.stateGraph.enableState(nameState);
         }
 
-        __g__.disableState = function (state) {
-            __g__.stateGraph.disableState(state);
+        __g__.disableState = function (nameState) {
+            __g__.stateGraph.disableState(nameState);
         }
 
-        __g__.setCurrentState = function (name) {
-            currentState = name;
+        __g__.setUseless = function(nameState, value){
+            __g__.stateGraph.setUseless(nameState, value);
+        }
+        
+        __g__.setFromAll = function(nameState, value)
+        {
+            __g__.stateGraph.setFromAll(nameState, value);
+        }
+
+        __g__.setCurrentState = function (nameState) {
+            currentState = nameState;
         }
 
         __g__.initController = function (ID, typeController) {
@@ -235,11 +203,11 @@ var TP = TP || {};
                 currentState = "select"
         }
 
-        __g__.getStateAccess = function (cState) {
+        __g__.getStateAccess = function (nameState) {
 
             //console.log("currentState : "+currentState)
 
-            var State = __g__.stateGraph.getInfoState(cState);
+            var State = __g__.stateGraph.getInfoState(nameState);
 
             if (State == null)
                 return false;
@@ -264,47 +232,49 @@ var TP = TP || {};
             }
         }
 
-        __g__.isBindingToAll = function (cState) {
-            var State = __g__.stateGraph.getInfoState(cState);
-            return State.bindings["all"] !== undefined;
+        __g__.isBindingToAll = function (nameState) {
+            var State = __g__.stateGraph.getInfoState(nameState);
+            
+            if(State != null)
+                return State.bindings["all"] !== undefined;
+            else{
+                assert(false, "there is no State named : "+nameState);
+                return;
+            }
         }
 
-        __g__.transitionState = function (cState) {
-            var State = __g__.stateGraph.getInfoState(cState);
+        __g__.transitionState = function (nameState) {
+            var State = __g__.stateGraph.getInfoState(nameState);
             
             //console.log(__g__.stateGraph)
             
             if (State.useless !== true){
-                if(cState != currentState){
+                if(nameState != currentState){
                     beforeCurrentState = currentState
-                    currentState = cState;
+                    currentState = nameState;
                 }            
             }
         }
-        
-        
-        __g__.isUseless = function(cState, value){
-            __g__.stateGraph.isUseless(cState, value);
-        }
 
+        
         //targetController : for example, even if div's id of principal controller is handlerStateprincipal, type "principal"
-        //same thing for view, type just the view ID("0", "1", "2")
-        __g__.sendMessage = function (messageName, object, targetController, source){
+        //same thing for view, type just the view ID("0", "1", "2")        
+        __g__.sendMessage = function (messageName, data, idViewDestination, idViewSource){
 
-            if (source != null && targetController == null) {
-                assert(false, "error !!!! source is specified, but not targetController");
+            if (idViewSource != null && idViewDestination == null) {
+                assert(false, "error !!!! idViewSource is specified, but not idViewDestination");
                 return;
             }
             
             var access = false;
             var tmpController = null;
 
-            if (targetController != null) {
-                if (targetController === "principal") {
+            if (idViewDestination != null) {
+                if (idViewDestination === "principal") {
                     tmpController = TP.Context().getController();
                 }
                 else {
-                    tmpController = TP.Context().view[""+targetController].getController();
+                    tmpController = TP.Context().view[""+idViewDestination].getController();
                 }
             }
             else {
@@ -337,33 +307,33 @@ var TP = TP || {};
                 assert(false, "message can't pass => state is associated with an other state but function 'addState' has'nt been called for it");
                 return;
             }
-            else
-            {
-                assert(true, "message can pass => state cheking is disabled for it");
-            }
+            //else
+            //{
+                //assert(true, "message can pass => state cheking is disabled for it");
+            //}
             
             var _event = new CustomEvent(messageName);
-            if (object != null) {
-               _event.associatedData = object;
+            if (data != null) {
+               _event.associatedData = data;
             }
             else
                _event.associatedData = {};
 
 
-            if (source != null)
-               _event.associatedData.source = source;
+            if (idViewSource != null)
+               _event.associatedData.source = idViewSource;
             else
                _event.associatedData.source = idView;
 
-            if (targetController != null)
-               _event.associatedData.target = targetController;
+            if (idViewDestination != null)
+               _event.associatedData.target = idViewDestination;
             else
                _event.associatedData.target = idView;               
             
-            if (targetController == null)
+            if (idViewDestination == null)
                 document.getElementById(nameC).dispatchEvent(_event);
             else
-                document.getElementById("handlerState" + targetController).dispatchEvent(_event);
+                document.getElementById("handlerState" + idViewDestination).dispatchEvent(_event);
 
         }
          
@@ -384,6 +354,11 @@ var TP = TP || {};
 
             currentState = null;
 
+        }
+        
+        __g__.addBinding = function(stateSource, stateDest)
+        {
+            __g__.stateGraph.addBinding(stateSource, stateDest);
         }
 
         return __g__;

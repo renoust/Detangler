@@ -10,7 +10,7 @@ var TP = TP || {};
 
         var objectStore = new TP.Store();
         var nextGuid = 1;
-        var saveEvent = new Object();
+        //var saveEvent = new Object();
 
 
         __g__.getElem = function(name)
@@ -62,9 +62,6 @@ var TP = TP || {};
             if (data == null) return;
 
             if (!data.handlers) data.handlers = {};
-
-            if(saveEvent[type] != null)
-                delete saveEvent[type];
 
             if (!data.handlers[type])
             //data.handlers[type] = [];
@@ -146,7 +143,7 @@ var TP = TP || {};
         }
         
         
-        __g__.removeEvent = function (elem, type/*, id*/) {
+        __g__.deleteEvent = function (elem, type/*, id*/) {
             
             function isEmpty(object) {
 
@@ -162,7 +159,6 @@ var TP = TP || {};
 
             if(data.handlers[type] != null)
             {
-                saveEvent[type] = data.handlers[type];
 
                 delete data.handlers[type];
 
@@ -175,21 +171,15 @@ var TP = TP || {};
                 }
                 
             }
+            else
+            {
+                assert(false, "warning : there is no event named : "+type)
+            }
 
             if (isEmpty(data.handlers)) {
                 delete data.handlers;
                 delete data.dispatcher;
             }
-        }
-        
-        
-        __g__.goBackEvent = function(nameElem, nameEvent)
-        {
-            if(saveEvent[nameEvent] != null){
-                __g__.addEvent(nameElem, nameEvent, saveEvent[nameEvent]);
-            }
-            else
-                assert(false, "the event's type isn't defined");
         }
         
         __g__.eventIsAvailable = function(nameElem, nameEvent)

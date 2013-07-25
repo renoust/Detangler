@@ -17,7 +17,7 @@ var TP = TP || {};
                     range: true,
                     min: 0,
                     max: 99,
-                    values: [ 3, 12 ],
+                    values: [ 3, 12 ]
                 },
                 "scale: "
             ]
@@ -200,7 +200,7 @@ var TP = TP || {};
             }, {bindings:["toto","nodeSelected", "selectionVide", "arrangeLabels"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("nodeSelected", function (_event) {/*assert(true, "nodeSelected");*/
                 TP.Interaction().nodeSelected_deprecated(_event);
-            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "mouseoverMouseDown"], fromAll:true, useless:null, activate:true});
             __g__.controller.addEventState("selectionVide", function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
             }, {bindings:["mousemoveLasso", "mousemoveMouseDown", "mouseupMouseDown", "sizeMapping"], fromAll:null, useless:null, activate:true});
@@ -215,7 +215,7 @@ var TP = TP || {};
             }, {bindings:["mousemoveLasso", "mouseupLasso"], fromAll:null, useless:null, activate:true});
             __g__.controller.addEventState("mousemoveLasso",  function (_event) {/*assert(true, "mousemoveLasso");*/
                 _event.associatedData.myL.canMouseMove(_event.associatedData.mouse);
-            }, {bindings:["mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["toto","mousemoveMouseDown", "mouseupMouseDown", "mousemoveLasso", "mousedownLasso", "mouseoverMouseDown"], fromAll:null, useless:null, activate:true});
 
             __g__.controller.addEventState("mouseoverMouseDown",  function (_event) {
                 if (!__g__.controller.isActivate("mouseupLasso")) {

@@ -204,7 +204,8 @@ var TP = TP || {};
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {/*assert(true, "movingZoomDrag");*/
                 TP.Interaction().movingZoomDrag(_event);
             }, {bindings:["movingZoomDragEnd", "movingZoomDrag"], fromAll:null, useless:null, activate:true});
-            __g__.controller.addEventState("movingZoomDragEnd", ["movingZoomDrag"], function (_event) {/*assert(true, "movingZoomDragEnd"); */
+
+            __g__.controller.addEventState("movingZoomDragEnd", function (_event) {/*assert(true, "movingZoomDragEnd"); */
                 TP.Interaction().movingZoomDragEnd(_event);
             }, {bindings:["movingZoomDrag"], fromAll:null, useless:null, activate:true});
 
