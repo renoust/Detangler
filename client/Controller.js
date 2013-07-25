@@ -95,7 +95,7 @@ var TP = TP || {};
                     sGraph.addState({name:name, bindings:bindings}, fromAll, useless, activate);
                 }
                 else
-                    assert(true, "you asked to don't have state creating");
+                    assert(true, "No state creation asked");
 
             }
             else{
