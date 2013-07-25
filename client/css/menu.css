@@ -1,92 +1,89 @@
+/********************************************************************************/
 /********************************** Left Menu ***********************************/
-li{
-	overflow: auto;
-}
-
+/********************************************************************************/
 #wrap .cont{ 
 	position: absolute;
 	width: 300px;
 	height: 100%;
 	top: 0px;
-	margin-left: 0px; 
-
-	z-index: 101;
-	
 	background-color: white;
 	border:1px solid #666666;
 }
 
 .toggleButton{ 
+	position: absolute; 
 	width: 20px; 
 	height: 100px; 
-	position: absolute; 
 	right: -22px;
-	cursor: pointer; 
-	text-align: center; 
 	
 	border:1px solid #666666;
 	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) ;
 }
 
 .toggleButton h3{
+	position: absolute;
+	width: 100px;
+	height: 20px;
+	top: 40px;
+	right: -40px;
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer; 
+	text-align: center; 
+	font-size: 0.7em;
 	-webkit-transform: rotate(-90deg);	
 	-moz-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
 	-o-transform: rotate(-90deg);
 	transform: rotate(-90deg);
-	position: absolute;
-	top: 28px;
-	right: -45px;
-	width:102px;
-	height:22px;
-	font-size: 0.7em;
 }
 
 .toggleButton.open{
 	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
 }
 
-.header-menu{
-    line-height: 32px;
-    height: 32px;
-	text-align:center;
+.cont .header-menu{
+	line-height: 32px;
+	height: 32px;
+	text-align: center;
 	background-color: #6d6d6d;
 	color: #fff;
 	font-family: Arial;
 	font-size: 16px;
 }
 
-/*.menu-content{
-	margin:10px;
-}*/
-
-.nosidebar .cont{
-	left: -200px;
-	z-index: 200;
-}
-
 .close-button{
-	background: url(myTheme/close-button.png);
-	width:32px;
-	height:32px;
 	float:right;
-
+	width: 32px;
+	height :32px;
+	background: url(myTheme/close-button.png);
 }
 
-/***************************** Menu 1: Interactors ******************************/
 
-.nav label{
-	font-size: 13px;
+/*infos*/
+li{
+	overflow: auto;
 }
 
+/********************************************************************************/
+/************ Accordion for 'Interactions' and 'View Settings' panels ***********/
+/********************************************************************************/
 .nav{
-	padding: 0;
-	margin: 0;
-	font-size: 0.8em;
+	padding: 0px;
+	margin: 0px;
+	font-size: 0.9em;
 }
 
 .nav li{
 	list-style-type:none;
+}
+
+
+.nav .family{
+	padding: 0;
+}
+.nav label{
+	font-size: 13px;
 }
 
 .nav li.tglFamily > a{
@@ -112,22 +109,36 @@ li{
 }
 
 .nav a:hover, .nav a:focus, .nav a:active, .nav a:visited {
-	/*text-decoration: underline;*/
 	cursor: pointer;
-	color:#000;
-	background: url(myTheme/state-hover.png) left bottom repeat-x;
+	color: #000;
+	/*background: url(myTheme/state-hover.png) left bottom repeat-x;*/
 }
 
 .nav .family{
 	padding: 0;
 }
 
-.submit{
-	/*display: block;*/
+.ui-autocomplete{
+	z-index: 203;
+	font-size: 11px;
+	height: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+ .ui-autocomplete li{
+ 	overflow: hidden;
+ }
+
+/********************************************************************************/
+/****************************** Informations panel ******************************/
+/********************************************************************************/
+#infoNodes {
+	padding: 5px;
+	font: 12px Arial;
+	/*font-family:arial;
+	font-size:12px;*/
 }
 
-
-/***************************** Menu 2: Informations *****************************/
 p{
 	font-weight: bold;
 }
@@ -146,15 +157,7 @@ p{
 	font-size: 12px;
 }
 
-#infoNodes {
-	/*margin: 5 5 5 5;*/
-	padding: 5px;
-	font-family:arial;
-	font-size:12px;
-	/*font-weight:bold;*/
 
-	/*border: 1px solid #666666;*/
-}
 
 #infoNodes p{
 	margin: 2px;
@@ -165,6 +168,10 @@ p{
 	margin:0 0 0 20;
 }
 
+.hidden{
+	visibility: hidden;
+}
+
 /******************************** Entanglement **********************************/
 
 #entanglement-cont{	
@@ -172,7 +179,6 @@ p{
     position: relative;
     height: 70px;
     margin-bottom: 5px;
-
 }
 
 #bg  {
@@ -180,6 +186,7 @@ p{
     opacity: 0.5; 
     position: absolute;
     height: 100%; width:100%;
+
 }
 
 #entanglement {

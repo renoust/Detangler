@@ -1,6 +1,20 @@
+/*****************************************************************************/
 /********************************* General ***********************************/
-*{font-family: Verdana,Arial,sans-serif;}
+/*****************************************************************************/
+* {
+	font-family: Verdana,Arial,sans-serif;
+}
 
+.enable-text-selection {
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    user-select: all;
+    -ms-user-select: all;
+}
+
+/*****************************************************************************/
+/********************************** Body *************************************/
+/*****************************************************************************/
 body{
     margin:0px;
     -moz-user-select: none;
@@ -9,14 +23,6 @@ body{
     -ms-user-select: none;
 }
 
-.enable-text-selection{
-    -moz-user-select: all;
-    -webkit-user-select: all;
-    user-select: all;
-    -ms-user-select: all;
-}
-
-/********************************** Body *************************************/
 #wrap{
 	overflow: hidden;
 	position: absolute;
@@ -24,137 +30,109 @@ body{
 	width: 100%;
 	top:30px;
 }
+/*****************************************************************************/
 /********************************* Header ************************************/
-
+/*****************************************************************************/
 #header{
 	background: url(myTheme/test-header.png) repeat-x;
-	border: 1px solid black;
-	height:30px;
+	height: 30px;
 	color: white;
 }
+
 #header-content{
 	position: absolute;
-	left:30px;
-	right:0px;
-	height:28px;
+	left: 30px;
+	right: 0px;
 	z-index: 200;
 }
+
 #header-logo{
-	display:inline-block;
-	margin-right:12%;
-	font-family: "Caslon";
-	font-style: italic;
-	font-size:1.6em;
-	vertical-align: top;
-}
-#menu-header{
 	display: inline-block;
+	margin-right: 12%;
+	vertical-align: top;
+	font: italic 1.6em "Caslon";
 }
+
 #menu {
 	display: inline-block;
-	margin: 0;
-	padding: 0;
+	height: 30px;
+	margin: 0px;
+	padding: 0px;
 	list-style: none;
-	background: #000;
-	color: #fff;
 	width: 130px;
 	font: 0.8em "Trebuchet MS", sans-serif;
-	border-radius: 10px;
+}
+
+.submenu{
+	background: black;
 }
 #menu a{
 	display: block;
-	padding: 4px 10px;
+	padding: 3px 10px;
 	color: #fff;
+	background: none;
 	text-decoration: none;
-	min-height: 21px;
-	background: url(myTheme/test-header.png) left bottom repeat-x;
+	min-height: 22px;
+}
 
-}
-#menu .hmenu a, {
-/*	background-image: url(myTheme/state-default.png);*/
-}
-#menu .open a,{
-	border-radius: 10px;
-	/*background-image: url(menu-item-enroule.png);*/
-}
 #menu a:hover, #menu a:focus, #menu a:active {
 	text-decoration: underline;
-	
 }
 
 #menu .submenu {
-	font-size: .8em;
-	/*background: #ccc url(subMenu.png) 0 0 repeat-x;*/
 	font-size: .9em;
-	margin: 0;
-	padding: 0;
-	border-bottom: 1px solid #666;
-	border-radius: 10px;
-	
-}
-#menu .submenu li{
-	border-radius: 10px
-}
-#menu ul.submenu a {
-	background: none;
-	padding: 3px 10px;
-	border-radius: 10px;
-}
-#header-content button{
-	float:right;
+	margin: 0px;
+	padding: 0px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
 
+#header-content button{
+	float: right;
+}
+
+/*****************************************************************************/
 /******************************** Workspace **********************************/
+/*****************************************************************************/
 #container {
-	/*padding-left: 20px;*/
 	height: 100%;
 	bottom: 0px;
-	border:1px solid #666666;
-	background:#F0F0F0;
-	
+	background: #F0F0F0;	
 }
 
-
+/*****************************************************************************/
 /********************************** View *************************************/
+/*****************************************************************************/
 .ui-dialog{
 	padding: 1px;
-	font-size: 0.8em;
+	/*font-size: 0.8em;*/
 }
 
-/*.ui-dialog .ui-dialog-titlebar{
-	padding:0 10 0 10;
-	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x;
-}*/
+.ui-dialog .ui-dialog-titlebar {
+	padding: 2px 10px ;
+}
 
-.ui-dialog .ui-dialog-title {
+.ui-dialog .ui-dialog-titlebar.active{
+	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
+}
+
+.ui-dialog-titlebar .ui-dialog-title {
 	width: auto ;
 	font-size: 12px;
-	
 }
 
 .ui-dialog .ui-dialog-titlebar button{
 	height: 20px;
 	font-size: 11px;
 	float:right;
-	
 }
-
-/* hide close button on the dialog window */
-/*.ui-dialog-titlebar-close {
-  visibility: hidden;
-}*/
 
 .ui-dialog .ui-dialog-content{
 	padding:2px;
 }
 
-.ui-dialog .ui-dialog-titlebar.active{
-	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
-}
-.ui-dialog .ui-dialog-titlebar {
-	padding: 2 10 ;
-	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
-}
+
+
 
 .node.text, .snippet{
 	stroke: black;

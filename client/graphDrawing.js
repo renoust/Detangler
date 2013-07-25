@@ -152,7 +152,10 @@ var TP = TP || {};
                     return dd.currentY
                 })
                 .classed("snippet", true)
+                .style("fill",TP.Context().view[currentViewID].getLabelsColor())
+                .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
                 .text(function (dd) {
+                    console.log(dd)
                     return dd.label
                 });
         }
@@ -342,6 +345,7 @@ var TP = TP || {};
 
                 //.attr('unselectable', 'on')
                 //.on('selectstart', function(){return false;})
+                .style("font-size",12)
                 .text(function (d) {
                     return d.label;
                 });
@@ -1087,7 +1091,10 @@ var TP = TP || {};
 
             var labels = g.svg.selectAll("text.node")
                 .attr("visibility", "visible")
-                .style("fill", TP.Context().view[currentViewID].getLabelsColor());
+                .style("fill", TP.Context().view[currentViewID].getLabelsColor())
+                .text(function(dd){
+                    return dd.label;
+                });
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")

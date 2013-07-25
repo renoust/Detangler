@@ -26,6 +26,14 @@ var TP = TP || {};
         var tl = [
             [3,{id:"selectedAlgo"}]
         ];
+
+        var tulipLayout = ["3-Connected (Tutte)", "Balloon (OGDF)", "Bubble Tree", "Circular", "Circular (OGDF)", "Cone Tree", "Connected Component Packing", "Connected Component Packing (Polyomino)", "Davidson Harel (OGDF)", "Dendrogram", "Dominance (OGDF)", "FM^3 (OGDF)", "Fast Multipole Embedder (OGDF)", "Fast Multipole Multilevel Embedder (OGDF)", "Fast Overlap Removal", "Frutcherman Reingold (OGDF)", "GEM (Frick)", "GEM Frick (OGDF)", "GRIP", "Hierarchical Graph", "Hierarchical Tree (R-T Extended)", "Improved Walker", "Improved Walker (OGDF)", "Kamada Kawai (OGDF)", "LinLog", "MMM Example Fast Layout (OGDF)", "MMM Example Nice Layout (OGDF)", "MMM Example No Twist Layout (OGDF)", "Mixed Model", "Perfect aspect ratio", "Planarization Grid (OGDF)", "Random layout", "Squarified Tree Map", "Stress Majorization (OGDF)", "Sugiyama (OGDF)", "Tree Leaf", "Tree Radial", "Upward Planarization (OGDF)", "Visibility (OGDF)"]
+        var tl2 = [
+            [7,{id:"algoTulip"},
+                {
+                    source:tulipLayout,
+                    minLength: 0,
+                }]]
     
         var colorSettings = [
             [1,{id:"color"},[
@@ -34,7 +42,7 @@ var TP = TP || {};
                 {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
                 {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
             ],
-            [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
+            [6,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]
         ];
         
         var setting = [
@@ -46,7 +54,7 @@ var TP = TP || {};
                 },
                 "Labels size:"
             ],
-            [7,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+            [6,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
         /*
         var tabCatalyst = [1,//__g__.getID(), 
                         null,
@@ -99,6 +107,9 @@ var TP = TP || {};
             }}, interactorGroup:"Layout"},
             {interactorLabel:'Tulip layout list',interactorParameters:'',callbackBehavior:{click:function(){
                 __g__.getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms}, 'principal')
+            }}, interactorGroup:"Layout"},
+            {interactorLabel:'Tulip layout algorithm 2',interactorParameters:tl2,callbackBehavior:{call:function(layout){
+                __g__.getController().sendMessage('changeLayout', {layoutName:layout.algoTulip, idView: TP.Context().activeView})
             }}, interactorGroup:"Layout"},
 
             {interactorLabel:'Induced subgraph', interactorParameters: '', callbackBehavior: {click: function () {
@@ -355,10 +366,17 @@ var TP = TP || {};
                 TP.Visualization().changeNodesSettings(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true})
 
-
+            __g__.controller.addEventState("changeLayout", function(_event){
+                TP.Visualization().tulipLayout(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true})
 
             __g__.controller.setCurrentState("select");
+
+
         }
+
+
+
 
         return __g__;
     }

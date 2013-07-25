@@ -44,7 +44,7 @@ var TP = TP || {};
                 {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
                 {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
             ],
-            [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+            [6,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
         
         var interactors = [
 

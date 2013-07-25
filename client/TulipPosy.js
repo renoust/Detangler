@@ -28,87 +28,26 @@ var TulipPosy = function (originalJSON) {
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
+    TP.Context().InterfaceObject.setHeaderMenu();
+
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
     // types:   0:select    3:textfield     6:text
     //          1:radio     4:slider
     //          2:checkbox  5:spinner
-    /*var bigtest = [[0, {id:"select"}, [{value:"opt1", text:"option1"},{value:"opt2",text:"option2"}]],
-    [1, {id:"radio"},[{name:"alpha",value:"2", text:"bravo"},{name:"alpha",value:"3",text:"charlie"}]],
-    [2, {id:"checkbox"},[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]],
-    [3, {id:"text"}],
-    [5, {id:"spinner"}],
-    [4,{id:'slider',class:'slider'},
-        {   range: true,
-            min: 0,
-            max: 99,
-            values: [ 3, 12 ],
-            change: function() {
-                var value = $("#sizemap").slider("values",0);
-                var value2 = $("#sizemap").slider("values",1);
-                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-            },
-            slide: function() {
-                var value = $("#sizemap").slider("values",0);
-                var value2 = $("#sizemap").slider("values",1);
-                $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-            }
-        }]
-    ];*/
+    
+    var viewGraphSubstrate = new TP.ViewGraphSubstrate({
+        //id:viewIndex, 
+        //interactorList:array1, 
+        name:name + " - substrate", 
+        nodeColor:"#a0522d", 
+        linkColor:"#808080", 
+        backgroundColor:"#FFFFFF", 
+        labelColor:"#000000", 
+        nodeShape:"rect", 
+        type:"substrate"
+    });
 
-    /*
-
-    var paramSizeMap = [
-        [4, {id:"sizemap"},{
-                range: true,
-                min: 0,
-                max: 99,
-                values: [ 3, 12 ],
-                change: function() {
-                    var value = $("#sizemap").slider("values",0);
-                    var value2 = $("#sizemap").slider("values",1);
-                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                },
-                slide: function() {
-                    var value = $("#sizemap").slider("values",0);
-                    var value2 = $("#sizemap").slider("values",1);
-                    $("#sizemap").find(".ui-slider-handle").eq(0).text(value);
-                    $("#sizemap").find(".ui-slider-handle").eq(1).text(value2);
-                }
-            },
-            "scale: "
-        ]
-    ];
-
-    var tl = [
-        [3,{id:"selectedAlgo"}]
-    ];
-
-    var colorSettings = [
-        [1,{id:"color"},[
-            {id:"cnodes", name:"color", class:"colorwell", text:"Nodes Color"},
-            {id:"clinks", name:"color", class:"colorwell", text:"Links Color"},
-            {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
-            {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
-        ],
-        [7,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
-
-
-    */
-
-
-    var viewGraphSubstrate = new TP.ViewGraphSubstrate({//id:viewIndex, 
-                                                        //interactorList:array1, 
-                                                        name:name + " - substrate", 
-                                                        nodeColor:"#a0522d", 
-                                                        linkColor:"#808080", 
-                                                        backgroundColor:"#FFFFFF", 
-                                                        labelColor:"#000000", 
-                                                        nodeShape:"rect", 
-                                                        type:"substrate"});
     viewGraphSubstrate.addView();
     viewGraphSubstrate.buildLinks();
 
@@ -142,26 +81,37 @@ var TulipPosy = function (originalJSON) {
 	TP.Context().getController().sendMessage('getPlugins', {pluginType:"double",endHandler:TP.Context().updateTulipDoubleAlgorithms})
 
     if ($('#analyse').is(':checked')) {
-                    ['Bipartite analysis', '', {click: function () {
-                __g__.getController().sendMessage("analyseGraph", (function(){
-                    var params = __g__.viewGraphCatalystParameters()
-                    params.idSourceAssociatedView = __g__.getID();
-                    return {viewIndex: __g__.getID(), 
-                            viewGraphCatalystParameters: params}
-                     })())
-            }}, "Open View"],
+        ['Bipartite analysis', '', {click: function () {
+            __g__.getController().sendMessage("analyseGraph", (function(){
+                var params = __g__.viewGraphCatalystParameters()
+                params.idSourceAssociatedView = __g__.getID();
+                return {
+                    viewIndex: __g__.getID(), 
+                    viewGraphCatalystParameters: params
+                }
+            })())
+        }}, "Open View"],
 
         viewGraphSubstrate.getController().sendMessage("analyseGraph", (function(){
-                    var params = viewGraphSubstrate.viewGraphCatalystParameters()
-                    params.idSourceAssociatedView = viewGraphSubstrate.getID();
-                    return {viewIndex: viewGraphSubstrate.getID(), 
-                            viewGraphCatalystParameters: params}
-                     })());
-                     //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
+            var params = viewGraphSubstrate.viewGraphCatalystParameters()
+            params.idSourceAssociatedView = viewGraphSubstrate.getID();
+            return {
+                viewIndex: viewGraphSubstrate.getID(), 
+                viewGraphCatalystParameters: params
+            }
+        })());
+        //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
     }
     if ($('#sync').is(':checked')) {
         TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
     }
+
+    $('#tile').click(function(){
+        var tab=[];
+        for( var k in TP.Context().view )
+            tab.push(TP.Context().view[k]);
+        TP.Context().InterfaceObject.setPositionDialogs(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth(),true);
+  })
 
     //check if Google Chrome browser is used, if not, warn the user
      if(!window.chrome){

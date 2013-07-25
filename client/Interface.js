@@ -106,7 +106,6 @@ var TP = TP || {};
         // This function toggles the 'select' and 'move' modes for the 
         // interactors
         // target, the string value of the target svg view
-
         this.toggleSelectMove = function (_event) {
 //            if (!target) return
             
@@ -125,22 +124,18 @@ var TP = TP || {};
             TP.Context().view[target].setMoveMode(!TP.Context().view[target].getMoveMode());
 
             if (TP.Context().view[target].getSelectMode()) {
-                svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
-                svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor);
-                //objectReferences.InteractionObject.addLasso(target);
-
-                //view.getController().sendMessage("select"); //send Message "select" to the StateController
-
-                //objectReferences.InteractionObject.removeZoom(target);
+            //     svg.select('rect.moveButton').style('fill', TP.Context().defaultFillColor);
+            //     svg.select('rect.selectButton').style('fill', TP.Context().highlightFillColor);
+            //     objectReferences.InteractionObject.addLasso(target);
+            //     view.getController().sendMessage("select"); //send Message "select" to the StateController
+            //     objectReferences.InteractionObject.removeZoom(target);
             }
-
             if (TP.Context().view[target].getMoveMode()) {
-                svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
-                svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
-                //objectReferences.InteractionObject.removeLasso(target);
-                //objectReferences.InteractionObject.addZoom(target);
-
-                //view.getController().sendMessage("move");
+            //     svg.select('rect.moveButton').style('fill', TP.Context().highlightFillColor);
+            //     svg.select('rect.selectButton').style('fill', TP.Context().defaultFillColor);
+            //     objectReferences.InteractionObject.removeLasso(target);
+            //     objectReferences.InteractionObject.addZoom(target);
+            //     view.getController().sendMessage("move");
             }
         }
 
@@ -240,44 +235,39 @@ var TP = TP || {};
 
         this.attachInfoBox = function (target) {
             // assert(true, 'Interface -> attachInfoBox')
-            $('#infoNodes').html("<p> NODE INFORMATIONS: </p>");
-            $('#infoNodes').append("<button id='searchNode' class='hidden'>Search</button>")
-            var nodesBID = $('<select/>',{style:"visibility:hidden"}).appendTo("#infoNodes")
-            $('#infoNodes').append("<ul></ul>");
+            var infoNodes = $('#infoNodes');
+            var nodesBID = $('<select/>',{class:"hidden"});
+
+            infoNodes.html("<p> NODE INFORMATIONS: </p>");
+            infoNodes.append("<button id='searchNode'>Search</button>");
+            infoNodes.append(nodesBID);
+            infoNodes.append("<ul></ul>");
 
             var svg = TP.Context().view[target].getSvg();
-            var nodes = svg.selectAll('g.node').data()
+            var nodes = svg.selectAll('g.node').data();
             
-            nodesBID.append("<option>-Nodes-</option>")
-            for(n in nodes){
-                nodesBID.append("<option>"+nodes[n].baseID+"</option>")
+            nodesBID.append("<option>-Nodes-</option>");
+            for(var n in nodes){
+                nodesBID.append("<option>"+nodes[n].baseID+"</option>");
             }
             $("#searchNode").click(function(){
-                if($(this).hasClass('hidden')){
-                    $(this).siblings('select').css('visibility','visible')
-                    $(this).removeClass('hidden')
-                }else{
-                    $(this).siblings('select').css('visibility','hidden')
-                    $(this).addClass('hidden')
-                }
+                $(this).siblings('select').toggleClass('hidden');
             })
+
             nodesBID.change(function(){
                 var selectedNode = nodesBID[0].options[nodesBID[0].selectedIndex].value;
-                var node = null;
-                for (n in nodes){
+                for (var n in nodes){
                     if(nodes[n].baseID==selectedNode){
-                        node = nodes[n];
+                        TP.Controller().sendMessage("mouseoverInfoBox", {node:nodes[n]}, "principal", "undifined");
                         break;
                     }
                 }
-                TP.Controller().sendMessage("mouseoverInfoBox", {node:node}, "principal", "undifined")
+                
             })
 
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-
-                    //objectReferences.InterfaceObject.addInfoBox(d)
-                    TP.Controller().sendMessage("mouseoverInfoBox", {node: d}, "principal", "undifined")
+                    TP.Controller().sendMessage("mouseoverInfoBox", {node: d}, "principal", "undifined");
                 });
         }
 
@@ -339,15 +329,47 @@ var TP = TP || {};
                 zIndex: 3999    
             });
             $('.ui-front').css('z-index', 3000);
-            $('#announce').append(text)
+            $('#announce').append(text);
 
+        }
+
+        this.setHeaderMenu = function(){
+            $(".submenu:not('.open_at_load')").hide();
+            $("li.hmenu > a").click(function (e) {
+              if ($(this).next("ul.submenu:visible").length != 0) {
+                $(this).next("ul.submenu").slideUp("normal", function () {
+                  $(this).parent().removeClass("open")
+                });
+              }
+              else {
+                $("ul.submenu").slideUp("normal", function () {
+                  $(this).parent().removeClass("open")
+                });
+                //console.log()
+                $(this).next("ul.submenu").slideDown("normal", function () {
+                  $(this).parent().addClass("open")
+                });
+              }
+              e.preventDefault();
+            });
+            $('ul.submenu').mouseleave(function () {
+              //console.log('mouseout');
+              $('ul.submenu').slideUp("normal", function () {
+                $(this).parent().removeClass("open")
+              });
+
+            })
+            $('#opfile').click(function (e) {
+              $('#files').click();
+              e.preventDefault();
+            })
         }
 
 
         this.setPositionDialogs = function(tabView, x, y, h, w, sens){
             // assert(true, 'Interface -> setPositionDialogs') 
             var length = tabView.length;
-            if(length===1){
+            if(length === 1){
                 drawDialog(x,y,h,w,tabView[0]);
                 return x;
             }else{
@@ -377,18 +399,18 @@ var TP = TP || {};
 
         this.toggleAccordion = function(menu){
             // assert(true, 'Interface -> toggleAccordion') 
-            $("#"+menu+" ul.family:not('.open_at_load')").hide();
-            $("#"+menu+" li.tglFamily > a").click(function () {
-                if ($(this).next("#"+menu+" ul.family:visible").length != 0) {
-                    $(this).next("#"+menu+" ul.family").slideUp("normal", function () {
-                        $(this).parent().removeClass("open")
+            $( "#" + menu + " ul.family:not('.open_at_load')" ).hide();
+            $( "#" + menu + " li.tglFamily > a" ).click(function () {
+                if ( $(this).next("#" + menu + " ul.family:visible" ).length != 0) {
+                    $(this).next( "#" + menu + " ul.family" ).slideUp("normal", function () {
+                        $(this).parent().removeClass("open");
                     });
                 } else {
-                    $("#"+menu+" ul.family").slideUp("normal", function () {
-                        $(this).parent().removeClass("open")
+                    $( "#" + menu + " ul.family" ).slideUp("normal", function () {
+                        $(this).parent().removeClass("open");
                     });
-                    $(this).next("#"+menu+" ul.family").slideDown("normal", function () {
-                        $(this).parent().addClass("open")
+                    $(this).next( "#" + menu + " ul.family" ).slideDown("normal", function () {
+                        $(this).parent().addClass("open");
                     });
                 }
                 return false;
@@ -585,7 +607,7 @@ var TP = TP || {};
         this.createElements = function(tab, parentId, evnt){
             // assert(true, 'Interface -> createElements') 
             var par = $(parentId)
-            for(k in tab){
+            for(var k in tab){
                 var element = tab[k];
                 var type = tab[k][0];
                 var attrElem = tab[k][1];
@@ -600,7 +622,7 @@ var TP = TP || {};
                 switch(type){
                     case 0: // select
                         var div = $('<select>', attrElem).appendTo(parentId);
-                        for(opt in attrChild){
+                        for(var opt in attrChild){
                             $('<option/>',{value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(div)
                         }
 
@@ -610,7 +632,8 @@ var TP = TP || {};
                                 var key = this.id;
                                 var selectedOpt = $('#'+key)[0].options[$('#'+key)[0].selectedIndex];
                                 res[key] = {text:selectedOpt.text, val:selectedOpt.value}
-                                (e) ? e.call(res) : null;
+                                console.log(res)
+                                var c = e ? e.call(res) : null;
                             }
                         })(evnt));
                         break;
@@ -618,7 +641,7 @@ var TP = TP || {};
                     case 1: // radio
                         var form = $('<form>', attrElem).appendTo(parentId);
                         form.addClass('radio')
-                        for(opt in attrChild){
+                        for(var opt in attrChild){
                             var input = $('<input/>',attrChild[opt]).appendTo(form)
                             input.attr("type","radio")
                             $('<label/>',{text:attrChild[opt].text}).appendTo(form)
@@ -631,6 +654,7 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).val()}
+                                    console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
@@ -652,6 +676,7 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).val()}
+                                    console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
@@ -668,6 +693,7 @@ var TP = TP || {};
                                 var res = {};
                                 var key = this.id;
                                 res[key] = this.value;
+                                console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))                        
@@ -687,6 +713,7 @@ var TP = TP || {};
 
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2}
+                                console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))
@@ -701,6 +728,7 @@ var TP = TP || {};
                                
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2}
+                                console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))
@@ -720,16 +748,36 @@ var TP = TP || {};
                                 var res = {}
                                 key = this.id
                                 res[key] = $(this).spinner('value')
+                                console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))
                         break;
 
-                    case 7: //color picker
+                    case 6: //color picker
                         var div = $('<div/>', attrElem).appendTo(parentId)
                         //par.append(tab[k][4])
                         var f = $.farbtastic('#'+attrElem.id);
                         f.linkTo(tab[k][5].func);
+                        break;
+
+                    case 7: //autocomplete
+                        var div = $('<input/>',attrElem).appendTo(parentId)
+                        div.autocomplete(attrChild)
+                            .bind('focus', function(){$(this).autocomplete('search');});
+                        var res = {}, key;
+                        div.autocomplete({
+                            select: function (event, ui) {
+                                
+                                    key = this.id;
+                                    console.log(key)
+                                    res[key] = ui.item.value;
+                                    console.log(res, evnt);
+                                    var c = evnt ? evnt.call(res) : null;
+                            }
+                        })                   
+                        break;
+
                 }
                 par.append(labelSuiv + "<br/>")
             }
