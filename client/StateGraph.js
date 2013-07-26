@@ -94,7 +94,7 @@ var TP = TP || {};
                     delete hashMapSavedStates[node.name];
                 }
                 else
-                    hashMapStates[node.name] = {name: node.name, root: {}, bindings: {}, func: null, activate: true, useless: false};
+                    hashMapStates[node.name] = {name: node.name, root: {}, bindings: {}, activate: true, useless: false};
             }
             
             if(useless != null)
@@ -116,7 +116,7 @@ var TP = TP || {};
                         if (hashMapStates[tmp[key]] == null) {
                                     
                             if(hashMapSavedStates[tmp[key]] == null)
-                                hashMapSavedStates[tmp[key]] = {name: tmp[key], root: {}, bindings: {}, func: null, activate: true, useless: false};
+                                hashMapSavedStates[tmp[key]] = {name: tmp[key], root: {}, bindings: {}, activate: true, useless: false};
                                         
                             stateTmp = hashMapSavedStates[tmp[key]];
                             inGraph = false;
