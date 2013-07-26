@@ -56,9 +56,9 @@ var TP = TP || {};
         __g__.addEventState = function (name, func, parametersState) {            
 
             var hasState = false;
-            var bindings = null;
-            var fromAll = null;
-            var useless = null;
+            var bindings = ["all"];
+            var fromAll = true;
+            var useless = false;
             var activate = true;
             
             if(parametersState != null)
@@ -109,9 +109,9 @@ var TP = TP || {};
         __g__.addState = function(nameState, parametersState)
         {
             
-            var bindings = null;
-            var fromAll = null;
-            var useless = null;
+            var bindings = ["all"];
+            var fromAll = true;
+            var useless = false;
             var activate = true;
             
             if(parametersState != null)
@@ -301,8 +301,7 @@ var TP = TP || {};
                 
             }
             else if(canContinue === -1){
-                assert(false, "message can't pass => state is associated with an other state but function 'addState' has'nt been called for it");
-                return;
+                assert(false, "warning : state is associated with an other state but function 'addState' hasn't been called for it");
             }
             //else
             //{
