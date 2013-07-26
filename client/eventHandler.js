@@ -45,7 +45,7 @@ var TP = TP || {};
         {
 
             if (elem == null || type == null || fn == null) {
-                assert(false, "warning !!! parameters aren't completed or there are problems with its");
+                assert(false, "warning !!! parameters aren't completed or there are problems with its (function eventHandler.addEvent)");
                 console.log("elem= ", elem, " type=",type, " fn=",fn);
                 return;
             }
@@ -84,13 +84,13 @@ var TP = TP || {};
                     data.handlers[type] = fn;
                 }
                 else{
-                    assert(false, "there is no function or fn parametter isn't a function type")
+                    assert(false, "there is no function or fn parametter isn't a function type (function eventHandler.addEvent)")
                     return false;
                 }
             }
             else {
                 //assert(false, "a reference to similar function already exist")
-                assert(false, "Event already exist")
+                assert(false, "Event already exist (function eventHandler.addEvent)")
                 return false;
             }
 
@@ -164,7 +164,7 @@ var TP = TP || {};
             }
             else
             {
-                assert(false, "warning : there is no event named : "+type)
+                assert(false, "warning : there is no event named : "+type+" (function eventHandler.deleteEvent)")
             }
 
             if (isEmpty(data.handlers)) {

@@ -44,7 +44,7 @@ var TP = TP || {};
                 __g__.dataTreatment[typeView][typeEvent] = func;
             }
             else
-                assert(false, "An association between typeView and typeEvent already exist !!")
+                assert(false, "An association between typeView and typeEvent already exist !! (function addTreatmentFunc)")
         }
         
         
@@ -59,7 +59,7 @@ var TP = TP || {};
                 __g__.tabAssociation[typeEvent] = func;
             }
             else
-                assert(false, "typeEvent already exist !!")
+                assert(false, "typeEvent already exist !! (function addUpdateFunc)")
         }
         
         
@@ -74,7 +74,7 @@ var TP = TP || {};
                 }
             }
             else
-                assert(false, "the association does'nt exist !!")
+                assert(false, "the association does'nt exist !! (function deleteTreatmentFunc)")
         }
         
         
@@ -86,7 +86,7 @@ var TP = TP || {};
                 delete __g__.tabAssociation[typeEvent];
             }
             else
-                assert(false, "the association does'nt exist !!")
+                assert(false, "the association does'nt exist !! (function deleteUpdateFunc)")
         }
         
         
@@ -104,11 +104,11 @@ var TP = TP || {};
                 }
             }
             else
-                assert(false, "the association does'nt exist !!")
+                assert(false, "the association does'nt exist !! (function goBackTreatmentFunc)")
         }
         
         
-        __g__.goBackUpdateFunc= function(typeView, typeEvent){
+        __g__.goBackUpdateFunc= function(typeView){
             
             if(__g__.tabAssociationSave[typeView] != null)
             {
@@ -116,7 +116,7 @@ var TP = TP || {};
                 delete __g__.tabAssociationSave[typeView];
             }
             else
-                assert(false, "the association does'nt exist !!")
+                assert(false, "the association does'nt exist !! (function goBackUpdateFunc)")
         }
         
         
@@ -189,10 +189,10 @@ var TP = TP || {};
                     __g__.tabAssociation[event.associatedData.type].call(null, event)
                 }
                 else
-                    assert(false, "warning : update function for "+event.associatedData.type+" does not exist !!" );
+                    assert(false, "warning : update function for "+event.associatedData.type+" does not exist !! (function treatUpdateEvent)" );
             }
             else
-                assert(false, "warning : process treatUpdateEvent problem");
+                assert(false, "warning : process treatUpdateEvent problem  (function treatUpdateEvent)");
 
         }
         
@@ -206,10 +206,10 @@ var TP = TP || {};
                     __g__.dataTreatment[typeView][event.associatedData.type].call(null, event);
                 }
                 else
-                    assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !!" );
+                    assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !! (function dataTreat)" );
             }
             else
-                assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !!" );
+                assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !! (function dataTreat)" );
         }
 
 

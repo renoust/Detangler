@@ -43,29 +43,29 @@ var TP = TP || {};
             
             if((fromAll != null) && (fromAll != true) &&  (fromAll != false))
             {
-                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                assert(false, "problem with 'fromAll' parameter : bad value !!! (function StateGraph.addState)")
                 return;
             }
             if((useless != null) && (useless != true) &&  (useless != false))
             {
-                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                assert(false, "problem with 'fromAll' parameter : bad value !!! (function StateGraph.addState)")
                 return;
             }
             if((activate != null) && (activate != true) &&  (activate != false))
             {
-                assert(false, "problem with 'fromAll' parameter : bad value !!!")
+                assert(false, "problem with 'fromAll' parameter : bad value !!! (function StateGraph.addState)")
                 return;
             }
             
             
             if (node == null || node.name == null) {
-                assert(false, "State are no name or there is node object default")
+                assert(false, "State are no name or there is node object default (function StateGraph.addState)")
                 return;
             }
             
             if (hashMapStates[node.name] != null)
             {
-                assert(false, "state isn't added because it already exist !!!")
+                assert(false, "state isn't added because it already exist !!! (function StateGraph.addState)")
                 return;
             }
 
@@ -78,12 +78,12 @@ var TP = TP || {};
             if(tmp != null){
                 if(typeof(tmp) === "object"){
                     if (Object.getPrototypeOf(tmp) != Object.getPrototypeOf([])) {
-                        assert(false, "'node.bindings' must be an array");
+                        assert(false, "'node.bindings' must be an array (function StateGraph.addState)");
                         return false;
                     }                    
                 }
                 else{
-                    assert(false, "'node.bindings' must be an array");
+                    assert(false, "'node.bindings' must be an array (function StateGraph.addState)");
                     return false;
                 }
             }
@@ -212,7 +212,7 @@ var TP = TP || {};
                 delete tmp;
             }
             else{
-                assert(false, "warning : state : "+name+" does'nt exist !!!")
+                assert(false, "warning : state : "+name+" does'nt exist !!! (function StateGraph.deleteState)")
                 return;
             }
         }
@@ -221,7 +221,7 @@ var TP = TP || {};
         {
             if((value != true) && (value != false))
             {
-                assert(false, "bad value !!!");
+                assert(false, "bad value !!! (function StateGraph.setUseless)");
                 return -1;
             }
              
@@ -231,7 +231,7 @@ var TP = TP || {};
             }
             else
             {
-                assert(false, "state doesn't exist !!!")
+                assert(false, "state doesn't exist !!! (function StateGraph.setUseless)")
                 return -1;
             }
         }
@@ -270,7 +270,7 @@ var TP = TP || {};
                 }
             }
             else{
-                assert(false, "state : "+nameState+" doesn't exist !!!")
+                assert(false, "state : "+nameState+" doesn't exist !!! (function StateGraph.setFromAll)")
                 return;
             }
         }
@@ -311,19 +311,19 @@ var TP = TP || {};
                    if(stateSourceTmp.bindings["all"] == null)                   
                         stateSourceTmp.bindings[stateDest] = true;
                    else
-                        assert(false, "warning : state "+stateSource+" is bind to 'all'");
+                        assert(false, "warning : state "+stateSource+" is bind to 'all' (function StateGraph.addBinding)");
                    
                    if(stateDestTmp.root["all"] == null)     
                         stateDestTmp.root[stateSource] = true;
                    else
-                        assert(false, "warning : state's root of "+stateDest+" is bind to 'all'");
+                        assert(false, "warning : state's root of "+stateDest+" is bind to 'all' (function StateGraph.addBinding)");
                         
                }
-               assert(true, "links correctly added");
+               assert(true, "links correctly added (function StateGraph.addBinding)");
             }
             else
             {
-                assert(false, "one of the state don't exist")
+                assert(false, "one of the state don't exist (function StateGraph.addBinding)")
                 return;
             }
             
