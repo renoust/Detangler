@@ -260,19 +260,28 @@ var TP = TP || {};
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
                 TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
+                // $('.ui-dialog-titlebar').each(function () {
+                //     $(this).removeClass('active')
+                //     // $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
+                // })
+                // __g__.titlebar.addClass('active')
+                // __g__.titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
+            });
+
+            __g__.dialog.parent().mousedown(function(){
                 $('.ui-dialog-titlebar').each(function () {
                     $(this).removeClass('active')
                     // $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
                 })
                 __g__.titlebar.addClass('active')
-                // __g__.titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
-            });
 
+            })
             $("#zone" + __g__.ID).parent().appendTo("#container")
 
             $('#zone' + __g__.ID).parent().find('.ui-dialog-titlebar-close').click(function(){
                 $('#zone' + __g__.ID).remove();
             })
+
 
         }
 
