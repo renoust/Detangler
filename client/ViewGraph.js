@@ -190,11 +190,38 @@ var TP = TP || {};
 
             /****   en-tête du dialog   ****/
 
-
+            var dialog = $("[id=zone" + __g__.ID + "]");
             /*$("<button/>", {text:"-"}).appendTo(titlebar).button().click(function() {dialog.toggle();});        */
-            $("<button/>", {id: "toggle" + __g__.ID, text: "Move", style: 'right:15px'}).appendTo(__g__.titlebar);
+            //$("<button/>", {id: "toggle" + __g__.ID, text: "Move", style: 'right:15px'}).appendTo(__g__.titlebar);
+            var toggle = $("<select/>", {id: "toggle" + __g__.ID}).appendTo(__g__.titlebar);
+            toggle.append("<option>Select</option>");
+            toggle.append("<option>Move</option>");
 
-            var minWidth = __g__.dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
+            //check conflict when mouseover during a drag.
+            var down = false;
+            $(document).mousedown(function(){
+                down = true;
+            });
+            $(document).mouseup(function(){
+                down = false;
+            });
+            toggle.mouseover(function(){
+                if(!down){
+                    dialog.dialog('option', 'draggable', false);
+                }
+            })
+            
+            
+            toggle.mouseout(function(){
+                dialog.dialog('option', 'draggable', true);
+            })
+            toggle.change(function(){
+                var interact = document.getElementById("toggle" + __g__.ID).options[document.getElementById("toggle" + __g__.ID).selectedIndex].text;
+                __g__.controller.sendMessage(interact)
+                console.log(choice)
+            })
+
+            /*var minWidth = __g__.dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
             __g__.dialog.parents('.ui-dialog').find('.ui-button').each(function () {
                 minWidth += $(this).width()
             })
@@ -212,7 +239,7 @@ var TP = TP || {};
                 }
                 //TP.Context().stateStack[ID].executeCurrentState();
                 //TP.ObjectReferences().InterfaceObject.toggleSelectMove(__g__.ID);
-            });
+            });*/
 
 
             $('#toggle' + __g__.ID).attr("idView", __g__.ID);

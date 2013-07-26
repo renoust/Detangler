@@ -79,9 +79,13 @@ var TP = TP || {};
                     values: [ 3, 12 ],
                 },"b","a"]
             ];*/
-
+        var path = $('#files').val().split('\\');
+        var name = path[path.length - 1].split('.')[0];
+        if(name){
+            name = name + ' - ';
+        }
         var _viewGraphCatalystParameters = {
-            name:name + " - catalyst", 
+            name:name + " catalyst", 
             nodeColor:"#4682b4", 
             linkColor:"#808080", 
             backgroundColor:"#FFFFFF", 

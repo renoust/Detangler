@@ -104,21 +104,38 @@ body{
 /********************************** View *************************************/
 /*****************************************************************************/
 .ui-dialog{
-	padding: 1px;
+	/*padding: 1px;*/
+	/*test*/
+	padding: 0px;
+	/*test*/
 	/*font-size: 0.8em;*/
 }
 
 .ui-dialog .ui-dialog-titlebar {
-	padding: 2px 10px ;
+	/*test*/
+	padding: 5 30 5 10;
+	background: #C0C0C0;
+	border:none;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	height: 20px;
+	/*test*/
+	/*padding: 2px 10px ;*/
 }
 
 .ui-dialog .ui-dialog-titlebar.active{
-	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
+	background: #707070;
+	/*background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x*/
 }
 
 .ui-dialog-titlebar .ui-dialog-title {
-	width: auto ;
-	font-size: 12px;
+	/*test*/
+	width: 60%;
+	font-size: 15px;
+	color: #E9E9E9;
+	/*test*/
+	/*width: auto ;
+	font-size: 12px;*/
 }
 
 .ui-dialog .ui-dialog-titlebar button{
@@ -130,6 +147,13 @@ body{
 .ui-dialog .ui-dialog-content{
 	padding:2px;
 }
+
+.ui-dialog  select{
+				float: right;
+				top: 17%;
+				font-size: 13px;
+				margin: 0px;
+			}
 
 
 

@@ -28,8 +28,9 @@ var TulipPosy = function (originalJSON) {
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
-    if(originalJSON == null)
+    if (!originalJSON){
         TP.Context().InterfaceObject.setHeaderMenu();
+    }
 
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
@@ -37,10 +38,13 @@ var TulipPosy = function (originalJSON) {
     //          1:radio     4:slider
     //          2:checkbox  5:spinner
     
+    if(name){
+        name = name + ' - ';
+    }
     var viewGraphSubstrate = new TP.ViewGraphSubstrate({
         //id:viewIndex, 
         //interactorList:array1, 
-        name:name + " - substrate", 
+        name:name + "substrate", 
         nodeColor:"#a0522d", 
         linkColor:"#808080", 
         backgroundColor:"#FFFFFF", 
