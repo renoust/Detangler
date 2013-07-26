@@ -108,7 +108,7 @@ var TP = TP || {};
         }
         
         
-        __g__.goBackUpdateFunc= function(typeView, typeEvent){
+        __g__.goBackUpdateFunc= function(typeView){
             
             if(__g__.tabAssociationSave[typeView] != null)
             {
