@@ -28,7 +28,8 @@ var TulipPosy = function (originalJSON) {
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
-    TP.Context().InterfaceObject.setHeaderMenu();
+    if(originalJSON == null)
+        TP.Context().InterfaceObject.setHeaderMenu();
 
 
     // parameter: [type, {attrs}, {attrs_child}, labelprec, labelsuiv]
