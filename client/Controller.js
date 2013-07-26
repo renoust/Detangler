@@ -49,7 +49,7 @@ var TP = TP || {};
             else if (typeC == "principal")
                 TP.Context().initStates();
             else
-                assert(false, "type of controller isn't supported");
+                assert(false, "type of controller isn't supported (function addStates)");
         }
         
 
@@ -88,18 +88,18 @@ var TP = TP || {};
                 success = __g__.addEvent(name, func);
 
                 if(success === false){
-                    assert(false, "warning : event isn't added because event already exist in eventHandler since an other insertion or event can't be created")
+                    assert(false, "warning : event isn't added because event already exist in eventHandler since an other insertion or event can't be created (function addEventState)")
                 }
                 
                 if(hasState === true){
                     sGraph.addState({name:name, bindings:bindings}, fromAll, useless, activate);
                 }
                 else
-                    assert(true, "you asked to don't have state creating");
+                    assert(true, "you asked to don't have state creating (function addEventState)");
 
             }
             else{
-                assert(false, "sGraph or/and controller isn't defined or correctly initialised !!")
+                assert(false, "sGraph or/and controller isn't defined or correctly initialised !! (function addEventState)")
                 return;
             }
             
@@ -235,7 +235,7 @@ var TP = TP || {};
             if(State != null)
                 return State.bindings["all"] !== undefined;
             else{
-                assert(false, "there is no State named : "+nameState);
+                assert(false, "there is no State named : "+nameState+" (function isBindingToAll)");
                 return;
             }
         }
@@ -259,7 +259,7 @@ var TP = TP || {};
         __g__.sendMessage = function (messageName, data, idViewDestination, idViewSource){
 
             if (idViewSource != null && idViewDestination == null) {
-                assert(false, "error !!!! idViewSource is specified, but not idViewDestination");
+                assert(false, "error !!!! idViewSource is specified, but not idViewDestination (function sendMessage)");
                 return;
             }
             
@@ -281,7 +281,7 @@ var TP = TP || {};
             //if no message are available, we don't send message            
             if(tmpController.eventIsAvailable(messageName) === false)
             {
-                assert(false, "no event are available for this message. Even if state is present (or not), message will be not sent !!!");
+                assert(false, "no event are available for this message. Even if state is present (or not), message will be not sent !!! (function sendMessage)");
                 return -1;
             }         
             
@@ -293,7 +293,7 @@ var TP = TP || {};
                 
                 if (access === false) {
                     console.log("currentState : "+currentState)
-                    assert(false, "access denied : " + messageName);
+                    assert(false, "access denied : " + messageName + " (function sendMessage)");
                     return;
                 }
                 
@@ -301,7 +301,7 @@ var TP = TP || {};
                 
             }
             else if(canContinue === -1){
-                assert(false, "warning : state is associated with an other state but function 'addState' hasn't been called for it");
+                assert(false, "warning : state is associated with an other state but function 'addState' hasn't been called for it (function sendMessage)");
             }
             //else
             //{
