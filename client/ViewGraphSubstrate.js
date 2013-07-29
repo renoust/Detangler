@@ -27,12 +27,21 @@ var TP = TP || {};
             [3,{id:"selectedAlgo"}]
         ];
 
-        var tulipLayout = ["3-Connected (Tutte)", "Balloon (OGDF)", "Bubble Tree", "Circular", "Circular (OGDF)", "Cone Tree", "Connected Component Packing", "Connected Component Packing (Polyomino)", "Davidson Harel (OGDF)", "Dendrogram", "Dominance (OGDF)", "FM^3 (OGDF)", "Fast Multipole Embedder (OGDF)", "Fast Multipole Multilevel Embedder (OGDF)", "Fast Overlap Removal", "Frutcherman Reingold (OGDF)", "GEM (Frick)", "GEM Frick (OGDF)", "GRIP", "Hierarchical Graph", "Hierarchical Tree (R-T Extended)", "Improved Walker", "Improved Walker (OGDF)", "Kamada Kawai (OGDF)", "LinLog", "MMM Example Fast Layout (OGDF)", "MMM Example Nice Layout (OGDF)", "MMM Example No Twist Layout (OGDF)", "Mixed Model", "Perfect aspect ratio", "Planarization Grid (OGDF)", "Random layout", "Squarified Tree Map", "Stress Majorization (OGDF)", "Sugiyama (OGDF)", "Tree Leaf", "Tree Radial", "Upward Planarization (OGDF)", "Visibility (OGDF)"]
+        //var tulipLayout = ["3-Connected (Tutte)", "Balloon (OGDF)", "Bubble Tree", "Circular", "Circular (OGDF)", "Cone Tree", "Connected Component Packing", "Connected Component Packing (Polyomino)", "Davidson Harel (OGDF)", "Dendrogram", "Dominance (OGDF)", "FM^3 (OGDF)", "Fast Multipole Embedder (OGDF)", "Fast Multipole Multilevel Embedder (OGDF)", "Fast Overlap Removal", "Frutcherman Reingold (OGDF)", "GEM (Frick)", "GEM Frick (OGDF)", "GRIP", "Hierarchical Graph", "Hierarchical Tree (R-T Extended)", "Improved Walker", "Improved Walker (OGDF)", "Kamada Kawai (OGDF)", "LinLog", "MMM Example Fast Layout (OGDF)", "MMM Example Nice Layout (OGDF)", "MMM Example No Twist Layout (OGDF)", "Mixed Model", "Perfect aspect ratio", "Planarization Grid (OGDF)", "Random layout", "Squarified Tree Map", "Stress Majorization (OGDF)", "Sugiyama (OGDF)", "Tree Leaf", "Tree Radial", "Upward Planarization (OGDF)", "Visibility (OGDF)"]
         var tl2 = [
             [7,{id:"algoTulip"},
                 {
-                    source:tulipLayout,
-                    minLength: 0,
+                    source: function(searchStr, sourceCallback){
+                        var algorithmList = []
+                        for (var algo in TP.Context().tulipLayoutAlgorithms)
+                        {
+                           var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
+                           var isAlgo = patt.test(algo);
+                           if (isAlgo) algorithmList.push(algo);
+                        }
+                        sourceCallback(algorithmList);
+                    },
+                    minLength: 0
                 }]]
     
         var colorSettings = [
@@ -106,14 +115,16 @@ var TP = TP || {};
             {interactorLabel:'MDS layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'MDS', idView: __g__.getID()})
             }}, interactorGroup:"Layout"},
-            {interactorLabel:'Tulip layout algorithm', interactorParameters:tl, callbackBehavior:{call: function (layout) {
+            /*{interactorLabel:'Tulip layout algorithm', interactorParameters:tl, callbackBehavior:{call: function (layout) {
                 __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
             }}, interactorGroup:"Layout"},
             {interactorLabel:'Tulip layout list',interactorParameters:'',callbackBehavior:{click:function(){
                 __g__.getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms}, 'principal')
-            }}, interactorGroup:"Layout"},
-            {interactorLabel:'Tulip layout algorithm 2',interactorParameters:tl2,callbackBehavior:{call:function(layout){
-                __g__.getController().sendMessage('changeLayout', {layoutName:layout.algoTulip, idView: TP.Context().activeView})
+            }}, interactorGroup:"Layout"},*/
+            {interactorLabel:'Tulip layout algorithm',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(layout){
+                    __g__.getController().sendMessage('changeLayout', {layoutName:layout.algoTulip, idView: TP.Context().activeView})
             }}, interactorGroup:"Layout"},
 
             {interactorLabel:'Induced subgraph', interactorParameters: '', callbackBehavior: {click: function () {

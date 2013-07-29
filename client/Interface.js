@@ -608,10 +608,19 @@ var TP = TP || {};
             // assert(true, 'Interface -> createElements') 
             var par = $(parentId)
             for(var k in tab){
+                /*if (typeof (tab[k]) == "function")
+                    tab[k] = tab[k].call()
+
+                for(var l in tab) {
+                    if (typeof (tab[k][l]) == "function")
+                        tab[k][l] = tab[k][l].call()
+                }*/
+
                 var element = tab[k];
                 var type = tab[k][0];
                 var attrElem = tab[k][1];
                 var attrChild = tab[k][2];
+
                 var labelPrec = (tab[k][3]!= null && tab[k][3]!=undefined) ? tab[k][3] : "";
                 var labelSuiv = (tab[k][4]!= null && tab[k][4]!=undefined) ? tab[k][4] : "";
 
@@ -764,15 +773,19 @@ var TP = TP || {};
                     case 7: //autocomplete
                         var div = $('<input/>',attrElem).appendTo(parentId)
                         div.autocomplete(attrChild)
-                            .bind('focus', function(){$(this).autocomplete('search');});
+                            .bind('focus', function(){
+                                if(attrChild.focusCallback)
+                                    attrChild.source = attrChild.focusCallback()
+                                $(this).autocomplete('search');
+                            });
                         var res = {}, key;
                         div.autocomplete({
                             select: function (event, ui) {
                                 
                                     key = this.id;
-                                    console.log(key)
+                                    //console.log(key)
                                     res[key] = ui.item.value;
-                                    console.log(res, evnt);
+                                    //console.log(res, evnt);
                                     var c = evnt ? evnt.call(res) : null;
                             }
                         })                   
@@ -801,7 +814,8 @@ var TP = TP || {};
                     $(button).click(evnt.click);
                 } else {
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);
-                    $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam)
+                    if (evnt && evnt.click) $(button).click(evnt.click);
                     var form = $('<div/>', {class: 'formParam'}).appendTo(fam)
                     this.createElements(param,form, evnt)
                     /*if(evnt){
