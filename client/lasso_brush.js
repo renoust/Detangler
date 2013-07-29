@@ -125,7 +125,7 @@ d3.custom.Lasso = function module(){
             .on('mousemove.dragLasso', function(d, i){
                 if(!isPressedOnLasso) return;
                 var mousePos = d3.mouse(svg.node());
-                var bbox = d3.select('.lasso').node().getBBox();
+                var bbox = svg.select('.lasso').node().getBBox();
                 var newPosX = mousePos[0] - bbox.x + mouseOffsetX;
                 var newPosY = mousePos[1] - bbox.y + mouseOffsetY;
                 lassoGroup.attr({
