@@ -318,8 +318,8 @@ var TP = TP || {};
                parameters: params,
                success: function (data) {
                    //TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
-                   assert(true, "Grabbed algorithms:")
-                    console.log(data)
+                   //assert(true, "Grabbed algorithms:")
+                   // console.log(data)
                     endHandler.call(TP.Context(), data)
                 }
             });

@@ -48,7 +48,7 @@ var TP = TP || {};
         //following a Brewer's scale (www.colorbrewer2.org).
         this.entanglementCaught = function (CurrentViewID, nothing) {
 
-            console.log("entering 'entanglement caught function'")
+            //console.log("entering 'entanglement caught function'")
 
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
             var target_source = CurrentViewID;
@@ -88,11 +88,11 @@ var TP = TP || {};
 
             Object.keys(TP.Context().view).forEach(function(k)
             {
-                console.log("view: ",k, TP.Context().view[k].getType(), TP.Context().view[k].getType() in ["substrate", "catalyst"])
+                //console.log("view: ",k, TP.Context().view[k].getType(), TP.Context().view[k].getType() in ["substrate", "catalyst"])
 
                 if (TP.Context().view[k].getType() in {"substrate":0, "catalyst":0})
                 {
-                    console.log("svg found: ", TP.Context().view[k].getSvg())
+                    //console.log("svg found: ", TP.Context().view[k].getSvg())
                     TP.Context().view[k].getSvg()
                         .selectAll(".lasso")
                             .style('fill',brewerSeq[indexI])

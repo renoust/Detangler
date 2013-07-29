@@ -340,7 +340,7 @@ var TP = TP || {};
         this.syncGraphRequestFromData = function (data, selection, graphName) {
 
 
-            console.log("within syncGraphRequestFromData")
+            //console.log("within syncGraphRequestFromData")
 
             var graph = null
             var svg = null
@@ -377,7 +377,7 @@ var TP = TP || {};
 
                 //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
                 //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-                console.log("should be entering 'entanglement caught'");
+                //console.log("should be entering 'entanglement caught'");
                 objectReferences.VisualizationObject.entanglementCaught(graphName);
 
             }
