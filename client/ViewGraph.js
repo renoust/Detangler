@@ -214,6 +214,10 @@ var TP = TP || {};
             
             toggle.mouseout(function(){
                 dialog.dialog('option', 'draggable', true);
+                dialog.parent().draggable({
+                    containment: "#container",
+                    opacity: 0.70
+                });
             })
             toggle.change(function(){
                 var interact = document.getElementById("toggle" + __g__.ID).options[document.getElementById("toggle" + __g__.ID).selectedIndex].text;
