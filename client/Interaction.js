@@ -1067,28 +1067,30 @@ var TP = TP || {};
         }
 
 
-        this.delSelection = function (target) {
+        this.delSelection = function (currentViewID) {
 
-            //assert("")
+            var currentView = TP.Context().view[currentViewID]
+            var svg = currentView.getSvg();
+            var graph = currentView.getGraph();
 
-            svg = TP.Context().view[target].getSvg(); //before, it was only svg_substrate
-            graph = TP.Context().view[target].getGraph();
+            var newLinks = [];
+            var newNodes = [];
 
-            newLinks = []
-            newNodes = []
+            //console.log("the current view selection: ", currentView.getSourceSelection())
+
             graph.links().forEach(function (d) {
-                if (!(TP.Context().syncNodes.indexOf(d.source.baseID) != -1 || TP.Context().syncNodes.indexOf(d.target.baseID) != -1)) {
+                if (!(currentView.getSourceSelection().indexOf(d.source.baseID) != -1 || currentView.getSourceSelection().indexOf(d.target.baseID) != -1)) {
                     newLinks.push(d);
                 }
             })
 
             graph.nodes().forEach(function (d) {
-                if (!(TP.Context().syncNodes.indexOf(d.baseID) != -1)) {
+                if (!(currentView.getSourceSelection().indexOf(d.baseID) != -1)) {
                     newNodes.push(d);
                 }
             })
 
-            var typeGraph = TP.Context().view[target].getType();
+            var typeGraph = currentView.getType();
 
             graph.nodes(newNodes, typeGraph);
             graph.links(newLinks, typeGraph);
@@ -1103,6 +1105,8 @@ var TP = TP || {};
             svg.selectAll("g.link").data(graph.links(),function (d) {
                 return d.baseID
             }).exit().remove();
+
+            //TODO: delete also in server (!)
 
             //svg.selectAll("g.node").data(graph.nodes())
             //  .attr("visibility", function(d){if(TP.Context().syncNodes.indexOf(d.baseID) != -1){return "hidden"}else{return "visible"}})
