@@ -271,7 +271,7 @@ var TP = TP || {};
         }
 
 
-        this.applyFloatAlgorithmFromData = function (data, graphName, attributeName) {
+        this.applyFloatAlgorithmFromData = function (data, graphName, attributeName, unsetViewMetric) {
 
             if (!attributeName)
                 attributeName = "viewMetric"
@@ -286,6 +286,16 @@ var TP = TP || {};
             ], true);
             //assert(true, "again");
 
+            if (!unsetViewMetric)
+            {
+                TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [
+                    {'in': "viewMetric", 'out': "viewMetric"}
+                ], true);
+                //assert(true, "there");
+                TP.Context().view[graphName].getGraph().updateLinks(data.links, [
+                    {'in': "viewMetric", 'out': "viewMetric"}
+                ], true);
+            }
 
             //data.nodes.forEach(function(d){console.log(d)});
             //TP.Context().getViewGraph(graphName).nodes().forEach(function(d){console.log(d)});
@@ -333,7 +343,7 @@ var TP = TP || {};
 
             //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-            objectReferences.VisualizationObject.entanglementCaught(graphName);
+            //objectReferences.VisualizationObject.entanglementCaught(graphName);
         }
 
 

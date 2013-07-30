@@ -428,7 +428,7 @@ var TP = TP || {};
                 parameters: JSON.stringify(floatParams)
             }
             floatAlgorithmName, idView
-            TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params: params}, "principal");
+            TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params: params, floatAlgorithmName:floatAlgorithmName}, "principal");
 
         }
 
@@ -437,12 +437,13 @@ var TP = TP || {};
 
             var source = _event.associatedData.source;
             var params = _event.associatedData.params;
+            var floatAlgorithmName = _event.associatedData.floatAlgorithmName;
 
             __g__.sendQuery({
                 parameters: params,
                 success: function (data) {
 
-                    TP.Context().getController().sendMessage("AnswerFloatAlgorithm", {data: data}, source);
+                    TP.Context().getController().sendMessage("AnswerFloatAlgorithm", {data: data, floatAlgorithmName: floatAlgorithmName}, source);
 
                 }
             });
@@ -453,8 +454,9 @@ var TP = TP || {};
         this.AnswerFloatAlgorithm = function (_event) {
             var idView = _event.associatedData.target;
             var data = _event.associatedData.data;
+            var floatAlgorithmName = _event.associatedData.floatAlgorithmName;
 
-            objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView);
+            objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView, floatAlgorithmName);
         }
 
 
