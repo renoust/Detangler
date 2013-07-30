@@ -45,7 +45,7 @@ var TP = TP || {};
         parameters.interactorList = interactors;
         __g__ = new TP.ViewTemplate(parameters);
 
-        __g__.scatterProperties = {x:'x', y:'y', size:'size'};
+        __g__.scatterProperties = {x:'x', y:'y', size:'viewMetric'};
         __g__.yProperty = 'y';
 
         __g__.addView = function () {
@@ -115,6 +115,10 @@ var TP = TP || {};
         {
 
             __g__.scatterProperties[viewAxis] = nodeProperty;
+
+            __g__.chart.xAxis.axisLabel(__g__.scatterProperties.x);
+            __g__.chart.yAxis.axisLabel(__g__.scatterProperties.y);
+
 
             d3.select("#zone" + __g__.ID + " svg")
                 .datum((function(graph){
@@ -191,8 +195,13 @@ var TP = TP || {};
                 
                   myView.chart.xAxis.tickFormat(d3.format('.02f'));
                   myView.chart.yAxis.tickFormat(d3.format('.02f'));
-                                  
-                  d3.select("#zone" + id + " svg")
+
+                  myView.chart.xAxis.axisLabel(myView.scatterProperties.x);
+                  myView.chart.yAxis.axisLabel(myView.scatterProperties.y);
+
+
+
+                d3.select("#zone" + id + " svg")
                       .datum((function(graph){
                           var values = []
                           graph.nodes().forEach(
