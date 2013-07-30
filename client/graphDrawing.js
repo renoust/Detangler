@@ -930,15 +930,15 @@ var TP = TP || {};
 
             //linear
 
-            var factor = scaleMin
             var equalScales = false
             if (valMax == valMin || valMax - valMin < 0.0001) {
                 equalScales = true
                 scaleMin = 5
-            } else {
-                factor = (scaleMax - scaleMin) / (valMax - valMin)
             }
 
+            var dom = [valMin, valMax]
+            var range = [scaleMin, scaleMax]
+            var scale = d3.scale.linear().domain(dom).range(range)
 
             // assign the new data
             var node = g.svg.selectAll("g.node")
@@ -963,11 +963,11 @@ var TP = TP || {};
 
             node.select("circle.node")
                 .attr("r", function (d) {
-                    r = eval("d." + parameter + "*factor+scaleMin");
+                    r = scale(d[parameter])//eval("d." + parameter + "*factor+scaleMin");
                     //r = d[parameter] * factor + scaleMin
-                    if (!r || equalScales) {
-                        r = scaleMin;
-                    }
+                    //if (!r || equalScales) {
+                    //    r = scaleMin;
+                    //}
                     return r;
                 })
                 .style("stroke-width", function (d) {
@@ -975,24 +975,25 @@ var TP = TP || {};
                 })
                 .style("stroke", "brown")
 
+
             node.select("rect.node")
-                .attr("width", function (d) {
-                    r = eval("d." + parameter + "*factor+scaleMin");
+                //.attr("width", function (d) {
+                //    r = scale(d[parameter])//eval("d." + parameter + "*factor+scaleMin");
                     //r = d[parameter] * factor + scaleMin
-                    if (!r || equalScales) {
-                        r = scaleMin;
-                    }
-                    return 2 * r;
-                })
-                .attr("height", function (d) {
-                    r = eval("d." + parameter + "*factor+scaleMin");
+                    //if (!r || equalScales) {
+                    //    r = scaleMin;
+                    //}
+                //    return 2 * r;
+                //})
+                //.attr("height", function (d) {
+                //    r = scale(d[parameter])//eval("d." + parameter + "*factor+scaleMin");
                     //r = d[parameter] * factor + scaleMin
 
-                    if (!r || equalScales) {
-                        r = scaleMin;
-                    }
-                    return 2 * r;
-                })
+                    //if (!r || equalScales) {
+                    //    r = scaleMin;
+                    //}
+                //    return 2 * r;
+                //})
                 .style("stroke-width", function (d) {
                     return 2;
                 })
@@ -1138,7 +1139,7 @@ var TP = TP || {};
                             [bbox.x + bbox.width + margin, bbox.y - margin],
                             [bbox.x - margin, bbox.y + bbox.height + margin],
                             [bbox.x + bbox.width + margin, bbox.y + bbox.height
-                                + margin],
+                                + margin]
                         ];
 
                         noChange = false;
@@ -1156,7 +1157,7 @@ var TP = TP || {};
                                     [bbox2.x - margin, bbox2.y + bbox2.height
                                         + margin],
                                     [bbox2.x + bbox2.width + margin, bbox2.y
-                                        + bbox2.height + margin],
+                                        + bbox2.height + margin]
                                 ];
 
                                 var end3 = polygon2.length;
