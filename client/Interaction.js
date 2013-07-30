@@ -204,6 +204,8 @@ var TP = TP || {};
             else
                 return;
 
+            //TODO: prevSelList is not managed anymore, should check it (no need to fire the server)
+
             if (selList.length == prevSelList.length) {
                 var i = 0;
                 var iMax = selList.length;

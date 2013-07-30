@@ -479,7 +479,7 @@ var TP = TP || {};
                 type: 'analyse',
                 graph: selection,
                 target: syncTarget,
-                operator: TP.Context().tabOperator["catalyst"],//contxt.catalyst_sync_operator,
+                operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
                 weight: contxt.substrateWeightProperty
             }
 
