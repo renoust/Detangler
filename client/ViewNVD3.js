@@ -34,11 +34,19 @@ var TP = TP || {};
                 //click:function(){console.log('click on the button');},
                 call:function(paramList){
                     __g__.getController().sendMessage('updateXAxis', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                }}, interactorGroup:"View"},
+            {interactorLabel:'Y-axis data',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    __g__.getController().sendMessage('updateYAxis', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                 }}, interactorGroup:"View"}
             ]
 
         parameters.interactorList = interactors;
         __g__ = new TP.ViewTemplate(parameters);
+
+        __g__.scatterProperties = {x:'x', y:'y', size:'size'};
+        __g__.yProperty = 'y';
 
         __g__.addView = function () {
 
@@ -91,16 +99,23 @@ var TP = TP || {};
             });
 
             __g__.controller.addEventState("updateXAxis", function(_event){
-                console.log("UPDATING X-AXIS DATA: ", _event);
-                __g__.updateXAxis(_event.associatedData.nodeProperty);
+                //console.log("UPDATING X-AXIS DATA: ", _event);
+                __g__.updateAxis(_event.associatedData.nodeProperty, "x");
+            });
+
+            __g__.controller.addEventState("updateYAxis", function(_event){
+                //console.log("UPDATING Y-AXIS DATA: ", _event);
+                __g__.updateAxis(_event.associatedData.nodeProperty, "y");
             });
 
             __g__.controller.setCurrentState(null);
 
         }
 
-        __g__.updateXAxis = function (nodeProperty)
+        __g__.updateAxis = function (nodeProperty, viewAxis)
         {
+
+            __g__.scatterProperties[viewAxis] = nodeProperty;
 
             d3.select("#zone" + __g__.ID + " svg")
                 .datum((function(graph){
@@ -108,13 +123,13 @@ var TP = TP || {};
                     graph.nodes().forEach(
                         function(d){
                             //return null;
-                            values.push(
-                                {
-                                    x:d[nodeProperty],
-                                    y:d.y,
-                                    size:d.size,
-                                    node:d
-                                })
+                            var scatterPoint = {};
+                            for (p in __g__.scatterProperties)
+                            {
+                                scatterPoint[p] = d[__g__.scatterProperties[p]]
+                            }
+                            scatterPoint['node'] = d;
+                            values.push(scatterPoint);
                         })
                     return [{key:'nodes', values:values}]
                 })(TP.Context().view[__g__.idSourceAssociatedView].getGraph()));
@@ -182,13 +197,15 @@ var TP = TP || {};
                           var values = []
                           graph.nodes().forEach(
                               function(d){
-                                  values.push(
-                                      {
-                                          x:d.x,
-                                          y:d.y,
-                                          size:d.size,
-                                          node:d
-                                      })
+
+                                  var scatterPoint = {};
+                                  for (p in myView.scatterProperties)
+                                  {
+                                      scatterPoint[p] = d[myView.scatterProperties[p]]
+                                  }
+                                  scatterPoint['node'] = d;
+                                  values.push(scatterPoint);
+
                               })
                           return [{key:'nodes', values:values}]
                       })(__g__.graph))
