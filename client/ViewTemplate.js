@@ -64,8 +64,20 @@ var TP = TP || {};
         TP.Context().view[__g__.ID] = __g__;
 
 
+        var highlightSelection = null;
+        var previousHighlightSelection = null;
         var sourceSelection = null;
+        var previousSourceSelection = null;
         var targetSelection = null;
+        var previousTargetSelection = null;
+
+        __g__.getHighlightSelection = function () {
+            return highlightSelection;
+        }
+
+        __g__.setHighlightSelection = function (_selection) {
+            highlightSelection = _selection;
+        }
 
         __g__.getSourceSelection = function () {
             return sourceSelection;
@@ -74,13 +86,35 @@ var TP = TP || {};
         __g__.setSourceSelection = function (_selection) {
             sourceSelection = _selection;
         }
-
         __g__.getTargetSelection = function () {
             return targetSelection;
         }
 
         __g__.setTargetSelection = function (_selection) {
             targetSelection = _selection;
+        }
+
+        __g__.getPreviousHighlightSelection = function () {
+            return previousHighlightSelection;
+        }
+
+        __g__.setPreviousHighlightSelection = function (_selection) {
+            previousHighlightSelection = _selection;
+        }
+
+        __g__.getPreviousSourceSelection = function () {
+            return previousSourceSelection;
+        }
+
+        __g__.setPreviousSourceSelection = function (_selection) {
+            previousSourceSelection = _selection;
+        }
+        __g__.getPreviousTargetSelection = function () {
+            return previousTargetSelection;
+        }
+
+        __g__.setPreviousTargetSelection = function (_selection) {
+            previousTargetSelection = _selection;
         }
 
         __g__.interactorListTreatment = function () {

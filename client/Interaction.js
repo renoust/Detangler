@@ -189,14 +189,14 @@ var TP = TP || {};
                 return
 
             var selList = null;
-            var target = null;
+            var currentViewID = null;
             var prevSelList = null;
 
             if (typeof object.associatedData == "object") {
                 if (!object.associatedData.source || !object.associatedData.selList)
                     return;
                 else {
-                    target = object.associatedData.source;
+                    currentViewID = object.associatedData.source;
                     selList = object.associatedData.selList;
                     prevSelList = object.associatedData.prevSelList;
                 }
@@ -205,8 +205,10 @@ var TP = TP || {};
                 return;
 
             //TODO: prevSelList is not managed anymore, should check it (no need to fire the server)
-
+            prevSelList = TP.Context().view[currentViewID].getPreviousSourceSelection();
+            if (!prevSelList) prevSelList = [];
             if (selList.length == prevSelList.length) {
+
                 var i = 0;
                 var iMax = selList.length;
                 while (i < iMax && selList[i] == prevSelList[i])
@@ -214,13 +216,18 @@ var TP = TP || {};
                 if (i != iMax) {
                     prevSelList.length = 0
                     prevSelList = selList.slice(0);
-                    objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
+                    objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(currentViewID), currentViewID)
+                }else{
+                    assert(true, "nothing to compute")
                 }
             } else {
                 prevSelList.length = 0
                 prevSelList = selList.slice(0);
-                objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(target), target)
+                objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(currentViewID), currentViewID)
             }
+
+            TP.Context().view[currentViewID].setPreviousSourceSelection(selList);
+
         }
 
 
