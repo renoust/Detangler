@@ -30,14 +30,14 @@ var TP = TP || {};
         
  
         __g__.controller = new TP.Controller();
-        __g__.tabLinks = new Object();
+        __g__.tabLinks = {};
         __g__.graphDrawing = null;
         __g__.ID = parameters.id;
         __g__.viewInitialized = null;
         __g__.name = parameters.name;
         __g__.typeView = parameters.type;
         __g__.svg = null;
-        __g__.hashInteractorList = new Object();
+        __g__.hashInteractorList = {};
         __g__.dialog = null;
         __g__.titlebar = null;
         __g__.idSourceAssociatedView = parameters.idSourceAssociatedView;
@@ -201,7 +201,7 @@ var TP = TP || {};
                 id: "btn-cancel",
                 height: TP.Context().dialogHeight,
                 width: TP.Context().dialogWidth,
-                position: "right-" + dialogRight + " top+" + dialogTop, 
+                position: "right-" + dialogRight + " top+" + dialogTop
             }).parent().resizable({
                     containment: "#container"
                 }).draggable({
@@ -231,7 +231,7 @@ var TP = TP || {};
                     __g__.dialog.dialog({
                         width: fullwidth,
                         height: fullheight,
-                        position: ["left+" + 8, "top+" + 16],
+                        position: ["left+" + 8, "top+" + 16]
                     });
                 }
                 else {
@@ -239,7 +239,7 @@ var TP = TP || {};
                     __g__.dialog.dialog({
                         width: TP.Context().dialogWidth,
                         height: TP.Context().dialogHeight,
-                        position: "right-" + dialogRight + " top+" + dialogTop,
+                        position: "right-" + dialogRight + " top+" + dialogTop
                     });
                 }
             });

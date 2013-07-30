@@ -498,7 +498,7 @@ var TP = TP || {};
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
             var cbtn = $('<div/>', {class:'close-button'}).appendTo(head)
-            $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content', }).appendTo('#menu-' + menuNum)
+            $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content'}).appendTo('#menu-' + menuNum)
             
             cbtn.click(function(){
                 $("#wrap").toggleClass('nosidebar sidebar');
