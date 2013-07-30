@@ -8,8 +8,37 @@ var TP = TP || {};
 
         //var __g__ = new TP.ViewTemplate(id, name, type, idAssociation, bouton);
 
-        var __g__ = new TP.ViewTemplate(parameters);
 
+        var __g__ = this;
+
+
+        var tl2 = [
+            [7,{id:"nodeProperty"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = [];
+                        var oneNode = TP.Context().view[__g__.idSourceAssociatedView].getGraph().nodes()[0];
+                        for (var algo in oneNode)
+                        {
+                            var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
+                            var isAlgo = patt.test(algo);
+                            if (isAlgo && typeof(oneNode[algo]) == "number") propertyList.push(algo);
+                        }
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }]];
+
+        var interactors = [
+            {interactorLabel:'X-axis data',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    __g__.getController().sendMessage('updateXAxis', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                }}, interactorGroup:"View"}
+            ]
+
+        parameters.interactorList = interactors;
+        __g__ = new TP.ViewTemplate(parameters);
 
         __g__.addView = function () {
 
@@ -48,6 +77,7 @@ var TP = TP || {};
 
         __g__.initStates = function () {
             console.log("states view nvd3 initializing")
+
             __g__.controller.addEventState("simpleSelectionMadeView", function(_event){
                 console.log("SIMPLE SELECTION DETECTED IN VIEW: ", _event);
                 __g__.updateSelectionView(_event.associatedData.selection);
@@ -59,10 +89,38 @@ var TP = TP || {};
                 __g__.getController().sendMessage("simpleSelectionMade", {selection:graph, idView:__g__.getID()}, "principal", __g__.getID())
 
             });
+
+            __g__.controller.addEventState("updateXAxis", function(_event){
+                console.log("UPDATING X-AXIS DATA: ", _event);
+                __g__.updateXAxis(_event.associatedData.nodeProperty);
+            });
+
             __g__.controller.setCurrentState(null);
 
         }
 
+        __g__.updateXAxis = function (nodeProperty)
+        {
+
+            d3.select("#zone" + __g__.ID + " svg")
+                .datum((function(graph){
+                    var values = []
+                    graph.nodes().forEach(
+                        function(d){
+                            //return null;
+                            values.push(
+                                {
+                                    x:d[nodeProperty],
+                                    y:d.y,
+                                    size:d.size,
+                                    node:d
+                                })
+                        })
+                    return [{key:'nodes', values:values}]
+                })(TP.Context().view[__g__.idSourceAssociatedView].getGraph()));
+
+            __g__.chart.update();
+        }
         __g__.updateSelectionView = function (selection)
         {
 
@@ -111,13 +169,13 @@ var TP = TP || {};
             //TP.Context().view[id].buildLinks();
             
             nv.addGraph(function() {
-                  var chart = nv.models.scatterChart()
+                  myView.chart = nv.models.scatterChart()
                                 .showDistX(true)
                                 .showDistY(true)
                                 .color(d3.scale.category10().range());
                 
-                  chart.xAxis.tickFormat(d3.format('.02f'))
-                  chart.yAxis.tickFormat(d3.format('.02f'))
+                  myView.chart.xAxis.tickFormat(d3.format('.02f'));
+                  myView.chart.yAxis.tickFormat(d3.format('.02f'));
                                   
                   d3.select("#zone" + id + " svg")
                       .datum((function(graph){
@@ -135,12 +193,12 @@ var TP = TP || {};
                           return [{key:'nodes', values:values}]
                       })(__g__.graph))
                      .transition().duration(500)
-                      .call(chart);
+                      .call(myView.chart);
                 
-                  nv.utils.windowResize(chart.update);
+                  nv.utils.windowResize(myView.chart.update);
 
 
-                  return chart;
+                  return myView.chart;
             });
 
 
