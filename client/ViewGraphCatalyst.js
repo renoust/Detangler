@@ -44,7 +44,41 @@ var TP = TP || {};
                 {id:"cbg", name:"color", class:"colorwell", text:"Background Color"},
                 {id:"clabels", name:"color", class:"colorwell", text:"Labels Color"}]
             ],
-            [6,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+            [6,{id:"picker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]];
+
+
+        var tulipLayouts = [
+            [7,{id:"algoTulip"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var algorithmList = []
+                        for (var algo in TP.Context().tulipLayoutAlgorithms)
+                        {
+                            var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
+                            var isAlgo = patt.test(algo);
+                            if (isAlgo) algorithmList.push(algo);
+                        }
+                        sourceCallback(algorithmList);
+                    },
+                    minLength: 0
+                }]];
+
+        var tulipMetrics = [
+            [7,{id:"algoTulip"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var algorithmList = []
+                        for (var algo in TP.Context().tulipDoubleAlgorithms)
+                        {
+                            var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
+                            var isAlgo = patt.test(algo);
+                            if (isAlgo) algorithmList.push(algo);
+                        }
+                        sourceCallback(algorithmList);
+                    },
+                    minLength: 0
+                }]];
+
         
         var interactors = [
 
@@ -54,13 +88,13 @@ var TP = TP || {};
             {interactorLabel:'Server update layout', interactorParameters:'', callbackBehavior:{click: function () {
                 TP.ObjectReferences().ClientObject.updateLayout(__g__.getID())
             }}, interactorGroup:"Layout"},
-            {interactorLabel:'Tulip layout algorithm', interactorParameters:tl, callbackBehavior:{call: function (layout) {
-                __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
-            }}, interactorGroup:"Layout"},
-            {interactorLabel:'Tulip layout list',interactorParameters:'',callbackBehavior:{click:function(){
-                TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout", endHandler:TP.Context().updateTulipLayoutAlgorithms})
-            }}, interactorGroup:"Layout"},
-    
+            {interactorLabel:'Tulip layout algorithm',interactorParameters:tulipLayouts,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(layout){
+                    __g__.getController().sendMessage('callLayout', {layoutName:layout.algoTulip, idView: __g__.getID()})
+                }}, interactorGroup:"Layout"},
+
+
             {interactorLabel:'Operator ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
                 TP.ObjectReferences().InteractionObject.toggleCatalystSyncOperator(__g__.getID())
             }}, interactorGroup:"Selection"},
@@ -112,10 +146,14 @@ var TP = TP || {};
             {interactorLabel:'Entanglement mapping', interactorParameters: '', callbackBehavior: {click: function (scales) {
                 __g__.getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: TP.Context().activeView, scales: scales})
             }}, interactorGroup:"Measure"},
-            {interactorLabel:'Tulip measure', interactorParameters: tl, callbackBehavior: {call: function (algo) {
-                __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.selectedAlgo, idView: __g__.getID()})
-            }}, interactorGroup:"Measure"},
-    
+
+            {interactorLabel:'Tulip measure',interactorParameters:tulipMetrics,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(algo){
+                    __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.algoTulip, idView: __g__.getID()})
+                }}, interactorGroup:"Measure"},
+
+
             {interactorLabel:'Horizontal barchart', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawBarChart", {smell: 'base'})
             }}, interactorGroup:"Open View"},
@@ -127,6 +165,9 @@ var TP = TP || {};
             }}, interactorGroup:"Open View"},
             {interactorLabel:'Data', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawDataBase")
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Scatter plot nvd3', interactorParameters:'', callbackBehavior:{click: function () {
+                __g__.getController().sendMessage("drawScatterPlotNVD3")
             }}, interactorGroup:"Open View"}
             // ['b3','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random',viewIndex1)}}],
             // ['b4','reset view','',{click:function(){TP.ObjectReferences().VisualizationObject.resetView(viewIndex1)}}],
@@ -306,6 +347,13 @@ var TP = TP || {};
             //__g__.controller.addState({name:"mousedownResizeGroup", bindings:null, func:function(event){assert(true, "mousedownResizeGroup"); TP.Lasso().mousedownResizeGroup(event);}}, "all", true);
             //__g__.controller.addState({name:"mouseupResizeGroup", bindings:null, func:function(event){assert(true, "mouseupResizeGroup"); TP.Lasso().mouseupResizeGroup(event);}}, "all", true);
             __g__.controller.setCurrentState("select");
+
+
+            __g__.controller.addEventState("drawScatterPlotNVD3",  function (_event) {/*assert(true, "drawScatterPlot");*/
+                //this.nvd3 = new TP.ViewNVD3(_event);
+                //this.nvd3.setGraph(__g__.graph)
+                TP.ViewNVD3().drawScatterPlot(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
         }
 
