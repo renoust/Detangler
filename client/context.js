@@ -196,9 +196,7 @@ var TP = TP || {};
 
         __g__.simpleSelectionReceived = function(_event)
         {
-            console.log("SIMPLE SELECTION DETECTED: ", _event);
-            _event.associatedData.source = "0";
-            TP.Interaction().updateViewFromSimpleSelection(_event);
+            TP.Interaction().updateViewFromSimpleSelection(_event.associatedData.associated, _event.associatedData.selection);
         }
 
         __g__.initController = function (ID, typeC) {

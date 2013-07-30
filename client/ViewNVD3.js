@@ -84,17 +84,16 @@ var TP = TP || {};
 
 
         __g__.initStates = function () {
-            console.log("states view nvd3 initializing")
+            //console.log("states view nvd3 initializing")
 
             __g__.controller.addEventState("simpleSelectionMadeView", function(_event){
-                console.log("SIMPLE SELECTION DETECTED IN VIEW: ", _event);
                 __g__.updateSelectionView(_event.associatedData.selection);
                 var graph = []
                 _event.associatedData.selection.data().forEach(function(n)
                 {
                     graph.push(n.node)
                 })
-                __g__.getController().sendMessage("simpleSelectionMade", {selection:graph, idView:__g__.getID()}, "principal", __g__.getID())
+                __g__.getController().sendMessage("simpleSelectionMade", {selection:graph, idView:__g__.getID(), associated:__g__.idSourceAssociatedView}, "principal", __g__.getID())
 
             });
 
@@ -140,6 +139,7 @@ var TP = TP || {};
         {
 
             //should be passing the subgraph, but I am reconverting in order to reroute with the old
+            __g__.svg.selectAll('.nv-point').style('fill', '#1f77b4');
             selection[0].forEach(function(n){d3.select(n).style('fill', 'red')})
         }
 
@@ -220,14 +220,18 @@ var TP = TP || {};
 
 
             __g__.lasso = d3.custom.Lasso()
-                .on("brushDrawStart", function(d, i){ console.log("brushDrawStart"); })
-                .on("brushDrawMove", function(d, i){ console.log("brushDrawMove"); })
-                .on("brushDrawEnd", function(d, i){ console.log("brushDrawEnd"); })
-                .on("brushDragStart", function(d, i){ console.log("brushDragStart"); })
-                .on("brushDragMove", function(d, i){ console.log("brushDragMove"); })
+                .on("brushDrawStart", function(d, i){})
+                .on("brushDrawMove", function(d, i){})
+                .on("brushDrawEnd", function(d, i){
+                    myView.getController().sendMessage("simpleSelectionMadeView", {selection:d, idView:myView.getID()});
+                })
+                .on("brushDragStart", function(d, i){})
+                .on("brushDragMove", function(d, i){ //console.log("brushDragMove");
+                    myView.getController().sendMessage("simpleSelectionMadeView", {selection:d, idView:myView.getID()});
+                })
                 .on("brushDragEnd", function(d, i){ //console.log("brushDragEnd", d, d.data(), d[0]);
-                    console.log("sending message of selection")
-                    myView.getController().sendMessage("simpleSelectionMadeView", {selection:d, idView:myView.getID()})
+                    //console.log("sending message of selection")
+                    myView.getController().sendMessage("simpleSelectionMadeView", {selection:d, idView:myView.getID()});
                     //myView.getController().sendMessage("simpleSelectionMadeView", {selection:graph, idView:myView.getID()})
                 });
 
