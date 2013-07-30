@@ -246,16 +246,38 @@ var TP = TP || {};
 
             //listening for keyboard event
             var e = window.event
+            console.log("the window event: ",  window.event)
 
             svg.selectAll("g.node")
-                .classed("selected", false)
+               .classed("selected", function(d){
+                    if ((e.ctrlKey || e.metaKey) && d.selected == true)
+                    {
+                        console.log("meta pushed")
+                        return true;
+                    }
+                    d.selected = false;
+                    return false;})
+
                     .select("g.glyph")
                         .select(".node")
-                            .style('fill', function(){return TP.Context().view[_viewID].getNodesColor();});
+                            .style('fill', function(d){
+                                if ((e.ctrlKey || e.metaKey) && d.selected == true)
+                                    return "red";
+                                return TP.Context().view[_viewID].getNodesColor();
+                            });
+
 
             svg.selectAll("g.node").data(selList, function(d){return d.baseID;})
 
-                .classed("selected", true)
+                .classed("selected", function(d){
+                    if (e.shiftKey)
+                    {
+                        d.selected = false;
+                        return false;
+                    }
+                    d.selected = true;
+                    return true;
+                })
 
                //should restore keyboard event handler to append/remove from selection
                /*
@@ -276,9 +298,17 @@ var TP = TP || {};
                 //console.log("returning selection:", d.selected)
                 return d.selected*/
 
+
                 .select("g.glyph")
-                .select(".node")
-                .style('fill', 'red');
+                    .select(".node")
+                        .style('fill', function(d){
+                            if (e.shiftKey)
+                            {
+                                console.log('shift pushed')
+                                return TP.Context().view[_viewID].getNodesColor();
+                            }
+                            return 'red';
+                        });
 
                  /*
                  {
