@@ -53,7 +53,12 @@ var TP = TP || {};
 
         this.addInfoButton = function (target) {
             // assert(false, 'Interface -> addInfoButton')
-            var cGraph = target.getGraph();
+
+            var cGraph = null;
+            if (target.getType() in {'substrate':'', 'catalyst':''})
+                cGraph = target.getGraph();
+            else
+                cGraph = TP.Context().view[target.idSourceAssociatedView].getGraph();
 
             var path = $('#files').val().split('\\');
             var file = path[path.length - 1];

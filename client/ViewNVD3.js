@@ -142,7 +142,7 @@ var TP = TP || {};
         __g__.updateSelectionView = function (selection)
         {
 
-            //should be passing the subgraph, but I am reconverting in order to reroute with the old
+            //should be passing the subgraph, but I am reconverting in order to reroute with the old function
             __g__.svg.selectAll('.nv-point').style('fill', '#1f77b4');
             selection[0].forEach(function(n){d3.select(n).style('fill', 'red')})
         }
@@ -246,7 +246,7 @@ var TP = TP || {};
 
 
             myView.getSvg().on('mouseover', function(d, i){
-                console.log("capturing mouseover") ;
+                //console.log("capturing mouseover") ;
                 var nodeSelection = d3.select(this).selectAll(/*cirlce*/'.nv-point');
                 __g__.lasso.shapes(nodeSelection);
             })
