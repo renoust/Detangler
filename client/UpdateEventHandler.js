@@ -15,8 +15,8 @@ var TP = TP || {};
         __g__.tabAssociationSave = null;
         __g__.dataTreatmentSave = null;
         
-        var BarChart = [["simpleSelect", function(event){TP.DataTreatment().mouseoverBarChartRectUpdate(event);}]]
-        var graph = [["simpleSelect", function(event){TP.DataTreatment().simpleSelectGraph(event)}]]
+        var BarChart = [["simpleSelect", function(_event){TP.DataTreatment().mouseoverBarChartRectUpdate(_event);}]]
+        var graph = [["simpleSelect", function(_event){TP.DataTreatment().simpleSelectGraph(_event)}]]
 
 //in this implementation, the data from the last view is treated in function "treatUpdateEvent" of current view. then when we look bindings for datatreatment, for example
 //the first line of graphDataTreatment Means : my current view is graph and if last view is "barchart" and typeEvent is "simpleSelect", then the called function to obtain my data is... 
@@ -180,16 +180,16 @@ var TP = TP || {};
             return __g__.tabAssociation;
         }
 
-        __g__.treatUpdateEvent = function(event){
+        __g__.treatUpdateEvent = function(_event){
 
-            __g__.dataTreat(TP.Context().view[event.associatedData.source].getType(), event);
+            __g__.dataTreat(TP.Context().view[_event.associatedData.source].getType(), _event);
             
             if(__g__.tabAssociation != null){
-                if(__g__.tabAssociation[event.associatedData.type] != null){
-                    __g__.tabAssociation[event.associatedData.type].call(null, event)
+                if(__g__.tabAssociation[_event.associatedData.type] != null){
+                    __g__.tabAssociation[_event.associatedData.type].call(null, _event)
                 }
                 else
-                    assert(false, "warning : update function for "+event.associatedData.type+" does not exist !! (function treatUpdateEvent)" );
+                    assert(false, "warning : update function for "+_event.associatedData.type+" does not exist !! (function treatUpdateEvent)" );
             }
             else
                 assert(false, "warning : process treatUpdateEvent problem  (function treatUpdateEvent)");
@@ -198,18 +198,18 @@ var TP = TP || {};
         
         
                 
-        __g__.dataTreat = function(typeView, event){
+        __g__.dataTreat = function(typeView, _event){
             
             if(__g__.dataTreatment[typeView] != null){                
                 
-                if(__g__.dataTreatment[typeView][event.associatedData.type] != null){
-                    __g__.dataTreatment[typeView][event.associatedData.type].call(null, event);
+                if(__g__.dataTreatment[typeView][_event.associatedData.type] != null){
+                    __g__.dataTreatment[typeView][_event.associatedData.type].call(null, _event);
                 }
                 else
-                    assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !! (function dataTreat)" );
+                    assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+_event.associatedData.type+" does not exist !! (function dataTreat)" );
             }
             else
-                assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+event.associatedData.type+" does not exist !! (function dataTreat)" );
+                assert(false, "warning : treatment data function from typeView : "+typeView+" to this view : "+idView+" and typeEvent : "+_event.associatedData.type+" does not exist !! (function dataTreat)" );
         }
 
 

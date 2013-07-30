@@ -279,7 +279,7 @@ var TP = TP || {};
 
         this.addInfoBox = function (_event) {
             // assert(true, 'Interface -> addInfoBox')
-            var node = event.associatedData.node;
+            var node = _event.associatedData.node;
             $("#infoNodes ul").empty();
             for (var k in node) {
                 $('#infoNodes ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
@@ -785,7 +785,7 @@ var TP = TP || {};
                             });
                         var res = {}, key;
                         div.autocomplete({
-                            select: function (event, ui) {
+                            select: function (evnt, ui) {
                                 
                                     key = this.id;
                                     //console.log(key)

@@ -7,9 +7,9 @@ var TP = TP || {};
         var __g__ = this;
 
         
-        __g__.dataToTabNode  =function(event){
+        __g__.dataToTabNode  =function(_event){
 
-            var data = event.associatedData.data
+            var data = _event.associatedData.data
             var tabNode = new Array();
 
             for(var i = 0; i<data.length; i++)
@@ -22,11 +22,11 @@ var TP = TP || {};
             return tabNode;
         } 
 
-        __g__.mouseoverBarChartRectUpdate = function(event)
+        __g__.mouseoverBarChartRectUpdate = function(_event)
         {
-           var targetView = event.associatedData.target
+           var targetView = _event.associatedData.target
            assert(true, "target : "+targetView)
-           var data = event.associatedData.data;
+           var data = _event.associatedData.data;
            
            console.log("data : ", data);
            var obj = data[2];
@@ -36,24 +36,24 @@ var TP = TP || {};
                 .style('fill', function(d){if(d[2] === obj){return 'red';}else{return "#4682b4";}})
         }
 
-        __g__.simpleSelectGraph = function(event)
+        __g__.simpleSelectGraph = function(_event)
         {
-            var svg = TP.Context().view[event.associatedData.target].getSvg();
+            var svg = TP.Context().view[_event.associatedData.target].getSvg();
             console.log("svg : ", svg);
 
-            var data = event.associatedData.data;
+            var data = _event.associatedData.data;
             console.log("data : ", data);
 
             var value = data[1];
             var node = svg.selectAll("g.node")
-                      .select("g."+TP.Context().view[event.associatedData.target].getType())
-                      .select(/*"rect"*/TP.Context().view[event.associatedData.target].getViewNodes())              
+                      .select("g."+TP.Context().view[_event.associatedData.target].getType())
+                      .select(/*"rect"*/TP.Context().view[_event.associatedData.target].getViewNodes())
                       .data(value, function(ddd){ /*console.log(ddd);*/ return ddd.baseID; })
            
             node.style("fill","black");
         }
 
-        __g__.synchronizedSelectionData = function(event)
+        __g__.synchronizedSelectionData = function(_event)
         {
 
         }

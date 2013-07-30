@@ -24,12 +24,14 @@ var TP = TP || {};
         
         __g__.initStates = function () {
             
-            __g__.controller.addEventState("updateOtherView",  function(event){
-                /*console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateOtherViews(event);
+            __g__.controller.addEventState("updateOtherView",  function(_event){
+                //console.log("avant otherViews : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);
+                __g__.updateOtherViews(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true})
 
-            __g__.controller.addEventState("updateView",  function(event){
-                /*console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);*/ __g__.updateEventHandler.treatUpdateEvent(event); __g__.updateOtherViews(event);
+            __g__.controller.addEventState("updateView",  function(_event){
+                //console.log("avant updateViewGraph : source = ", event.associatedData.source, " target : ", event.associatedData.target, " data : ", event.associatedData.data, " type : ", event.associatedData.type);
+                __g__.updateEventHandler.treatUpdateEvent(_event); __g__.updateOtherViews(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true})
 
             __g__.controller.setCurrentState(null);
