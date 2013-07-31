@@ -222,7 +222,9 @@ var TP = TP || {};
                          */
                     })
 
-                    .on("dragend", function () {/*
+                    .on("dragend", function () {
+                        TP.Context().view[currentViewID].getController().sendMessage("dragNodeEnd", {node: d3.select(this)});
+                        /*
                      console.log("mouseDown, mouseDown");
 
                      //g.arrangeLabels();

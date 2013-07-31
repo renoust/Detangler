@@ -256,6 +256,11 @@ var TP = TP || {};
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().dragNode(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
+            __g__.controller.addEventState("dragNodeEnd",  function (_event) {
+                TP.ObjectReferences().ClientObject.updateLayout(__g__.getID());
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+
             __g__.controller.addEventState("showHideLabelNode",  function (_event) {
                 TP.Context().view[_event.associatedData.source].getGraphDrawing().showHideLabelNode(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
