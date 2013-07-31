@@ -53,20 +53,32 @@ body{
 	font: italic 1.6em "Caslon";
 }
 
-#menu {
+#about{
+    display: inline-block;
+    margin-right: 12%;
+    vertical-align: middle;
+    color: #fff;
+    background: none;
+    text-decoration: none;
+    /*font: italic 1.6em "Caslon";*/
+}
+
+.inbarmenu {
 	display: inline-block;
 	height: 30px;
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
 	width: 130px;
-	font: 0.8em "Trebuchet MS", sans-serif;
+    vertical-align: bottom;
+    font-size:.9em;
+	/*font: 0.8em "Trebuchet MS", sans-serif;*/
 }
 
 .submenu{
 	background: black;
 }
-#menu a{
+.inbarmenu a{
 	display: block;
 	padding: 3px 10px;
 	color: #fff;
@@ -75,16 +87,17 @@ body{
 	min-height: 22px;
 }
 
-#menu a:hover, #menu a:focus, #menu a:active {
+.inbarmenu a:hover, #menu a:focus, #menu a:active {
 	text-decoration: underline;
 }
 
-#menu .submenu {
+.inbarmenu .submenu {
 	font-size: .9em;
 	margin: 0px;
 	padding: 0px;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
+    /*pointer-events: none;*/
 }
 
 #header-content button{
@@ -124,7 +137,7 @@ body{
 }
 
 .ui-dialog .ui-dialog-titlebar.active{
-	background: #707070;
+	background: #E9E9E9;
 	/*background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x*/
 }
 
@@ -132,7 +145,7 @@ body{
 	/*test*/
 	width: 60%;
 	font-size: 15px;
-	color: #E9E9E9;
+	color: black;
 	/*test*/
 	/*width: auto ;
 	font-size: 12px;*/

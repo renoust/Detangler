@@ -17,7 +17,8 @@
 	right: -22px;
 	z-index: 200;
 	border:1px solid #666666;
-	background: url(smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) ;
+    background-color: #C0C0C0;
+	/*background: url(myTheme/state-hover2.png) 2px bottom repeat-y; /*url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png);  /*smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) ;*/
 }
 
 .toggleButton h3{
@@ -36,10 +37,12 @@
 	-ms-transform: rotate(-90deg);
 	-o-transform: rotate(-90deg);
 	transform: rotate(-90deg);
+    color: black;
 }
 
 .toggleButton.open{
-	background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x
+    background-color: #E9E9E9;
+    /*background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png); /*50% 50% repeat-x*/
 }
 
 .cont .header-menu{
@@ -105,7 +108,7 @@ li{
 }
 
 .nav li.open > a{
-	background: url(myTheme/state-open.png) left bottom repeat-x;
+	background: url(myTheme/state-hover2.png) left bottom repeat-x;
 }
 
 .nav a:hover, .nav a:focus, .nav a:active, .nav a:visited {

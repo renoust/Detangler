@@ -340,7 +340,9 @@ var TP = TP || {};
 
         this.setHeaderMenu = function(){
             $(".submenu:not('.open_at_load')").hide();
+
             $("li.hmenu > a").click(function (e) {
+
               if ($(this).next("ul.submenu:visible").length != 0) {
                 $(this).next("ul.submenu").slideUp("normal", function () {
                   $(this).parent().removeClass("open")
@@ -363,11 +365,13 @@ var TP = TP || {};
                 $(this).parent().removeClass("open")
               });
 
-            })
+            });
+
             $('#opfile').click(function (e) {
               $('#files').click();
               e.preventDefault();
-            })
+            });
+
         }
 
 
