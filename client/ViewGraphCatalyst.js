@@ -100,6 +100,9 @@ var TP = TP || {};
             }}, interactorGroup:"Selection"},
             {interactorLabel:'Selection operator is: ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
                 TP.ObjectReferences().InteractionObject.toggleCatalystSyncOperator(__g__.getID());
+                //var selList = [];
+                __g__.setPreviousSourceSelection([]);
+                __g__.getController().sendMessage("nodeSelected", {selList: __g__.getSourceSelection()});
             }}, interactorGroup:"Selection"},
 
             {interactorLabel:'Center view', interactorParameters: '', callbackBehavior: {click: function () {
