@@ -215,6 +215,7 @@ var TP = TP || {};
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
             objectReferences.VisualizationObject.entanglementCaught(target);
+            TP.Context().view[target].getController().sendMessage("sizeMapping", {parameter:"entanglementIndex", idView: target});
         }
 
 
