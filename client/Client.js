@@ -198,7 +198,7 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
-                target: idViewSource,//'substrate',
+                target: TP.Context().view[idViewSource].getType(),//idViewSource,//'substrate',
                 weight: contxt.substrateWeightProperty
             }
 
@@ -261,7 +261,7 @@ var TP = TP || {};
                 type: "update",
                 parameters: JSON.stringify(updateParams),
                 graph: json,
-                target: idView
+                target: TP.Context().view[idView].getType()
             }
 
             TP.Context().view[idView].getController().sendMessage("selectionSendQuery", {params: params}, "principal");
@@ -345,7 +345,7 @@ var TP = TP || {};
             var layoutParams = {
                 type: "layout",
                 name: layoutName,
-                target: idView
+                target: TP.Context().view[idView].getType()
             };
             var params = {
                 sid: contxt.sessionSid,
@@ -391,7 +391,7 @@ var TP = TP || {};
             })
             var updateParams = {
                 type: "layout",
-                target: graphName,
+                target: TP.Context().view[graphName].getType(),
                 graph: json
             };
             var params = {
@@ -420,7 +420,7 @@ var TP = TP || {};
             var floatParams = {
                 type: "float",
                 name: floatAlgorithmName,
-                target: idView
+                target: TP.Context().view[idView].getType()
             };
             var params = {
                 sid: contxt.sessionSid,
