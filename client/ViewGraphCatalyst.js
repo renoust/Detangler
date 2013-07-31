@@ -85,23 +85,23 @@ var TP = TP || {};
             {interactorLabel:'Force layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: __g__.getID()})
             }}, interactorGroup:"Layout"},
-            {interactorLabel:'Server update layout', interactorParameters:'', callbackBehavior:{click: function () {
-                TP.ObjectReferences().ClientObject.updateLayout(__g__.getID())
-            }}, interactorGroup:"Layout"},
             {interactorLabel:'Tulip layout algorithm',interactorParameters:tulipLayouts,callbackBehavior:{
                 //click:function(){console.log('click on the button');},
                 call:function(layout){
                     __g__.getController().sendMessage('callLayout', {layoutName:layout.algoTulip, idView: __g__.getID()})
                 }}, interactorGroup:"Layout"},
+            {interactorLabel:'Force server to update layout', interactorParameters:'', callbackBehavior:{click: function () {
+                TP.ObjectReferences().ClientObject.updateLayout(__g__.getID())
+            }}, interactorGroup:"Layout"},
 
 
-            {interactorLabel:'Operator ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
-                TP.ObjectReferences().InteractionObject.toggleCatalystSyncOperator(__g__.getID())
-            }}, interactorGroup:"Selection"},
             {interactorLabel:'Toggle selection', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
             }}, interactorGroup:"Selection"},
-    
+            {interactorLabel:'Selection operator is: ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
+                TP.ObjectReferences().InteractionObject.toggleCatalystSyncOperator(__g__.getID());
+            }}, interactorGroup:"Selection"},
+
             {interactorLabel:'Center view', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('resetView');
             }}, interactorGroup:"View"},
@@ -137,14 +137,14 @@ var TP = TP || {};
             {interactorLabel:'Degree', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Degree', idView: __g__.getID()})
             }}, interactorGroup:"Measure"},
-            {interactorLabel:'Betweenness. centrality', interactorParameters:'', callbackBehavior:{click: function () {
+            {interactorLabel:'Betweenness centrality', interactorParameters:'', callbackBehavior:{click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: __g__.getID()})
             }}, interactorGroup:"Measure"},
-            {interactorLabel:'Weight mapping', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
-                __g__.getController().sendMessage("sizeMapping", {parameter: 'weight', idView: TP.Context().activeView})//, scales: scales})
-            }}, interactorGroup:"Measure"},
-            {interactorLabel:'Entanglement mapping', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
+            {interactorLabel:'Entanglement index', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
                 __g__.getController().sendMessage("sizeMapping", {parameter: 'entanglementIndex', idView: TP.Context().activeView})//, scales: scales})
+            }}, interactorGroup:"Measure"},
+            {interactorLabel:'Weighted catalyst occurrence', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
+                __g__.getController().sendMessage("sizeMapping", {parameter: 'weight', idView: TP.Context().activeView})//, scales: scales})
             }}, interactorGroup:"Measure"},
 
             {interactorLabel:'Tulip measure',interactorParameters:tulipMetrics,callbackBehavior:{
@@ -154,20 +154,20 @@ var TP = TP || {};
                 }}, interactorGroup:"Measure"},
 
 
-            {interactorLabel:'Horizontal barchart', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'base'})
+            {interactorLabel:'Scatter plot (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
+                __g__.getController().sendMessage("drawScatterPlotNVD3")
             }}, interactorGroup:"Open View"},
-            {interactorLabel:'Barchart', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'})
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'ScatterPlot', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawScatterPlot")
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'Data', interactorParameters: '', callbackBehavior: {click: function () {
+            {interactorLabel:'Spreadsheet (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawDataBase")
             }}, interactorGroup:"Open View"},
-            {interactorLabel:'Scatter plot nvd3', interactorParameters:'', callbackBehavior:{click: function () {
-                __g__.getController().sendMessage("drawScatterPlotNVD3")
+            {interactorLabel:'Barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
+                __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'})
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'Horizontal barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
+                __g__.getController().sendMessage("drawBarChart", {smell: 'base'})
+            }}, interactorGroup:"Open View"},
+            {interactorLabel:'ScatterPlot (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
+                __g__.getController().sendMessage("drawScatterPlot")
             }}, interactorGroup:"Open View"}
             // ['b3','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random',viewIndex1)}}],
             // ['b4','reset view','',{click:function(){TP.ObjectReferences().VisualizationObject.resetView(viewIndex1)}}],

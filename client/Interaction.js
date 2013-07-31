@@ -204,9 +204,10 @@ var TP = TP || {};
             else
                 return;
 
-            //TODO: prevSelList is not managed anymore, should check it (no need to fire the server)
+
             prevSelList = TP.Context().view[currentViewID].getPreviousSourceSelection();
             if (!prevSelList) prevSelList = [];
+
             if (selList.length == prevSelList.length) {
 
                 var i = 0;
@@ -221,6 +222,7 @@ var TP = TP || {};
                 //    assert(true, "nothing to compute")
                 //}
             } else {
+
                 prevSelList.length = 0
                 prevSelList = selList.slice(0);
                 objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(currentViewID), currentViewID)
@@ -1032,15 +1034,15 @@ var TP = TP || {};
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
                 $('li.form > a').each(function () {
-                    if ($(this).text() === 'Operator OR') {
-                        $(this).text('Operator AND')
+                    if ($(this).text() === 'Selection operator is: OR') {
+                        $(this).text('Selection operator is: AND')
                     }
                 })
             } else {
                 TP.Context().tabOperator[target] = "OR"
                 $('li.form > a').each(function () {
-                    if ($(this).text() === 'Operator AND') {
-                        $(this).text('Operator OR')
+                    if ($(this).text() === 'Selection operator is: AND') {
+                        $(this).text('Selection operator is: OR')
                     }
                 })
 
