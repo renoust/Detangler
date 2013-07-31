@@ -217,9 +217,9 @@ var TP = TP || {};
                     prevSelList.length = 0
                     prevSelList = selList.slice(0);
                     objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(currentViewID), currentViewID)
-                }else{
-                    assert(true, "nothing to compute")
-                }
+                }//else{
+                //    assert(true, "nothing to compute")
+                //}
             } else {
                 prevSelList.length = 0
                 prevSelList = selList.slice(0);

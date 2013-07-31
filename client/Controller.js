@@ -307,7 +307,7 @@ var TP = TP || {};
             //{
                 //assert(true, "message can pass => state cheking is disabled for it");
             //}
-            
+
             var _event = new CustomEvent(messageName);
             if (data != null) {
                _event.associatedData = data;

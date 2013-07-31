@@ -320,10 +320,14 @@ var TP = TP || {};
 
             __g__.controller.addEventState("Select",  function (_event) {
                 //activates the lasso
-                __g__.lasso.on("brushDrawStart", function(d, i){ console.log("brushDrawStart"); })
-                    .on("brushDrawMove", function(d, i){ console.log("brushDrawMove"); })
+                __g__.lasso.on("brushDrawStart", function(d, i){ //console.log("brushDrawStart");
+                            })
+                    .on("brushDrawMove", function(d, i){ //console.log("brushDrawMove");
+                    })
+
                     .on("brushDrawEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
-                    .on("brushDragStart", function(d, i){ console.log("brushDragStart"); })
+                    .on("brushDragStart", function(d, i){ //console.log("brushDragStart");
+                    })
                     .on("brushDragMove", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
                     .on("brushDragEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); });
 

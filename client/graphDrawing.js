@@ -155,7 +155,7 @@ var TP = TP || {};
                 .style("fill",TP.Context().view[currentViewID].getLabelsColor())
                 .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
                 .text(function (dd) {
-                    console.log(dd)
+                    //console.log(dd)
                     return dd.label
                 });
         }
