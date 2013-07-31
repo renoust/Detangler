@@ -59,14 +59,14 @@ var TP = TP || {};
                 //console.log("graph analysed", contxt.sessionSid)
             }
             //TP.ObjectReferences().ClientObject.syncLayouts();
-            //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndice", "catalyst");
+            //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndex", "catalyst");
             /*var cGraph = null;
              var svg = null;
 
              svg = TP.Context().view('catalyst').getSvg();
              cGraph = contxt.getViewGraph('catalyst');
              var graph_drawing = TP.GraphDrawing(cGraph, svg);
-             graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndice');
+             graph_drawing.nodeSizeMap(cGraph, 0, 'entanglementIndex');
 
              objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
              objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();

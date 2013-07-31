@@ -559,7 +559,7 @@ class graphManager():
         #source of the resultint graph edges are always of type 'substrate'
         jsresgraph = self.graphToJSON(resGraph, {'nodes':[{'type':'string', 'name':'label'}, {'type':'string', 'name':'_type'}]})
         bLResult['graph'] = jsresgraph 
-        return self.graphToJSON(self.substrate, {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndice'}], 'data':bLResult})
+        return self.graphToJSON(self.substrate, {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndex'}], 'data':bLResult})
         
 
     '''

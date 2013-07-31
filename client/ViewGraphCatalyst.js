@@ -140,11 +140,11 @@ var TP = TP || {};
             {interactorLabel:'Betweenness. centrality', interactorParameters:'', callbackBehavior:{click: function () {
                 __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: 'Betweenness Centrality', idView: __g__.getID()})
             }}, interactorGroup:"Measure"},
-            {interactorLabel:'Weight mapping', interactorParameters: '', callbackBehavior: {click: function (scales) {
-                __g__.getController().sendMessage("sizeMapping", {parameter: 'weight', idView: TP.Context().activeView, scales: scales})
+            {interactorLabel:'Weight mapping', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
+                __g__.getController().sendMessage("sizeMapping", {parameter: 'weight', idView: TP.Context().activeView})//, scales: scales})
             }}, interactorGroup:"Measure"},
-            {interactorLabel:'Entanglement mapping', interactorParameters: '', callbackBehavior: {click: function (scales) {
-                __g__.getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: TP.Context().activeView, scales: scales})
+            {interactorLabel:'Entanglement mapping', interactorParameters: '', callbackBehavior: {click: function (){//(scales) {
+                __g__.getController().sendMessage("sizeMapping", {parameter: 'entanglementIndex', idView: TP.Context().activeView})//, scales: scales})
             }}, interactorGroup:"Measure"},
 
             {interactorLabel:'Tulip measure',interactorParameters:tulipMetrics,callbackBehavior:{
@@ -172,7 +172,7 @@ var TP = TP || {};
             // ['b3','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random',viewIndex1)}}],
             // ['b4','reset view','',{click:function(){TP.ObjectReferences().VisualizationObject.resetView(viewIndex1)}}],
             // ['b10','Node information','',{click:function(){TP.ObjectReferences().InterfaceObject.attachInfoBox(viewIndex1)}}],
-            //['b14','ent. color','',{click:function(){TP.ObjectReferences().VisualizationObject.colorMapping('entanglementIndice', viewIndex1)}}],
+            //['b14','ent. color','',{click:function(){TP.ObjectReferences().VisualizationObject.colorMapping('entanglementIndex', viewIndex1)}}],
             //['b15','computeMatrix','',{click:function(){TP.ObjectReferences().VisualizationObject.buildEdgeMatrices()}}],
         ]
         

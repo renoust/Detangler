@@ -425,7 +425,7 @@ class EntanglementAnalysis():
         self.nbSubstrates = self.substrateGraph.numberOfNodes()
         self.nbSubstratesLinks = self.substrateGraph.numberOfEdges()
 
-        entP = self.catalystGraph.getDoubleProperty("entanglementIndice")
+        entP = self.catalystGraph.getDoubleProperty("entanglementIndex")
             
         for t in self.catalystList:
             n = self.catalystToNode[t]

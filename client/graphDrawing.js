@@ -913,7 +913,7 @@ var TP = TP || {};
             //we would like it better as a parameter
             var scaleMin = 3.0
             var scaleMax = 12.0
-            var parameter = "entanglementIndice"
+            var parameter = "entanglementIndex"
 
             var valMin = null
             var valMax = null

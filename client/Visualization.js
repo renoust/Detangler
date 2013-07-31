@@ -431,6 +431,7 @@ var TP = TP || {};
             var parameter = _event.associatedData.parameter;
             var idView = _event.associatedData.idView;
             var scales = _event.associatedData.scales;
+            //console.log('associated scales: ', scales)
 
             this.nodeSizeMapping(parameter, idView, scales);
 
@@ -442,7 +443,10 @@ var TP = TP || {};
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
-            var scaleMax = null
+            var scaleMax = null;
+
+            //console.log('scales: ', scales)
+
             if (scales != null) {
                 scaleMin = scales.sizemap.val1;
                 scaleMax = scales.sizemap.val2;

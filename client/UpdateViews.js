@@ -140,8 +140,8 @@ var TP = TP || {};
              */
 
 
-            //TP.ObjectReferences().VisualizationObject.nodeSizeMapping("entanglementIndice", viewID);
-            //TP.Context().view[viewID].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: TP.Context().activeView});
+            //TP.ObjectReferences().VisualizationObject.nodeSizeMapping("entanglementIndex", viewID);
+            //TP.Context().view[viewID].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndex', idView: TP.Context().activeView});
 
             //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
             TP.Controller().sendMessage("arrangeLabels", null, viewID, viewID);

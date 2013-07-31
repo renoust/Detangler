@@ -507,7 +507,7 @@ var TP = TP || {};
 
             if (catalystSvg != null)
             //TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
-                TP.Context().view[catalystName].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: catalystName})
+                TP.Context().view[catalystName].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndex', idView: catalystName})
 
             d3.select("#svg_" + target).select("g.brush").select("polygon").style('fill', "white");
             TP.Visualization().entanglementCaught(target, 1);
