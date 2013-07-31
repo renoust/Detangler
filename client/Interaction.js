@@ -245,23 +245,20 @@ var TP = TP || {};
             var selList = _selection;
 
             //listening for keyboard event
-            var e = window.event
-            console.log("the window event: ",  window.event)
+            var e = d3.event
+
 
             svg.selectAll("g.node")
                .classed("selected", function(d){
-                    if ((e.ctrlKey || e.metaKey) && d.selected == true)
-                    {
-                        console.log("meta pushed")
+                    if ((e.ctrlKey || e.metaKey || e.shiftKey) && d.selected == true)
                         return true;
-                    }
                     d.selected = false;
                     return false;})
 
                     .select("g.glyph")
                         .select(".node")
                             .style('fill', function(d){
-                                if ((e.ctrlKey || e.metaKey) && d.selected == true)
+                                if ((e.ctrlKey || e.metaKey || e.shiftKey) && d.selected == true)
                                     return "red";
                                 return TP.Context().view[_viewID].getNodesColor();
                             });
@@ -303,10 +300,7 @@ var TP = TP || {};
                     .select(".node")
                         .style('fill', function(d){
                             if (e.shiftKey)
-                            {
-                                console.log('shift pushed')
                                 return TP.Context().view[_viewID].getNodesColor();
-                            }
                             return 'red';
                         });
 
@@ -329,9 +323,12 @@ var TP = TP || {};
                 }*/
 
             selList = []
+            _selection = svg.selectAll("g.node.selected").data();
+
             _selection.forEach(function(d){selList.push(d.baseID)});
 
             selList.sort()
+
             TP.Context().view[currentViewID].setSourceSelection(selList);
 
             if (selList.length > 0)
