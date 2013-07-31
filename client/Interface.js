@@ -785,15 +785,14 @@ var TP = TP || {};
                             });
                         var res = {}, key;
                         div.autocomplete({
-                            select: function (evnt, ui) {
-                                
+                            select: function (e, ui) {
                                     key = this.id;
                                     //console.log(key)
                                     res[key] = ui.item.value;
-                                    //console.log(res, evnt);
+                                    //console.log(res, event);
                                     var c = evnt ? evnt.call(res) : null;
                             }
-                        })                   
+                        })
                         break;
 
                 }
