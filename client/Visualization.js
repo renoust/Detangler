@@ -431,7 +431,14 @@ var TP = TP || {};
             var parameter = _event.associatedData.parameter;
             var idView = _event.associatedData.idView;
             var scales = _event.associatedData.scales;
-            
+
+            this.nodeSizeMapping(parameter, idView, scales);
+
+        };
+
+
+        this.nodeSizeMapping = function (parameter, idView, scales) {
+
             var cGraph = null;
             var svg = null;
             var scaleMin = null;
@@ -449,6 +456,7 @@ var TP = TP || {};
             objectReferences.VisualizationObject.entanglementCaught(idView);
 
         };
+
 
 
         this.colorMapping = function (parameter, graphName) {

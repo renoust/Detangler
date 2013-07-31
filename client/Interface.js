@@ -646,7 +646,7 @@ var TP = TP || {};
                                 var key = this.id;
                                 var selectedOpt = $('#'+key)[0].options[$('#'+key)[0].selectedIndex];
                                 res[key] = {text:selectedOpt.text, val:selectedOpt.value}
-                                console.log(res)
+                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             }
                         })(evnt));
@@ -668,7 +668,7 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).val()}
-                                    console.log(res)
+                                    //console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
@@ -690,7 +690,7 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).val()}
-                                    console.log(res)
+                                    //console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
@@ -707,7 +707,7 @@ var TP = TP || {};
                                 var res = {};
                                 var key = this.id;
                                 res[key] = this.value;
-                                console.log(res)
+                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))                        
@@ -742,7 +742,7 @@ var TP = TP || {};
                                
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2}
-                                console.log(res)
+                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))
@@ -762,7 +762,7 @@ var TP = TP || {};
                                 var res = {}
                                 key = this.id
                                 res[key] = $(this).spinner('value')
-                                console.log(res)
+                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))

@@ -57,7 +57,8 @@ var TP = TP || {};
 
             var combinedGraph = null;
 
-            if (TP.Context().view[viewID].getAssociatedView("combined")[0].getGraph() != null) {
+            if (TP.Context().view[viewID].getAssociatedView("combined")
+                && TP.Context().view[viewID].getAssociatedView("combined")[0].getGraph() != null) {
                 var tmp = TP.Context().view[viewID].getAssociatedView("combined");
                 combinedGraph = tmp[0].getGraph();
             }
@@ -139,14 +140,16 @@ var TP = TP || {};
              */
 
 
-            TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", "catalyst");
+            //TP.ObjectReferences().VisualizationObject.nodeSizeMapping("entanglementIndice", viewID);
+            //TP.Context().view[viewID].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndice', idView: TP.Context().activeView});
+
             //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels(viewID);
             TP.Controller().sendMessage("arrangeLabels", null, viewID, viewID);
             //TP.ObjectContext().TulipPosyVisualizationObject.arrangeLabels("catalyst");
-            if(TP.Context().view[viewID].getAssociatedView("catalyst")[0] != null){
-                var getCatalyst = TP.Context().view[viewID].getAssociatedView("catalyst")[0];
-                TP.Controller().sendMessage("arrangeLabels", null, getCatalyst, getCatalyst);
-            }
+            //if(TP.Context().view[viewID].getAssociatedView("catalyst")[0] != null){
+            //    var getCatalyst = TP.Context().view[viewID].getAssociatedView("catalyst")[0];
+            //    TP.Controller().sendMessage("arrangeLabels", null, getCatalyst, getCatalyst);
+            //}
 
         }
 
