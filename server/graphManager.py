@@ -591,5 +591,8 @@ class graphManager():
 
         vM = g.getDoubleProperty("viewMetric")
         g.computeDoubleProperty(doubleName, vM)
+        #print "the computation result"
+        #print [vM[n] for n in g.getNodes()]
+        #print [[e.id, g.source(e), g.target(e)] for e in g.getEdges()]
         return g
 
