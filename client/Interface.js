@@ -727,7 +727,7 @@ var TP = TP || {};
 
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2}
-                                console.log(res)
+                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt))
