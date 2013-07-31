@@ -352,7 +352,12 @@ var TP = TP || {};
 
             __g__.controller.addEventState("emptySelection", function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
-            }, {bindings:["nodeSelected", "sizeMapping"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["nodeSelected", "sizeMapping", "emptySelection", "Select"], fromAll:true, useless:null, activate:false});
+
+
+            __g__.controller.addEventState("arrangeLabels",  function (_event) {
+                TP.Visualization().arrangeLabels(_event);
+            }, {bindings:[ "sizeMapping", "emptySelection", "nodeSelected"], fromAll:true, useless:null, activate:true});
 
             /*
             __g__.svg.on('mouseover', function(d, i){

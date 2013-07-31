@@ -247,12 +247,6 @@ var TP = TP || {};
         
         __g__.initStates = function () {
 
-
-            __g__.controller.addEventState("arrangeLabels",  function (_event) {
-                TP.Visualization().arrangeLabels(_event);
-            }, {bindings:[ "sizeMapping", null, "emptySelection", "nodeSelected"], fromAll:true, useless:null, activate:false});
-
-
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {
                 TP.Interaction().movingZoomDrag(_event);
             }, {bindings:["movingZoomDragEnd", "movingZoomDrag"], fromAll:null, useless:null, activate:true});

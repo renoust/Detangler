@@ -5,18 +5,22 @@
  ***********************************************************************/
 var TP = TP || {};
 (function () {
+    var mute = true;
 
     this.assert = function (test, message) {
+        if(mute) return;
         if (test) console.log("%c\t" + message, "color: green");
         else console.log("%c\t" + message, "color: red");
     };
 
     this.Test = function (name, fn) {
+        if(mute) return;
         //console.log("%c" + name + ":", "color: blue");
         if (fn !== undefined) fn();
     };
 
     this.profile = function (fn, iterations) {
+        if(mute) return;
         var start = new Date().getTime();
         if (fn === undefined) return
         if (iterations === undefined) iterations = 1
