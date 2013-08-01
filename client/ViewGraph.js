@@ -352,7 +352,7 @@ var TP = TP || {};
 
             __g__.controller.addEventState("emptySelection", function (_event) {/*assert(true, "selectionVide");*/
                 TP.Interaction().emptyListAction(_event);
-            }, {bindings:["nodeSelected", "sizeMapping", "emptySelection", "Select"], fromAll:true, useless:null, activate:false});
+            }, {bindings:["nodeSelected", "sizeMapping", "emptySelection", "Select"], fromAll:true, useless:null, activate:true});
 
 
             __g__.controller.addEventState("arrangeLabels",  function (_event) {
