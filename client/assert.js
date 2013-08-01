@@ -5,7 +5,7 @@
  ***********************************************************************/
 var TP = TP || {};
 (function () {
-    var mute = true;
+    var mute = false;
 
     this.assert = function (test, message) {
         if(mute) return;
