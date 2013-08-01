@@ -1,0 +1,213 @@
+/********************************************************************************/
+/********************************** Left Menu ***********************************/
+/********************************************************************************/
+#wrap .cont{ 
+	position: absolute;
+	width: 300px;
+	height: 100%;
+	top: 0px;
+	background-color: white;
+	border:1px solid #666666;
+}
+
+.toggleButton{ 
+	position: absolute; 
+	width: 20px; 
+	height: 100px; 
+	right: -22px;
+	z-index: 200;
+	border:1px solid #666666;
+    background-color: #C0C0C0;
+	/*background: url(myTheme/state-hover2.png) 2px bottom repeat-y; /*url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png);  /*smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) ;*/
+}
+
+.toggleButton h3{
+	position: absolute;
+	width: 100px;
+	height: 20px;
+	top: 40px;
+	right: -40px;
+	margin: 0px;
+	padding: 0px;
+	cursor: pointer; 
+	text-align: center; 
+	font-size: 0.7em;
+	-webkit-transform: rotate(-90deg);	
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+    color: black;
+}
+
+.toggleButton.open{
+    background-color: #E9E9E9;
+    /*background: url(smoothness/images/ui-bg_glass_95_fef1ec_1x400.png); /*50% 50% repeat-x*/
+}
+
+.cont .header-menu{
+	line-height: 32px;
+	height: 32px;
+	text-align: center;
+	background-color: #6d6d6d;
+	color: #fff;
+	font-family: Arial;
+	font-size: 16px;
+}
+
+.close-button{
+	float:right;
+	width: 32px;
+	height :32px;
+	background: url(myTheme/close-button.png);
+}
+
+
+/*infos*/
+li{
+	overflow: auto;
+}
+
+/********************************************************************************/
+/************ Accordion for 'Interactions' and 'View Settings' panels ***********/
+/********************************************************************************/
+.nav{
+	padding: 0px;
+	margin: 0px;
+	font-size: 0.9em;
+}
+
+.nav li{
+	list-style-type:none;
+}
+
+
+.nav .family{
+	padding: 0;
+}
+.nav label{
+	font-size: 13px;
+}
+
+.nav li.tglFamily > a{
+	display: block;
+	padding: 4px 10px;
+	background: url(myTheme/state-default.png) left bottom repeat-x;
+}
+
+.nav li.form > a{
+	display: block;
+	padding: 4px 10px;
+	background: url(myTheme/state-default2.png) left bottom repeat-x;
+}
+
+.nav div.formParam {
+	display: block;
+	padding: 4px 10px;
+	text-decoration: none;
+}
+
+.nav li.open > a{
+	background: url(myTheme/state-hover2.png) left bottom repeat-x;
+}
+
+.nav a:hover, .nav a:focus, .nav a:active, .nav a:visited {
+	cursor: pointer;
+	color: #000;
+	/*background: url(myTheme/state-hover.png) left bottom repeat-x;*/
+}
+
+.nav .family{
+	padding: 0;
+}
+
+.ui-autocomplete{
+	z-index: 203;
+	font-size: 11px;
+	height: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+ .ui-autocomplete li{
+ 	overflow: hidden;
+ }
+
+/********************************************************************************/
+/****************************** Informations panel ******************************/
+/********************************************************************************/
+#infoNodes {
+	padding: 5px;
+	font: 12px Arial;
+	/*font-family:arial;
+	font-size:12px;*/
+}
+
+p{
+	font-weight: bold;
+}
+
+#infoView p{
+	margin: 5 5 5 5;
+	font-size:12px;
+/*	font-weight:bold;*/
+}
+#infoView ul{
+	padding: 0;
+	margin:0 0 0 20;
+
+}
+#infoView li{
+	font-size: 12px;
+}
+
+
+
+#infoNodes p{
+	margin: 2px;
+}
+
+#infoNodes ul{
+	padding: 0;
+	margin:0 0 0 20;
+}
+
+.hidden{
+	visibility: hidden;
+}
+
+/******************************** Entanglement **********************************/
+
+#entanglement-cont{	
+	border: 4px solid #666666;
+    position: relative;
+    height: 70px;
+    margin-bottom: 5px;
+}
+
+#bg  {
+    /*background: #fdd0a2;*/
+    opacity: 0.5; 
+    position: absolute;
+    height: 100%; width:100%;
+
+}
+
+#entanglement {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+
+	font-family:arial;
+	font-size:12px;
+}
+
+#entanglement p{
+	margin:2 2 5 2;
+}
+
+#entanglement ul{
+	margin: 0;
+	padding: 0 0 0 20;
+}
+
+/************************** Menu : VIsualisation ********************************/

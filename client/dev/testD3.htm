@@ -1,0 +1,135 @@
+<html>
+<head>
+  <title>Test tulip-python/D3</title>
+</head>
+
+<style>
+
+
+  svg {
+    border: solid 1px #ccc;
+  }
+
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  .node {
+    stroke: #fff;
+    stroke-width: 1.5px;
+  }
+
+  .link {
+    stroke: #999;
+    stroke-opacity: .6;
+    stroke-width: 1.5px;
+  }
+
+  @font-face {
+    font-family: 'EntypoRegular';
+    src: url('entypo-webfont.eot');
+    src: url('entypo-webfont.eot?#iefix') format('embedded-opentype'), url('entypo-webfont.woff') format('woff'), url('entypo-webfont.ttf') format('truetype'), url('entypo-webfont.svg#EntypoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+</style>
+
+
+<h1>Proof of concept: D3 and tulip-python</h1>
+<!--
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://d3js.org/d3.v2.min.js?2.8.1"></script> 
+<script src="local/jquery.js"></script>
+<script src="local/jqui.js"></script>
+<script src="local/d3.v2.js"></script>
+<script src="lasso.js"></script>
+-->
+<link rel="stylesheet" href="../local/nv.d3.css" type="text/css" media="screen">
+
+<script src="../local/jquery-1.9.1.js"></script>
+<script src="../local/jquery-ui-1.10.2.js"></script>
+<script src="../local/d3.v3.min.js"></script>
+<script src="../local/nv.d3.js"></script>
+
+<script>
+
+
+  var data = [
+    [1, 2],
+    [3, 4],
+    [5, 6]
+  ]
+
+  //    $("body").append("div").attr("id","dialog")
+  d3.select("body").append("div")
+      .attr("id", "dialog")
+      .append("input")
+      .on("mouseover", function (d, e, f) {
+        console.log(d, e, f);
+        d3.select(this).attr("value", "toto")
+      });
+
+  $("#dialog").dialog();
+
+  nv.addGraph(function () {
+    var chart = nv.models.scatterChart()
+        .showDistX(true)
+        .showDistY(true)
+        .color(d3.scale.category10().range());
+
+    chart.xAxis.tickFormat(d3.format('.02f'))
+    chart.yAxis.tickFormat(d3.format('.02f'))
+
+    d3.select('#dialog').append("svg")
+        .datum(randomData(4, 40))
+        .transition().duration(500)
+        .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+
+  /**************************************
+   * Simple test data generator
+   */
+
+  function randomData(groups, points) { //# groups,# points per group
+    var data = [],
+        shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
+        random = d3.random.normal();
+
+    for (i = 0; i < groups; i++) {
+      data.push({
+        key: 'Group ' + i,
+        values: []
+      });
+
+      for (j = 0; j < points; j++) {
+        data[i].values.push({
+          x: random(), y: random(), size: Math.random()
+          //, shape: shapes[j % 6]
+        });
+      }
+    }
+
+    return data;
+  }
+
+
+</script>
+<body>
+<div>
+  <p>
+    <aside>Select nodes by clicking on them and click the rectangle to sub-select them.</aside>
+</div>
+<p>We're just trying</p>
+</body>
+<footer>
+  <aside>May 25, 2012</aside>
+  Benjamin Renoust (from Mike Bostock)
+</footer> 

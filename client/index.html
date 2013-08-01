@@ -1,0 +1,129 @@
+<html>
+<head>
+
+  <link rel="stylesheet" href="css/smoothness/jquery-ui.css" type="text/css"/>
+  <link rel="stylesheet" href="css/farbastic/farbtastic.css" type="text/css"/>
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="css/menu.css" type="text/css">
+
+  <link rel="stylesheet" href="local/nv.d3.css" type="text/css" media="screen">
+
+
+  <script type="text/javascript" src="local/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="local/jquery-ui-1.10.2.js"></script>
+  <script type="text/javascript" src="local/d3.v3.min.js"></script>
+  <script type="text/javascript" src="local/farbtastic.js"></script>
+  <script type="text/javascript" src="local/colorbrewer.js"></script>
+  <script type="text/javascript" src="local/nv.d3.js"></script>
+
+  <script type="text/javascript" src="DataTreatment.js"></script>
+  <script type="text/javascript" src="UpdateEventHandler.js"></script>
+  <script type="text/javascript" src="lasso_brush.js"></script>
+  <script type="text/javascript" src="BarChart.js"></script>
+  <script type="text/javascript" src="Client.js"></script>
+  <script type="text/javascript" src="Controller.js"></script>
+  <script type="text/javascript" src="Interaction.js"></script>
+  <script type="text/javascript" src="Interface.js"></script>
+  <script type="text/javascript" src="Metric.js"></script>
+  <script type="text/javascript" src="ScatterPlot.js"></script>
+  <script type="text/javascript" src="StateGraph.js"></script>
+  <script type="text/javascript" src="States.js"></script>
+  <script type="text/javascript" src="StatesChange.js"></script>
+  <script type="text/javascript" src="Store.js"></script>
+  <script type="text/javascript" src="UpdateViews.js"></script>
+  <script type="text/javascript" src="ViewData.js"></script>
+  <script type="text/javascript" src="ViewBarchart.js"></script>
+  <script type="text/javascript" src="ViewGraphCatalyst.js"></script>
+  <script type="text/javascript" src="ViewGraphSubstrate.js"></script>
+  <script type="text/javascript" src="ViewGraph.js"></script>
+  <script type="text/javascript" src="ViewScatterPlot.js"></script>
+  <script type="text/javascript" src="ViewNVD3.js"></script>
+  <script type="text/javascript" src="ViewTemplate.js"></script>
+  <script type="text/javascript" src="context.js"></script>
+  <script type="text/javascript" src="eventHandler.js"></script>
+  <script type="text/javascript" src="graph.js"></script>
+  <script type="text/javascript" src="graphDrawing.js"></script>
+  <script type="text/javascript" src="lasso.js"></script>
+  <script type="text/javascript" src="Visualization.js"></script>
+  <script type="text/javascript" src="objectReferences.js"></script>
+  <script type="text/javascript" src="stateSelect.js"></script>
+  <script type="text/javascript" src="tools.js"></script>
+  <script type="text/javascript" src="assert.js"></script>
+  <script type="text/javascript" src="View.js"></script> 
+  <script type="text/javascript" src="TulipPosy.js"></script>
+
+
+</head>
+
+<body>
+<script>
+  // This function removes an element of the page by its id
+  function remove(id) {
+    var elem = document.getElementById(id);
+    if (elem)
+      return elem.parentNode.removeChild(elem);
+    else
+      return
+  }
+</script>
+
+<div id='header'>
+  <div id='header-content'>
+    <!--<button id='redo'> Redo</button>
+    <button id='refresh'> Refresh</button>
+    <button id='undo'> Undo</button>-->
+    <button id='tile'>Tile</button>
+    <div id='header-logo'>data detangler</div>
+    <ul class='inbarmenu'>
+      <li class='hmenu'><a>Load...</a>
+        <ul class='submenu'>
+
+          <li><a id='opfile'>Open File</a></li>
+          <li><a><input id='analyse' type='checkbox'></input>Analyse</a></li>
+          <li><a><input id='sync' type='checkbox'></input>Align layouts</a></li>
+
+        </ul>
+      </li>
+    </ul>
+
+      <ul class='inbarmenu'>
+          <li class='hmenu'><a>About...</a>
+              <ul class='submenu'>
+
+                  <li><a href="https://github.com/renoust/tulipposy" target="_blank">Project</a></li>
+
+              </ul>
+          </li>
+      </ul>
+
+    <!--
+    <ul class='inbarmenu'>
+        <li class='hmenu>'><a>About...</a>
+            <ul class="submenu">
+                <li><a id='opfile' href="https://github.com/renoust/tulipposy" target="_blank">project</a></li>
+                <li><a>ttt</a></li>
+            </ul>
+        </li>
+    </ul>
+    -->
+  </div>
+</div>
+
+<div id="wrap" class="sidebar">
+  <div id="container"></div>
+</div>
+
+<div style="opacity:0;display:none;">
+  <input id="files" type="file">
+</div>
+
+<div id="Controller"></div>
+
+<script>
+  //$("#principalController").on("message", function(resume, message){TP.Context().treateEvent(resume, message)});
+  TP.Context().initController("principal", "principal");
+
+</script>
+<script type="text/javascript" src="load.js"></script>
+</body>
+</html>
