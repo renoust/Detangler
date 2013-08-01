@@ -346,13 +346,13 @@ var TP = TP || {};
             //assert(false, "il n'y a rien");
 
             var selList = null;
-            var target = null;
+            var currentViewID = null;
 
-            target = object.associatedData.source;
+            currentViewID = object.associatedData.source;
             selList = object.associatedData.selList;
 
 
-            var svg = TP.Context().view[target].getSvg();
+            var svg = TP.Context().view[currentViewID].getSvg();
 
             var combinedSvg = null;
             var catalystSvg = null;
@@ -367,25 +367,25 @@ var TP = TP || {};
             var substrateName = null;
 
 
-            if (TP.Context().view[target].getAssociatedView("catalyst") != null || TP.Context().view[target].getType() == "catalyst") {
-                catalystName = (TP.Context().view[target].getType() == "catalyst") ? target : TP.Context().view[target].getAssociatedView("catalyst")[0].getID();
+            if (TP.Context().view[currentViewID].getAssociatedView("catalyst") != null || TP.Context().view[currentViewID].getType() == "catalyst") {
+                catalystName = (TP.Context().view[currentViewID].getType() == "catalyst") ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("catalyst")[0].getID();
                 catalystView = TP.Context().view[catalystName];
-                catalystSvg = (TP.Context().view[target].getType() == "catalyst") ? svg : catalystView.getSvg();
+                catalystSvg = (TP.Context().view[currentViewID].getType() == "catalyst") ? svg : catalystView.getSvg();
             }
 
 
-            if (TP.Context().view[target].getAssociatedView("substrate") != null || TP.Context().view[target].getType() == "substrate") {
-                substrateName = (TP.Context().view[target].getType() == "substrate") ? target : TP.Context().view[target].getAssociatedView("substrate")[0].getID();
+            if (TP.Context().view[currentViewID].getAssociatedView("substrate") != null || TP.Context().view[currentViewID].getType() == "substrate") {
+                substrateName = (TP.Context().view[currentViewID].getType() == "substrate") ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("substrate")[0].getID();
                 ;
                 substrateView = TP.Context().view[substrateName];
-                substrateSvg = (TP.Context().view[target].getType() == "substrate") ? svg : substrateView.getSvg();
+                substrateSvg = (TP.Context().view[currentViewID].getType() == "substrate") ? svg : substrateView.getSvg();
             }
 
 
-            if (TP.Context().view[target].getAssociatedView("combined") != null || TP.Context().view[target].getType() == "combined") {
-                combinedName = (TP.Context().view[target].getType() == "combined") ? target : TP.Context().view[target].getAssociatedView("combined")[0].getID();
+            if (TP.Context().view[currentViewID].getAssociatedView("combined") != null || TP.Context().view[currentViewID].getType() == "combined") {
+                combinedName = (TP.Context().view[currentViewID].getType() == "combined") ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("combined")[0].getID();
                 combinedView = TP.Context().view[combinedName];
-                combinedSvg = (TP.Context().view[target].getType() == "combined") ? svg : combinedView.getSvg();
+                combinedSvg = (TP.Context().view[currentViewID].getType() == "combined") ? svg : combinedView.getSvg();
             }
 
             if (catalystSvg != null) {
@@ -500,19 +500,22 @@ var TP = TP || {};
                 combinedSvg.selectAll("text.node").style("opacity", 1)
 
             }
+
+
+
             /*
              objectReferences.VisualizationObject.resetSize("substrate");
              objectReferences.VisualizationObject.resetSize("catalyst");
              objectReferences.VisualizationObject.resetSize("combined");*/
 
             prevSelList = selList.slice(0);
-
+            TP.Context().view[currentViewID].setPreviousSourceSelection([])
             if (catalystSvg != null)
             //TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
                 TP.Context().view[catalystName].getController().sendMessage("sizeMapping", {parameter: 'entanglementIndex', idView: catalystName})
 
-            d3.select("#svg_" + target).select("g.brush").select("polygon").style('fill', "white");
-            TP.Visualization().entanglementCaught(target, 1);
+            d3.select("#svg_" + currentViewID).select("g.brush").select("polygon").style('fill', "white");
+            TP.Visualization().entanglementCaught(currentViewID, 1);
 
             //console.log("warning: the selection list is empty");
 
