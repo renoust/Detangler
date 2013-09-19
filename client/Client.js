@@ -25,6 +25,7 @@ var TP = TP || {};
         this.loadData = function (json, target) {
             //for local use
             if (json == "" || json == null) {
+                console.log(contxt.json_address)
                 var jqxhr = $.getJSON(contxt.json_address, function () {
                     console.log("success");
                 })
@@ -36,6 +37,9 @@ var TP = TP || {};
                         console.log("complete");
                     })
                     .success(function (data, b) {
+                        if ("response" in data)
+                            data = data.response
+                        console.log(data)
                         objectReferences.ToolObject.addBaseID(data, "id")
                         var jsonData = JSON.stringify(data)
                         objectReferences.ToolObject.loadJSON(data, target)

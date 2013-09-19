@@ -28,6 +28,45 @@ var TP = TP || {};
         __g__.tulip_address = document.URL;
         __g__.json_address = "./data/cluster1.json";
 
+
+        //URLparameters = document.URL.split("?")[1]
+        indexGURL = document.URL.indexOf("graphurl=")
+        if(indexGURL !=-1)
+        {
+            URLaddress = document.URL.substring(indexGURL+9)
+            if (URLaddress.indexOf("?") !=-1)
+            {
+                console.log("appending")
+                __g__.json_address = URLaddress+"&callback=?";
+            }else{
+                __g__.json_address = URLaddress+"?callback=?";
+            }
+        }
+        /*
+        if (URLparameters)
+            URLparameters = URLparameters.split("&")
+
+        if (URLparameters && URLparameters.length >0)
+        {
+            for (i in URLparameters)
+            {
+                wparam = URLparameters[i].split('=');
+                if (wparam.length >0)
+                {
+                    if (wparam[0] == "graphurl")
+                    {
+                        if (wparam[1].indexOf("?") !=-1)
+                        {
+                            console.log("appending")
+                            __g__.json_address = wparam[1]+"&callback=?";
+                        }else{
+                            __g__.json_address = wparam[1]+"?callback=?";
+                        }
+                    }
+                }
+            }
+        }*/
+
         // initialization of the default svg parameters
         __g__.dialogWidth = 460;
         __g__.dialogHeight = 460;

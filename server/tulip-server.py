@@ -15,6 +15,7 @@ import cgi
 import json
 import sys
 import os
+import re
 import mimetypes
 
 print sys.path
@@ -98,20 +99,45 @@ class MyRequestHandler(tornado.web.RequestHandler):
         
         
         if os.path.isfile(self.currentPath+arg):
-            print "FILE found!", self.currentPath+arg
+            print "FILE found!", self.currentPath+arg, "  ", arg
             abspath = os.path.abspath(self.currentPath)
             mime_type, encoding = mimetypes.guess_type(self.currentPath+arg)
             
-            f = open(self.currentPath+arg, 'r')
-            self.set_header("Content-type", mime_type)
-            self.write(f.read())#.encode('utf-8'))
+            if re.match("(.*\.json)", arg) and self.get_argument('callback', None, True):
+                f = open(self.currentPath+arg, 'r')
+                print "*************************************************************************************************"
+                print arg
+                print self.request.uri.split("?")[1].split("&")
+                print self.get_argument('callback', None, True)
+                print "*************************************************************************************************"
+                content = json.loads(f.read())
+                callback = self.get_argument('callback', None, True)
+                self.set_header("Content-type", "application/javascript")
+                result = {'status':'success', 'response': content}
+                kk = tornado.escape.json_encode(result)
+                kk = callback+'('+kk+')'
+                self.write(kk)
+            else:
+                f = open(self.currentPath+arg, 'r')
+                self.set_header("Content-type", mime_type)
+                self.write(f.read())#.encode('utf-8'))
+
             f.close()
             self.finish()
+            return
         
         isArg = [True for a in args if a != ""]
         if uri == "" and not isArg:
             self.render(self.currentPath+"index.html")
-                
+        else:
+            print "******************************************************************************************"
+            print uri
+            print args
+            print os.path.isfile(self.currentPath+arg)
+            print self.currentPath+"   /   "+arg
+            print "******************************************************************************************"
+            self.render(self.currentPath+"index.html")
+
         '''
         if uri in fileList:
             f = open(self.currentPath+uri, 'r')
