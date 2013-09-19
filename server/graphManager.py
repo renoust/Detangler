@@ -587,12 +587,13 @@ class graphManager():
         if graphTarget == 'catalyst':
                 g = self.catalyst
         
-        print 'computing double algorithm: ',g.numberOfNodes(), ' / ', g.numberOfEdges()                
-
+        print 'computing double algorithm: ',doubleName,' on ',graphTarget,' with ' ,g.numberOfNodes(), ' / ', g.numberOfEdges()
         vM = g.getDoubleProperty("viewMetric")
+        viewLabel = g.getStringProperty("catalyst")
         g.computeDoubleProperty(doubleName, vM)
         #print "the computation result"
         #print [vM[n] for n in g.getNodes()]
         #print [[e.id, g.source(e), g.target(e)] for e in g.getEdges()]
+        print {viewLabel[n]: vM[n] for n in g.getNodes()}
         return g
 
