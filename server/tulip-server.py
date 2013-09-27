@@ -38,6 +38,7 @@ from tulip import *
 
 from graphManager import *
 from session import *
+from importDF import *
 
 import mds
 
@@ -60,6 +61,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         newPath[len(newPath)-1] = "client"
         self.currentPath = "/".join(newPath)+"/"
         print "current path=",self.currentPath
+        self.utilImportDF = importDF()
     # the graph manager instance allows many pure graph manipulation
     #graphMan = graphManager()
     
@@ -201,7 +203,12 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
                 #length = int(self.headers.getheader('content-length'))
                 #postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-
+        
+        if ctype == 'text/csv':
+            
+            
+            fileName = self.request.headers.get('X-File-Name')
+            self.handleCSVUpload(self.request.body, fileName)
 
 
     '''
@@ -212,6 +219,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         #print "The request:",request
         if 'type' in request.keys():
                 if request['type'][0] == 'creation':
+                        print 'this is the end children are insane'
                         self.creationRequest(request)
 
                 if request['type'][0] == 'analyse':
@@ -226,7 +234,15 @@ class MyRequestHandler(tornado.web.RequestHandler):
                         
                 if request['type'][0] == 'plugin':
                         self.getPlugins(request)
-
+                
+                if request['type'][0] == 'adjust':
+                        self.adjustBase(request)
+                        
+                if request['type'][0] == 'adjustDraw':
+                        self.adjustDraw(request)
+                
+                if request['type'][0] == 'exportCSV':
+                        self.exportCSV(request)
 
     '''
     Returns a json as a list.
@@ -284,11 +300,22 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.set_status(200)
         self.set_header("Content-type", "application/json")
         #self.end_headers()
-        #print "this is the original json to return: ",jsonFile
+        print "this is the original json to return: ",jsonFile
         self.write(jsonFile)#.encode('utf-8'))
         self.finish()
                 
 
+    def handleCSVUpload(self, csvFile, fileName):
+         self.set_status(200)
+         self.set_header("Content-type", "application/json")
+         print 'Got a CSV file'
+         print csvFile
+         df = self.utilImportDF.buildDataFrame(csvFile,fileName)
+         dico = self.utilImportDF.goToJson(df,fileName)
+         #dico = self.utilImportDF.buildDFEssai(csvFile, fileName)
+         self.write(dico)
+         self.finish()
+         
     '''
     Sends a json string to the d3 interface.
     jsonF, the JSON formatted answer to send.
@@ -375,6 +402,51 @@ class MyRequestHandler(tornado.web.RequestHandler):
     Handles a graph creation request. 'search' for a SE query, 'graph' for a tulip graph creation.
     request, the JSON object of the request
     '''
+    
+    def adjustDraw(self, request):
+        print 'its a hell of a seasonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+        dictNodes = self.utilImportDF.buildNodesFromParameters(request)
+        jsonFile = self.utilImportDF.buildLinksFromParameters(request, dictNodes)
+        #jsonFile = self.utilImportDF.buildJSONFromParameters(request)
+        loa = json.loads(jsonFile)
+        self.handleFileUpload(json.dumps(loa))
+         
+        
+    
+    
+     
+    def exportCSV(self, request):
+        print 'export is great'
+        name = request['name'][0]
+        path = request['path'][0]
+        self.utilImportDF.exportDFInCSV(name, path) 
+     
+     
+                        
+    def adjustBase(self, request):
+        print 'adjust is great'
+        name = request['name'][0]
+        op = request['operation'][0]
+        if op == 'edit': 
+            df = self.utilImportDF.adjustDataFrameFromEdit(request['expression'][0], name)
+        elif op == 'subLines':
+            df = self.utilImportDF.adjustDataFrameFromSubsetLines(request['firstLine'][0], request['secondLine'][0], name)
+        elif op == 'choiceDrop':
+            df = self.utilImportDF.adjustDataFrameFromDropLines(request['nameColumn'][0],name)
+        elif op == 'choiceColumn':
+            df = self.utilImportDF.adjustDataFrameFromSubsetColumns(request['text'][0], name)
+        elif op == 'keepSpeValues':
+            df = self.utilImportDF.adjustDataFrameFromKeepinSpeValues(request['mode'][0], request['column'][0], request['text'][0], request['operator'][0], name)
+        elif op == 'prec':
+            df = self.utilImportDF.adjustDataFrameFromPrec(name)
+        elif op == 'suiv':
+            df = self.utilImportDF.adjustDataFrameFromSuiv(name)
+        dico = self.utilImportDF.goToJson(df,name)
+        self.write(dico)
+        self.finish() 
+        
+           
+                        
     def creationRequest(self, request):
         # handles a search request, gathers the result and formats the graph in order to send to d3
         if 'search' in request.keys():
@@ -421,6 +493,8 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
                 #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':[{'type':'string', 'name':'label'}]})
                 #graphJSON = self.getGraphMan(sidMap).graphToJSON(g, {'data':{'sid':sidMap['sid'][0]}, 'nodes':nodeProps, 'links':linkProps})
+                print 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+                print sidMap
                 graphJSON = self.getGraphMan(sidMap).graphToJSON(g, params)
 
                 #print "####################################### SENDING THIS GRAPH"

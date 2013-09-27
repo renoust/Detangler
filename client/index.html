@@ -24,6 +24,7 @@
   <script type="text/javascript" src="Controller.js"></script>
   <script type="text/javascript" src="Interaction.js"></script>
   <script type="text/javascript" src="Interface.js"></script>
+  <script type="text/javascript" src="ViewImport.js"></script>
   <script type="text/javascript" src="Metric.js"></script>
   <script type="text/javascript" src="ScatterPlot.js"></script>
   <script type="text/javascript" src="StateGraph.js"></script>
@@ -79,9 +80,9 @@
         <ul class='submenu'>
 
           <li><a id='opfile'>Open File</a></li>
+          <li><a id='csvFile'>import CSV</a></li>
           <li><a><input id='analyse' type='checkbox'></input>Analyse</a></li>
           <li><a><input id='sync' type='checkbox'></input>Align layouts</a></li>
-
         </ul>
       </li>
     </ul>
@@ -115,6 +116,10 @@
 
 <div style="opacity:0;display:none;">
   <input id="files" type="file">
+</div>
+
+<div style="opacity:0;display:none;">
+  <input id="fileCSV" type="file">
 </div>
 
 <div id="Controller"></div>

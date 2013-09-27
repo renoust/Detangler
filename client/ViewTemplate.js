@@ -122,6 +122,7 @@ var TP = TP || {};
             if (__g__.typeView === "substrate") {
                 TP.ObjectReferences().InterfaceObject.interactionPane(__g__.hashInteractorList, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
+                TP.ObjectReferences().InterfaceObject.importPane();
                 TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashInteractorList,'create');
                 TP.ObjectReferences().InterfaceObject.togglePanelMenu();
             }

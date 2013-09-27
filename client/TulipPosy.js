@@ -18,7 +18,7 @@
 // interface...
 
 
-var TulipPosy = function (originalJSON) {
+var TulipPosy = function (originalJSON, okCSV) {
 
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
@@ -75,7 +75,7 @@ var TulipPosy = function (originalJSON) {
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
             TP.ObjectReferences().ClientObject.loadData(recievedGraph, viewGraphSubstrate.getID());
         } else if ('file' in originalJSON) {
-            TP.ObjectReferences().ClientObject.loadData(originalJSON.file, viewGraphSubstrate.getID());
+            TP.ObjectReferences().ClientObject.loadData(originalJSON.file, viewGraphSubstrate.getID(), okCSV);
         } else TP.ObjectReferences().ClientObject.loadData(null, viewGraphSubstrate.getID());
     }
     else {

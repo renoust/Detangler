@@ -123,14 +123,20 @@ var TP = TP || {};
             //TP.GraphDrawing(TP.Context().getViewGraph('substrate'),TP.Context().getViewSVG('substrate')).rescaleGraph(contxt,data);
             //console.log("loadJSONrescaleENDING");
             //console.log("the data to store:", data);
+            console.log('target    '+ target)
             this.grabDataProperties(data);
+            console.log('grabDataPropertties')
             var typeGraph = TP.Context().view[target].getType();
+            console.log('typeGraph' )
             TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph);
+            console.log('first isn')
             TP.Context().view[target].getGraph().links(data.links, typeGraph);
+            console.log('second isn')
             TP.Context().view[target].getGraph().edgeBinding();
             //console.log("loading JSON", TP.Context().graph_substrate.nodes(), TP.Context().graph_catalyst.nodes());
-
+			console.log('third isn')
             TP.Context().view[target].getGraphDrawing().draw();
+            console.log('draw isn')
             //objectReferences.VisualizationObject.rescaleGraph(data);
 
             return

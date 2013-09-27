@@ -371,6 +371,11 @@ var TP = TP || {};
               $('#files').click();
               e.preventDefault();
             });
+            
+           	$('#csvFile').click(function(e){
+        		$('#fileCSV').click();
+        		e.preventDefault();
+        	})
 
         }
 
@@ -585,6 +590,1214 @@ var TP = TP || {};
 
             $('<div/>', {id: 'infoNodes'}).appendTo('#' + content.attr('id'));
         }
+        
+        this.importPane = function() {
+        	
+        	
+        	$('<div/>',{id:'parameters'}).appendTo('#container');
+        	var dialog = $("#parameters");
+			dialog.dialog({
+				title: "Build the graph",
+				modal: false,
+			    height: 600,
+			    width: 600,    
+			})
+			
+			
+        	$('<div/>',{id:'tabs'}).appendTo('#parameters');
+			st =  "<ul>"+
+"<li><a href='#tabs-1'>Bases parameters</a></li>"+
+"<li><a href='#tabs-2'>Fields parameters</a></li>"+
+"<li><a href='#tabs-3'>Draws parameters</a></li>"+
+"</ul>"+
+"<div id='tabs-1'>"+
+"</div>"+
+"<div id='tabs-2'>"+
+"<p></p>"+
+"</div>"+
+"<div id='tabs-3'>"+
+"<p></p>"+
+"<p></p>"+
+"</div>"
+
+			document.getElementById('tabs').innerHTML += st
+			$("#tabs").tabs();
+			
+			
+			// definition des div du 1er ecran, celui des parametres sur la base
+			$('#tabs-1').append('<p>Here are basics changes directly on the base</p>') 
+			$('<div/>', {id: 'visuBase'}).appendTo('#tabs-1')
+			$('#tabs-1').append('<HR/>')
+			$('<div/>',{id: 'radioOption'}).appendTo('#tabs-1')
+			$('#tabs-1').append('<HR/>')
+			$('<div/>',{id: 'parcOption'}).appendTo('#tabs-1')
+			$('#tabs-1').append('<HR/>')
+			$('<div/>',{id:'exportOption'}).appendTo('#tabs-1')
+			
+			//definition de la vue de chaucune des div du premier ecran
+			
+			//definition de la visubase premeire div
+			$('#visuBase').append("<input type = 'text' name = 'labelName' id = 'labelName' readonly='true'/>")
+			$('#visuBase').append("see the dataBase  <input type = 'button' name = 'btnSee' text = 'ejjejeje' id = 'btnSee' />")
+			$('<div/>', {id: 'visuDiv'}).appendTo('#visuBase')
+			
+			
+			
+			//definition de la radioOption div des radiobox
+			$('#radioOption').append("<input type='radio' id = 'dropNanValue' name='dropNanValue' value='0'>drop nan value<br>");
+			$('#radioOption').append("<div id= 'dropNanDiv'>")
+			$('#radioOption').append("<input type='radio' id = 'subsetLines' name='subsetLines' value='0'>subset of lines<br>");
+			$('#radioOption').append("<div id = 'subDiv'>")
+			$('#radioOption').append("<input type='radio' id = 'subsetColumns' name='subsetColumns' value='0'>subset of columns<br>");
+			$('#radioOption').append("<div id = 'subDivCol'>")
+			$('#radioOption').append("<input type='radio' id = 'keepSpeValue' name='keepSpeValue' value='0'>keep specific values<br>");
+			$('#radioOption').append("<div id = 'keepSpeValueDiv'>")
+			$('#radioOption').append("<input type='radio' id = 'edit' name='edit' value='0'>edit<br>");
+			$('#radioOption').append("<div id = 'filterInter'>")
+        	
+        	
+        	//definition de la parcOption div des precdeente, suivante
+        	$('#parcOption').append("<input type = 'button' name = 'btnPrec' title = 'PREC' id = 'btnPrec' float= 'left'/>")
+        	$('#parcOption').append("<input type = 'button' name = 'btnSuiv' title = 'SUIV' id = 'btnSuiv' float= 'right'/>")
+        	
+        	//definition de la exportOption div de l'export du csv changé
+        	$('#exportOption').append("<input type = 'button' name = 'btnExport' title = 'btnExport' id = 'btnExport'/>")
+        	
+        	
+        	//defintion des differentes div des radio de la radioOption
+        	$('#dropNanDiv').append("select your column")
+			$('<select/>', {id: 'choiceDrop', float: 'left'}).appendTo('#dropNanDiv')
+			
+        	$('#subDiv').append("keep lines from  "+ "<input type= 'text' name= 'firstLine' id = 'firstLine' value = '0' style='width:30px;' float='left'/> ")
+			$('#subDiv').append("to  "+ "<input type= 'text' name= 'secondLine' id = 'secondLine' style='width:30px;' float='left'/>")
+			$('#subDiv').append('<button id="ok2">OK</button>')
+        	
+        	$('#subDivCol').append("select your columns")
+			$('<select/>', {id: 'choiceColumn', float:'left'}).appendTo('#subDivCol')
+			$('<input/>', {type: 'text', id:'choiceCol', value:'', float: 'right'}).appendTo('#subDivCol')
+			$('#subDivCol').append('<button id="okCol">OK</button>')
+			
+			$('#keepSpeValueDiv').append("select your filter")
+			$('<select/>', {id: 'choiceMode'}).appendTo('#keepSpeValueDiv')
+			$("<option/>",{value:'drop', text:'drop'}).appendTo("#choiceMode");
+			$("<option/>",{value:'keep', text:'keep'}).appendTo("#choiceMode");
+			$('#keepSpeValueDiv').append("</br>")
+			$('#keepSpeValueDiv').append("select you column")
+			$('<select/>', {id: 'choiceC'}).appendTo('#keepSpeValueDiv')
+			$('<select/>', {id: 'choiceOp'}).appendTo('#keepSpeValueDiv')
+			$("<option/>",{value:'=', text:'='}).appendTo("#choiceOp");
+			$("<option/>",{value:'>', text:'>'}).appendTo("#choiceOp");
+			$("<option/>",{value:'<', text:'<'}).appendTo("#choiceOp");
+			$("<option/>",{value:'==', text:'=='}).appendTo("#choiceOp");
+			$('#keepSpeValueDiv').append("<input type='text' name ='valEnr' id='valEnr' value=''/>")
+			$('#keepSpeValueDiv').append("</br>")
+			$('#keepSpeValueDiv').append('<button id="okKeep">OK</button>')
+			
+			$('#filterInter').append("Variable to use: df </br>")
+			$('#filterInter').append("<input type='text' name='txt' id='txt' value = 'mark your function'/></br>")
+			$('#filterInter').append('<button id="ok">OK</button>')
+			
+			
+			$('#dropNanDiv').css('display', 'none');
+			$('#dropNandiv').css("visibility","hidden");
+			
+			$('#subDiv').css('display', 'none');
+			$('#subDiv').css("visibility","hidden");
+			
+			$('#subDivCol').css('display', 'none');
+			$('#subDivCol').css("visibility","hidden");
+			
+			$('#keepSpeValueDiv').css('display', 'none');
+			$('#keepSpeValueDiv').css("visibility","hidden");
+			
+			
+			$('#filterInter').css('display', 'none');
+			$('#filterInter').css("visibility","hidden");
+        	
+        	
+        	$('#dropNanValue').click(function() {
+        		var val = document.getElementById('dropNanValue').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#dropNanDiv').slideToggle( "slow" );
+        			$('#dropNanDiv').css("display","block");
+					$('#dropNanDiv').css("visibility","visible");
+        			var st  = document.getElementById('radioOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'dropNanDiv') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='dropNanValue') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#dropNanValue').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#subsetLines').click(function() {
+        		var val = document.getElementById('subsetLines').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#subDiv').slideToggle( "slow" );
+        			$('#subDiv').css("display","block");
+					$('#subDiv').css("visibility","visible");
+        			var st  = document.getElementById('radioOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'subDiv') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='subsetLines') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#subsetLines').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#subsetColumns').click(function() {
+        		var val = document.getElementById('subsetColumns').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#subDivCol').slideToggle( "slow" );
+        			$('#subDivCol').css("display","block");
+					$('#subDivCol').css("visibility","visible");
+        			var st  = document.getElementById('radioOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'subDivCol') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='subsetColumns') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#subsetColumns').attr('checked', false)
+        		}
+        	})
+        	
+        	$('#keepSpeValue').click(function() {
+        		var val = document.getElementById('keepSpeValue').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#keepSpeValueDiv').slideToggle( "slow" );
+        			$('#keepSpeValueDiv').css("display","block");
+					$('#keepSpeValueDiv').css("visibility","visible");
+        			var st  = document.getElementById('radioOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'keepSpeValueDiv') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='keepSpeValue') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#keepSpeValue').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#edit').click(function() {
+        		var val = document.getElementById('edit').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#filterInter').slideToggle( "slow" );
+        			$('#filterInter').css("display","block");
+					$('#filterInter').css("visibility","visible");
+        			var st  = document.getElementById('radioOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'filterInter') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='edit') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#edit').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#parameters').parent().css("display","none");
+			$('#parameters').parent().css("visibility","hidden");
+        	
+        	
+        	$( "#btnSee" ).click(function() {
+        		console.log('jjrjrjrjrjrjrj fiucking this shit motah fucka')
+  				$('#visuDiv').slideToggle( "slow" );
+  				$('#dropNanDiv').css("display","block");
+				$('#dropNanDiv').css("visibility","visible");
+			});
+        	
+        	
+        	$('#choiceDrop').click(function() {
+        		name = document.getElementById('labelName').value
+        		name2 = document.getElementById('choiceDrop').options[document.getElementById('choiceDrop').selectedIndex].value
+        		objectReferences.ClientObject.updateNewBase(name, 'choiceDrop')
+        	})
+        	
+        	
+        	$('#ok2').click(function() {
+				name = document.getElementById('labelName').value
+				firstVal = document.getElementById('firstLine').value
+				secondVal = document.getElementById('secondLine').value
+				objectReferences.ClientObject.updateNewBase(name, 'subsetLines')
+			})	
+        	
+        	
+        	$('#choiceColumn').click(function() {
+        		name = document.getElementById('choiceColumn').options[document.getElementById('choiceColumn').selectedIndex].value
+        		console.log('name   '+ name)
+        		console.log(document.getElementById('choiceCol').value)
+        		if (document.getElementById('choiceCol').value == '') {
+        			document.getElementById('choiceCol').value = name
+        		}
+        		else {
+        			document.getElementById('choiceCol').value = document.getElementById('choiceCol').value + '  and  '+ name
+        		}
+        	})
+        	
+        	
+        	$('#okCol').click(function() {
+        		console.log('let the night begin')
+        		name = document.getElementById('labelName').value
+        		txt = document.getElementById('choiceCol').value
+        		objectReferences.ClientObject.updateNewBase(name, 'choiceColumn')
+        	})
+        	
+        	
+        	$('#okKeep').click(function() {
+        		name = document.getElementById('labelName').value
+        		objectReferences.ClientObject.updateNewBase(name, 'keepSpeValues')
+        	})
+        	
+        	$('#ok').click(function() {
+				name = document.getElementById('labelName').value
+				expr = document.getElementById('txt').value
+				console.log('expr:',  expr)
+				objectReferences.ClientObject.updateNewBase(name,'edit')
+			})
+			
+			$('#btnExport').click(function () {
+        		var favorite = window.prompt('mark your path', '');
+        		if (favorite) {
+        			console.log(favorite)
+        			name = document.getElementById('labelName').value
+        			objectReferences.ClientObject.exportCSV(name, favorite)
+        		}
+            });
+            
+            $('#btnPrec').click(function() {
+        		name = document.getElementById('labelName').value
+        		objectReferences.ClientObject.handleVersionBases(name, 'prec')
+        	})
+			
+			$('#btnSuiv').click(function() {
+        		name = document.getElementById('labelName').value
+        		objectReferences.ClientObject.handleVersionBases(name, 'suiv')
+        	})	
+            
+            
+        	
+        	
+        	
+        	
+        	//definition des div de la fenetre de trace de graphe
+        	$('#tabs-3').append('<p>Here are options to nodes and links parameters</p>') 
+			$('<div/>', {id: 'labelOption'}).appendTo('#tabs-3')
+			$('#tabs-3').append('<HR/>')
+			$('<div/>',{id: 'linkOption'}).appendTo('#tabs-3')
+			$('#tabs-3').append('<HR/>')
+			$('<div/>',{id: 'JSONExportOption'}).appendTo('#tabs-3')
+			$('#tabs-3').append('<HR/>')
+			$('<div/>',{id:'AlgoOption'}).appendTo('#tabs-3')
+			$('#tabs-3').append('<HR/>')
+			$('<div/>',{id:'PandasOption'}).appendTo('#tabs-3')
+			
+			
+			$('#labelOption').append('Choose your label field');
+			$('<select/>', {id: 'nodes', float:'left'}).appendTo('#labelOption');
+			
+			
+        	$('#linkOption').append("<input type='radio' id = 'checkTaux' name='checkTaux' value='0' checked='checked'/>Coefficient Filter<br>")
+			$('<div/>',{id:'linkCoef', float: 'left'}).appendTo('#linkOption');
+			
+			$('#linkOption').append("<input type='radio' id = 'equa' name='equa' value='0'/>boolean expression<br>")
+			$('<div/>',{id:'linkEqua', float: 'left'}).appendTo('#linkOption');
+			
+			$('#linkOption').append("<input type='radio' id = 'jacques' name='jacques' value='0'/>jacquard distance<br>")
+			$('<div/>', {id:'linkJacques', float: 'right'}).appendTo('#linkOption')
+			
+			
+			$('#linkOption').append("<input type='radio' id = 'randAlg' name='randAlg' value='0'/>write your own condition<br>")
+        	$('<div/>', {id:'txtAlg', float: 'right'}).appendTo('#linkOption')
+        	
+        	
+        	$('#linkOption').append("<input type='checkbox' id = 'nodesVroo' name='nodesVroo' value='0' checked='checked'/>show non linked nodes<br>")
+        	
+        	
+        	
+        	
+        	
+        	$('#linkCoef').append('coefficient')
+			$('#linkCoef').append("<input type = 'text' name = 'borneCoef' id = 'borneCoef' value ='0' flaot= 'left'/>")
+			
+			$('#linkEqua').append("<input type = 'text' name='equaTXT' id = 'equaTXT' placeholder = 'mark your boolean function by using fields'/><br> ")
+			$('#linkEqua').append("<label id='okEqua'>wrong equation</label>")
+			
+			$('#linkJacques').append('from')
+			$('#linkJacques').append("<input type = 'text' name = 'borneLeft' id = 'borneLeft' value ='0'/>")
+			$('#linkJacques').append('to')
+			$('#linkJacques').append("<input type = 'text' name = 'borneRight' id = 'borneRight' value ='1'/>")
+			
+			$('#txtAlg').append("<TEXTAREA id = 'algorithm' name='algorithm' rows=4 cols=40>write your favorite algorithm</TEXTAREA>")
+			$('#algorithm').append("<button id='ifBtn'>IF</button>")
+			
+        	
+        	$('#linkEqua').css("display","none");
+			$('#linkEqua').css("visibility","hidden");
+			
+			$('#linkCoef').css("display","none");
+			$('#linkEqua').css("visibility","hidden");
+			
+			$('#linkCoef').css("display","none");
+			$('#linkCoef').css("visibility","hidden");
+			
+			$('#linkJacques').css("display","none");
+			$('#linkJacques').css("visibility","hidden");
+			
+			
+			$('#txtAlg').css("display","none");
+			$('#txtAlg').css("visibility","hidden");
+        	
+        	
+        	$('#checkTaux').click(function() {
+        		var val = document.getElementById('checkTaux').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#linkCoef').slideToggle( "slow" );
+        			$('#linkCoef').css("display","block");
+					$('#linkCoef').css("visibility","visible");
+        			var st  = document.getElementById('linkOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'linkCoef') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='checkTaux') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#checkTaux').attr('checked', false)
+        		}
+        	})
+        	
+        	$('#equa').click(function() {
+        		var val = document.getElementById('equa').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#linkEqua').slideToggle( "slow" );
+        			$('#linkEqua').css("display","block");
+					$('#linkEqua').css("visibility","visible");
+        			var st  = document.getElementById('linkOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'linkEqua') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='equa') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#equa').attr('checked', false)
+        		}
+        	})
+        	
+        	$('#jacques').click(function() {
+        		var val = document.getElementById('jacques').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#linkJacques').slideToggle( "slow" );
+        			$('#linkJacques').css("display","block");
+					$('#linkJacques').css("visibility","visible");
+        			var st  = document.getElementById('linkOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'linkJacques') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='jacques') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#jacques').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#randAlg').click(function() {
+        		var val = document.getElementById('randAlg').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#txtAlg').slideToggle( "slow" );
+        			$('#txtAlg').css("display","block");
+					$('#txtAlg').css("visibility","visible");
+        			var st  = document.getElementById('linkOption')
+					var tab = st.getElementsByTagName('div')
+					for (var i=0; i<tab.length; i++) {
+						console.log(tab[i].id)
+						if (tab[i].id != 'txtAlg') {
+							$(tab[i]).css("display","none");
+							$(tab[i]).css("visibility","hidden");
+							console.log(document.getElementById(tab[i].id))
+						}
+					}			
+				
+					var inputs =  st.getElementsByTagName('input');
+					console.log(inputs)
+					for(var i = 0; i < inputs.length; i++) {
+    					if(inputs[i].type.toLowerCase() == 'radio' && inputs[i].id !='randAlg') {
+        					$(inputs[i]).attr('checked', false)
+    					}
+					}
+        			
+        		}
+        		else {
+        			$('#randalg').attr('checked', false)
+        		}
+        	})
+        	
+        	
+        	$('#borneCoef').keyup(function() {
+				name = document.getElementById('labelName').value
+				valCoef = document.getElementById('borneCoef').value
+				res = objectReferences.ViewImportObject.handleCoeffEquation(name,valCoef)
+				
+			})
+			
+			$('#equaTXT').keyup(function() {
+				name = document.getElementById('labelName').value
+				val = document.getElementById('equaTXT').value
+				res = objectReferences.ViewImportObject.handleBooleanEquation(name, val)
+				if (res) {
+					document.getElementById('okEqua').innerHTML = 'Correct equation'
+				}
+				else {
+					document.getElementById('okEqua').innerHTML = 'Wrong equation'
+					console.log('wrong')
+				}
+			})
+        	
+        	
+        	$('#borneLeft').keyup(function() {
+				name = document.getElementById('labelName').value				
+				valLeft = document.getElementById('borneLeft').value
+				valRight = document.getElementById('borneRight').value
+				res = objectReferences.ViewImportObject.handleJacquardEquation(name,valLeft, valRight)
+			})
+			
+			$('#borneRight').keyup(function() {
+				name = document.getElementById('labelName').value
+				valLeft = document.getElementById('borneLeft').value
+				valRight = document.getElementById('borneRight').value
+				res = objectReferences.ViewImportObject.handleJacquardEquation(name,valLeft, valRight)
+			})
+
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	/*
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+			//var head = $('#param').parents('.ui-dialog').find('.ui-dialog-titlebar');
+			
+			$('<div/>',{id:'buil'}).appendTo('#container');
+        	var dialog = $("#buil");
+			dialog.dialog({
+				title: "Build the graph",
+				modal: false,
+			    height: 600,
+			    width: 600,    
+			})
+			
+			//$('onglet_0 onglet', {id:'onglet_nom_de_longlet'}).appendTo('#buil') 
+			//$('#buil').append("<span class='onglet_0 onglet' id='onglet_nom_de_longlet'>Nom de l'onglet</span>")
+			
+			$('<div/>',{id:'tabs'}).appendTo('#buil');
+			st =  "<ul>"+
+"<li><a href='#tabs-1'>Bases parameters</a></li>"+
+"<li><a href='#tabs-2'>Fields parameters</a></li>"+
+"<li><a href='#tabs-3'>Draws parameters</a></li>"+
+"</ul>"+
+"<div id='tabs-1'>"+
+"</div>"+
+"<div id='tabs-2'>"+
+"<p>da, meelis. Mauris consectetur tortor et purus.</p>"+
+"</div>"+
+"<div id='tabs-3'>"+
+"<p>Mat nec, luctus a, lacus.</p>"+
+"<p>Dtesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>"+
+"</div>"
+
+
+			
+		
+			document.getElementById('tabs').innerHTML += st
+			$('#tabs-1').append("<input type='checkbox' id = 'ziz' name='randAlg' value='0'/>write your own condition<br>")
+			
+			$( "#tabs" ).tabs();
+			
+			
+			
+			
+			
+    
+			
+						
+			
+			$('#buil').append("<button id = 'back'>Back</button>")
+			
+			$('<div/>',{id:'nodeInt', float: 'left'}).appendTo('#buil');
+			$('#nodeInt').append('Choose your node parameter')
+			$('<select/>', {id: 'nodes', float:'left'}).appendTo('#nodeInt');
+			
+			$('<div/>',{id:'linkInt', float: 'left'}).appendTo('#buil');
+			$('#linkInt').append('Choose your link option<br>')
+			
+			$('#linkInt').append("<input type='checkbox' id = 'checkTaux' name='checkTaux' value='0' checked='checked'/>Coefficient Filter<br>")
+			$('<div/>',{id:'linkCoef', float: 'left'}).appendTo('#linkInt');
+			
+			$('#linkInt').append("<input type='checkbox' id = 'equa' name='equa' value='0'/>boolean expression<br>")
+			$('<div/>',{id:'linkEqua', float: 'left'}).appendTo('#linkInt');
+			
+			$('#linkInt').append("<input type='checkbox' id = 'jacques' name='jacques' value='0'/>jacquard distance<br>")
+			$('<div/>', {id:'linkJacques', float: 'right'}).appendTo('#linkInt')
+			
+			
+			$('#linkInt').append("<input type='checkbox' id = 'randAlg' name='randAlg' value='0'/>write your own condition<br>")
+			$('<div/>', {id:'txtAlg', float: 'right'}).appendTo('#linkInt')
+			
+			
+			$('#txtAlg').append("<TEXTAREA id = 'algorithm' name='algorithm' rows=4 cols=40>write your favorite algorithm</TEXTAREA>")
+			
+			
+			
+			
+			$('#linkEqua').css("display","none");
+			$('#linkEqua').css("visibility","hidden");
+			
+			$('#linkJacques').css("display","none");
+			$('#linkJacques').css("visibility","hidden");
+			
+			
+			$('#txtAlg').css("display","none");
+			$('#txtAlg').css("visibility","hidden");
+			
+			$('#linkCoef').append('coefficient')
+			$('#linkCoef').append("<input type = 'text' name = 'borneCoef' id = 'borneCoef' value ='0'/>")
+			
+			
+			$('#linkJacques').append('from')
+			$('#linkJacques').append("<input type = 'text' name = 'borneLeft' id = 'borneLeft' value ='0'/>")
+			$('#linkJacques').append('to')
+			$('#linkJacques').append("<input type = 'text' name = 'borneRight' id = 'borneRight' value ='1'/>")
+
+			$('#linkEqua').append("<input type = 'text' name='equaTXT' id = 'equaTXT' placeholder = 'mark your boolean function by using button'/><br> ")
+			$('#linkEqua').append("<label id='okEqua'>wrong equation</label>")
+			
+			
+			$('<div/>', {id: 'paramLiaison', float:'right'}).appendTo('#buil')
+		
+			
+			$('#equa').click(function() {
+				var val = document.getElementById('equa').checked
+				if (val) {
+        			console.log('chechked okkkkkkkkkkkkkkkkkkkkkkkk')
+        			$('#linkEqua').css("display","block");
+					$('#linkEqua').css("visibility","visible");
+        		}
+        		else {
+        			$('#linkEqua').css("display","none");
+					$('#linkEqua').css("visibility","hidden");	
+        		}
+        	});	
+        		
+        		
+        	$('#randAlg').click(function() {
+				var val = document.getElementById('randAlg').checked
+				if (val) {
+        			console.log('chechked ok')
+        			$('#txtAlg').css("display","block");
+					$('#txtAlg').css("visibility","visible");
+        		}
+        		else {
+        			$('#txtAlg').css("display","none");
+					$('#txtAlg').css("visibility","hidden");	
+        		}
+			})
+			
+			$('#jacques').click(function() {
+				var val = document.getElementById('jacques').checked
+				if (val) {
+        			console.log('chechked ok')
+        			$('#linkJacques').css("display","block");
+					$('#linkJacques').css("visibility","visible");
+        		}
+        		else {
+        			$('#linkJacques').css("display","none");
+					$('#linkJacques').css("visibility","hidden");	
+        		}
+			});
+			
+			$('#checkTaux').click(function() {
+				var val = document.getElementById('checkTaux').checked
+				console.log('valllllllllllllllllllllll'+ val)
+				if (val) {
+        			console.log('chechked ok')
+        			$('#linkCoef').css("display","block");
+					$('#linkCoef').css("visibility","visible");
+        		}
+        		else {
+        			$('#linkCoef').css("display","none");
+					$('#linkCoef').css("visibility","hidden");	
+        		}
+			});
+				/*var divName = 'linkInt'
+				var checkBoxName = 'equa'
+				var divAsso = 'linkEqua'
+				objectReferences.ViewImportObject.closeOtherDiv(divName, checkBoxName, divAsso)
+				*/
+/*
+			
+			$('#equaTXT').keyup(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				val = document.getElementById('equaTXT').value
+				res = objectReferences.ViewImportObject.handleBooleanEquation(name, val)
+				if (res) {
+					document.getElementById('okEqua').innerHTML = 'Correct equation'
+				}
+				else {
+					document.getElementById('okEqua').innerHTML = 'Wrong equation'
+					console.log('wrong')
+				}
+			})
+			
+			$('#borneCoef').keyup(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				valCoef = document.getElementById('borneCoef').value
+				res = objectReferences.ViewImportObject.handleCoeffEquation(name,valCoef)
+				
+			})
+			
+			
+			$('#borneLeft').keyup(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				valLeft = document.getElementById('borneLeft').value
+				valRight = document.getElementById('borneRight').value
+				res = objectReferences.ViewImportObject.handleJacquardEquation(name,valLeft, valRight)
+			})
+			
+			$('#borneRight').keyup(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				valLeft = document.getElementById('borneLeft').value
+				valRight = document.getElementById('borneRight').value
+				res = objectReferences.ViewImportObject.handleJacquardEquation(name,valLeft, valRight)
+			})
+			
+			$('#back').click(function() {
+				$('#param').parent().css("display","block");
+				$('#param').parent().css("visibility","visible");
+				
+				$('#buil').parent().css("display","none");
+				$('#buil').parent().css("visibility","hidden");
+				
+				/*$('#dropNanDiv').css('display', 'none');
+				$('#dropNandiv').css("visibility","hidden");
+				$('#dropNanValue').attr('checked', false)*/
+				
+		/*		
+				var st  = document.getElementById('choiceDF')
+				tab = st.getElementsByTagName('div')
+				for (var i=0; i<tab.length; i++) {
+					console.log(tab[i].id)
+					$(tab[i]).css("display","none");
+					$(tab[i]).css("visibility","hidden");
+					console.log(document.getElementById(tab[i].id))
+				}	
+				
+				var inputs =  st.getElementsByTagName('input');
+				console.log(inputs)
+				for(var i = 0; i < inputs.length; i++) {
+    				if(inputs[i].type.toLowerCase() == 'checkbox') {
+        				$(inputs[i]).attr('checked', false)
+    				}
+				}
+				
+			})
+			
+			
+			
+			console.log('importPane ok!!')
+			
+        	$('<div/>',{id:'param', class: 'popup_block'}).appendTo('#container');
+        	var dialog = $("#param");
+			dialog.dialog({
+				title: "Bases",
+			    height: 600,
+			    width: 600,    
+			})
+			
+			
+			$('<div/>',{id:'tabs'}).appendTo('#param');
+			st =  "<ul>"+
+"<li><a href='#tabs-1'>Bases parameters</a></li>"+
+"<li><a href='#tabs-2'>Fields parameters</a></li>"+
+"<li><a href='#tabs-3'>Draws parameters</a></li>"+
+"</ul>"+
+"<div id='tabs-1'>"+
+"</div>"+
+"<div id='tabs-2'>"+
+"<p>da, meelis. Mauris consectetur tortor et purus.</p>"+
+"</div>"+
+"<div id='tabs-3'>"+
+"<p>Mat nec, luctus a, lacus.</p>"+
+"<p>Dtesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>"+
+"</div>"
+
+
+			
+		
+			document.getElementById('tabs').innerHTML += st
+			
+			$('#tabs-1').append("<input type='checkbox' id = 'ziz' name='randAlg' value='0'/>write your own condition<br>")
+			
+			$( "#tabs" ).tabs();
+			
+			
+			$('<div/>',{id:'chBase', style:'background-color:#FFA500'}).appendTo('#param');
+			$('<div/>',{id:'btnGest'}).appendTo('#param');
+			$('<div/>',{id:'descDF',float:'left'}).appendTo('#param');
+			$('<div/>',{id:'choiceDF', float:'left'}).appendTo('#param');
+			$('<div/>',{id:'btnDF'}).appendTo('#param');
+			
+			//$('<div/>',{id: 'filterField'}).appendTo('#param');
+			$('#chBase').append("choose the base")
+			$('<select/>', {id: 'bases'}).appendTo('#chBase');
+			
+			
+			$('#btnGest').append("<button id='prec'>PREC</button>");
+			$('#btnGest').append("<button id='suiv'>SUIV</button>");
+			
+			
+			//$('#btnDF').append("<button id='export'>Export CSV</button>")
+			$('#btnDF').append("<input id = 'export' type='button' value= 'export the base to csv'>")
+			
+			$('#btnDF').append("<button id='draw'>Draw the Graph</button>")
+			
+			
+			
+			$('#choiceDF').append("<input type='checkbox' id = 'dropNanValue' name='dropNanValue' value='0'>drop nan value<br>");
+			$('#choiceDF').append("<div id= 'dropNanDiv'>")
+			$('#choiceDF').append("<input type='checkbox' id = 'subsetLines' name='subsetLines' value='0'>subset of lines<br>");
+			$('#choiceDF').append("<div id = 'subDiv'>")
+			$('#choiceDF').append("<input type='checkbox' id = 'subsetColumns' name='subsetColumns' value='0'>subset of columns<br>");
+			$('#choiceDF').append("<div id = 'subDivCol'>")
+			$('#choiceDF').append("<input type='checkbox' id = 'keepSpeValue' name='keepSpeValue' value='0'>keep specific values<br>");
+			$('#choiceDF').append("<div id = 'keepSpeValueDiv'>")
+			$('#choiceDF').append("<input type='checkbox' id = 'edit' name='edit' value='0'>edit<br>");
+			$('#choiceDF').append("<div id = 'filterInter'>")
+			
+			
+			$('#filterInter').css("display","none");
+			$('#filterInter').css("visibility","hidden");
+			
+			$('#dropNanDiv').css("display","none");
+			$('#dropNanDiv').css("visibility","hidden");
+			
+			$('#keepSpeValueDiv').css("display","none");
+			$('#keepSpeValueDiv').css("visibility","hidden");
+			
+			
+			
+			$('#keepSpeValueDiv').append("select your filter")
+			$('<select/>', {id: 'choiceMode'}).appendTo('#keepSpeValueDiv')
+			$("<option/>",{value:'drop', text:'drop'}).appendTo("#choiceMode");
+			$("<option/>",{value:'keep', text:'keep'}).appendTo("#choiceMode");
+			
+			
+			$('#keepSpeValueDiv').append("</br>")
+			$('#keepSpeValueDiv').append("select you column")
+			$('<select/>', {id: 'choiceC'}).appendTo('#keepSpeValueDiv')
+			$('<select/>', {id: 'choiceOp'}).appendTo('#keepSpeValueDiv')
+			$("<option/>",{value:'=', text:'='}).appendTo("#choiceOp");
+			$("<option/>",{value:'>', text:'>'}).appendTo("#choiceOp");
+			$("<option/>",{value:'<', text:'<'}).appendTo("#choiceOp");
+			$("<option/>",{value:'==', text:'=='}).appendTo("#choiceOp");
+			$('#keepSpeValueDiv').append("<input type='text' name ='valEnr' id='valEnr' value=''/>")
+			$('#keepSpeValueDiv').append("</br>")
+			$('#keepSpeValueDiv').append('<button id="okKeep">OK</button>')
+			
+			
+			$('#subDiv').css("display","none");
+			$('#subDiv').css("visibility","hidden");
+			
+			
+			$('#subDivCol').css("display","none");
+			$('#subDivCol').css("visibility","hidden");
+			
+			
+			$('#subDivCol').append("select your columns")
+			$('<select/>', {id: 'choiceColumn'}).appendTo('#subDivCol')
+			$('#subDivCol').append("<input type='text' name ='subCol' id='choiceCol' value=''/>")
+			$('#subDivCol').append('<button id="okCol">OK</button>')
+			
+			$('#dropNanDiv').append("select your column")
+			$('<select/>', {id: 'choiceDrop'}).appendTo('#dropNanDiv')
+			//$('#dropNanDiv').append("<input type= 'text' name= 'dropNan' id = 'choiceDrop' value = '0' style='width:30px;'/>")
+			
+			
+			$('#subDiv').append("keep lines from  "+ "<input type= 'text' name= 'firstLine' id = 'firstLine' value = '0' style='width:30px;'/> ")
+			$('#subDiv').append("to  "+ "<input type= 'text' name= 'secondLine' id = 'secondLine' value = '12' style='width:30px;'/>")
+			$('#subDiv').append('<button id="ok2">OK</button>')
+			
+			
+			
+			$('#filterInter').append("Variable to use: df </br>")
+			//$('#filterInter').append("<input type= 'text' name='var' id='var' value = 'df' style='width:30px;'/></br>")
+			$('#filterInter').append("<input type='text' name='txt' id='txt' value = 'mark your function'/></br>")
+			$('#filterInter').append('<button id="ok">OK</button>')
+			
+			
+			
+			//$('#filterInter').parent().css("display","none");
+			//$('#filterInter').parent().css("visibility","hidden");
+			
+			$('#param').parent().css("display","none");
+			$('#param').parent().css("visibility","hidden");
+			
+			$('#buil').parent().css("display","none");
+			$('#buil').parent().css("visibility","hidden");
+			$('#buil').append("<button id= 'paramWin'>parameteres</button>")
+			$('#buil').append("<button id = 'goToDraw'>Draw</button>")
+			
+			
+			$('#paramWin').click(function() {
+				
+				$('<div/>',{id:'pare'}).appendTo('#container');
+        		var dialog = $("#pare");
+				dialog.dialog({
+					title: "parameters of the field",
+					modal: false,
+			    	height: 600,
+			    	width: 600,    
+				})	
+			})
+			
+			$('#goToDraw').click(function() {
+				console.log('if you gotta go go now')
+				var dico = {}
+				var  l1 = document.getElementById("paramLiaison").getElementsByTagName('div');
+				for (var i=0; i<l1.length; i++) {
+					tog = l1[i]
+					console.log(tog.id)
+					var tab2 = document.getElementById(tog.id).getElementsByTagName('input')
+					if (tab2.length >1) {
+						dico[tog.id] = {'different': document.getElementById(tab2[0].id).value, 'equal': document.getElementById(tab2[1].id).options[document.getElementById(tab2[1].id).selectedIndex].value, 'numb':document.getElementById(tab2[2].id).value}
+					}
+					else {
+						dico[tog.id] = {'different': document.getElementById(tab2[0].id).value, 'equal': 'None', 'numb': 'None'}
+					}
+					
+				}
+				console.log(dico)	
+			});
+
+			$('#bases').change(function(){ 
+        		console.log(',fndfnfnnfnfnfnfnffn')
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		console.log(name)
+        		objectReferences.ViewImportObject.switchDataBase(name); 
+        	});
+        	
+        	$('#dropNanValue').click(function() {
+        		var val = document.getElementById('dropNanValue').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#dropNanDiv').css("display","block");
+					$('#dropNanDiv').css("visibility","visible");
+        		}
+        		else {
+        			$('#dropNanDiv').css("display","none");
+					$('#dropNanDiv').css("visibility","hidden");
+        		}
+        	})
+        	
+        	$('#keepSpeValue').click(function() {
+        		var val = document.getElementById('keepSpeValue').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#keepSpeValueDiv').css("display","block");
+					$('#keepSpeValueDiv').css("visibility","visible");
+        		}
+        		else {
+        			$('#keepSpeValueDiv').css("display","none");
+					$('#keepSpeValueDiv').css("visibility","hidden");
+        		}
+        	})
+        	
+        	
+        	$('#subsetColumns').click(function() {
+        		var val = document.getElementById('subsetColumns').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#subDivCol').css("display","block");
+					$('#subDivCol').css("visibility","visible");
+        		}
+        		else {
+        			$('#subDivCol').css("display","none");
+					$('#ubDivCol').css("visibility","hidden");
+        		}
+        	})
+        	
+        	
+        	$('#subsetLines').click(function() {
+        		var val = document.getElementById('subsetLines').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#subDiv').css("display","block");
+					$('#subDiv').css("visibility","visible");
+        		}
+        		else {
+        			
+        			$('#subDiv').css("display","none");
+					$('#subDiv').css("visibility","hidden");
+        			
+        		}
+        		
+        	})
+        	
+        	$('#edit').click(function() {
+        		var val = document.getElementById('edit').checked
+        		if (val) {
+        			console.log('chechked ok')
+        			$('#filterInter').css("display","block");
+					$('#filterInter').css("visibility","visible");
+        		}
+        		else {
+        			
+        			$('#filterInter').css("display","none");
+					$('#filterInter').css("visibility","hidden");
+        			
+        		}
+        		/*console.log('oooooo')
+        		console.log($('#filter'))
+        		$('#filter').parent().css("display","block");
+				$('#filter').parent().css("visibility","visible");*/
+        /*	})
+        	
+        	$('#ok').click(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				expr = document.getElementById('txt').value
+				console.log('expr:',  expr)
+				objectReferences.ClientObject.updateNewBase(name,'edit')
+			})
+				
+			$('#ok2').click(function() {
+				name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+				firstVal = document.getElementById('firstLine').value
+				secondVal = document.getElementById('secondLine').value
+				objectReferences.ClientObject.updateNewBase(name, 'subsetLines')
+			})	
+        	
+        	$('#choiceDrop').click(function() {
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		name2 = document.getElementById('choiceDrop').options[document.getElementById('choiceDrop').selectedIndex].value
+        		objectReferences.ClientObject.updateNewBase(name, 'choiceDrop')
+        	})
+        	
+        	$('#choiceColumn').click(function() {
+        		name = document.getElementById('choiceColumn').options[document.getElementById('choiceColumn').selectedIndex].value
+        		console.log('name   '+ name)
+        		console.log(document.getElementById('choiceCol').value)
+        		if (document.getElementById('choiceCol').value == '') {
+        			document.getElementById('choiceCol').value = name
+        		}
+        		else {
+        			document.getElementById('choiceCol').value = document.getElementById('choiceCol').value + '  and  '+ name
+        		}
+        	})
+        	
+        	$('#okCol').click(function() {
+        		console.log('let the night begin')
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		txt = document.getElementById('choiceCol').value
+        		objectReferences.ClientObject.updateNewBase(name, 'choiceColumn')
+        	})
+        	
+        	$('#okKeep').click(function() {
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		objectReferences.ClientObject.updateNewBase(name, 'keepSpeValues')
+
+        	})
+        	
+        	$('#prec').click(function() {
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		objectReferences.ClientObject.handleVersionBases(name, 'prec')
+        	})
+			
+			$('#suiv').click(function() {
+        		name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        		objectReferences.ClientObject.handleVersionBases(name, 'suiv')
+        	})	
+        	
+        	$('#export').click(function () {
+        		var favorite = window.prompt('mark your path', '');
+        		if (favorite) {
+        			console.log(favorite)
+        			name = document.getElementById('bases').options[document.getElementById('bases').selectedIndex].value
+        			objectReferences.ClientObject.exportCSV(name, favorite)
+        		}
+            });
+            
+            $('#draw').click(function() {
+            	$('#param').parent().css("display","none");
+				$('#param').parent().css("visibility","hidden");
+				
+				$('#buil').parent().css("display","block");
+				$('#buil').parent().css("visibility","visible");
+				
+				tabSelect = []
+            	
+            });
+            
+            
+            */
+            
+            
+        }
+        
+        
+        
+        
+        
 
         this.visuPane = function (buttons, mode) {
             // assert(true, 'Interface -> visuPane') 
@@ -611,6 +1824,9 @@ var TP = TP || {};
 
             this.toggleAccordion('navView');
         }
+        
+        
+
 
 
         this.createElements = function(tab, parentId, evnt){
