@@ -95,7 +95,7 @@ var TP = TP || {};
             }}, interactorGroup:"Layout"},
 
 
-            {interactorLabel:'Toggle selection', interactorParameters: '', callbackBehavior: {click: function () {
+            {interactorLabel:'Leapfrog to substrates', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
             }}, interactorGroup:"Selection"},
             {interactorLabel:'Selection operator is: ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
@@ -157,7 +157,7 @@ var TP = TP || {};
                 }}, interactorGroup:"Measure"},
 
 
-            {interactorLabel:'Scatter plot (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
+            {interactorLabel:'Scatter plot (nvd3 - experimental)', interactorParameters:'', callbackBehavior:{click: function () {
                 __g__.getController().sendMessage("drawScatterPlotNVD3")
             }}, interactorGroup:"Open View"},
             {interactorLabel:'Spreadsheet (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
@@ -188,11 +188,11 @@ var TP = TP || {};
 
             __g__.controller.addEventState("movingZoomDrag",  function (_event) {
                 TP.Interaction().movingZoomDrag(_event);
-            }, {bindings:["movingZoomDragEnd", "movingZoomDrag"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["movingZoomDragEnd", "movingZoomDrag"], fromAll:true, useless:null, activate:true});
 
             __g__.controller.addEventState("movingZoomDragEnd", function (_event) {
                 TP.Interaction().movingZoomDragEnd(_event);
-            }, {bindings:["movingZoomDrag"], fromAll:null, useless:null, activate:true});
+            }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
 
 
             __g__.controller.addEventState("callLayout",  function (_event) {
