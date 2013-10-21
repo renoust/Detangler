@@ -154,7 +154,7 @@ var TP = TP || {};
         }
 
 
-        this.buildGraphFromData = function (data, target) { //substrate at bigin of project
+        this.buildGraphFromData = function (data, target, forceLinks) { //substrate at bigin of project
 
             //console.log('creating in tulip, and recieved data: ', data)
             //console.log("here should be sid: ", data.data.sid)
@@ -178,7 +178,7 @@ var TP = TP || {};
 
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             TP.Context().view[target].getGraphDrawing().clear();
-            TP.Context().view[target].getGraphDrawing().draw();
+            TP.Context().view[target].getGraphDrawing().draw(forceLinks);
 
 
             //assert(true, "arrangeLabels appele dans buildgraph")
@@ -272,6 +272,23 @@ var TP = TP || {};
                 TP.Context().view[graphName].getGraphDrawing().clear()
                 TP.Context().view[graphName].getGraphDrawing().draw()
             }
+
+            var _viewGraphCatalystParameters = {
+                name:name + " catalyst",
+                nodeColor:"#4682b4",
+                linkColor:"#808080",
+                backgroundColor:"#FFFFFF",
+                labelColor:"#000000",
+                nodeShape:"circle",
+                type:"catalyst"
+            }
+
+            TP.Context().view[graphName].getController().sendMessage("analyseGraph", (function(){
+                var params = _viewGraphCatalystParameters;
+                params.idSourceAssociatedView = graphName;
+                return {viewIndex: graphName,
+                    viewGraphCatalystParameters: params}
+            })())
         }
 
 
