@@ -31,8 +31,8 @@ var TP = TP || {};
 
 
         // this function draws the graph, first the links then the nodes
-        g.draw = function () {
-            if (g.cGraph.links().length < 1000) {
+        g.draw = function (_forceLinks) {
+            if (g.cGraph.links().length < 1000 || _forceLinks != undefined) {
                 g.drawLinks()
             }
 

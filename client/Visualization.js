@@ -26,7 +26,13 @@ var TP = TP || {};
             TP.Context().view[target].setShowLinks(!TP.Context().view[target].getShowLinks());
 
             if (TP.Context().view[target].getShowLinks()) {
-                svg.selectAll('g.link').attr("visibility", "visible");
+                var sel=svg.selectAll('g.link').attr("visibility", "visible");
+                if(sel.data().length == 0)
+                {
+                    //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
+                    TP.Context().view[target].getGraphDrawing().clear();
+                    TP.Context().view[target].getGraphDrawing().draw(true);
+                }
                 $('li.form > a').each(function () {
                     if ($(this).text() === 'Show links') {
                         $(this).text('Hide links')
@@ -38,8 +44,11 @@ var TP = TP || {};
                         $(this).text('Show links')
                     }
                 })
-                svg.selectAll('g.link').attr("visibility", "hidden");
+                var sel = svg.selectAll('g.link').attr("visibility", "hidden");
+
+
             }
+
         }
 
         // This function updates the entanglement values displayed in the 
