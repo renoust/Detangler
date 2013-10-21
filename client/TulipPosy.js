@@ -85,7 +85,7 @@ var TulipPosy = function (originalJSON) {
 	TP.Context().getController().sendMessage('getPlugins', {pluginType:"layout",endHandler:TP.Context().updateTulipLayoutAlgorithms})
 	TP.Context().getController().sendMessage('getPlugins', {pluginType:"double",endHandler:TP.Context().updateTulipDoubleAlgorithms})
 
-    if ($('#analyse').is(':checked')) {
+    /*if ($('#analyse').is(':checked')) {
         ['Bipartite analysis', '', {click: function () {
             __g__.getController().sendMessage("analyseGraph", (function(){
                 var params = __g__.viewGraphCatalystParameters()
@@ -109,7 +109,7 @@ var TulipPosy = function (originalJSON) {
     }
     if ($('#sync').is(':checked')) {
         TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
-    }
+    }*/
 
     $('#tile').click(function(){
         var tab=[];

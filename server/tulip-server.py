@@ -92,16 +92,27 @@ class MyRequestHandler(tornado.web.RequestHandler):
         #print fileList
         #print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> recieved get!!!" 
         print "the request: ", self.request.uri
-        uri = self.request.uri.split("/")[1]
+        uriList = self.request.uri.split("/")
+        uri = uriList[len(uriList)-1]
         args = uri.split("?")
         print 'args:',args
         print "parse:",cgi.parse_qs(uri)
-        
+        print uri
+        if uriList[1] == "brenoust":
+            self.currentPath = self.currentPath.split("/")
+            print "the path:",  self.currentPath
+            #self.currentPath[len(self.currentPath)-2] = "brenoust"
+            del self.currentPath[len(self.currentPath)-2]
+            self.currentPath = "/".join(self.currentPath)
+        print "The new path ", self.currentPath, " arg ",arg
+        print "result: ", self.currentPath+arg
         
         if os.path.isfile(self.currentPath+arg):
             print "FILE found!", self.currentPath+arg, "  ", arg
             abspath = os.path.abspath(self.currentPath)
             mime_type, encoding = mimetypes.guess_type(self.currentPath+arg)
+            if not mime_type:
+                mime_type= 'text/plain'
             
             if re.match("(.*\.json)", arg) and self.get_argument('callback', None, True):
                 f = open(self.currentPath+arg, 'r')
