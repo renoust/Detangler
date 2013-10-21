@@ -1,0 +1,466 @@
+{"nodes":
+  [
+   {
+    "id": 1029,
+    "descriptors": "visual programming;direct-manipulation;database visualization;uncertainty visualization;bounded uncertainty;portals;multiple views;data visualization",
+    "label": "Chris Olston",
+    "x": 203.0,
+    "y": 80.0
+    }
+,  {
+    "id": 294,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "label": "Michael Chu",
+    "x": 219.0,
+    "y": 88.0
+    }
+,  {
+    "id": 297,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "label": "Vuk Ercegovac",
+    "x": 227.0,
+    "y": 83.0
+    }
+,  {
+    "id": 296,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "label": "Mybrid Spalding",
+    "x": 223.0,
+    "y": 86.0
+    }
+,  {
+    "id": 293,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "label": "Mark Lin",
+    "x": 215.0,
+    "y": 66.0
+    }
+,  {
+    "id": 1052,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing;direct manipulation;database visualization;visual programming;direct-manipulation;database visualization",
+    "label": "Alexander Aiken",
+    "x": 228.0,
+    "y": 71.0
+    }
+,  {
+    "id": 1069,
+    "descriptors": "user interfaces;usability heuristics;multiple views;information visualization;design guidelines;portals;multiple views;data visualization;zoomable interfaces;visualization;visual interfaces;interactive graphics;information navigation;information density;clutter;zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing;direct manipulation;database visualization;visual programming;direct-manipulation;database visualization",
+    "label": "Allison Woodruff",
+    "x": 229.0,
+    "y": 73.0
+    }
+,  {
+    "id": 1070,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing;direct manipulation;database visualization;visual programming;direct-manipulation;database visualization;zoomable interfaces;visualization;visual interfaces;interactive graphics;information navigation;information density;clutter",
+    "label": "Michael Stonebraker",
+    "x": 227.0,
+    "y": 69.0
+    }
+,  {
+    "id": 409,
+    "descriptors": "user interfaces;usability heuristics;multiple views;information visualization;design guidelines",
+    "label": "Michelle Q. Wang Baldonado",
+    "x": 251.0,
+    "y": 82.0
+    }
+,  {
+    "id": 253,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing",
+    "label": "Peter Wisnovsky",
+    "x": 251.0,
+    "y": 69.0
+    }
+,  {
+    "id": 407,
+    "descriptors": "user interfaces;usability heuristics;multiple views;information visualization;design guidelines",
+    "label": "Allan Kuchinsky",
+    "x": 249.0,
+    "y": 85.0
+    }
+,  {
+    "id": 1053,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing;direct manipulation;database visualization",
+    "label": "Jolly Chen",
+    "x": 239.0,
+    "y": 59.0
+    }
+,  {
+    "id": 254,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing",
+    "label": "Caroline Paxson",
+    "x": 249.0,
+    "y": 66.0
+    }
+,  {
+    "id": 1068,
+    "descriptors": "zoomable interfaces;visualization;visual interfaces;interactive graphics;information navigation;information density;clutter",
+    "label": "James Landay",
+    "x": 230.0,
+    "y": 50.0
+    }
+,  {
+    "id": 248,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing",
+    "label": "Alan Su",
+    "x": 251.0,
+    "y": 72.0
+    }
+,  {
+    "id": 255,
+    "descriptors": "zooming;wormholes;visual programming;visual databases;user interfaces;magnifying glasses;hypermedia;data browsing",
+    "label": "Cimarron Taylor",
+    "x": 245.0,
+    "y": 62.0
+    }
+],"links":
+  [
+     {
+    "id": 65,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1052,
+    "target": 1029
+    }
+,    {
+    "id": 70,
+    "descriptors": "direct-manipulation;data visualization;portals;multiple views;visual programming;database visualization",
+    "source": 1069,
+    "target": 1029
+    }
+,    {
+    "id": 75,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 293,
+    "target": 1029
+    }
+,    {
+    "id": 79,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 294,
+    "target": 1029
+    }
+,    {
+    "id": 82,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1070,
+    "target": 1029
+    }
+,    {
+    "id": 84,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 296,
+    "target": 1029
+    }
+,    {
+    "id": 85,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 297,
+    "target": 1029
+    }
+,    {
+    "id": 62,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1052,
+    "target": 294
+    }
+,    {
+    "id": 67,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1069,
+    "target": 294
+    }
+,    {
+    "id": 71,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 293,
+    "target": 294
+    }
+,    {
+    "id": 64,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1052,
+    "target": 297
+    }
+,    {
+    "id": 69,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1069,
+    "target": 297
+    }
+,    {
+    "id": 74,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 293,
+    "target": 297
+    }
+,    {
+    "id": 78,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 294,
+    "target": 297
+    }
+,    {
+    "id": 81,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1070,
+    "target": 297
+    }
+,    {
+    "id": 83,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 296,
+    "target": 297
+    }
+,    {
+    "id": 63,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1052,
+    "target": 296
+    }
+,    {
+    "id": 68,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1069,
+    "target": 296
+    }
+,    {
+    "id": 73,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 293,
+    "target": 296
+    }
+,    {
+    "id": 77,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 294,
+    "target": 296
+    }
+,    {
+    "id": 80,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1070,
+    "target": 296
+    }
+,    {
+    "id": 61,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1052,
+    "target": 293
+    }
+,    {
+    "id": 66,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 1069,
+    "target": 293
+    }
+,    {
+    "id": 99,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 1052
+    }
+,    {
+    "id": 37,
+    "descriptors": "data browsing;direct-manipulation;magnifying glasses;zooming;visual programming;hypermedia;visual databases;direct manipulation;wormholes;user interfaces;database visualization",
+    "source": 1052,
+    "target": 1069
+    }
+,    {
+    "id": 39,
+    "descriptors": "data browsing;magnifying glasses;zooming;visual programming;hypermedia;visual databases;direct manipulation;wormholes;user interfaces;database visualization",
+    "source": 1053,
+    "target": 1069
+    }
+,    {
+    "id": 58,
+    "descriptors": "visualization;interactive graphics;information density;information navigation;visual interfaces;zoomable interfaces;clutter",
+    "source": 1068,
+    "target": 1069
+    }
+,    {
+    "id": 95,
+    "descriptors": "information visualization;user interfaces;usability heuristics;design guidelines;multiple views",
+    "source": 407,
+    "target": 1069
+    }
+,    {
+    "id": 101,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 1069
+    }
+,    {
+    "id": 38,
+    "descriptors": "data browsing;direct-manipulation;magnifying glasses;zooming;visual programming;hypermedia;visual databases;direct manipulation;wormholes;user interfaces;database visualization",
+    "source": 1052,
+    "target": 1070
+    }
+,    {
+    "id": 40,
+    "descriptors": "data browsing;magnifying glasses;zooming;visual programming;hypermedia;visual databases;direct manipulation;wormholes;user interfaces;database visualization",
+    "source": 1053,
+    "target": 1070
+    }
+,    {
+    "id": 41,
+    "descriptors": "visualization;information density;direct-manipulation;interactive graphics;data browsing;magnifying glasses;information navigation;zooming;user interfaces;direct manipulation;hypermedia;visual interfaces;visual databases;zoomable interfaces;visual programming;wormholes;clutter;database visualization",
+    "source": 1069,
+    "target": 1070
+    }
+,    {
+    "id": 59,
+    "descriptors": "visualization;interactive graphics;information density;information navigation;visual interfaces;zoomable interfaces;clutter",
+    "source": 1068,
+    "target": 1070
+    }
+,    {
+    "id": 72,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 293,
+    "target": 1070
+    }
+,    {
+    "id": 76,
+    "descriptors": "visual programming;direct-manipulation;database visualization",
+    "source": 294,
+    "target": 1070
+    }
+,    {
+    "id": 102,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 1070
+    }
+,    {
+    "id": 96,
+    "descriptors": "information visualization;user interfaces;usability heuristics;design guidelines;multiple views",
+    "source": 407,
+    "target": 409
+    }
+,    {
+    "id": 97,
+    "descriptors": "information visualization;user interfaces;usability heuristics;design guidelines;multiple views",
+    "source": 1069,
+    "target": 409
+    }
+,    {
+    "id": 103,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 253
+    }
+,    {
+    "id": 106,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1052,
+    "target": 253
+    }
+,    {
+    "id": 109,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1053,
+    "target": 253
+    }
+,    {
+    "id": 112,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1069,
+    "target": 253
+    }
+,    {
+    "id": 115,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1070,
+    "target": 253
+    }
+,    {
+    "id": 36,
+    "descriptors": "data browsing;magnifying glasses;zooming;visual programming;hypermedia;visual databases;direct manipulation;wormholes;user interfaces;database visualization",
+    "source": 1052,
+    "target": 1053
+    }
+,    {
+    "id": 100,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 1053
+    }
+,    {
+    "id": 104,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 254
+    }
+,    {
+    "id": 107,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1052,
+    "target": 254
+    }
+,    {
+    "id": 110,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1053,
+    "target": 254
+    }
+,    {
+    "id": 113,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1069,
+    "target": 254
+    }
+,    {
+    "id": 116,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1070,
+    "target": 254
+    }
+,    {
+    "id": 118,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 253,
+    "target": 254
+    }
+,    {
+    "id": 105,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 248,
+    "target": 255
+    }
+,    {
+    "id": 108,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1052,
+    "target": 255
+    }
+,    {
+    "id": 111,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1053,
+    "target": 255
+    }
+,    {
+    "id": 114,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1069,
+    "target": 255
+    }
+,    {
+    "id": 117,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 1070,
+    "target": 255
+    }
+,    {
+    "id": 119,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 253,
+    "target": 255
+    }
+,    {
+    "id": 120,
+    "descriptors": "data browsing;magnifying glasses;user interfaces;hypermedia;visual databases;visual programming;wormholes;zooming",
+    "source": 254,
+    "target": 255
+    }
+  ]
+}
