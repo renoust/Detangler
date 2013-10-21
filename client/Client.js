@@ -151,6 +151,34 @@ var TP = TP || {};
                 //success: objectReferences.UpdateViewsObject.buildGraphFromData
                 success: function (data) {
                     objectReferences.UpdateViewsObject.buildGraphFromData(data, target)
+                    if ($('#analyse').is(':checked')) {
+                        console.log(target);
+                        var viewGraphSubstrate = TP.Context().view[target];
+                        ['Bipartite analysis', '', {click: function () {
+                            __g__.getController().sendMessage("analyseGraph", (function(){
+                                var params = __g__.viewGraphCatalystParameters()
+                                params.idSourceAssociatedView = __g__.getID();
+                                return {
+                                    viewIndex: __g__.getID(),
+                                    viewGraphCatalystParameters: params
+                                }
+                            })())
+                        }}, "Open View"],
+
+
+                            viewGraphSubstrate.getController().sendMessage("analyseGraph", (function(){
+                                var params = viewGraphSubstrate.viewGraphCatalystParameters()
+                                params.idSourceAssociatedView = viewGraphSubstrate.getID();
+                                return {
+                                    viewIndex: viewGraphSubstrate.getID(),
+                                    viewGraphCatalystParameters: params
+                                }
+                            })());
+                        //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
+                    }
+                    if ($('#sync').is(':checked')) {
+                        TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
+                    }
                 }
             });
         }
@@ -295,7 +323,12 @@ var TP = TP || {};
             var idView = _event.associatedData.target;
             var data = _event.associatedData.data;
 
+
+
             objectReferences.UpdateViewsObject.applyInducedSubGraphFromData(data, idView);
+
+
+
         }
 
 
