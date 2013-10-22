@@ -307,7 +307,8 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 returnParams = json.dumps(tlp.getDefaultPluginParameters(pluginName))
             
         print returnParams
-        
+        blackList = ["Convolution"]
+        returnParams = json.dumps([x for x in json.loads(returnParams) if x not in blackList])
         self.sendJSON(returnParams)
 
 
