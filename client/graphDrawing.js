@@ -656,7 +656,7 @@ var TP = TP || {};
             g.cGraph.nodes()
                 .forEach(function (n) {
                     //console.log("node:", n)
-                    val = eval("n." + parameter);
+                    val = eval("n[\"" + parameter + "\"]");
                     if(!val)val = 3;
                     //console.log("val:", val)
                     if (valMin == null | val < valMin)
@@ -680,7 +680,7 @@ var TP = TP || {};
                 })
 
             node.select("circle.node").attr("r", function (d) {
-                var val = eval('d.'+parameter);
+                var val = eval('d[\"'+parameter+'\"]');
                 if(!val)val = 1;
                 return scale(val);
 
@@ -689,12 +689,12 @@ var TP = TP || {};
             node.select("rect.node")
                 .attr("width", function (d) {
                     //console.log(d)
-                    var val = eval('d.'+parameter);
+                    var val = eval('d[\"'+parameter+ '\"]');
                     if(!val)val = 3;
                     return 2 * scale(val)
                 })
                 .attr("height", function (d) {
-                    var val = eval('d.'+parameter);
+                    var val = eval('d[\"'+parameter+ '\"]');
                     if(!val)val = 3;
                     return 2 * scale(val)
                 })
@@ -726,7 +726,7 @@ var TP = TP || {};
             valMax = null
 
             g.cGraph.nodes().forEach(function (n) {
-                val = eval("n." + parameter);
+                val = eval("n[\"" + parameter+"\"]");
                 if (valMin == null | val < valMin)
                     valMin = val;
                 if (valMax == null | val > valMax)
@@ -748,7 +748,7 @@ var TP = TP || {};
             node.select("g.glyph")
                 .select(".node")
                 .style("fill", function (d) {
-                    c = color(eval("d." + parameter));
+                    c = color(eval('d[\"' + parameter +'\"]'));
                     return d3.rgb(c);
                 })
 
