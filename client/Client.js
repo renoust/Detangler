@@ -231,8 +231,10 @@ var TP = TP || {};
                 sid: contxt.sessionSid,
                 type: 'analyse',
                 target: TP.Context().view[idViewSource].getType(),//idViewSource,//'substrate',
-                weight: contxt.substrateWeightProperty
+                weight: TP.Context().substrateWeightProperty
             }
+
+            console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
 
 
             //assert(false, "idView : " + idView);
@@ -256,7 +258,6 @@ var TP = TP || {};
                 success: function (data) {
 
                     TP.Context().getController().sendMessage("answerAnalyseGraph", {data: data}, source);
-
                 }
             });
 
@@ -310,8 +311,7 @@ var TP = TP || {};
                 parameters: params,
                 success: function (data) {
 
-                    TP.Context().getController().sendMessage("answerSendSelection", {data: data}, source);
-
+                    console.log("analyzed data", data)
                 }
             });
 
@@ -517,13 +517,16 @@ var TP = TP || {};
                 graph: selection,
                 target: syncTarget,
                 operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
-                weight: contxt.substrateWeightProperty
+                weight: TP.Context().substrateWeightProperty
             }
+            console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
+
 
             __g__.sendQuery({
                 parameters: params,
                 async: false,
                 success: function (data) {
+                    console.log("updated", data)
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
