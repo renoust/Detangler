@@ -64,14 +64,43 @@ var TP = TP || {};
             var file = path[path.length - 1];
             var view = target.getName().split('-');
             var type = view[view.length - 1];
-
-            $('#infoView').html("<p> GLOBAL INFORMATIONS: </p>" +
+            var nbElements = Object.keys(TP.Context().substrateProperties).length
+            var formString = ""
+            formString += "<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
                 "<li> File : " + file + "</li>" +
                 "<li> View : " + type + "</li>" +
                 "<li> - " + cGraph.nodes().length + " nodes </li>" +
                 "<li> - " + cGraph.links().length + " links </li>" +
-                "</ul>");
+                "</ul>"+
+                "<form><select id=weightPropSel>" +
+                " <option value=\"\"><i>--</i></option>";
+
+            Object.keys(TP.Context().substrateProperties)
+                .forEach(function (k, i) {
+                    if (TP.Context().substrateProperties[k] == "number") {
+                        if (k == TP.Context().substrateWeightProperty)
+                            formString += " <option selected=\"selected\" value=\"" + k + "\">" + k + "</option>";
+                        else
+                            formString += " <option value=\"" + k + "\">" + k + "</option>";
+                    }
+                });
+            formString += "</select></form>";
+
+
+
+
+            $('#infoView').html(formString);
+
+            d3.select('#weightPropSel').on("change", function () {
+                TP.Context().substrateWeightProperty=d3.select("#weightPropSel")
+                    .node()
+                    .value;
+                var cView = TP.Context().view[TP.Context().activeView];
+                cView.setPreviousSourceSelection([]);
+                cView.getController().sendMessage("nodeSelected", {selList: cView.getSourceSelection()});
+                console.log("updating weight property: ", TP.Context().substrateWeightProperty);
+            })
         }
 
 
