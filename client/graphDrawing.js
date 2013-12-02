@@ -681,7 +681,7 @@ var TP = TP || {};
 
             node.select("circle.node").attr("r", function (d) {
                 var val = eval('d.'+parameter);
-                if(!val)val = 3;
+                if(!val)val = 1;
                 return scale(val);
 
             })
@@ -713,7 +713,8 @@ var TP = TP || {};
         }
 
 
-        g.nodeColorMap = function (_graph, dTime, parameter) {
+        g.nodeColorMap = function (_graph, dTime, parameter, diff) {
+            diff = true;
             g.cGraph = _graph
             //console.log(g.cGraph);
             //we would like it better as a parameter
@@ -735,6 +736,9 @@ var TP = TP || {};
             var color = d3.scale.quantize()
                 .domain([valMin, valMax])
                 .range(colorbrewer.GnBu[9]);
+
+            if (diff == true)
+                color = d3.scale.category20();
 
             var node = g.svg.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {

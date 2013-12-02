@@ -422,6 +422,9 @@ var TP = TP || {};
                 ;
             })
 
+            //var sizeScale = d3.scale.linear();
+            //sizeScale.range([minX, maxX])
+
 
             var delta = 0.00000000000000000001 //to avoid division by 0
             scale = Math.min.apply(null, [w / (maxX - minX + delta), h / (maxY - minY + delta)])
@@ -484,7 +487,7 @@ var TP = TP || {};
 
             //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-            objectReferences.VisualizationObject.entanglementCaught(graphName);
+            //objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 
