@@ -518,7 +518,7 @@ class graphManager():
     jsonGraph, a JSON graph object of a selection of nodes to analyse
     In the future we should include the entanglement calculation and send it back too.
     '''
-    def synchronizeFromCatalyst(self, jsonGraph, operator):
+    def synchronizeFromCatalyst(self, jsonGraph, operator, weightProperty=None):
 
         nodeList = []
         graphNList = []
@@ -540,7 +540,7 @@ class graphManager():
 
         descP = self.substrate.getStringProperty("descripteurs")
         
-        sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs")
+        sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs", _weightProperty = weightProperty)
         syncRes = sync.synchronizeFromCatalyst(cataList, _operator=operator)
         toPrint = [n for n in syncRes['substrate'].getNodes()]
         resLen = [len(k) for k in syncRes['catalystAnalysis'].catalystToEntIndex]

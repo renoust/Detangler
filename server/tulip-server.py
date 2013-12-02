@@ -529,7 +529,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
         # request the synchronization for the given catalyst selection
         if request['target'][0] == 'catalyst':
-                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection, operator)
+                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection, operator, weightProperty)
          
         # send back the resulting graph
         self.sendJSON(graphJSON)

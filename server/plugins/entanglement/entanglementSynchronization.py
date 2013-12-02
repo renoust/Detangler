@@ -123,7 +123,10 @@ class EntanglementSynchronization():
         self.weightProperty = None
 
         if isinstance(_weightProperty, str) or isinstance(_weightProperty, unicode):
-            self.weightProperty = self.substrateGraph.getDoubleProperty(_weightProperty)
+            if _weightProperty != "" and _weightProperty != "null":
+                self.weightProperty = self.substrateGraph.getDoubleProperty(_weightProperty)
+            else:
+                _weightProperty = ""
 
         if isinstance(_weightProperty, tlp.DoubleProperty):
             if self.substrateGraph.existProperty(_weightProperty.getName()):
