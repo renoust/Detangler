@@ -80,6 +80,25 @@ var TP = TP || {};
                 "Labels size:"
             ],
             [6,{id:"npicker"},{class:"colorwell"},null,null,{func:TP.Context().VisualizationObject.changeColor}]]
+
+        var tl2 = [
+            [7,{id:"nodeProperty"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = [];
+                        var oneNode = __g__.getGraph().nodes()[0];
+                        for (var algo in oneNode)
+                        {
+                            var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i')
+                            var isAlgo = patt.test(algo);
+                            if (isAlgo && typeof(oneNode[algo]) == "number") propertyList.push(algo);
+                        }
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }]];
+
+
         /*
         var tabCatalyst = [1,//__g__.getID(), 
                         null,
@@ -227,7 +246,21 @@ var TP = TP || {};
 
             {interactorLabel:'Scatter plot (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawScatterPlot")
-            }}, interactorGroup:"Open View"}
+            }}, interactorGroup:"Open View"},
+
+            {interactorLabel:'Node size mapping',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    //__g__.getController().sendMessage('node size mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                    TP.ObjectReferences().VisualizationObject.nodeSizeMapping(paramList.nodeProperty, __g__.getID());
+                }}, interactorGroup:"View"},
+            {interactorLabel:'Color mapping',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                    TP.ObjectReferences().VisualizationObject.colorMapping(paramList.nodeProperty, __g__.getID());
+                }}, interactorGroup:"View"}
+
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],
             // ['b5','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random', __g__.getID())}}],        
             // ['b13','node information','',{click:function(){TP.ObjectReferences().InterfaceObject.attachInfoBox()}}],
