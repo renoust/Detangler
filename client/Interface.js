@@ -532,8 +532,10 @@ var TP = TP || {};
         this.addPanelMenu = function (header) {
             // assert(true, 'Interface -> addPanelMenu') 
             var menuNum = contxt.menuNum++;
-            $("<div/>", {class: 'cont', id: 'menu-' + menuNum}).appendTo("#wrap");
-            $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)] + 'px;'}).appendTo('#menu-' + menuNum);
+            if($('#entValues').length < 1)
+                $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute;'}).appendTo("#wrap");
+            $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
+            $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)]  + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
             var cbtn = $('<div/>', {class:'close-button'}).appendTo(head)
             $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content'}).appendTo('#menu-' + menuNum)
@@ -597,7 +599,7 @@ var TP = TP || {};
 
             content.css("margin",10)
 
-            $('<div/>', {id: 'entanglement-cont'}).appendTo('#' + content.attr('id'))
+            $('<div/>', {id: 'entanglement-cont'}).appendTo('#' + 'entValues')//content.attr('id'))
             $('<div/>', {id: 'infoView'}).appendTo('#' + content.attr('id'));
 
 
