@@ -782,7 +782,7 @@ var TP = TP || {};
                 .data(cGraph.nodes(), function (d) {
                     return d.baseID;
                 })
-                .transition().delay(time).each("end", function(){TP.Controller().sendMessage("arrangeLabels", null, target, target);})
+                .transition().delay(time)//.each("end", function(){TP.Controller().sendMessage("arrangeLabels", null, target, target);})
 
                 //label.select("text")
                 .attr("dx", function (d) {
@@ -790,7 +790,8 @@ var TP = TP || {};
                 })
                 .attr("dy", function (d) {
                     return d.y;
-                })
+                });
+            TP.Controller().sendMessage("arrangeLabels", null, target, target);;
 
             _event.preventDefault();
 
