@@ -136,15 +136,27 @@ li{
 /****************************** Informations panel ******************************/
 /********************************************************************************/
 #infoNodes {
+    height:200px;
 	padding: 5px;
 	font: 12px Arial;
+    overflow-y:auto;
 	/*font-family:arial;
 	font-size:12px;*/
+}
+
+#infoSync {
+    height:200px;
+    padding: 5px;
+    font: 12px Arial;
+    overflow-y:auto;
+    /*font-family:arial;
+    font-size:12px;*/
 }
 
 p{
 	font-weight: bold;
 }
+
 
 #infoView p{
 	margin: 5 5 5 5;

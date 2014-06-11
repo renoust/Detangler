@@ -313,14 +313,11 @@ var TP = TP || {};
 
 
         this.attachInfoBox = function (target) {
+            console.log("calling attach")
             // assert(true, 'Interface -> attachInfoBox')
+
             var infoNodes = $('#infoNodes');
             var nodesBID = $('<select/>',{class:"hidden"});
-
-            infoNodes.html("<p> NODE INFORMATIONS: </p>");
-            infoNodes.append("<button id='searchNode'>Search</button>");
-            infoNodes.append(nodesBID);
-            infoNodes.append("<ul></ul>");
 
             var svg = TP.Context().view[target].getSvg();
             var nodes = svg.selectAll('g.node').data();
@@ -337,7 +334,7 @@ var TP = TP || {};
                 var selectedNode = nodesBID[0].options[nodesBID[0].selectedIndex].value;
                 for (var n in nodes){
                     if(nodes[n].baseID==selectedNode){
-                        TP.Controller().sendMessage("mouseoverInfoBox", {node:nodes[n]}, "principal", "undifined");
+                        TP.Controller().sendMessage("mouseoverInfoBox", {node:nodes[n]}, "principal", "undefined");
                         break;
                     }
                 }
@@ -346,7 +343,7 @@ var TP = TP || {};
 
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
-                    TP.Controller().sendMessage("mouseoverInfoBox", {node: d}, "principal", "undifined");
+                    TP.Controller().sendMessage("mouseoverInfoBox", {node: d}, "principal", "undefined");
                 });
         }
 
@@ -357,6 +354,17 @@ var TP = TP || {};
             $("#infoNodes ul").empty();
             for (var k in node) {
                 $('#infoNodes ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
+            }
+        }
+
+
+        this.addCatalystList = function (_event) {
+            // assert(true, 'Interface -> addInfoBox')
+            var node = _event.associatedData.catalystList;
+            console.log("calling addCataList")
+            $("#infoSync ul").empty();
+            for (var k in node) {
+                $('#infoSync ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
             }
         }
 
@@ -636,7 +644,8 @@ var TP = TP || {};
         }
 
         this.infoPane = function () {
-            // assert(true, 'Interface -> infoPane') 
+            // assert(true, 'Interface -> infoPane')
+            //console.log("calling infoPane")
             var menu = this.addPanelMenu('Informations');
             var content = $("#" + menu + " .menu-content");
             var tgbutton = $('#' + menu).find('.toggleButton')
@@ -659,7 +668,21 @@ var TP = TP || {};
                     "</p>" +
                     "</div>";
 
+            $('<div/>', {id: 'infoSync'}).appendTo('#' + content.attr('id'));
+            var infoSync = $('#infoSync');
+            infoSync.html("<p> SYNC INFORMATIONS: </p>");
+            infoSync.addClass(".enable-text-selection");
+            infoSync.append("<ul></ul>");
+
             $('<div/>', {id: 'infoNodes'}).appendTo('#' + content.attr('id'));
+            var infoNodes = $('#infoNodes');
+            var nodesBID = $('<select/>',{class:"hidden"});
+
+            infoNodes.html("<p> NODE INFORMATIONS: </p>");
+            infoNodes.append("<button id='searchNode'>Search</button>");
+            infoNodes.append(nodesBID);
+            infoNodes.append("<ul></ul>");
+
         }
 
         this.visuPane = function (buttons, mode) {

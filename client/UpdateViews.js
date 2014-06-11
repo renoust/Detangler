@@ -383,7 +383,7 @@ var TP = TP || {};
 
 
             data.nodes.forEach(function(d){
-                console.log(d);
+                //console.log(d);
                 if ("entanglementIndex" in d)
                 {
                     d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)
@@ -403,6 +403,14 @@ var TP = TP || {};
             if (typeGraph == 'substrate' && TP.Context().view[graphName].getAssociatedView("catalyst") != null) {
                 //if(TP.Context().view[graphName].getAssociatedView("catalyst")[0].viewInitialized() == 1){
                 var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
+                var tmpEvent = {};
+                tmpEvent.associatedData = {}
+                tmpEvent.associatedData.catalystList = {} ;
+                data.nodes.forEach(function (d) {
+                    //console.log(d)
+                    tmpEvent.associatedData.catalystList[d.label] = d.entanglementIndex;
+                });
+                TP.Interface().addCatalystList(tmpEvent);
                 graph = tmp[0].getGraph();
                 svg = tmp[0].getSvg();
                 associatedViewFound = true;
