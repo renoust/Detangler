@@ -129,11 +129,11 @@ var TP = TP || {};
             name = name + ' - ';
         }
         var _viewGraphCatalystParameters = {
-            name:name + " catalyst", 
-            nodeColor:"#4682b4", 
-            linkColor:"#808080", 
-            backgroundColor:"#FFFFFF", 
-            labelColor:"#000000", 
+            name:name + " catalyst",
+            nodeColor:TP.Context().defaulNodeColor,
+            linkColor:TP.Context().defaultLinkColor,
+            backgroundColor:TP.Context().defaultBackgroundColor,
+            labelColor:TP.Context().defaultLabelColor,
             nodeShape:"circle", 
             type:"catalyst"
         }

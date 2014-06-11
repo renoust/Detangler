@@ -177,8 +177,8 @@ p{
 
 /******************************** Entanglement **********************************/
 
-#entanglement-cont{	
-	border: 4px solid #666666;
+#entanglement-cont{
+    /*border: 4px solid rgba(255, 255, 255, .5);*/
     position: relative;
     height: 70px;
     margin-bottom: 5px;
@@ -186,9 +186,10 @@ p{
 
 #bg  {
     /*background: #fdd0a2;*/
-    opacity: 0.5; 
+    opacity: 0.5;
+    border: 4px solid rgba(255, 255, 255, .5);
     position: absolute;
-    height: 100%; width:100%;
+    height: 100%; width:98%;
 
 }
 

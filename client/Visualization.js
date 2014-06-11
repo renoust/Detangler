@@ -60,17 +60,61 @@ var TP = TP || {};
             //console.log("entering 'entanglement caught function'")
 
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
+            var zeroColor = d3.rgb("white")
+            var oneColor = d3.rgb("purple")
+            //var inter = ['#FFFF00','#00FF00','#0000FF']
+            var inter = ['yellow','green','steelblue']
+            var currentIntensityColor = d3.rgb("white");
+            var currentHomogeneityColor = d3.rgb("black");
+
             var target_source = CurrentViewID;
 
             if (nothing == null) {
 
-                $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, 5);
-                $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, 5);
+                $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, TP.Context().digitPrecision);
+                $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, TP.Context().digitPrecision);
 
-                var indexI = Math.round(TP.Context().entanglement_intensity * 5) % 6
-                var indexH = Math.round(TP.Context().entanglement_homogeneity * 5) % 6
-                $("#bg").css("background-color",brewerSeq[indexI]);
-                $("#entanglement-cont").css("border-color",brewerSeq[indexH]);
+                //var indexI = Math.round(TP.Context().entanglement_intensity * 5) % 6
+                //var indexH = Math.round(TP.Context().entanglement_homogeneity * 5) % 6
+                //$("#bg").css("background-color",brewerSeq[indexI]);
+                //$("#entanglement-cont").css("border-color",brewerSeq[indexH]);
+
+
+                if (TP.Context().entanglement_intensity < 1/3){ currentIntensityColor = inter[0];}
+                else if (TP.Context().entanglement_intensity < 2/3){ currentIntensityColor = inter[1];}
+                else { currentIntensityColor = inter[2];}
+
+                currentIntensityColor = d3.hcl(currentIntensityColor)
+                currentIntensityColor.l = 99 *(1- TP.Context().entanglement_intensity)
+                //currentIntensityColor.r = Math.round(currentIntensityColor.r * (1-TP.Context().entanglement_intensity))
+                //currentIntensityColor.g = Math.round(currentIntensityColor.g * (1-TP.Context().entanglement_intensity))
+                //currentIntensityColor.b = Math.round(currentIntensityColor.b * (1-TP.Context().entanglement_intensity))
+
+
+                if (TP.Context().entanglement_intensity == 0){ currentIntensityColor = zeroColor; }
+                if (TP.Context().entanglement_intensity == 1){ currentIntensityColor = oneColor;}
+
+
+                else if (TP.Context().entanglement_homogeneity < 1/3){ currentHomogeneityColor = inter[0];}
+                else if (TP.Context().entanglement_homogeneity < 2/3){ currentHomogeneityColor = inter[1];}
+                else { currentHomogeneityColor = inter[2];}
+
+                currentHomogeneityColor = d3.hcl(currentHomogeneityColor)
+                currentHomogeneityColor.l = 99 * (1- TP.Context().entanglement_homogeneity)
+                //currentHomogeneityColor.r = Math.round(currentHomogeneityColor.r * (1-TP.Context().entanglement_homogeneity))
+                //currentHomogeneityColor.g = Math.round(currentHomogeneityColor.g * (1-TP.Context().entanglement_homogeneity))
+                //currentHomogeneityColor.b = Math.round(currentHomogeneityColor.b * (1-TP.Context().entanglement_homogeneity))
+
+                if (TP.Context().entanglement_homogeneity == 0){ currentHomogeneityColor = oneColor; }
+                if (TP.Context().entanglement_homogeneity == 1){ currentHomogeneityColor = oneColor;}
+
+
+                //$("#bg").css("background-color",d3.rgb(currentIntensityColor));
+                d3.selectAll('#bg').style("background-color",currentIntensityColor)
+
+                $("#bg").css("border-color",d3.rgb(currentHomogeneityColor))
+                //$("#bg").css("opacity",1)
+                //$("#entanglement-cont").css("opacity",.5);
 
             }
             else {
@@ -86,10 +130,18 @@ var TP = TP || {};
              .transition()
              .style('fill-opacity', .5)
              .style("fill", brewerSeq[index])*/
-            d3.selectAll("rect.view").style("fill", brewerSeq[indexI])
-                                     .style("stroke", brewerSeq[indexH]);
-            d3.selectAll("rect.brush").style("fill", brewerSeq[indexI])
-                                      .style("stroke", brewerSeq[indexH]);
+            //d3.selectAll("rect.view").style("fill", brewerSeq[indexI])
+            //                         .style("stroke", brewerSeq[indexH]);
+            //d3.selectAll("rect.brush").style("fill", brewerSeq[indexI])
+            //                          .style("stroke", brewerSeq[indexH]);
+
+
+            d3.selectAll("rect.view").style("fill", currentIntensityColor)
+                .style("stroke", currentHomogeneityColor);
+            d3.selectAll("rect.brush").style("fill", currentIntensityColor)
+                .style("stroke", currentHomogeneityColor)*TP.Context();
+
+
             //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
 
             //if (TP.Context().view[target_source].getLasso())
@@ -104,8 +156,11 @@ var TP = TP || {};
                     //console.log("svg found: ", TP.Context().view[k].getSvg())
                     TP.Context().view[k].getSvg()
                         .selectAll(".lasso")
-                            .style('fill',brewerSeq[indexI])
-                            .style('stroke', brewerSeq[indexH]);
+                            //.style('fill',brewerSeq[indexI])
+                            //.style('stroke', brewerSeq[indexH]);
+                            .style('fill', currentIntensityColor)
+                            .style('stroke', currentHomogeneityColor);
+
                 }
             })
 

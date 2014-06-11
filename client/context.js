@@ -101,6 +101,14 @@ var TP = TP || {};
         __g__.defaultTextFont = "Arial";
         __g__.defaultTextSize = 14;
 
+        // initialization of default graph colors
+        __g__.defaulNodeColor = "#4682b4";
+        __g__.defaultLinkColor = "#D0D0D0";
+        __g__.defaultSourceHighlightColor = "";
+        __g__.defaultTargetHighlightColor = "";
+        __g__.defaultBackgroundColor = "#FFFFFF";
+        __g__.defaultLabelColor = "#000000";
+
         __g__.sessionSid = 0;
 
 		__g__.tulipLayoutAlgorithms = {};
