@@ -87,10 +87,55 @@ var TP = TP || {};
                 });
             formString += "</select></form>";
 
+            formString += "<div id='scaleDiv' style='width:250px; height:20px'><svg width='100%' height='100%' class='scaleFrame'>"+
+                "</svg></div>";
+
+
+
 
 
 
             $('#infoView').html(formString);
+
+            var svgF = d3.selectAll("svg.scaleFrame")
+            for (var i = 0; i <= 100 ; i++){
+                svgF.append('rect')
+                    .attr('x', function(){if (i==0){return 0}
+                                            return 2*i + 10} )
+                    .attr('y', 0)
+                    .attr('height', 10)
+                    .attr('fill-opacity', .5)
+                    .attr('width', function()
+                    {
+                        if (i == 0 || i ==100){return 10}
+                        else return 2;
+                    }
+                )
+                    .attr('fill',function(){
+                        var currentColor = "black"
+                        var zeroColor = d3.rgb("white")
+                        var oneColor = d3.rgb("purple")
+                        //var inter = ['#FFFF00','#00FF00','#0000FF']
+                        var inter = ['yellow','green','steelblue']
+                        var index = i/100;
+                        if (index < 1/3){ currentColor = inter[0];}
+                        else if (index < 2/3){ currentColor = inter[1];}
+                        else { currentColor = inter[2];}
+
+                        currentColor = d3.hcl(currentColor)
+                        currentColor.l = 99 *(1- index)
+                        //currentIntensityColor.r = Math.round(currentIntensityColor.r * (1-TP.Context().entanglement_intensity))
+                        //currentIntensityColor.g = Math.round(currentIntensityColor.g * (1-TP.Context().entanglement_intensity))
+                        //currentIntensityColor.b = Math.round(currentIntensityColor.b * (1-TP.Context().entanglement_intensity))
+
+
+                        if (index == 0){ currentColor = zeroColor; }
+                        if (index == 1){ currentColor = oneColor;}
+                        return currentColor;
+                    }
+                    )
+
+            }
 
             d3.select('#weightPropSel').on("change", function () {
                 TP.Context().substrateWeightProperty=d3.select("#weightPropSel")

@@ -24,6 +24,12 @@ d3.custom.Lasso = function module(){
     var dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
     var currentSvg = null;
 
+    var defaultFillColor = 'white';
+    var defaultStrokeColor = 'black';
+    var defaultStrokeWidth = 10;
+    var defaultStrokeOpacity = .5;
+    var defaultFillOpacity = .5;
+
     function exports(svg){
 
         currentSvg = svg;
@@ -35,10 +41,11 @@ d3.custom.Lasso = function module(){
         var lasso = lassoGroup.append('path')
             .attr({
                 'class': 'freeform-brush',
-                stroke: 'black',
-                'stroke-width': 3,
-                fill: 'black',
-                'fill-opacity': 0.5,
+                stroke: defaultStrokeColor,
+                'stroke-width': defaultStrokeWidth,
+                'stroke-opacity': defaultStrokeOpacity,
+                fill: defaultFillColor,
+                'fill-opacity': defaultFillOpacity,
                 display: 'none',
                 'fill-rule': 'evenodd'
             })
@@ -53,10 +60,11 @@ d3.custom.Lasso = function module(){
         var rectBrush = lassoGroup.append('path')
             .attr({
                 'class': 'rect-brush',
-                stroke: 'black',
-                'stroke-width': 3,
-                fill: 'black',
-                'fill-opacity': 0.5,
+                stroke: defaultStrokeColor,
+                'stroke-width': defaultStrokeWidth,
+                'stroke-opacity': defaultStrokeOpacity,
+                fill: defaultFillColor,
+                'fill-opacity': defaultFillOpacity,
                 display: 'none',
                 'fill-rule': 'evenodd'
             })

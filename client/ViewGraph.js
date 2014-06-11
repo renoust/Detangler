@@ -347,6 +347,7 @@ var TP = TP || {};
 
 
             __g__.controller.addEventState("nodeSelected", function (_event) {/*assert(true, "nodeSelected");*/
+                //console.log("node selected event")
                 TP.Interaction().nodeSelected_deprecated(_event);
             }, {bindings:["emptySelection"], fromAll:true, useless:null, activate:true});
 

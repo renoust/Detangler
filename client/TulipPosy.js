@@ -45,10 +45,10 @@ var TulipPosy = function (originalJSON) {
         //id:viewIndex, 
         //interactorList:array1, 
         name:name + "substrate", 
-        nodeColor:"#a0522d", 
-        linkColor:"#808080", 
-        backgroundColor:"#FFFFFF", 
-        labelColor:"#000000", 
+        nodeColor:TP.Context().defaulNodeColor,
+        linkColor:TP.Context().defaultLinkColor,
+        backgroundColor:TP.Context().defaultBackgroundColor,
+        labelColor:TP.Context().defaultLabelColor,
         nodeShape:"rect", 
         type:"substrate"
     });
