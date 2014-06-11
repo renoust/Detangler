@@ -91,6 +91,7 @@ var TP = TP || {};
 
         __g__.entanglement_intensity = 0.0;
         __g__.entanglement_homogeneity = 0.0;
+        __g__.digitPrecision = 9;
 
         // initialization of default interface visual parameters
         __g__.defaultFillColor = "white";

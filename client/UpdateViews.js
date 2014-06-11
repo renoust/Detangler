@@ -199,6 +199,17 @@ var TP = TP || {};
 
             //graph_drawing.rescaleGraph(data);
 
+            data.nodes.forEach(function(d){
+                console.log(d);
+                if ("entanglementIndex" in d)
+                {
+                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)
+                }
+            });
+
+            data['data']['entanglement homogeneity'] = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
+            data['data']['entanglement intensity'] = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
+
             graph.nodes(data.nodes, typeGraph); //catalyst
             graph.links(data.links, typeGraph); //catalyst
 
@@ -209,8 +220,8 @@ var TP = TP || {};
             TP.Context().view[target].getGraphDrawing().clear();
             TP.Context().view[target].getGraphDrawing().draw();
 
-            TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity']
-            TP.Context().entanglement_intensity = data['data']['entanglement intensity']
+            TP.Context().entanglement_homogeneity = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision)
+            TP.Context().entanglement_intensity = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision)
 
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
@@ -371,6 +382,14 @@ var TP = TP || {};
         this.syncGraphRequestFromData = function (data, selection, graphName) {
 
 
+            data.nodes.forEach(function(d){
+                console.log(d);
+                if ("entanglementIndex" in d)
+                {
+                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)
+                }
+            });
+
             //console.log("within syncGraphRequestFromData")
 
             var graph = null
@@ -403,6 +422,10 @@ var TP = TP || {};
             }
 
             if ('data' in data) {
+
+                data['data']['entanglement homogeneity'] = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
+                data['data']['entanglement intensity'] = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
+
                 TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
                 TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
 
