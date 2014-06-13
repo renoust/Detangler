@@ -173,6 +173,20 @@ p{
 }
 
 
+#infoSync p{
+    margin: 5 5 5 5;
+    font-size:12px;
+    /*	font-weight:bold;*/
+}
+#infoSync ul{
+    padding: 0;
+    margin:0 0 0 20;
+
+}
+#infoSync li{
+    font-size: 12px;
+}
+
 
 #infoNodes p{
 	margin: 2px;
