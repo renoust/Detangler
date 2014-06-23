@@ -222,7 +222,7 @@ var TP = TP || {};
             toggle.change(function(){
                 var interact = document.getElementById("toggle" + __g__.ID).options[document.getElementById("toggle" + __g__.ID).selectedIndex].text;
                 __g__.controller.sendMessage(interact)
-                console.log(choice)
+                //console.log(choice)
             })
 
             /*var minWidth = __g__.dialog.parents('.ui-dialog').find('.ui-dialog-title').width()

@@ -700,6 +700,11 @@ var TP = TP || {};
 
         this.runZoom = function (_event) {
 
+            //if (TP.Context().zoomLock == true)
+            //    return
+
+            //TP.Context().zoomLock = true
+
             var target = _event.associatedData.source;
             var wheelDelta = _event.associatedData.wheelDelta;
             var mousePos = _event.associatedData.mousePos;
@@ -715,6 +720,10 @@ var TP = TP || {};
 
             var cGraph = TP.Context().view[target].getGraph();
             var svg = TP.Context().view[target].getSvg();
+            var nodeContainer = svg.select("g.nodeContainer");
+            var linkContainer = svg.select("g.linkContainer");
+            var labelContainer = svg.select("g.labelContainer");
+
             var time = 0;
 
             var delta = null;
@@ -740,7 +749,7 @@ var TP = TP || {};
 
             var data_translate = TP.Context().view[target].getDataTranslation();//TP.tabDataTranslation[target]//eval("TP.Context().data_translation_"+target);
 
-            var node = svg.selectAll("g.node")
+            var node = nodeContainer.selectAll("g.node")
                 .data(cGraph.nodes(), function (d) {
                     d.x = d.currentX;
                     d.y = d.currentY;
@@ -750,7 +759,7 @@ var TP = TP || {};
                     d.currentY = d.y;
                     return d.baseID;
                 })
-                .transition().delay(time)
+                //.transition().delay(time)
 
             node.select("circle")
                 .attr("cx", function (d) {
@@ -768,21 +777,21 @@ var TP = TP || {};
                     return d.y;
                 })
 
-            var link = svg.selectAll("g.link")
+            var link = linkContainer.selectAll("g.link")
                 .data(cGraph.links(), function (d) {
                     return d.baseID
                 })
-                .transition().delay(time)
+                //.transition().delay(time)
                 .select("path")
                 .attr("d", function (d) {
                     return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
 
-            var label = svg.selectAll("text.node")
+            var label = labelContainer.selectAll("text.node")
                 .data(cGraph.nodes(), function (d) {
                     return d.baseID;
                 })
-                .transition().delay(time)//.each("end", function(){TP.Controller().sendMessage("arrangeLabels", null, target, target);})
+                //.transition().delay(time)//.each("end", function(){TP.Controller().sendMessage("arrangeLabels", null, target, target);})
 
                 //label.select("text")
                 .attr("dx", function (d) {
@@ -790,10 +799,13 @@ var TP = TP || {};
                 })
                 .attr("dy", function (d) {
                     return d.y;
-                });
-            TP.Controller().sendMessage("arrangeLabels", null, target, target);;
+                })
+
+            TP.Controller().sendMessage("arrangeLabels", null, target, target);
 
             _event.preventDefault();
+
+            //TP.Context().zoomLock = false
 
 
 

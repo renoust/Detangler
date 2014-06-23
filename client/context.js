@@ -105,6 +105,9 @@ var TP = TP || {};
         // initialization of default graph colors
         __g__.defaulNodeColor = "#4682b4";
         __g__.defaultLinkColor = "#D0D0D0";
+        __g__.defaultNodeOpacity = 1;
+        __g__.defaultLabelOpacity = 1;
+        __g__.defaultLinkOpacity = .7;
         __g__.defaultSourceHighlightColor = "";
         __g__.defaultTargetHighlightColor = "";
         __g__.defaultBackgroundColor = "#FFFFFF";

@@ -5,7 +5,7 @@
  */
 
 d3.custom = d3.custom || {};
-d3.custom.Lasso = function module(){
+d3.custom.Lasso = function module() {
 
     var isPressedOnLasso = false;
     var isPressedOnBg = false;
@@ -30,7 +30,7 @@ d3.custom.Lasso = function module(){
     var defaultStrokeOpacity = .5;
     var defaultFillOpacity = .5;
 
-    function exports(svg){
+    function exports(svg) {
 
         currentSvg = svg;
         g = svg.append('g').classed('lasso-group', true);
@@ -49,7 +49,7 @@ d3.custom.Lasso = function module(){
                 display: 'none',
                 'fill-rule': 'evenodd'
             })
-            .on('mousedown', function(d, i){
+            .on('mousedown', function (d, i) {
                 isPressedOnLasso = true;
                 var mousePos = d3.mouse(lasso.node());
                 var bbox = this.getBBox();
@@ -68,7 +68,7 @@ d3.custom.Lasso = function module(){
                 display: 'none',
                 'fill-rule': 'evenodd'
             })
-            .on('mousedown', function(d, i){
+            .on('mousedown', function (d, i) {
                 isPressedOnLasso = true;
                 var mousePos = d3.mouse(rectBrush.node());
                 var bbox = this.getBBox();
@@ -77,26 +77,26 @@ d3.custom.Lasso = function module(){
                 dispatch.brushDragStart();
             });
 
-        svg.on('mousedown.drawLasso', function(d, i){
-                if(isPressedOnLasso) return;
-                isPressedOnBg = true;
+        svg.on('mousedown.drawLasso', function (d, i) {
+            if (isPressedOnLasso) return;
+            isPressedOnBg = true;
 
-                if(!!d3.select('.lasso')[0][0]){
-                    lassoAlreadyDisplayed = true;
-                    rectBrush.attr({width: 0, height: 0});
-                    lasso.attr({display: 'none'});
-                }
-                var mousePos = d3.mouse(svg.node());
-                rectPoints = [mousePos, mousePos, mousePos, mousePos]
-                rectBrush.attr({
-                    display: 'block',
-                    d: 'M' + rectPoints.join('L') + 'Z'
-                });
-                dispatch.brushDrawStart();
-            })
-            .on('mousemove.drawLasso', function(d, i){
-                if(isPressedOnLasso || !isPressedOnBg) return;
-                if(lassoAlreadyDisplayed){
+            if (!!d3.select('.lasso')[0][0]) {
+                lassoAlreadyDisplayed = true;
+                rectBrush.attr({width: 0, height: 0});
+                lasso.attr({display: 'none'});
+            }
+            var mousePos = d3.mouse(svg.node());
+            rectPoints = [mousePos, mousePos, mousePos, mousePos]
+            rectBrush.attr({
+                display: 'block',
+                d: 'M' + rectPoints.join('L') + 'Z'
+            });
+            dispatch.brushDrawStart();
+        })
+            .on('mousemove.drawLasso', function (d, i) {
+                if (isPressedOnLasso || !isPressedOnBg) return;
+                if (lassoAlreadyDisplayed) {
                     lassoPoints = [];
                     lassoAlreadyDisplayed = false;
                     lassoGroup.attr({transform: 'translate(0, 0)'});
@@ -104,14 +104,14 @@ d3.custom.Lasso = function module(){
                 }
                 movedOnBg = true;
                 var mousePos = d3.mouse(svg.node());
-                if((skip++ % skipNum) >= skipNum - 1){
+                if ((skip++ % skipNum) >= skipNum - 1) {
                     lassoPoints.push([mousePos[0], mousePos[1]]);
                     lasso.attr({
                         d: 'M' + lassoPoints.join('L') + 'Z',
                         display: 'block'
                     });
                 }
-                if(isRect(lassoPoints)){
+                if (isRect(lassoPoints)) {
                     rectPoints[1] = [mousePos[0], rectPoints[0][1]];
                     rectPoints[2] = mousePos;
                     rectPoints[3] = [rectPoints[0][0], mousePos[1]];
@@ -123,15 +123,15 @@ d3.custom.Lasso = function module(){
                     });
                     rectIsAlive = true;
                 }
-                else{
+                else {
                     rectBrush.attr({display: 'none'});
                     rectIsAlive = false;
                 }
                 var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
                 dispatch.brushDrawMove(selectedSet);
             })
-            .on('mousemove.dragLasso', function(d, i){
-                if(!isPressedOnLasso) return;
+            .on('mousemove.dragLasso', function (d, i) {
+                if (!isPressedOnLasso) return;
                 var mousePos = d3.mouse(svg.node());
                 var bbox = svg.select('.lasso').node().getBBox();
                 var newPosX = mousePos[0] - bbox.x + mouseOffsetX;
@@ -142,28 +142,28 @@ d3.custom.Lasso = function module(){
                 var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
                 dispatch.brushDragMove(selectedSet);
             })
-            .on('mouseup', function(d, i){
+            .on('mouseup', function (d, i) {
                 var selectedSet = findAllIntersect(shapes, rectIsAlive ? rectPoints : lassoPoints, lassoGroup);
-                if(!isPressedOnLasso && isPressedOnBg && !movedOnBg){
+                if (!isPressedOnLasso && isPressedOnBg && !movedOnBg) {
                     lassoPoints = [];
                     lasso.attr({display: 'none'});
                     rectBrush.attr({display: 'none'});
                     rectBrush.classed('lasso', false);
                     lasso.classed('lasso', false);
                 }
-                if(!isPressedOnLasso){
+                if (!isPressedOnLasso) {
                     var isRectangle = isRect(lassoPoints);
-                    if(isRectangle){
+                    if (isRectangle) {
                         lassoPoints = [];
                         lasso.attr({display: 'none'});
                     }
-                    else{
+                    else {
                         rectBrush.attr({display: 'none'});
                     }
                     rectBrush.classed('lasso', isRectangle);
                     lasso.classed('lasso', !isRectangle);
                 }
-                if(isPressedOnLasso) dispatch.brushDragEnd(selectedSet);
+                if (isPressedOnLasso) dispatch.brushDragEnd(selectedSet);
                 else dispatch.brushDrawEnd(selectedSet);
                 isPressedOnLasso = false;
                 isPressedOnBg = false;
@@ -171,30 +171,30 @@ d3.custom.Lasso = function module(){
             });
     }
 
-    function findAllIntersect(shapes, polygon, lasso){
+    function findAllIntersect(shapes, polygon, lasso) {
         var selectedShapesByBBox = findIntersectBBox(shapes, polygon, lasso);
         return findIntersectCenter(selectedShapesByBBox, polygon, lasso);
     }
 
-    function findIntersectCenter(shapes, polygon, lasso){
+    function findIntersectCenter(shapes, polygon, lasso) {
         var i, j, x, y, w, c, polyX, polyY, polyPrevX, polyPrevY, shapeBBox;
         var lassoTranslate = d3.transform(lasso.attr('transform')).translate;
 
-        return shapes.filter(function(){
+        return shapes.filter(function () {
             shapeBBox = this.getBBox();
-            x = shapeBBox.x + shapeBBox.width/2 - lassoTranslate[0];
-            y = shapeBBox.y + shapeBBox.height/2 - lassoTranslate[1];
+            x = shapeBBox.x + shapeBBox.width / 2 - lassoTranslate[0];
+            y = shapeBBox.y + shapeBBox.height / 2 - lassoTranslate[1];
             w = shapeBBox.width;
             var end1 = polygon.length;
             var end2 = end1 - 1;
             c = false;
-            for(i = 0, j = end2; i < end1; j = i++){
+            for (i = 0, j = end2; i < end1; j = i++) {
                 polyY = polygon[i][1];
                 polyX = polygon[i][0];
                 polyPrevY = polygon[j][1];
                 polyPrevX = polygon[j][0];
-                if((((polyY <= y) && (y < polyPrevY)) || ((polyPrevY <= y) && (y < polyY))) &&
-                    (x < (polyPrevX - polyX) * (y - polyY) / (polyPrevY - polyY) + polyX)){
+                if ((((polyY <= y) && (y < polyPrevY)) || ((polyPrevY <= y) && (y < polyY))) &&
+                    (x < (polyPrevX - polyX) * (y - polyY) / (polyPrevY - polyY) + polyX)) {
                     c = !c;
                 }
             }
