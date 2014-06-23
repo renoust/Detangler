@@ -24,9 +24,22 @@ var TP = TP || {};
         // g, the return variable
         // cGraph, the current graph
         // svg, the current svg
-        var g = {}
-        g.cGraph = _graph
-        g.svg = _svg
+        var g = {};
+        g.cGraph = _graph;
+        g.svg = _svg;
+        g.linkContainer = g.svg.selectAll("g.linkContainer").data([1])
+            .enter()
+                .append("g").attr("class", "linkContainer");
+
+        g.nodeContainer = g.svg.selectAll("g.nodeContainer").data([1])
+            .enter()
+                .append("g").attr("class", "nodeContainer");
+
+        g.labelContainer = g.svg.selectAll("g.labelContainer").data([1])
+            .enter()
+                .append("g").attr("class", "labelContainer");
+
+
         var contxt = TP.Context();
 
 
@@ -48,7 +61,7 @@ var TP = TP || {};
             var circleTarget = dragTarget.select("circle.node");
             var rectTarget = dragTarget.select("rect.node");
             var currentNode = dragTarget.data()[0]
-            var labelTarget = g.svg.select("text.node" + currentNode.baseID);
+            var labelTarget = g.labelContainer.select("text.node" + currentNode.baseID);
 
             if (tabb[1] == null) {
                 var posX = d3.event.dx
@@ -97,7 +110,7 @@ var TP = TP || {};
                 });
 
             // console.log("current svg:", g.svg, g.cGraph.links());
-            var links = g.svg.selectAll("g.link").data(g.cGraph.links(), function (d) {
+            var links = g.linkContainer.selectAll("g.link").data(g.cGraph.links(), function (d) {
                 return d.baseID
             })
                 .select("path.link")
@@ -124,7 +137,7 @@ var TP = TP || {};
         g.showHideLabelNode = function (_event) {
             var dragTarget = _event.associatedData.node;
             var currentNode = dragTarget.data()[0];
-            var labelTarget = g.svg.select("text.node" + currentNode.baseID);
+            var labelTarget = g.labelContainer.select("text.node" + currentNode.baseID);
             var nodeTarget = dragTarget.select("circle.node");
             var hidden = labelTarget.attr("visibility") == 'hidden';
 
@@ -177,7 +190,9 @@ var TP = TP || {};
 
 
             //créer tout les noeud (rectangle, cercle) depuis les données contenu dans cGraph.nodes (= données des noeuds passé dans un tableaux)
-            var node = g.svg.selectAll("g.node").data(g.cGraph.nodes(), function (d) {
+
+
+            var node = g.nodeContainer.selectAll("g.node").data(g.cGraph.nodes(), function (d) {
                 return d.baseID
             })
                 .enter()
@@ -290,13 +305,14 @@ var TP = TP || {};
              */
 
             //var glyphR = g.svg.selectAll("g.glyph."+target)
-            var glyphR = g.svg.selectAll("g.glyph." + TP.Context().view[currentViewID].getType())
+            var glyphR = g.nodeContainer.selectAll("g.glyph." + TP.Context().view[currentViewID].getType())
                 .append(view_nodes)
                 .attr("class", function (d) {
                     return d._type
                 })
                 .classed("node", true)
                 .classed(view_nodes, true)
+                .style("opacity", TP.Context().defaultNodeOpacity)
                 .style("fill", TP.Context().view[currentViewID].getNodesColor())
 
             if (view_nodes == "rect" && glyphR != null) {
@@ -325,7 +341,8 @@ var TP = TP || {};
                     .attr("r", 5)
             }
 
-            var selection = g.svg.selectAll("text.node")
+
+            var selection = g.labelContainer.selectAll("text.node")
             //var selection = g.svg.selectAll("g.node")
             selection.data(g.cGraph.nodes(),function (d) {
                 return d.baseID
@@ -348,6 +365,7 @@ var TP = TP || {};
                 //.attr('unselectable', 'on')
                 //.on('selectstart', function(){return false;})
                 .style("font-size",12)
+                .style("opacity", TP.Context().defaultLabelOpacity)
                 .text(function (d) {
                     return d.label;
                 });
@@ -460,7 +478,7 @@ var TP = TP || {};
 
 
         g.delLabels = function () {
-            var selection = g.svg.selectAll("g.text")
+            var selection = g.labelContainer.selectAll("g.text")
                 .data([])
                 .exit()
                 .remove();
@@ -474,20 +492,20 @@ var TP = TP || {};
         // to each group are added an svg:path (placed according to the related
         // nodes property x and y)
         g.drawLinks = function () {
-            var links = g.svg.selectAll("g.link");
+            var links = g.linkContainer.selectAll("g.link");
             var transform = null;
 
             if (!links.empty()) {
                 //console.log("link transforms: ", links.attr("transform"));
                 transform = links.attr("transform");
             }
-            g.svg.selectAll("g.link")
+            g.linkContainer.selectAll("g.link")
                 .data([])
                 .exit()
                 .remove();
             //console.log("the current trasformation", transform);
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID
                 })
@@ -509,6 +527,7 @@ var TP = TP || {};
                 })
 
                 .style("stroke", TP.Context().view[currentViewID].getLinksColor()) //before, there was catalyst
+                .style("opacity", TP.Context().defaultLinkOpacity)
                 .style("stroke-width", function (d) {
                     return 1;
                 })
@@ -532,7 +551,7 @@ var TP = TP || {};
 
             //assert(true, "assigning g.node_s")
 
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     d.currentX = d.x;
                     d.currentY = d.y;
@@ -578,7 +597,7 @@ var TP = TP || {};
 
             //assert(true, "assigning g.link_s")
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID
                 })
@@ -602,7 +621,7 @@ var TP = TP || {};
             // 	.select("text")
             //assert(true, "assigning text.node_s")
 
-            var label = g.svg.selectAll("text.node")
+            var label = g.labelContainer.selectAll("text.node")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -674,7 +693,7 @@ var TP = TP || {};
             var dom = [valMin, valMax]
             var range = [scaleMin, scaleMax]
             var scale = d3.scale.linear().domain(dom).range(range)
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -699,7 +718,7 @@ var TP = TP || {};
                     return 2 * scale(val)
                 })
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
 
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID
@@ -740,7 +759,7 @@ var TP = TP || {};
             if (diff == true)
                 color = d3.scale.category20();
 
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -752,7 +771,7 @@ var TP = TP || {};
                     return d3.rgb(c);
                 })
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID
                 })
@@ -769,7 +788,7 @@ var TP = TP || {};
             // console.log(g);
             // console.log(g.cGraph);
             if (elem == "node") {
-                var node = g.svg.selectAll("g.node")
+                var node = g.nodeContainer.selectAll("g.node")
                     .data(g.cGraph.nodes(), function (d) {
                         return d.baseID
                     })
@@ -779,7 +798,7 @@ var TP = TP || {};
                         return d3.rgb(color);
                     })
             } else if (elem === "link") {
-                var link = g.svg.selectAll("g.link")
+                var link = g.linkContainer.selectAll("g.link")
                     .data(g.cGraph.links(), function (d) {
                         return d.baseID
                     })
@@ -813,7 +832,7 @@ var TP = TP || {};
             console.log(elem, value)
             g.cGraph = _graph;
             //console.log(elem, value)
-            g.svg.selectAll("text.node.text")
+            g.labelContainer.selectAll("text.node.text")
                 .style(elem,value)
 
         }
@@ -877,7 +896,7 @@ var TP = TP || {};
             currentGlyph = currentView.getViewNodes()
             currentGlyphClass = currentGlyph + ".node"
 
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .style("opacity", .5)
 
 
@@ -899,16 +918,16 @@ var TP = TP || {};
             }
 
 
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "hidden")
 
 
-            g.svg.selectAll("text.node")
+            g.labelContainer.selectAll("text.node")
                 .style("opacity", 0.5)
 
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .style("opacity", .25)
                 .select("path.link")
                 .style("stroke", currentView.getLinksColor())
@@ -947,23 +966,23 @@ var TP = TP || {};
             var scale = d3.scale.linear().domain(dom).range(range)
 
             // assign the new data
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
-                .style("opacity", 1)
+                .style("opacity", TP.Context().defaultNodeOpacity)
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .data(_graph.links(), function (d) {
                     return d.baseID
                 })
-                .style("opacity", 1)
+                .style("opacity", TP.Context().defaultLinkOpacity)
 
-            var label = g.svg.selectAll("text.node")
+            var label = g.labelContainer.selectAll("text.node")
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
-                .style("opacity", 1)
+                .style("opacity", TP.Context().defaultLabelOpacity)
 
             // update the nodes
 
@@ -1020,17 +1039,17 @@ var TP = TP || {};
 
             // reassign the original data
 
-            g.svg.selectAll("g.node")
+            g.nodeContainer.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
 
-            g.svg.selectAll("g.link")
+            g.linkContainer.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID
                 })
 
-            g.svg.selectAll("g.text")
+            g.labelContainer.selectAll("g.text")
                 .data(g.cGraph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -1054,19 +1073,19 @@ var TP = TP || {};
                     linkIds.push(d.baseID)
                 })
             //console.log(nodeIds)
-            var node = g.svg.selectAll("g.node")
+            var node = g.nodeContainer.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
             node.exit().remove()
 
-            var link = g.svg.selectAll("g.link")
+            var link = g.linkContainer.selectAll("g.link")
                 .data(_graph.links(), function (d) {
                     return d.baseID
                 })
             link.exit().remove()
 
-            var label = g.svg.selectAll("text.node")
+            var label = g.labelContainer.selectAll("text.node")
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -1096,7 +1115,7 @@ var TP = TP || {};
                 return false;
             }
 
-            var labels = g.svg.selectAll("text.node")
+            var labels = g.labelContainer.selectAll("text.node")
                 .attr("visibility", "visible")
                 .style("fill", TP.Context().view[currentViewID].getLabelsColor())
                 .text(function(dd){
@@ -1219,21 +1238,21 @@ var TP = TP || {};
             var nodeColor = TP.Context().view[currentViewID].getNodesColor();
             var linkColor = TP.Context().view[currentViewID].getLinksColor();
 
-            g.svg.selectAll("g.node")
+            g.nodeContainer.selectAll("g.node")
                 .classed("selected", false)
-                .style('opacity', 1.0)
+                .style('opacity', TP.Context().defaultNodeOpacity)
                 .select("circle.node")
                 .style('fill', nodeColor)
                 .style("stroke-width", 0);
-            g.svg.selectAll("g.node")
+            g.nodeContainer.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "visible");
-            g.svg.selectAll("g.node")
+            g.nodeContainer.selectAll("g.node")
                 .select("rect.node")
                 .style('fill', nodeColor)
                 .style("stroke-width", 0);
-            g.svg.selectAll("g.link")
-                .style('opacity', 1.0)
+            g.linkContainer.selectAll("g.link")
+                .style('opacity', TP.Context().defaultLinkOpacity)
                 .select("path.link")
                 .style('stroke', linkColor)
                 .style('stroke-width', 1)
@@ -1243,7 +1262,7 @@ var TP = TP || {};
             })
 
             //objectReferences.VisualizationObject.resetSize(catalystName);
-            g.svg.selectAll("text.node").style("opacity", 1)
+            g.labelContainer.selectAll("text.node").style("opacity", TP.Context().defaultLabelOpacity)
             //objectReferences.VisualizationObject.arrangeLabels(catalystName);
         }
 
@@ -1265,7 +1284,7 @@ var TP = TP || {};
             //.data(nodeList, function(d){return d.baseID;})
             //should we reassign the data each time to access the data?
             //nodes.data(g.cGraph, function(d){return d.baseID;})
-            g.svg.selectAll("g.node")
+            g.nodeContainer.selectAll("g.node")
                 .classed("selected", function (d) {
                     return d.selected;
                 })

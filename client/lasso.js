@@ -62,7 +62,8 @@ var TP = TP || {};
         __g.totalDistanceAlongDrag = 0.0;
         __g.distanceFromStartToEnd = 0.0;
 
-        __g.fillColor = 'black';
+        __g.fillColor = 'white';
+        __g.basicDefaultColor = 'purple';
         // This method is called internally to update both the total distance 
         // along drag and
         // the distance from start to end given a new point, the point is 
@@ -171,7 +172,7 @@ var TP = TP || {};
                         .data(obj.pointList)
                         .attr("points", strPointList)
                         .attr("style", function () {
-                            return "fill:" + obj.fillColor + ";stroke:purple;stroke-width:2;fill-rule:evenodd;fill-opacity:.5";
+                            return "fill:" + obj.fillColor + ";stroke:"+__g.basicDefaultColor+";stroke-width:2;fill-rule:evenodd;fill-opacity:.5";
                         })
                 } else {
                     var p0 = obj.pointList[0]
@@ -186,7 +187,7 @@ var TP = TP || {};
                             return obj.fillColor;
                         })
                         .style("fill-opacity", .5)
-                        .style("stroke", "purple")
+                        .style("stroke", __g.basicDefaultColor)
                         .style("stroke-width", 2)
                     obj.cSvg.selectAll("g.resize")
                         .data([])
@@ -355,7 +356,7 @@ var TP = TP || {};
                     .attr("y", Math.min(p0[1], p1[1]))
                     .attr("width", Math.abs(p0[0] - p1[0]))
                     .attr("height", Math.abs(p0[1] - p1[1]))
-                    .style("fill", "black")
+                    .style("fill", __g.fillColor)
                     .style("fill-opacity", .5)
             }
         }
@@ -539,7 +540,7 @@ var TP = TP || {};
                 .attr("y", Math.min(p0[1], p1[1]) + 5)
                 .attr("width", 10)
                 .attr("height", Math.abs(Math.abs(p0[1] - p1[1]) - 10))
-                .style("fill", "black")
+                .style("fill", __g.fillColor)
                 .style("fill-opacity", 0)
                 .style("cursor", "w-resize")
                 .on("mousedown", function () {/*
@@ -561,7 +562,7 @@ var TP = TP || {};
                 .attr("y", Math.min(p0[1], p1[1]) + 5)
                 .attr("width", 10)
                 .attr("height", Math.abs(Math.abs(p0[1] - p1[1]) - 10))
-                .style("fill", "black")
+                .style("fill", __g.fillColor)
                 .style("fill-opacity", 0)
                 .style("cursor", "e-resize")
                 .on("mousedown", function () {/*
@@ -583,7 +584,7 @@ var TP = TP || {};
                 .attr("y", Math.min(p0[1], p1[1]) - 5)
                 .attr("width", Math.abs(Math.abs(p0[0] - p1[0]) - 10))
                 .attr("height", 10)
-                .style("fill", "black")
+                .style("fill", __g.fillColor)
                 .style("fill-opacity", 0)
                 .style("cursor", "n-resize")
                 .on("mousedown", function () {/*
@@ -607,7 +608,7 @@ var TP = TP || {};
                 .attr("y", Math.max(p0[1], p1[1]) - 5)
                 .attr("width", Math.abs(Math.abs(p0[0] - p1[0]) - 10))
                 .attr("height", 10)
-                .style("fill", "black")
+                .style("fill", __g.fillColor)
                 .style("fill-opacity", 0)
                 .style("cursor", "s-resize")
                 .on("mousedown", function () {
