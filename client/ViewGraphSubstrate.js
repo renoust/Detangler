@@ -286,6 +286,9 @@ var TP = TP || {};
             __g__.controller.addEventState("movingZoomDragEnd",  function (_event) {
                 TP.Interaction().movingZoomDragEnd(_event);
             }, {bindings:["movingZoomDrag"], fromAll:true, useless:null, activate:true});
+            __g__.controller.addEventState("doubleClickOnLasso", function (_event) {
+                TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
 
 
             __g__.controller.addEventState("callLayout",  function (_event) {

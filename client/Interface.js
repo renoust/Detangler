@@ -144,7 +144,7 @@ var TP = TP || {};
                 var cView = TP.Context().view[TP.Context().activeView];
                 cView.setPreviousSourceSelection([]);
                 cView.getController().sendMessage("nodeSelected", {selList: cView.getSourceSelection()});
-                console.log("updating weight property: ", TP.Context().substrateWeightProperty);
+                //console.log("updating weight property: ", TP.Context().substrateWeightProperty);
             })
         }
 
@@ -313,7 +313,7 @@ var TP = TP || {};
 
 
         this.attachInfoBox = function (target) {
-            console.log("calling attach")
+            //console.log("calling attach")
             // assert(true, 'Interface -> attachInfoBox')
 
             var infoNodes = $('#infoNodes');
@@ -361,7 +361,7 @@ var TP = TP || {};
         this.addCatalystList = function (_event) {
             // assert(true, 'Interface -> addInfoBox')
             var node = _event.associatedData.catalystList;
-            console.log("calling addCataList")
+            //console.log("calling addCataList")
             $("#infoSync ul").empty();
             for (var k in node) {
                 $('#infoSync ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
@@ -455,23 +455,38 @@ var TP = TP || {};
             });
 
         }
+        
+        this.tileViews = function(){
+            var tab=[];
+            for( var k in TP.Context().view )
+                tab.push(TP.Context().view[k]);
+            
+            TP.Context().InterfaceObject.setPositionDialogs(tab,300+25,35,
+                                                            $(window).height()-35,
+                                                            $(window).width()-(300+25),
+                                                            false);
 
+           tab.forEach(function(t){
+            //console.log("in the forEachLoop:",t); 
+            t.getController().sendMessage("rescaleView", {idView:t.getID()});})
+                   
+        }
 
-        this.setPositionDialogs = function(tabView, x, y, h, w, sens){
+        this.setPositionDialogs = function(tabView, x, y, h, w, horizontal){
             // assert(true, 'Interface -> setPositionDialogs') 
             var length = tabView.length;
             if(length === 1){
                 drawDialog(x,y,h,w,tabView[0]);
                 return x;
             }else{
-                var tmp = changesens(h,w,sens);
+                var tmp = changesens(h,w,horizontal);
                 var hbis = tmp.h;
                 var wbis = tmp.w;
-                this.setPositionDialogs(tabView.slice(0,length/2), x,y,hbis,wbis,!sens);
-                this.setPositionDialogs(tabView.slice(length/2, length), x+(w-wbis), y+(h-hbis),hbis,wbis,!sens);
+                this.setPositionDialogs(tabView.slice(0,length/2), x,y,hbis,wbis,!horizontal);
+                this.setPositionDialogs(tabView.slice(length/2, length), x+(w-wbis), y+(h-hbis),hbis,wbis,!horizontal);
             }
-            function changesens(h,w,sens){
-                if(sens){
+            function changesens(h,w,horizontal){
+                if(horizontal){
                     return {h:h/2, w:w};
                 }else{ 
                     return {h:h, w:w/2};
@@ -585,8 +600,10 @@ var TP = TP || {};
         this.addPanelMenu = function (header) {
             // assert(true, 'Interface -> addPanelMenu') 
             var menuNum = contxt.menuNum++;
+            $('#bg').css('border-width','12px')
+            $('#bg').css({'height':'51px', 'width':'276px'})
             if($('#entValues').length < 1)
-                $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute;'}).appendTo("#wrap");
+                $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)]  + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
@@ -667,7 +684,7 @@ var TP = TP || {};
                     "</ul>" +
                     "</p>" +
                     "</div>";
-
+            
             $('<div/>', {id: 'infoSync'}).appendTo('#' + content.attr('id'));
             var infoSync = $('#infoSync');
             infoSync.html("<p> SYNC INFORMATIONS: </p>");

@@ -29,22 +29,28 @@
 	position: absolute;
 	height:97%;
 	width: 100%;
-	top:30px;
+	top:35px;
+	left:0px;
 }
 /*****************************************************************************/
 /********************************* Header ************************************/
 /*****************************************************************************/
 #header{
 	background: url(myTheme/test-header.png) repeat-x;
-	height: 30px;
+	background-size: auto 100%;
+	height: 35px;
+	width: 100%;
 	color: white;
+	top: 0px;
+	left: 0px;
 }
 
 #header-content{
 	position: absolute;
+	height:35px;
 	left: 30px;
 	right: 0px;
-	z-index: 200;
+	z-index: 3000;
 }
 
 #header-logo{
@@ -72,6 +78,8 @@
 	list-style: none;
 	width: 130px;
     vertical-align: bottom;
+    /*horizontal-align: right;*/
+   /* align: right;*/
     font-size:.9em;
 	/*font: 0.8em "Trebuchet MS", sans-serif;*/
 }

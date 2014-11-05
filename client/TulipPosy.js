@@ -112,11 +112,10 @@ var TulipPosy = function (originalJSON) {
     }*/
 
     $('#tile').click(function(){
-        var tab=[];
-        for( var k in TP.Context().view )
-            tab.push(TP.Context().view[k]);
-        TP.Context().InterfaceObject.setPositionDialogs(tab,0,0,$("#container").innerHeight(),$("#container").innerWidth(),true);
-  })
+        TP.Context().InterfaceObject.tileViews();
+    })
+    
+    //TP.Context().InterfaceObject.tileViews();
 
     //check if Google Chrome browser is used, if not, warn the user
      if(!window.chrome){

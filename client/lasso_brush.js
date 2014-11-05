@@ -21,7 +21,7 @@ d3.custom.Lasso = function module() {
     var shapes = null;
     var lassoGroup = null;
     var g = null;
-    var dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd");
+    var dispatch = d3.dispatch("brushDrawStart", "brushDrawMove", "brushDrawEnd", "brushDragStart", "brushDragMove", "brushDragEnd", "brushDoubleClick");
     var currentSvg = null;
 
     var defaultFillColor = 'white';
@@ -55,6 +55,9 @@ d3.custom.Lasso = function module() {
                 var bbox = this.getBBox();
                 mouseOffsetX = bbox.x - mousePos[0];
                 mouseOffsetY = bbox.y - mousePos[1];
+            })
+            .on('dblclick', function (d, i) {
+                dispatch.brushDoubleClick();
             });
 
         var rectBrush = lassoGroup.append('path')
@@ -75,6 +78,9 @@ d3.custom.Lasso = function module() {
                 mouseOffsetX = bbox.x - mousePos[0];
                 mouseOffsetY = bbox.y - mousePos[1];
                 dispatch.brushDragStart();
+            })
+            .on('dblclick', function (d, i) {
+                dispatch.brushDoubleClick();
             });
 
         svg.on('mousedown.drawLasso', function (d, i) {
