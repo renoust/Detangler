@@ -585,8 +585,10 @@ var TP = TP || {};
         this.addPanelMenu = function (header) {
             // assert(true, 'Interface -> addPanelMenu') 
             var menuNum = contxt.menuNum++;
+            $('#bg').css('border-width','12px')
+            $('#bg').css({'height':'51px', 'width':'276px'})
             if($('#entValues').length < 1)
-                $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute;'}).appendTo("#wrap");
+                $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)]  + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
@@ -667,7 +669,7 @@ var TP = TP || {};
                     "</ul>" +
                     "</p>" +
                     "</div>";
-
+            
             $('<div/>', {id: 'infoSync'}).appendTo('#' + content.attr('id'));
             var infoSync = $('#infoSync');
             infoSync.html("<p> SYNC INFORMATIONS: </p>");
