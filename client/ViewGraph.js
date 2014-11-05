@@ -14,7 +14,7 @@ var TP = TP || {};
             parameters.nodeColor = "steelblue"
             
         if(!('linkColor' in parameters) || parameters.linkColor === undefined)
-            parameters.linkColor = "lightgrey"
+            parameters.linkColor = "#D0D0D0"
             
         if (!('backgroundColor' in parameters) || parameters.backgroundColor === undefined)
             parameters.backgroundColor = "white"
@@ -329,7 +329,8 @@ var TP = TP || {};
                     .on("brushDragStart", function(d, i){ //console.log("brushDragStart");
                     })
                     .on("brushDragMove", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
-                    .on("brushDragEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); });
+                    .on("brushDragEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDoubleClick", function(d, i){__g__.getController().sendMessage("doubleClickOnLasso", {idView:__g__.getID()}); });
 
                 __g__.svg.on('mouseover', function(d, i){
                     var nodeSelection = __g__.svg.selectAll('.glyph .node');
@@ -337,6 +338,13 @@ var TP = TP || {};
                 })
 
                 __g__.svg.call(__g__.lasso);
+                
+                /*__g__.svg.live('click', function(e) { 
+                    if( e.which == 2 ) {
+                        e.preventDefault();
+                        alert("middle button"); 
+                    }
+                });*/
 
                 //TP.Interaction().addLasso(_event);
                 TP.Interaction().removeMove(_event);
