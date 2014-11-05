@@ -25,7 +25,7 @@ var TP = TP || {};
         this.loadData = function (json, target) {
             //for local use
             if (json == "" || json == null) {
-                console.log(contxt.json_address)
+                //console.log(contxt.json_address)
                 var jqxhr = $.getJSON(contxt.json_address, function () {
                     console.log("success");
                 })
@@ -39,7 +39,7 @@ var TP = TP || {};
                     .success(function (data, b) {
                         if ("response" in data)
                             data = data.response
-                        console.log(data)
+                        //console.log(data)
                         objectReferences.ToolObject.addBaseID(data, "id")
                         var jsonData = JSON.stringify(data)
                         objectReferences.ToolObject.loadJSON(data, target)
@@ -152,7 +152,7 @@ var TP = TP || {};
                 success: function (data) {
                     objectReferences.UpdateViewsObject.buildGraphFromData(data, target)
                     if ($('#analyse').is(':checked')) {
-                        console.log(target);
+                        //console.log(target);
                         var viewGraphSubstrate = TP.Context().view[target];
                         ['Bipartite analysis', '', {click: function () {
                             __g__.getController().sendMessage("analyseGraph", (function(){
@@ -176,9 +176,10 @@ var TP = TP || {};
                             })());
                         //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
                     }
-                    if ($('#sync').is(':checked')) {
-                        TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
+                    if ($('#sync').is(':checked')) {                        
+                        TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID(), true, true)
                     }
+                    TP.Context().InterfaceObject.tileViews();
                 }
             });
         }
@@ -234,7 +235,7 @@ var TP = TP || {};
                 weight: TP.Context().substrateWeightProperty
             }
 
-            console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
+            //console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
 
 
             //assert(false, "idView : " + idView);
@@ -311,7 +312,7 @@ var TP = TP || {};
                 parameters: params,
                 success: function (data) {
 
-                    console.log("analyzed data", data)
+                    //console.log("analyzed data", data)
                 }
             });
 
@@ -519,21 +520,21 @@ var TP = TP || {};
                 operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
                 weight: TP.Context().substrateWeightProperty
             }
-            console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
+            //console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
 
 
             __g__.sendQuery({
                 parameters: params,
                 async: false,
                 success: function (data) {
-                    console.log("updated", data)
+                    //console.log("updated", data)
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
         }
 
 
-        this.syncLayouts = function (currentGraph, async) {
+        this.syncLayouts = function (currentGraph, async, rescale) {
 
             //assert(true, "syncLayouts");
 
@@ -555,7 +556,8 @@ var TP = TP || {};
                 async: async,
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
                 success: function (data) {
-                    objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph)
+                    objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph);
+                    if(rescale){TP.Context().InterfaceObject.tileViews();}
                 }
             });
         };

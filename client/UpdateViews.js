@@ -200,7 +200,7 @@ var TP = TP || {};
             //graph_drawing.rescaleGraph(data);
 
             data.nodes.forEach(function(d){
-                console.log(d);
+                //console.log(d);
                 if ("entanglementIndex" in d)
                 {
                     d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)

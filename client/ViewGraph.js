@@ -308,6 +308,14 @@ var TP = TP || {};
             });
 
 
+            __g__.controller.addEventState("rescaleView", function(_event){
+                //console.log("this is something here")
+                //console.log()
+                __g__.graphDrawing.rescaleGraph(__g__.graph, __g__.dialog.dialog().width(), __g__.dialog.dialog().height());
+                __g__.graphDrawing.changeLayout(__g__.graph, 0);
+            });
+
+
             __g__.controller.addEventState("Move",  function (_event) {/*assert(true, "move");*/
                 //deactivate the lasso
                 __g__.svg.on('mouseover', null);

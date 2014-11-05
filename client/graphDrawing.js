@@ -405,16 +405,31 @@ var TP = TP || {};
 
         // This function rescales the graph data in order to fit the svg window
         // data, the graph data (modified during the function)
-        g.rescaleGraph = function (graph) {
+        g.rescaleGraph = function (graph, width_, height_) {
 
             if (!graph)
                 graph = g.cGraph
+            
+            var leftFrame = 10
+            var rightFrame = 100
+            var topFrame = 20
+            var bottomFrame = 10
+            
+            //var frame = 60.0            
+            
+            if (!width_)
+                width_ = TP.Context().width
+            //var w = width_ - (2 * frame)
+            var w = width_ - (leftFrame + rightFrame)
+
+            if (!height_)
+                height_ = TP.Context().height 
+            
+            //var h = height_ - (2 * frame)
+            var h = height_ - (topFrame + bottomFrame)
 
             var node = graph.nodes();
             //console.log("Rescaling the graphe, here is the data: ", data);
-            var frame = 10.0
-            var w = TP.Context().width - (2 * frame)
-            var h = TP.Context().height - (2 * frame)
 
             if (node.length <= 0)
                 return
@@ -429,8 +444,8 @@ var TP = TP || {};
             var delta = 0.00000000000000000001 //to avoid division by 0
             var scale = Math.min.apply(null, [w / (Xminmax[1] - Xminmax[0] + delta), h / (Yminmax[1] - Yminmax[0] + delta)])
             node.forEach(function (d) {
-                d.x = (d.x - Xminmax[0]) * scale + frame;
-                d.y = (d.y - Yminmax[0]) * scale + frame;
+                d.x = (d.x - Xminmax[0]) * scale + leftFrame;
+                d.y = (d.y - Yminmax[0]) * scale + topFrame;
                 d.currentX = d.x;
                 d.currentY = d.y;
             })
@@ -544,6 +559,7 @@ var TP = TP || {};
         // and associate 
         // the new x and y values (d3 does the transition) 
         g.changeLayout = function (_graph, dTime) {
+            //console.log("this is layout change")
 
             // assert(true, "que le move soit avec toi (maitre Yoda)");
 
