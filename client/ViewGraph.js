@@ -328,16 +328,15 @@ var TP = TP || {};
 
             __g__.controller.addEventState("Select",  function (_event) {
                 //activates the lasso
-                __g__.lasso.on("brushDrawStart", function(d, i){ //console.log("brushDrawStart");
+                __g__.lasso.on("brushDrawStart", function(d, i){ __g__.getController().drawingState = true;//console.log("brushDrawStart");
                             })
                     .on("brushDrawMove", function(d, i){ //console.log("brushDrawMove");
                     })
 
-                    .on("brushDrawEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
-                    .on("brushDragStart", function(d, i){ //console.log("brushDragStart");
-                    })
+                    .on("brushDrawEnd", function(d, i){ __g__.getController().drawingState = false; __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDragStart", function(d, i){ __g__.getController().drawingState = true; })
                     .on("brushDragMove", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
-                    .on("brushDragEnd", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDragEnd", function(d, i){ __g__.getController().drawingState = false; __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
                     .on("brushDoubleClick", function(d, i){__g__.getController().sendMessage("doubleClickOnLasso", {idView:__g__.getID()}); });
 
                 __g__.svg.on('mouseover', function(d, i){
