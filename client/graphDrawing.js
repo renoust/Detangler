@@ -176,6 +176,17 @@ var TP = TP || {};
         g.mouseOutNode = function () {
             var o = g.svg.selectAll("text.snippet").data([]).exit().remove();
         }
+        
+        function limitLabel(lbl)
+        {
+           var label = lbl;
+           if (label && label.length > TP.Context().defaultLabelMaxLength)
+           {
+              label = label.substring(0, TP.Context().defaultLabelMaxLength-3)+"...";
+           }                    
+           return label;
+
+        }
 
         // this function draws the nodes using d3
         // we associate to each graph node an svg:g (indexed by baseID)
@@ -366,8 +377,8 @@ var TP = TP || {};
                 //.on('selectstart', function(){return false;})
                 .style("font-size",12)
                 .style("opacity", TP.Context().defaultLabelOpacity)
-                .text(function (d) {
-                    return d.label;
+                .text(function (d) {                    
+                    return limitLabel(d.label);
                 });
 
 
@@ -1135,7 +1146,7 @@ var TP = TP || {};
                 .attr("visibility", "visible")
                 .style("fill", TP.Context().view[currentViewID].getLabelsColor())
                 .text(function(dd){
-                    return dd.label;
+                    return limitLabel(dd.label);
                 });
             var labelsArray = []
             var iterArray = []

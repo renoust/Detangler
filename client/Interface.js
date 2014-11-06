@@ -466,7 +466,7 @@ var TP = TP || {};
                                                             $(window).width()-(300+25),
                                                             false);
 
-            tab.forEach(function(t){
+           tab.forEach(function(t){
             //console.log("in the forEachLoop:",t); 
             t.getController().sendMessage("rescaleView", {idView:t.getID()});})
                    
