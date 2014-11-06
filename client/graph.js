@@ -318,6 +318,30 @@ var TP = TP || {};
                     o.target = g.nodes_array[o.target];
             }
         }
+                
+        this.opposite= function (sourceNode, sourceLink)
+        {
+            if (sourceLink.source == sourceNode)
+                return sourceLink.target
+            if (sourceLink.target == sourceNode)
+                return sourceLink.source
+            return null
+        }
+        
+        this.neighborhood = function (sourceNode){
+            var m = g.links_array.length;
+            var returnLinks = []
+            var returnNodes = []
+            for(var i =0; i<m; ++i){
+               o = g.links_array[i];
+               if (o.source == sourceNode || o.target == sourceNode)
+               {
+                    returnLinks.push(o);
+                    returnNodes.push(g.opposite(sourceNode,o));
+               } 
+            }
+            return {nodes:returnNodes, links:returnLinks}
+        }
 
 
         return g;
