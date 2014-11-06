@@ -156,25 +156,117 @@ var TP = TP || {};
 
 
         g.showLabelNode = function (_event) {
-            g.svg.selectAll("text.snippet").data([_event.associatedData.data]).enter()
-                .append("text")
-                .attr("dx", function (dd) {
-                    return dd.currentX
-                })
-                .attr("dy", function (dd) {
-                    return dd.currentY
-                })
-                .classed("snippet", true)
-                .style("fill",TP.Context().view[currentViewID].getLabelsColor())
-                .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
-                .text(function (dd) {
-                    //console.log(dd)
-                    return dd.label
+            
+            
+            var currentNode = _event.associatedData.data
+            
+            // find in out edges
+            ng = g.cGraph.neighborhood(currentNode);
+            ng.nodes.push(currentNode)
+            var tempGraph = new TP.Graph()
+            tempGraph.nodes(ng.nodes)
+            tempGraph.links(ng.links)
+            g.show_snippet(ng, currentNode)
+            
+            
+                
+            return 
+            
+            /*
+            g.svg.selectAll("path.snippet").data(ng.links).enter()
+                .append("path")
+                    .classed("link", true)
+                    .classed("snippet", true)
+                    .classed("path", 1)
+                    .attr("d", function (d) {
+                        return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    })
+    
+                    .style("stroke", "black") //before, there was catalyst
+                    .style("opacity", TP.Context().defaultLinkOpacity)
+                    .style("stroke-width", function (d) {
+                        return 1;
                 });
+           
+           view_nodes = (currentNode._type == "substrate") ? "rect" : "circle";
+
+           var glyphR = g.svg.selectAll(view_nodes+".snippet").data(ng.nodes).enter()
+                .append(view_nodes)
+                .classed("glyph", true)
+                .classed("snippet", true)
+                .classed(view_nodes, true)
+                .style("opacity", TP.Context().defaultNodeOpacity)
+                .style("fill", TP.Context().view[currentViewID].getNodesColor())
+                .style("stroke-width", 1)
+
+            if (view_nodes == "rect" && glyphR != null) {
+                // assert(true, "rect")
+                glyphR.attr("x", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                    .attr("y", function (d) {
+                        d.currentY = d.y;
+                        return d.currentY
+                    })
+                    .attr("width", 2 * 5)
+                    .attr("height", 2 * 5)
+            }
+            if (view_nodes == "circle" && glyphR != null) {
+                // assert(true, "circle");
+                glyphR.attr("cx", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                    .attr("cy", function (d) {
+                        d.currentY = d.y;
+                        return d.currentY
+                    })
+                    .attr("r", 5)
+            }
+            */
+            
+                
+                           
+            //g.linkContainer.selectAll("g.link")
         }
 
         g.mouseOutNode = function () {
-            var o = g.svg.selectAll("text.snippet").data([]).exit().remove();
+            var o = g.svg.selectAll(".snippet").data([]).exit().remove();
+            
+            currentView = TP.Context().view[currentViewID];
+            var currentNodeColor = currentView.getNodesColor();
+           
+           /*
+            g.svg.selectAll("g.glyph")
+                    .style('opacity', 1.0)
+                    .select("circle.node")
+                        .style('fill', function (d) {
+                            return currentNodeColor;
+                        })
+                        .style("stroke-width", function(d){return 0});
+            g.svg.selectAll("g.node")
+                    .select("text.node")
+                     .attr("visibility", function(d){return "visible"});
+           
+            g.svg.selectAll("g.link")
+                    .style('opacity', function(d){return 1.0})
+                    .select("path.link")
+                        .style('stroke', function(d){return currentView.getLinksColor()})
+                        .style('stroke-width', function(d){return 1.0})
+
+            
+             g.svg.selectAll("g.node")
+                    .style("opacity", 1)
+                    .select("rect.node")
+                        .style('fill', function(d){return currentNodeColor})
+                        .style("stroke-width", function(d){return 0});
+                        
+
+                //objectReferences.VisualizationObject.resetSize(substrateName);
+            g.svg.selectAll("text.node").style("opacity", 1)
+            */
+ 
         }
         
         function limitLabel(lbl)
@@ -271,7 +363,7 @@ var TP = TP || {};
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
                 .on("mouseout", function () {
-                    TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode");
+                    
                 })
                 .append("g")
                 .attr("class", function (d) {
@@ -903,6 +995,108 @@ var TP = TP || {};
          .style("stroke-width", function(d) { return 1;})
          }*/
 
+        g.show_snippet = function (_graph, currentNode) {
+            
+            var fuzz=g.svg
+                        .append("rect")
+                        .classed("snippet",1)
+                        .style("fill","white")
+                        .style("opacity",.5)
+                        .attr("x",0)
+                        .attr("y",0)
+                        .attr("width",function(d){ return g.svg.style("width").replace("px", "");})
+                        .attr("height",function(d){return g.svg.style("height").replace("px", "");})
+                        .on("mouseover", function(d){ TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode");})
+            
+            currentView = TP.Context().view[currentViewID]
+            currentGlyph = currentView.getViewNodes()
+            currentGlyphClass = currentGlyph + ".node"
+            
+            snippetGroup = g.svg.append("g")
+                            .classed("snippet", 1)
+                            .on("mouseout",function(d){ TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode"); })
+
+            snippetGroup.selectAll("path.snippet").data(_graph.links).enter()
+                .append("path")
+                    .classed("link", true)
+                    .classed("snippet", true)
+                    .classed("path", 1)
+                    .attr("d", function (d) {
+                        return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    })
+    
+                    .style("stroke", "#009933") //before, there was catalyst
+                    .style("opacity", TP.Context().defaultLinkOpacity)
+                    .style("stroke-width", function (d) {
+                        return 1;
+                });
+           
+           view_nodes = (currentView.getType() == "substrate") ? "rect" : "circle";
+
+           var glyphR = snippetGroup.selectAll(view_nodes+".snippet").data(_graph.nodes).enter()
+                .append(view_nodes)
+                .classed("glyph", true)
+                .classed("snippet", true)
+                .classed(view_nodes, true)
+                .style("stroke","#009933")
+                .style("stroke-width", 1)
+                .style("opacity",1)
+
+            if (view_nodes == "rect" && glyphR != null) {
+                // assert(true, "rect")
+                glyphR.attr("x", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                    .attr("y", function (d) {
+                        d.currentY = d.y;
+                        return d.currentY
+                    })
+                    .attr("width", function(d){var rects = g.svg.selectAll("g.node").data([d], function(d){return d.baseID}).select("rect");
+                    return rects.attr("width");})//2 * 5})
+                    .attr("height", function(d){var rects = g.svg.selectAll("g.node").data([d], function(d){return d.baseID}).select("rect");
+                    return rects.attr("height");})//2 * 5})
+                    //.style("opacity", TP.Context().defaultNodeOpacity)
+                    .style("fill-opacity", 0)//TP.Context().view[currentViewID].getNodesColor())
+                
+            }
+            if (view_nodes == "circle" && glyphR != null) {
+                // assert(true, "circle");
+                glyphR.attr("cx", function (d) {
+                    d.currentX = d.x;
+                    return d.currentX
+                })
+                    .attr("cy", function (d) {
+                        d.currentY = d.y;
+                        return d.currentY
+                    })
+                    .attr("r", function(d){
+                        var circles = g.svg.selectAll("g.node").data([d], function(d){return d.baseID}).select("circle")
+                        return circles.attr("r");
+                        })
+                    .style("fill-opacity", 0)
+            }
+            
+            snippetGroup.selectAll("text.snippet").data(ng.nodes).enter()
+                .append("text")
+                .attr("dx", function (dd) {
+                    return dd.currentX
+                })
+                .attr("dy", function (dd) {
+                    return dd.currentY
+                })
+                .classed("snippet", 1)
+                .style("fill",TP.Context().view[currentViewID].getLabelsColor())
+                .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
+                .style("stroke-width",1)
+                .text(function (dd) {
+                    if(dd.visible || dd.baseID == currentNode.baseID)
+                        return dd.label
+                });
+            
+            return;
+        }
+
 
         // this function puts forward a selection of nodes
         // _graph, the new graph selection
@@ -914,7 +1108,7 @@ var TP = TP || {};
         // we assign to the nodes the new data, and reassign the original data
         // we might want to apply persistant colors and sizes stored in the 
         // data
-        g.show = function (_graph, dTime) {
+        g.show = function (_graph) {
             // redraw the previous nodes to the default values
             //g.arrangeLabels();
             //g.resetDrawing();
@@ -959,7 +1153,7 @@ var TP = TP || {};
                 .select("path.link")
                 .style("stroke", currentView.getLinksColor())
                 .style("stroke-width", function (d) {
-                    return 1;
+                    return 3;
                 })
 
             //we would like it better as a parameter
@@ -994,18 +1188,21 @@ var TP = TP || {};
 
             // assign the new data
             var node = g.nodeContainer.selectAll("g.node")
+                .classed("shown", 1)
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
                 .style("opacity", TP.Context().defaultNodeOpacity)
 
             var link = g.linkContainer.selectAll("g.link")
+                .classed("shown", 1)
                 .data(_graph.links(), function (d) {
                     return d.baseID
                 })
                 .style("opacity", TP.Context().defaultLinkOpacity)
 
             var label = g.labelContainer.selectAll("text.node")
+                .classed("shown", 1)
                 .data(_graph.nodes(), function (d) {
                     return d.baseID
                 })
@@ -1023,7 +1220,7 @@ var TP = TP || {};
                     return r;
                 })
                 .style("stroke-width", function (d) {
-                    return 2;
+                    return 3;
                 })
                 .style("stroke", "brown")
 
@@ -1047,7 +1244,7 @@ var TP = TP || {};
                 //    return 2 * r;
                 //})
                 .style("stroke-width", function (d) {
-                    return 2;
+                    return 3;
                 })
                 .style("stroke", "brown")
 
@@ -1056,7 +1253,7 @@ var TP = TP || {};
 
             link.select("path.link")
                 .style("stroke-width", function (d) {
-                    return 2;
+                    return 2    ;
                 })
                 .style("stroke", "brown")
 

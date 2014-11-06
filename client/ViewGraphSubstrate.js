@@ -365,7 +365,8 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("mouseoverShowLabelNode",  function (_event) {
-                TP.Context().view[_event.associatedData.source].getGraphDrawing().showLabelNode(_event);
+                if (__g__.getController().drawingState != true)
+                     TP.Context().view[_event.associatedData.source].getGraphDrawing().showLabelNode(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("mouseOutNode",  function (_event) {
