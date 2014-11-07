@@ -51,11 +51,13 @@ var TP = TP || {};
 
 
             g.drawNodes(TP.Context().view[currentViewID].getViewNodes());
+            g.recenterNodes();
+            
             g.drawLabels()
         }
 
 
-        g.moveNode = function move(tabb) {
+        g.moveNode = function (tabb) {
             //var dragTarget = d3.select(this);
             var dragTarget = tabb[0];
             var circleTarget = dragTarget.select("circle.node");
@@ -130,7 +132,63 @@ var TP = TP || {};
             tab1[1] = null;
             tab1[2] = null;
 
-            g.moveNode(tab1);
+            //g.moveNode(tab1);
+            
+            tabb = tab1
+             
+            var snippet = _event.associatedData.snippet;
+            if(snippet)
+            {
+                var currentNode = snippet.data()[0]
+                var view_node = snippet[0][0].tagName
+                var posX = d3.event.dx
+                var posY = d3.event.dy
+                currentNode.x += posX
+                currentNode.y += posY
+                currentNode.currentX += posX
+                currentNode.currentY += posY                
+                var currentBaseID = currentNode.baseID
+
+                if (view_node == "rect")
+                {
+                    snippet
+                        .attr("x", function () {
+                            return currentNode.x
+                        })
+                        .attr("y", function () {
+                            return currentNode.y
+                        });
+                    
+                } 
+
+                if (view_node == "circle")
+                {
+                    snippet
+                        .attr("cx", function () {
+                            return currentNode.x
+                        })
+                        .attr("cy", function () {
+                            return currentNode.y
+                        });
+                }
+ 
+                var labelTarget = g.svg.selectAll("text.snippet");
+ 
+                labelTarget
+                    .attr("dx", function () {
+                        return currentNode.x
+                    })
+                    .attr("dy", function () {
+                        return currentNode.y
+                    });
+
+                // console.log("current svg:", g.svg, g.cGraph.links());
+                var links = g.svg.selectAll("path.snippet")
+                .attr("d", function (d) {
+                    //console.log("updating the graph");
+                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                })
+            }
         }
 
 
@@ -311,55 +369,22 @@ var TP = TP || {};
                     return
                 })
                 .call(d3.behavior.drag()
-                    .on("dragstart", function (d) {/*
-                     var tab = []
-                     tab[0] = d3.select(this);
-                     tab[1] = tab[0].data()[0].x;
-                     tab[2] = tab[0].data()[0].y;
-                     tab[3] = tab[0].data()[0].currentX;
-                     tab[4] = tab[0].data()[0].currentY;
+                    .on("dragstart", function (d) {
 
-                     undo = function(){move(tab);}*/
                     })
                     .on("drag", function (d) {
-                        TP.Context().view[currentViewID].getController().sendMessage("dragNode", {node: d3.select(this)});
-                        //g.dragNode(d3.select(this));
-                        /*
-                         //save for redo
-                         var tab2 = []
-                         tab2[0] = d3.select(this);
-                         tab2[1] = tab2[0].data()[0].x;
-                         tab2[2] = tab2[0].data()[0].y;
-                         tab2[3] = tab2[0].data()[0].currentX;
-                         tab2[4] = tab2[0].data()[0].currentY;
-
-                         redo = function(){*/
-                        /*console.log(tab2);*/
-                        /* g.moveNode(tab2);}
-                         //TP.Context().changeStack.addChange("moveSommet", undo, redo);
-                         */
+                        //TP.Context().view[currentViewID].getController().sendMessage("dragNode", {node: d3.select(this)});
                     })
 
                     .on("dragend", function () {
-                        TP.Context().view[currentViewID].getController().sendMessage("dragNodeEnd", {node: d3.select(this)});
-                        /*
-                     console.log("mouseDown, mouseDown");
-
-                     //g.arrangeLabels();
-                     //if(saveUndo == 1){
-
-                     TP.Context().changeStack.addChange("moveSommet", undo, redo);
-                     undo = null;
-                     redo = null;
-                     saveUndo = 0;
-                     //}
-                     */
+                        //TP.Context().view[currentViewID].getController().sendMessage("dragNodeEnd", {node: d3.select(this)});
                     }))
                 .on("click", function (d) {
-                    TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
+                    //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
                 })
                 .on("mouseover", function (d) {
                     //console.log("appending a snippet");
+                    if (g.dragStarted == true) return;
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
                 .on("mouseout", function () {
@@ -849,6 +874,37 @@ var TP = TP || {};
                     return 1;
                 })
         }
+        
+        g.recenterNode = function(node, nodeData)
+        {
+            var existing = node.attr("transform");
+            node = node.select("rect.node")
+            var x = node.attr("x");
+            var y = node.attr("y");
+            var height = node.attr("height");
+            var width = node.attr("width");
+            transX = x+width/2.0;
+            transY = y+height/2.0;  
+            trans =  "translate("+transX+","+transY+")";        
+            
+            var centering = "";
+            /*if (existing != null)
+                centering = existing+","+trans;
+            else*/
+                centering = trans
+            console.log(centering) ;
+            return centering;
+        }
+        
+        g.recenterNodes = function(){
+            
+            if (g.type != "substrate") return 
+            
+            g.nodeContainer.selectAll("g.node")
+                .attr("transform", function(d){
+                    //return g.recenterNode(d3.select(this), d)
+                })
+        }
 
 
         g.nodeColorMap = function (_graph, dTime, parameter, diff) {
@@ -1006,7 +1062,10 @@ var TP = TP || {};
                         .attr("y",0)
                         .attr("width",function(d){ return g.svg.style("width").replace("px", "");})
                         .attr("height",function(d){return g.svg.style("height").replace("px", "");})
-                        .on("mouseover", function(d){ TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode");})
+                        .on("mouseover", function(d){ 
+                            if(g.dragStarted == true){return}
+                            TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode");})
+                        
             
             currentView = TP.Context().view[currentViewID]
             currentGlyph = currentView.getViewNodes()
@@ -1014,7 +1073,10 @@ var TP = TP || {};
             
             snippetGroup = g.svg.append("g")
                             .classed("snippet", 1)
-                            .on("mouseout",function(d){ TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode"); })
+                            .on("mouseout",function(d){
+                            if(g.dragStarted == true){return}
+                             TP.Context().view[currentViewID].getController().sendMessage("mouseOutNode"); })
+                                                
 
             snippetGroup.selectAll("path.snippet").data(_graph.links).enter()
                 .append("path")
@@ -1041,6 +1103,26 @@ var TP = TP || {};
                 .style("stroke","#009933")
                 .style("stroke-width", 1)
                 .style("opacity",1)
+                .call(d3.behavior.drag()
+                    .on("dragstart", function (d) {console.log("dragstart");
+                        g.dragStarted = true;
+
+                    })
+                    .on("drag", function (d) {
+                        console.log("dragging")
+                        TP.Context().view[currentViewID].getController().sendMessage("dragNode", {snippet: d3.select(this), node:g.svg.selectAll(view_nodes+".node").data([d])});
+                    })
+
+                    .on("dragend", function (d) {
+                        g.dragStarted = false;
+                        var currentView = TP.Context().view[currentViewID]
+                        currentView.getGraphDrawing().changeLayout(currentView.getGraph(), 0);
+                        currentView.getController().sendMessage("dragNodeEnd", {snippet: d3.select(this), node:g.svg.selectAll(view_nodes+".node").data([d])});
+                    })
+                )
+                .on("click", function (d) {
+                    TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {snippet: d3.select(this), node:g.svg.selectAll(view_nodes+".node").data([d])})
+                })
 
             if (view_nodes == "rect" && glyphR != null) {
                 // assert(true, "rect")
@@ -1057,7 +1139,7 @@ var TP = TP || {};
                     .attr("height", function(d){var rects = g.svg.selectAll("g.node").data([d], function(d){return d.baseID}).select("rect");
                     return rects.attr("height");})//2 * 5})
                     //.style("opacity", TP.Context().defaultNodeOpacity)
-                    .style("fill-opacity", 0)//TP.Context().view[currentViewID].getNodesColor())
+                    .style("fill-opacity", 0.5)//TP.Context().view[currentViewID].getNodesColor())
                 
             }
             if (view_nodes == "circle" && glyphR != null) {
