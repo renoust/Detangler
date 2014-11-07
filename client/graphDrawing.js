@@ -221,9 +221,6 @@ var TP = TP || {};
             // find in out edges
             ng = g.cGraph.neighborhood(currentNode);
             ng.nodes.push(currentNode)
-            var tempGraph = new TP.Graph()
-            tempGraph.nodes(ng.nodes)
-            tempGraph.links(ng.links)
             g.show_snippet(ng, currentNode)
             
             
@@ -1109,12 +1106,14 @@ var TP = TP || {};
 
                     })
                     .on("drag", function (d) {
-                        console.log("dragging")
+                        //console.log("dragging")
+                        //return
                         TP.Context().view[currentViewID].getController().sendMessage("dragNode", {snippet: d3.select(this), node:g.svg.selectAll(view_nodes+".node").data([d])});
                     })
 
                     .on("dragend", function (d) {
                         g.dragStarted = false;
+                        //return
                         var currentView = TP.Context().view[currentViewID]
                         currentView.getGraphDrawing().changeLayout(currentView.getGraph(), 0);
                         currentView.getController().sendMessage("dragNodeEnd", {snippet: d3.select(this), node:g.svg.selectAll(view_nodes+".node").data([d])});
@@ -1139,7 +1138,7 @@ var TP = TP || {};
                     .attr("height", function(d){var rects = g.svg.selectAll("g.node").data([d], function(d){return d.baseID}).select("rect");
                     return rects.attr("height");})//2 * 5})
                     //.style("opacity", TP.Context().defaultNodeOpacity)
-                    .style("fill-opacity", 0.5)//TP.Context().view[currentViewID].getNodesColor())
+                    .style("fill-opacity", 0)//TP.Context().view[currentViewID].getNodesColor())
                 
             }
             if (view_nodes == "circle" && glyphR != null) {
