@@ -115,7 +115,7 @@ var TP = TP || {};
             {interactorLabel:'Leapfrog to substrates', interactorParameters: '', callbackBehavior: {click: function () {
                 TP.ObjectReferences().InteractionObject.toggleSelection(__g__.getID())
             }}, interactorGroup:"Selection"},
-            {interactorLabel:'Selection operator is: ' + TP.Context().tabOperator["catalyst"], interactorParameters:'', callbackBehavior:{click: function () {
+            {interactorLabel:function(){return 'Selection operator is: ' +TP.Context().tabOperator[__g__.getID()]}, interactorParameters:'', callbackBehavior:{click: function () {
                 TP.ObjectReferences().InteractionObject.toggleCatalystSyncOperator(__g__.getID());
                 //var selList = [];
                 __g__.setPreviousSourceSelection([]);

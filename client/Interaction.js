@@ -1048,7 +1048,7 @@ var TP = TP || {};
 
 
         this.toggleCatalystSyncOperator = function (target) {
-            //console.log(target)
+                        
             if (TP.Context().tabOperator[target] == "OR") { //befrore, there was only catalyst
                 TP.Context().tabOperator[target] = "AND";
                 $('li.form > a').each(function () {
@@ -1057,12 +1057,18 @@ var TP = TP || {};
                     }
                 })
             } else {
-                TP.Context().tabOperator[target] = "OR"
-                $('li.form > a').each(function () {
-                    if ($(this).text() === 'Selection operator is: AND') {
-                        $(this).text('Selection operator is: OR')
-                    }
-                })
+                if (TP.Context().tabOperator[target] == "AND") {
+                    TP.Context().tabOperator[target] = "OR"
+                    $('li.form > a').each(function () {
+                        if ($(this).text() === 'Selection operator is: AND') {
+                            $(this).text('Selection operator is: OR')
+                        }
+                    })
+                }
+                else
+                {
+                    console.log("issue in operators");
+                }
 
             }
             /*
