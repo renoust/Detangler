@@ -1449,102 +1449,116 @@ var TP = TP || {};
 
         g.arrangeLabels = function () {
             var intersect = function (rectDiag, point) {
-                if (rectDiag[0][0] <= point[0] && rectDiag[1][0] >= point[0] &&
-                    rectDiag[0][1] <= point[1] && rectDiag[1][1] >= point[1])
+                var xList = (rectDiag[0][0] <= rectDiag[1][0]) ? [rectDiag[0][0], rectDiag[1][0]]: [rectDiag[1][0], rectDiag[0][0]]; 
+                var yList = (rectDiag[0][1] <= rectDiag[1][1]) ? [rectDiag[0][1], rectDiag[1][1]]: [rectDiag[1][1], rectDiag[1][0]];
+
+                if (xList[0] <= point[0] && xList[1] >= point[0] &&
+                    yList[0] <= point[1] && yList[1] >= point[1])
                     return true;
                 return false;
             }
 
             var labels = g.labelContainer.selectAll("text.node")
                 .attr("visibility", "visible")
-                .style("fill", TP.Context().view[currentViewID].getLabelsColor())
-                .text(function(dd){
-                    return limitLabel(dd.label);
-                });
+                //.style("fill", TP.Context().view[currentViewID].getLabelsColor())
+                //.text(function(dd){
+                //    return limitLabel(dd.label);
+                //});
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")
+            var combineArray = []
+            
             labels[0].forEach(function (d) {
-                labelsArray.push(d3.select(d));
+                
+                //labelsArray.push(d3.select(d));
                 //console.log(d.getBBox(), d3.select(d).data()[0].x, d3.select(d).data()[0].y, d3.select(d).data()[0].currentX, d3.select(d).data()[0].currentY)
-                iterArray.push(d.getBBox());
+                //iterArray.push(d.getBBox());
+                
+                combineArray.push([d3.select(d), d.getBBox()]);
+            });
+            
+            combineArray.sort(function(a, b){
+                if (a[1].x != b[1].x)
+                { return a[1].x - b[1].x }
+                else
+                { return a[1].y - b[1].y }
+                
             });
 
-            /*
-             function sortPoints(xA, xB, yA, yB)
-             {
-             var diffX = xA - xB
-             if (diffX != 0) return diffX;
-             var diffY = yA - yB
-             return diffY;
-             }
 
-             labelsArray.sort(function(b,a){ return sortPoints(a.currentX, b.currentX, a.currentY, b.currentY)})
-             iterArray.sort(function(b,a){ return sortPoints(a.x, b.x, a.y, b.y)})
-             */
-
-            var margin = 1;
-
-            var iterate = function () {
+            var iterate = function (combineArray) {
+                var margin = 2;
                 var anyChange = false,
                     noChange = false;
-                //We should reduce the complexity of this algo!!
 
 
-                var end = iterArray.length - 1;
+                //var end = iterArray.length - 1;
+                var blackList = []
+                var end = combineArray.length - 1;
 
-                for (var iLabel = 0; iLabel < end; iLabel++) {
+                for (var iLabel = 0; iLabel < end; ++iLabel) {
 
-                    var bbox = iterArray[iLabel];
+                    var label_i = combineArray[iLabel][0];
 
-                    if (labelsArray[iLabel].attr("visibility") == "visible") {
-
+                    if (blackList.indexOf(iLabel) == -1 && label_i.attr("visibility") == "visible") {
+                        
+                        var bbox = combineArray[iLabel][1];
+                    
                         var polygon = [
                             [bbox.x - margin, bbox.y - margin],
                             [bbox.x + bbox.width + margin, bbox.y - margin],
                             [bbox.x - margin, bbox.y + bbox.height + margin],
-                            [bbox.x + bbox.width + margin, bbox.y + bbox.height
-                                + margin]
+                            [bbox.x + bbox.width + margin, bbox.y + bbox.height + margin]
                         ];
+                        var testList = [[bbox.x - margin, bbox.y - margin], [bbox.x + bbox.width + margin, bbox.y + bbox.height + margin]]
 
-                        noChange = false;
+                        //noChange = true;
 
-                        var end2 = iterArray.length;
+                        var end2 = combineArray.length;
 
-                        for (var iLabel2 = iLabel + 1; iLabel2 < end2; iLabel2++) {
-
-                            if (labelsArray[iLabel2].attr("visibility") == "visible") {
-                                var bbox2 = iterArray[iLabel2];
+                        for (var iLabel2 = iLabel + 1; iLabel2 < end2; ++iLabel2) {
+                        //for (var iLabel2 = 0; iLabel2 < end2; ++iLabel2) {
+                            
+                            var label_j = combineArray[iLabel2][0];
+                            
+                            if (iLabel != iLabel2 && blackList.indexOf(iLabel2) == -1 && label_j.attr("visibility") == "visible") {
+                                var bbox2 = combineArray[iLabel2][1];
                                 var polygon2 = [
                                     [bbox2.x - margin, bbox2.y - margin],
-                                    [bbox2.x + bbox2.width + margin, bbox2.y
-                                        - margin],
-                                    [bbox2.x - margin, bbox2.y + bbox2.height
-                                        + margin],
-                                    [bbox2.x + bbox2.width + margin, bbox2.y
-                                        + bbox2.height + margin]
+                                    [bbox2.x + bbox2.width + margin, bbox2.y - margin],
+                                    [bbox2.x - margin, bbox2.y + bbox2.height + margin],
+                                    [bbox2.x + bbox2.width + margin, bbox2.y + bbox2.height + margin]
                                 ];
+                                var testList2 = [[bbox2.x - margin, bbox2.y - margin],[bbox2.x + bbox2.width + margin, bbox2.y + bbox2.height + margin]]
 
-                                var end3 = polygon2.length;
+                                var end3 = 4;//polygon2.length;
 
-                                for (var iPoint = 0; iPoint < end3 && !noChange; iPoint++) {
-                                    if (intersect([polygon[0], polygon[3]], polygon2[iPoint])) {
-                                        labelsArray[iLabel2].attr("visibility", "hidden");
-                                        noChange = true;
-                                        anyChange = true;
-                                        break;
+                                noChange = true;
+                                
+                                var iPoint = 0;
+                                while(noChange && iPoint < 4)
+                                {
+                                    var test = intersect(testList, polygon2[iPoint]);
+                                    if(test)
+                                    {
+                                        blackList.push(iLabel2);
+                                        label_j.attr("visibility", "hidden");
+                                        noChange = false;
+                                        anyChange = true;                                        
                                     }
-                                }
-                                for (var iPoint = 0; iPoint < end3
-                                    && !noChange; iPoint++) {
-                                    if (intersect([polygon2[0], polygon2[3]],
-                                        polygon[iPoint])) {
-                                        labelsArray[iLabel2].attr("visibility",
-                                            "hidden");
-                                        noChange = true;
-                                        anyChange = true;
-                                        break;
+                                    else
+                                    {
+                                    test = intersect(testList2, polygon[iPoint]);
+                                        if(test)
+                                        {
+                                            blackList.push(iLabel2);
+                                            label_j.attr("visibility", "hidden");
+                                            noChange = false;
+                                            anyChange = true;                                        
+                                        }                                        
                                     }
+                                    iPoint++;
                                 }
                             }
                         }
@@ -1552,13 +1566,8 @@ var TP = TP || {};
                 }
                 return anyChange;
             }
-            // I think normally just one pass of the algorithm should do it!
-            var count = 0;
-            while (iterate()) {
-                count++
-            }
-            ;
-            //console.log("iterated: ", count);
+
+            iterate(combineArray);
 
         }
 
