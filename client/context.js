@@ -112,7 +112,9 @@ var TP = TP || {};
         __g__.defaultTargetHighlightColor = "";
         __g__.defaultBackgroundColor = "#FFFFFF";
         __g__.defaultLabelColor = "#000000";
-        __g__.defaultLabelMaxLength = "20"; 
+        __g__.defaultLabelMaxLength = 20;
+        __g__.defaultLabelPadding = 1;
+        __g__.defaultLabelFontSize = 12; 
 
         __g__.sessionSid = 0;
 
