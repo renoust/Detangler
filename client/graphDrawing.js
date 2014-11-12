@@ -1193,6 +1193,7 @@ var TP = TP || {};
                 .style("fill",TP.Context().view[currentViewID].getLabelsColor())
                 .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
                 .style("stroke-width",1)
+                .style("font-size", TP.Context().view[currentViewID].labelFontSize)
                 .text(function (dd) {
                     if(dd.visible || dd.baseID == currentNode.baseID)
                         return dd.label
