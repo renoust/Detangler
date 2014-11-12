@@ -320,9 +320,9 @@ var TP = TP || {};
         function limitLabel(lbl)
         {
            var label = lbl;
-           if (label && label.length > TP.Context().defaultLabelMaxLength)
+           if (label && label.length > TP.Context().view[currentViewID].labelDisplayWidth)//TP.Context().defaultLabelMaxLength)
            {
-              label = label.substring(0, TP.Context().defaultLabelMaxLength-3)+"...";
+              label = label.substring(0, TP.Context().view[currentViewID].labelDisplayWidth-3)+"...";
            }                    
            return label;
 
@@ -482,7 +482,9 @@ var TP = TP || {};
 
                 //.attr('unselectable', 'on')
                 //.on('selectstart', function(){return false;})
-                .style("font-size",12)
+                .style("font-size",function(){
+                    return TP.Context().view[currentViewID].labelFontSize;
+                })
                 .style("opacity", TP.Context().defaultLabelOpacity)
                 .text(function (d) {                    
                     return limitLabel(d.label);
@@ -1461,13 +1463,18 @@ var TP = TP || {};
             var labels = g.labelContainer.selectAll("text.node")
                 .attr("visibility", "visible")
                 //.style("fill", TP.Context().view[currentViewID].getLabelsColor())
-                //.text(function(dd){
-                //    return limitLabel(dd.label);
-                //});
+                .style("font-size", function(){
+                    return TP.Context().view[currentViewID].labelFontSize;
+                })
+                .text(function(dd){
+                    return limitLabel(dd.label);
+                });
             var labelsArray = []
             var iterArray = []
             //assert(true,"Les labels au moment de leur traitement")
             var combineArray = []
+            var currentView = TP.Context().view[currentViewID];
+            var metricOrdering = currentView.labelMetric;//"nbDescriptors";//null
             
             labels[0].forEach(function (d) {
                 
@@ -1478,17 +1485,24 @@ var TP = TP || {};
                 combineArray.push([d3.select(d), d.getBBox()]);
             });
             
-            combineArray.sort(function(a, b){
-                if (a[1].x != b[1].x)
-                { return a[1].x - b[1].x }
-                else
-                { return a[1].y - b[1].y }
-                
-            });
-
+            if(metricOrdering != null)
+            {
+                combineArray.sort(function(a, b){
+                    //console.log(a[0].data()[0][metricOrdering])
+                    return (b[0].data()[0][metricOrdering] - a[0].data()[0][metricOrdering]);
+                });
+            }else{
+                combineArray.sort(function(a, b){
+                    if (a[1].x != b[1].x)
+                    { return a[1].x - b[1].x }
+                    else
+                    { return a[1].y - b[1].y }
+                    
+                });
+            }
 
             var iterate = function (combineArray) {
-                var margin = 2;
+                var margin = currentView.labelPadding;
                 var anyChange = false,
                     noChange = false;
 
@@ -1504,14 +1518,22 @@ var TP = TP || {};
                     if (blackList.indexOf(iLabel) == -1 && label_i.attr("visibility") == "visible") {
                         
                         var bbox = combineArray[iLabel][1];
+                        var margin_height = (margin > -bbox.height/2.0) ? margin : -bbox.height/2.0;
+                        var margin_width = (margin > -bbox.width/2.0) ? margin : -bbox.width/2.0;
+                        
+
+                        var minX = bbox.x - margin_width;
+                        var minY = bbox.y - margin_height;
+                        var maxX = bbox.x + bbox.width + margin_width;
+                        var maxY = bbox.y + bbox.height + margin_height;   
                     
                         var polygon = [
-                            [bbox.x - margin, bbox.y - margin],
-                            [bbox.x + bbox.width + margin, bbox.y - margin],
-                            [bbox.x - margin, bbox.y + bbox.height + margin],
-                            [bbox.x + bbox.width + margin, bbox.y + bbox.height + margin]
+                            [minX, minY],
+                            [maxX, minY],
+                            [minX, maxY],
+                            [maxX, maxY]
                         ];
-                        var testList = [[bbox.x - margin, bbox.y - margin], [bbox.x + bbox.width + margin, bbox.y + bbox.height + margin]]
+                        var testList = [[minX, minY], [maxX, maxY]]
 
                         //noChange = true;
 
@@ -1524,13 +1546,24 @@ var TP = TP || {};
                             
                             if (iLabel != iLabel2 && blackList.indexOf(iLabel2) == -1 && label_j.attr("visibility") == "visible") {
                                 var bbox2 = combineArray[iLabel2][1];
+                                
+                                var margin_height = (margin > -bbox2.height/2.0) ? margin : -bbox2.height/2.0;
+                                var margin_width = (margin > -bbox2.width/2.0) ? margin : -bbox2.width/2.0;
+                                
+
+                                var minX = bbox2.x - margin_width;
+                                var minY = bbox2.y - margin_height;
+                                var maxX = bbox2.x + bbox2.width + margin_width;
+                                var maxY = bbox2.y + bbox2.height + margin_height;   
+                            
                                 var polygon2 = [
-                                    [bbox2.x - margin, bbox2.y - margin],
-                                    [bbox2.x + bbox2.width + margin, bbox2.y - margin],
-                                    [bbox2.x - margin, bbox2.y + bbox2.height + margin],
-                                    [bbox2.x + bbox2.width + margin, bbox2.y + bbox2.height + margin]
+                                    [minX, minY],
+                                    [maxX, minY],
+                                    [minX, maxY],
+                                    [maxX, maxY]
                                 ];
-                                var testList2 = [[bbox2.x - margin, bbox2.y - margin],[bbox2.x + bbox2.width + margin, bbox2.y + bbox2.height + margin]]
+                                var testList2 = [[minX, minY], [maxX, maxY]]
+
 
                                 var end3 = 4;//polygon2.length;
 

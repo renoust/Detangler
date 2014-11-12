@@ -914,6 +914,39 @@ var TP = TP || {};
                             }
                         })
                         break;
+                    case 8: //simplelider
+                        var div = $('<div/>',attrElem).appendTo(parentId)
+
+                        attrChild.change= ((function (e) { 
+                            return function () {
+                                var res = {};
+                                var val1 = $(this).slider("values",0);
+
+                                $(this).find(".ui-slider-handle").eq(0).text(val1);
+
+                                key = "value";
+                                res[key] = val1
+                                //console.log(res)
+                                var c = e ? e.call(res) : null;
+                            };
+                        })(evnt))
+                        attrChild.slide= ((function (e) { 
+                            return function () {
+                                var res = {}
+                                var val1 = $(this).slider("values",0);
+
+                                $(this).find(".ui-slider-handle").eq(0).text(val1);
+                               
+                                key = "value";
+                                res[key] = val1
+                                //console.log(res)
+                                var c = e ? e.call(res) : null;
+                            };
+                        })(evnt))
+
+                        div.slider(attrChild);
+                        break;
+
 
                 }
                 par.append(labelSuiv + "<br/>")

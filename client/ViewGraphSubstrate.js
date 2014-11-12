@@ -9,7 +9,67 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
+        var labelFontSizeSlide = 
+        [
+            [8, {id:"labelFontSizeSlide"},{
+                    range: false,
+                    min: 0,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    max: 100,
+                    value: TP.Context().defaultLabelFontSize,
+                    change: function() {
+                        var value = $("#labelFontSizeSlide").slider("values",0);
+                        $("#labelFontSizeSlide").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#labelFontSizeSlide").slider("values",0);
+                        $("#labelFontSizeSlide").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]
+        ];
+
         
+        var labelPaddingSlide = 
+        [
+            [8, {id:"labelPaddingSlide"},{
+                    range: false,
+                    min: -100,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    max: 100,
+                    value: TP.Context().defaultLabelPadding,
+                    change: function() {
+                        var value = $("#labelPaddingSlide").slider("values",0);
+                        $("#labelPaddingSlide").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#labelPaddingSlide").slider("values",0);
+                        $("#labelPaddingSlide").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]
+        ];
+        
+        
+        var labelDisplayWidth = 
+        [
+            [8, {id:"labelDisplayWidth"},{
+                    range: false,
+                    min: 0,
+                    max: (function(){return window.width})(),
+                    value: TP.Context().defaultdefaultLabelMaxLength,
+                    change: function() {
+                        var value = $("#labelDisplayWidth").slider("values",0);
+                        $("#labelDisplayWidth").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#labelDisplayWidth").slider("values",0);
+                        $("#labelDisplayWidth").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]
+        ];        
         var paramSizeMap = [
             [4, 
                 {id:"sizemap"},
@@ -259,8 +319,31 @@ var TP = TP || {};
                 call:function(paramList){
                     //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                     TP.ObjectReferences().VisualizationObject.colorMapping(paramList.nodeProperty, __g__.getID());
-                }}, interactorGroup:"View"}
+                }}, interactorGroup:"View"},
+                
+            {interactorLabel:'Label metric ordering',interactorParameters:tl2,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    //__g__.getController().sendMessage('node size mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                    __g__.labelMetric = (paramList.nodeProperty == "--")? null: paramList.nodeProperty; 
+                    __g__.getController().sendMessage("arrangeLabels")//TP.ObjectReferences().VisualizationObject.nodeSizeMapping(paramList.nodeProperty, __g__.getID());
+                }}, interactorGroup:"View"},
 
+            {interactorLabel:'Label padding', interactorParameters: labelPaddingSlide, callbackBehavior: {call: function (scales) {
+                    __g__.labelPadding = scales.value;
+                    __g__.getController().sendMessage("arrangeLabels")
+            }}, interactorGroup:"View"},
+
+            {interactorLabel:'Label width', interactorParameters: labelDisplayWidth, callbackBehavior: {call: function (scales) {
+                    __g__.labelDisplayWidth = scales.value;
+                    __g__.getController().sendMessage("arrangeLabels")
+            }}, interactorGroup:"View"},
+
+            {interactorLabel:'Label font size', interactorParameters: labelFontSizeSlide, callbackBehavior: {call: function (scales) {
+                    __g__.labelFontSize = scales.value;
+                    __g__.getController().sendMessage("arrangeLabels")
+            }}, interactorGroup:"View"}
+            
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],
             // ['b5','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random', __g__.getID())}}],        
             // ['b13','node information','',{click:function(){TP.ObjectReferences().InterfaceObject.attachInfoBox()}}],

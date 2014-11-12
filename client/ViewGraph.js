@@ -25,12 +25,28 @@ var TP = TP || {};
         //todo rename viewNodes to nodeShape
         if (!('nodeShape' in parameters) || parameters.nodeShape === undefined)
             parameters.nodeShape = null
+
+        if (!('labelPadding' in parameters) || parameters.labelPadding === undefined)
+            parameters.labelPadding = TP.Context().defaultLabelPadding;
+
+        if (!('labelMetric' in parameters) || parameters.labelMetric === undefined)
+            parameters.labelMetric = null
+
+        if (!('labelDisplayWidth' in parameters) || parameters.labelDisplayWidth === undefined)
+            parameters.labelDisplayWidth = TP.Context().defaultLabelMaxLength;
+
+        if (!('labelFontSize' in parameters) || parameters.labelFontSize === undefined)
+            parameters.labelFontSize = TP.Context().defaultLabelFontSize;
          
 
         __g__.nodesColor = parameters.nodeColor;
         __g__.linksColor = parameters.linkColor;
         __g__.bgColor = parameters.backgroundColor;
         __g__.labelsColor = parameters.labelColor;
+        __g__.labelPadding = parameters.labelPadding;
+        __g__.labelMetric = parameters.labelMetric;
+        __g__.labelDisplayWidth = parameters.labelDisplayWidth;
+        __g__.labelFontSize = parameters.labelFontSize;
         
         __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;
