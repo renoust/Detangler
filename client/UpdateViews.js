@@ -44,11 +44,10 @@ var TP = TP || {};
                 {'in': 'y'}
             ], true);
 
-            TP.Context().view[viewID].getGraphDrawing().rescaleGraph();
-            TP.Context().view[viewID].getGraphDrawing().clear()
-            TP.Context().view[viewID].getGraphDrawing().draw();
-
-            TP.Context().view[viewID].getGraphDrawing().rescaleGraph(cGraph);
+            var cView = TP.Context().view[viewID] 
+            cView.getGraphDrawing().clear()
+            cView.getGraphDrawing().draw();
+            cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
 
 
             var newGraph = JSON.parse(data.data.graph);
@@ -197,7 +196,6 @@ var TP = TP || {};
 
             var graph = TP.Context().view[target].getGraph();
 
-            //graph_drawing.rescaleGraph(data);
 
             data.nodes.forEach(function(d){
                 //console.log(d);

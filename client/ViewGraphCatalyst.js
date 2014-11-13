@@ -9,6 +9,30 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
+        var viewRotationSlide = 
+        [
+            [1,{id:"views"},[
+                {id:"currentR", name:"views", class:"viewRotation", text:"Current view"},
+                {id:"bothR", name:"views", class:"viewRotation", text:"Both views"}]
+            ],
+            [8, {id:"viewRotationSlide"},{
+                    range: false,
+                    min: -360,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    max: +360,
+                    value: 0,
+                    change: function() {
+                        var value = $("#viewRotationSlide").slider("values",0);
+                        $("#viewRotationSlide").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#viewRotationSlide").slider("values",0);
+                        $("#viewRotationSlide").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]//TP.Context().VisualizationObject.rotateView
+        ];
+        
         var labelFontSizeSlide = 
         [
             [8, {id:"labelFontSizeSlide"},{
@@ -197,9 +221,6 @@ var TP = TP || {};
             {interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},
-            {interactorLabel:'Rotation', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("rotateGraph")
-            }}, interactorGroup:"View"},
             {interactorLabel:'Zoom in', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
             }}, interactorGroup:"View"},
@@ -284,6 +305,23 @@ var TP = TP || {};
             {interactorLabel:'Label font size', interactorParameters: labelFontSizeSlide, callbackBehavior: {call: function (scales) {
                     __g__.labelFontSize = scales.value;
                     __g__.getController().sendMessage("arrangeLabels")
+            }}, interactorGroup:"View"},
+
+            /*{interactorLabel:'Rotate view', interactorParameters: viewRotationSlide, callbackBehavior: {call: function (scales) {
+                    var rotation = scales.value;
+                    var angle = rotation - __g__.viewRotation;
+                    __g__.viewRotation = rotation;
+                    __g__.getController().sendMessage("rotateGraph", {angle: angle});
+                    TP.ObjectReferences().ClientObject.updateLayout(__g__.getID());
+            }}, interactorGroup:"View"}*/
+            {interactorLabel:'Rotate view', interactorParameters: viewRotationSlide, callbackBehavior: {call: function (scales) {
+                    if(scales.value == undefined || scales.value == NaN) return
+                    var rotation = scales.value;
+                    if (rotation == 0){
+                        __g__.viewRotation = 0;
+                    }
+
+                    TP.Context().VisualizationObject.rotateView(rotation);
             }}, interactorGroup:"View"}
 
 
