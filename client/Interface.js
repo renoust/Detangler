@@ -415,7 +415,7 @@ var TP = TP || {};
                 modal: true,
                 zIndex: 3999    
             });
-            $('.ui-front').css('z-index', 3000);
+            //$('.ui-front').css('z-index', 3000);
             $('#announce').append(text);
 
         }

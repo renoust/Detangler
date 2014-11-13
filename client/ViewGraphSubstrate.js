@@ -9,6 +9,34 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
+
+        
+        
+        var viewRotationSlide = 
+        [
+            [1,{id:"views"},[
+                {id:"currentR", name:"views", class:"viewRotation", text:"Current view"},
+                {id:"bothR", name:"views", class:"viewRotation", text:"Both views"}]
+            ],
+            [8, {id:"viewRotationSlide"},{
+                    range: false,
+                    min: -360,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    max: +360,
+                    value: 0,
+                    change: function() {
+                        var value = $("#viewRotationSlide").slider("values",0);
+                        $("#viewRotationSlide").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#viewRotationSlide").slider("values",0);
+                        $("#viewRotationSlide").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]//TP.Context().VisualizationObject.rotateView
+        ];
+        
+        
         var labelFontSizeSlide = 
         [
             [8, {id:"labelFontSizeSlide"},{
@@ -248,9 +276,6 @@ var TP = TP || {};
             {interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},
-            {interactorLabel:'Rotation', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("rotateGraph")
-            }}, interactorGroup:"View"},
             {interactorLabel:'Size mapping', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
                 __g__.getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales})
             }}, interactorGroup:"View"},
@@ -334,7 +359,7 @@ var TP = TP || {};
                     __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},
 
-            {interactorLabel:'Label width', interactorParameters: labelDisplayWidth, callbackBehavior: {call: function (scales) {
+            {interactorLabel:'Label text length', interactorParameters: labelDisplayWidth, callbackBehavior: {call: function (scales) {
                     __g__.labelDisplayWidth = scales.value;
                     __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},
@@ -342,6 +367,15 @@ var TP = TP || {};
             {interactorLabel:'Label font size', interactorParameters: labelFontSizeSlide, callbackBehavior: {call: function (scales) {
                     __g__.labelFontSize = scales.value;
                     __g__.getController().sendMessage("arrangeLabels")
+            }}, interactorGroup:"View"},
+
+            {interactorLabel:'Rotate view', interactorParameters: viewRotationSlide, callbackBehavior: {call: function (scales) {
+                    if(scales.value == undefined || scales.value == NaN) return
+                    var rotation = scales.value;
+                    if (rotation == 0){
+                        __g__.viewRotation = 0;
+                    }
+                    TP.Context().VisualizationObject.rotateView(rotation);
             }}, interactorGroup:"View"}
             
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],

@@ -47,6 +47,7 @@ var TP = TP || {};
         __g__.labelMetric = parameters.labelMetric;
         __g__.labelDisplayWidth = parameters.labelDisplayWidth;
         __g__.labelFontSize = parameters.labelFontSize;
+        __g__.viewRotation = 0;
         
         __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;

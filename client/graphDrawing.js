@@ -579,7 +579,9 @@ var TP = TP || {};
         }
 
 
-        g.rotate = function (currentViewID, valeur) {
+        g.rotate = function (currentViewID, angle) {
+            
+            angle = (angle/360.0)*Math.PI;
             var x_minx, y_minx, x_center, y_center;
             var x_tmp, y_tmp;
 
@@ -596,15 +598,16 @@ var TP = TP || {};
             g.cGraph.nodes().forEach(
                 function (d) {
                     //console.log(d.x +" "+ d.y);
-                    x_tmp = (Math.cos(valeur) * (d.x - x_center)) + (Math.sin(valeur) * (d.y - y_center)) + x_center;
-                    y_tmp = ((-1 * Math.sin(valeur)) * (d.x - x_center)) + (Math.cos(valeur) * (d.y - y_center)) + y_center;
+                    x_tmp = (Math.cos(angle) * (d.x - x_center)) + (Math.sin(angle) * (d.y - y_center)) + x_center;
+                    y_tmp = ((-1 * Math.sin(angle)) * (d.x - x_center)) + (Math.cos(angle) * (d.y - y_center)) + y_center;
                     d.x = x_tmp;
                     d.y = y_tmp;
                     //console.log("res:", d.x, d.y)
                 }
             );
-
-            g.rescaleGraph(TP.Context().view[currentViewID].getGraph());
+            
+            var currentView = TP.Context().view[currentViewID]; 
+            g.rescaleGraph(currentView.getGraph(), currentView.dialog.dialog().width(), currentView.dialog.dialog().height());
             g.changeLayout(g.cGraph, 0);
         }
 

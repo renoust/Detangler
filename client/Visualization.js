@@ -335,8 +335,9 @@ var TP = TP || {};
 
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
+            var cView =TP.Context().view[target] 
+            cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
 
-            TP.Context().view[target].getGraphDrawing().rescaleGraph(cGraph);
 
             TP.Context().view[target].getGraphDrawing().changeLayout(cGraph, 0);
 
@@ -366,14 +367,19 @@ var TP = TP || {};
         this.rotateGraph = function (_event) {
 
             var target = _event.associatedData.source;
+            var angle = _event.associatedData.angle;
+            
+            if(angle === undefined || angle == null)
+                angle = 5
 
             var cGraph = null
             var svg = null
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
+            //console.log("angle", angle)
 
-            TP.Context().view[target].getGraphDrawing().rotate(target, 5)
+            TP.Context().view[target].getGraphDrawing().rotate(target, angle)
         }
 
         this.arrangeLabels = function (_event) {
@@ -670,6 +676,52 @@ var TP = TP || {};
         }
 
 
+
+        this.rotateView = function(angle)
+        {
+            var IDView = TP.Context().activeView;
+            var view = TP.Context().view[IDView];
+            var typeGraph = view.getType();
+            var currentViewRotation = view.viewRotation;
+
+            if (currentViewRotation == NaN || currentViewRotation == undefined)
+                currentViewRotation = 0;
+
+            if (angle == NaN || angle == undefined)
+                angle = 0;
+            
+            var delta = angle - currentViewRotation;
+                
+            if (delta == 0) return;
+            
+            if ($('#bothR').is(":checked")) {
+                var targetView = null;
+                if (typeGraph == 'substrate' && view.getAssociatedView("catalyst") != null){
+                    targetView = TP.Context().view[IDView].getAssociatedView("catalyst")[0];
+                    //console.log("catalyst found: ", targetView)
+                }
+
+                if (typeGraph == 'catalyst' && view.getAssociatedView("substrate") != null){
+                    targetView = TP.Context().view[IDView].getAssociatedView("substrate")[0];
+                    //console.log("substrate found: ", targetView)
+                }
+                
+                if (targetView != null)
+                {    
+                    //targetView.viewRotation = angle;
+                    targetView.getController().sendMessage("rotateGraph", {angle: delta})
+                    if (targetView.getType() == "catalyst")
+                        TP.ObjectReferences().ClientObject.updateLayout(targetView.getID());
+                }                  
+            }
+            
+            view.viewRotation = angle; 
+            view.getController().sendMessage("rotateGraph", {angle: delta})
+            if (typeGraph == "catalyst")
+                        TP.ObjectReferences().ClientObject.updateLayout(view.getID());
+            
+            
+        }
 
 
         this.changeColor = function () {
