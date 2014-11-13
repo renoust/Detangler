@@ -297,7 +297,7 @@ var TP = TP || {};
                     __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},
 
-            {interactorLabel:'Label width', interactorParameters: labelDisplayWidth, callbackBehavior: {call: function (scales) {
+            {interactorLabel:'Label text length', interactorParameters: labelDisplayWidth, callbackBehavior: {call: function (scales) {
                     __g__.labelDisplayWidth = scales.value;
                     __g__.getController().sendMessage("arrangeLabels")
             }}, interactorGroup:"View"},

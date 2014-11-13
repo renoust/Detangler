@@ -115,6 +115,17 @@ var TulipPosy = function (originalJSON) {
         TP.Context().InterfaceObject.tileViews();
     })
     
+    $("#saveSVG").click(function(){
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","Coming soon...")
+    })
+    
+    $("#saveJSON").click(function(){
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","Coming soon...")
+    })
+
+    $("#saveGEXF").click(function(){
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","Coming soon...")
+    })
     //TP.Context().InterfaceObject.tileViews();
 
     //check if Google Chrome browser is used, if not, warn the user
