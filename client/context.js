@@ -116,6 +116,7 @@ var TP = TP || {};
         __g__.defaultLabelPadding = 1;
         __g__.defaultLabelFontSize = 12;
         __g__.defaultLinkCurvature = 0.20; 
+        __g__.currentOrientation = "vertical"
 
         __g__.sessionSid = 0;
 
