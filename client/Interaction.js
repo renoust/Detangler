@@ -718,6 +718,8 @@ var TP = TP || {};
 
             var cible = d3.select("#svg" + target)[0][0]
 
+            var cGD = TP.Context().view[target].graphDrawing;
+            
             var cGraph = TP.Context().view[target].getGraph();
             var svg = TP.Context().view[target].getSvg();
             var nodeContainer = svg.select("g.nodeContainer");
@@ -784,7 +786,8 @@ var TP = TP || {};
                 //.transition().delay(time)
                 .select("path")
                 .attr("d", function (d) {
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    return cGD.drawOneLink(d);
+                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
 
             var label = labelContainer.selectAll("text.node")
@@ -867,6 +870,7 @@ var TP = TP || {};
                     return d.currentY
                 })
 
+            var cGD = TP.Context().view[target].graphDrawing;
 
             svg.selectAll("g.link")
                 .data(cGraph.links(), function (d) {
@@ -874,7 +878,8 @@ var TP = TP || {};
                 })
                 .select("path")
                 .attr("d", function (d) {
-                    return "M" + d.source.currentX + " " + d.source.currentY + " L" + d.target.currentX + " " + d.target.currentY;
+                    return cGD.drawOneLink(d);
+                    //return "M" + d.source.currentX + " " + d.source.currentY + " L" + d.target.currentX + " " + d.target.currentY;
                 })
         }
 

@@ -37,6 +37,9 @@ var TP = TP || {};
 
         if (!('labelFontSize' in parameters) || parameters.labelFontSize === undefined)
             parameters.labelFontSize = TP.Context().defaultLabelFontSize;
+
+        if (!('linkCurvature' in parameters) || parameters.linkCurvature === undefined)
+            parameters.linkCurvature = TP.Context().defaultLinkCurvature;
          
 
         __g__.nodesColor = parameters.nodeColor;
@@ -47,6 +50,7 @@ var TP = TP || {};
         __g__.labelMetric = parameters.labelMetric;
         __g__.labelDisplayWidth = parameters.labelDisplayWidth;
         __g__.labelFontSize = parameters.labelFontSize;
+        __g__.linkCurvature = parameters.linkCurvature;
         __g__.viewRotation = 0;
         
         __g__.viewNodes = parameters.nodeShape;

@@ -117,8 +117,9 @@ var TP = TP || {};
             })
                 .select("path.link")
                 .attr("d", function (d) {
+                    return g.drawOneLink(d);
                     //console.log("updating the graph");
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
                 .style("stroke-width", function (d) {
                     return 1;
@@ -178,8 +179,9 @@ var TP = TP || {};
                 // console.log("current svg:", g.svg, g.cGraph.links());
                 var links = g.svg.selectAll("path.snippet")
                 .attr("d", function (d) {
+                    return g.drawOneLink(d);
                     //console.log("updating the graph");
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
             }
         }
@@ -666,10 +668,11 @@ var TP = TP || {};
                 .classed("link", true)
                 .classed("path", 1)
                 .attr("d", function (d) {
-                    //return d3.svg.arc().innerRadius().outerRadius(or).startAngle(sa).endAngle(ea))
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
-                })
+                    d.shape = "curved";
+                    return g.drawOneLink(d);
 
+                })
+                .style("fill","transparent")
                 .style("stroke", TP.Context().view[currentViewID].getLinksColor()) //before, there was catalyst
                 .style("opacity", TP.Context().defaultLinkOpacity)
                 .style("stroke-width", function (d) {
@@ -748,15 +751,14 @@ var TP = TP || {};
                 })
                 /*.transition()
                  .delay(dTime)*/
+                .style("fill","transparent")
                 .select("path")
                 .attr("d", function (d) {
-
-                    //assert(false, "edge does not match or isn't bounded")
-
-                    //console.log(d)                 	
-
-                    return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                    d.shape = "curved";
+                    return g.drawOneLink(d);
+                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
+                
 
             //var label = g.svg.selectAll("g.text")
             //   	.data(g.cGraph.nodes(),function(d){
@@ -788,7 +790,59 @@ var TP = TP || {};
 
         }
 
+        g.drawOneLink = function(d)
+        {
+            var shapeOperator = " L"
+            if (d.shape == undefined)
+            {
+                d.shape = "straight";
+            }
 
+            if (d.layout == undefined)
+            {
+                d.layout = [[d.source.currentX, d.source.currentY], [d.target.currentX, d.target.currentY]]
+            }
+            
+            if(TP.Context().view[currentViewID].linkCurvature == 0 || d.shape == "direct")
+            {
+                d.shape = "straight";
+                d.layout = [[d.source.currentX, d.source.currentY], [d.target.currentX, d.target.currentY]]                
+            }
+
+           
+            if (d.shape == "curved")
+            {
+                var x1 = d.source.currentX;
+                var x2 = d.target.currentX;
+                var y1 = d.source.currentY;
+                var y2 = d.target.currentY;
+                
+                var xL = x2 - x1;
+                var yL = y2 - y1;
+                var ab = Math.sqrt(xL*xL + yL*yL);
+                
+                var cosa = (ab>0) ? xL / ab : 0;
+                var sina = (ab>0) ? yL / ab : 0;
+                
+                var xM = (x1+x2)/2.0; 
+                var yM = (y1+y2)/2.0;
+                
+                var L = TP.Context().view[currentViewID].linkCurvature * ab;
+                
+                
+                var yM2 = yM + cosa*L;
+                var xM2 = xM + sina*L;
+                
+                d.layout = [[d.source.currentX, d.source.currentY], [xM2, yM2], [d.target.currentX, d.target.currentY]]
+                shapeOperator = " Q"
+            }
+            
+            var drawString = "M" + d.layout[0] + shapeOperator;
+            d.layout.forEach(function(p, i){ if (i>0) drawString += p + " "})//p[0] + " " + p[1] + " "})
+            //console.log(drawString)
+            return drawString;
+
+        }
         // this function resizes the nodes
         // _graph, the new graph with size
         // dTime, the delay in ms to resize
@@ -1091,9 +1145,10 @@ var TP = TP || {};
                     .classed("snippet", true)
                     .classed("path", 1)
                     .attr("d", function (d) {
-                        return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
+                        d.shape = "curved";
+                        return g.drawOneLink(d);
                     })
-    
+                    .style("fill","transparent")
                     .style("stroke", "#009933") //before, there was catalyst
                     .style("opacity", TP.Context().defaultLinkOpacity)
                     .style("stroke-width", function (d) {
