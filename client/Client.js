@@ -557,7 +557,15 @@ var TP = TP || {};
                 //success: objectReferences.UpdateViewsObject.syncLayoutsFromData()
                 success: function (data) {
                     objectReferences.UpdateViewsObject.syncLayoutsFromData(data, currentGraph);
-                    if(rescale){TP.Context().InterfaceObject.tileViews();}
+                    if(rescale){
+                        if($(window).height() / $(window).width() < 1)
+                        {
+                            TP.Context().currentOrientation = "vertical"
+                        }else{
+                            TP.Context().currentOrientation = "horizontal"                            
+                        } 
+                        TP.Context().InterfaceObject.tileViews();
+                    }
                 }
             });
         };

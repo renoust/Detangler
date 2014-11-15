@@ -112,6 +112,12 @@ var TulipPosy = function (originalJSON) {
     }*/
 
     $('#tile').click(function(){
+        if(TP.Context().currentOrientation == "horizontal")
+        {
+            TP.Context().currentOrientation = "vertical";
+        }else{
+            TP.Context().currentOrientation = "horizontal";            
+        }   
         TP.Context().InterfaceObject.tileViews();
     })
     

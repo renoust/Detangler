@@ -9,7 +9,25 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
-
+        var linkCurvatureSlide = 
+        [
+            [8, {id:"linkCurvatureSlide"},{
+                    range: false,
+                    min: -100,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    max: +100,
+                    value: 20,
+                    change: function() {
+                        var value = $("#linkCurvatureSlide").slider("values",0);
+                        $("#linkCurvatureSlide").find(".ui-slider-handle").eq(0).text(value);
+                    },
+                    slide: function() {
+                        var value = $("#linkCurvatureSlide").slider("values",0);
+                        $("#linkCurvatureSlide").find(".ui-slider-handle").eq(0).text(value);
+                    }
+                },
+                "slide: "
+            ]//TP.Context().VisualizationObject.rotateView
+        ];
         
         
         var viewRotationSlide = 
@@ -173,7 +191,7 @@ var TP = TP || {};
             [7,{id:"nodeProperty"},
                 {
                     source: function(searchStr, sourceCallback){
-                        var propertyList = [];
+                        var propertyList = ["--"];
                         var oneNode = __g__.getGraph().nodes()[0];
                         for (var algo in oneNode)
                         {
@@ -376,6 +394,11 @@ var TP = TP || {};
                         __g__.viewRotation = 0;
                     }
                     TP.Context().VisualizationObject.rotateView(rotation);
+            }}, interactorGroup:"View"},
+
+            {interactorLabel:'Link curvature', interactorParameters: linkCurvatureSlide, callbackBehavior: {call: function (scales) {
+                    __g__.linkCurvature = scales.value/100;
+                    __g__.graphDrawing.changeLayout(__g__.graph, 0);
             }}, interactorGroup:"View"}
             
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],

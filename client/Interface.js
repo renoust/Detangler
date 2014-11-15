@@ -460,15 +460,25 @@ var TP = TP || {};
             var tab=[];
             for( var k in TP.Context().view )
                 tab.push(TP.Context().view[k]);
+            var orientation = TP.Context().currentOrientation == "horizontal";
+            var paddingH = 35;
+            var paddingV = 25;
+            var x0 = 300+paddingV;
+            var y0 = paddingH;
+            if (orientation == true){
+                y0 = 5;
+            }
             
-            TP.Context().InterfaceObject.setPositionDialogs(tab,300+25,35,
-                                                            $(window).height()-35,
-                                                            $(window).width()-(300+25),
-                                                            false);
+            
+            TP.Context().InterfaceObject.setPositionDialogs(tab,x0,y0,
+                                                            $(window).height()-paddingH,
+                                                            $(window).width()-(300+paddingV),
+                                                            orientation);
 
            tab.forEach(function(t){
-            //console.log("in the forEachLoop:",t); 
-            t.getController().sendMessage("rescaleView", {idView:t.getID()});})
+                //console.log("in the forEachLoop:",t); 
+                t.getController().sendMessage("rescaleView", {idView:t.getID()});
+           })
                    
         }
 
