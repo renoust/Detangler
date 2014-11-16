@@ -356,13 +356,13 @@ var TP = TP || {};
                 call:function(paramList){
                     //__g__.getController().sendMessage('node size mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                     TP.ObjectReferences().VisualizationObject.nodeSizeMapping(paramList.nodeProperty, __g__.getID());
-                }}, interactorGroup:"View"},
+                }}, interactorGroup:"Mapping"},
             {interactorLabel:'Color mapping',interactorParameters:tl2,callbackBehavior:{
                 //click:function(){console.log('click on the button');},
                 call:function(paramList){
                     //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                     TP.ObjectReferences().VisualizationObject.colorMapping(paramList.nodeProperty, __g__.getID());
-                }}, interactorGroup:"View"},
+                }}, interactorGroup:"Mapping"},
                 
             {interactorLabel:'Label metric ordering',interactorParameters:tl2,callbackBehavior:{
                 //click:function(){console.log('click on the button');},
@@ -370,7 +370,7 @@ var TP = TP || {};
                     //__g__.getController().sendMessage('node size mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                     __g__.labelMetric = (paramList.nodeProperty == "--")? null: paramList.nodeProperty; 
                     __g__.getController().sendMessage("arrangeLabels");//TP.ObjectReferences().VisualizationObject.nodeSizeMapping(paramList.nodeProperty, __g__.getID());
-                }}, interactorGroup:"View"},
+                }}, interactorGroup:"Mapping"},
 
             {interactorLabel:'Label padding', interactorParameters: labelPaddingSlide, callbackBehavior: {call: function (scales) {
                     __g__.labelPadding = scales.value;
