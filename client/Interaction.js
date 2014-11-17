@@ -112,8 +112,8 @@ var TP = TP || {};
                         x = d.x;
                         y = d.y;
                     } else {
-                        x = d.currentX;
-                        y = d.currentY;
+                        x = d._currentX;
+                        y = d._currentY;
                     }
                     var pointArray = [];
                     if (__g.isLasso()) {
@@ -601,7 +601,7 @@ var TP = TP || {};
                 var selList = []
                 node.classed("selected", function (d) {
                     wNorm = w - buttonWidth
-                    d.selected = e[0][0] <= (d.currentX - buttonWidth + 1) / wNorm && (d.currentY - buttonWidth + 1) / wNorm <= e[1][0] && e[0][1] <= d.currentY / h && d.currentY / h <= e[1][1];
+                    d.selected = e[0][0] <= (d._currentX - buttonWidth + 1) / wNorm && (d._currentY - buttonWidth + 1) / wNorm <= e[1][0] && e[0][1] <= d._currentY / h && d._currentY / h <= e[1][1];
                     return d.selected;
                 })
                     .select("circle.node")
@@ -763,12 +763,12 @@ var TP = TP || {};
 
             var node = nodeContainer.selectAll("g.node")
                 .data(cGraph.nodes(), function (d) {
-                    d.x = d.currentX;
-                    d.y = d.currentY;
+                    d.x = d._currentX;
+                    d.y = d._currentY;
                     d.x = ((((d.x) - mouseOrigin[0]) * scale) + mouseOrigin[0]);
                     d.y = ((((d.y) - mouseOrigin[1]) * scale) + mouseOrigin[1]);
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return d.baseID;
                 })
                 //.transition().delay(time)
@@ -842,8 +842,8 @@ var TP = TP || {};
             var nodeDatum = svg.selectAll("g.node").data()
 
             nodeDatum.forEach(function (d) {
-                d.currentX = (d.x + data_translation[0]);
-                d.currentY = (d.y + data_translation[1]);
+                d._currentX = (d.x + data_translation[0]);
+                d._currentY = (d.y + data_translation[1]);
             });
 
 
@@ -852,10 +852,10 @@ var TP = TP || {};
                     return d.baseID;
                 })
                 .attr("x", function (d) {
-                    return d.currentX
+                    return d._currentX
                 })
                 .attr("y", function (d) {
-                    return d.currentY
+                    return d._currentY
                 })
 
             svg.selectAll("circle")
@@ -863,10 +863,10 @@ var TP = TP || {};
                     return d.baseID;
                 })
                 .attr("cx", function (d) {
-                    return d.currentX
+                    return d._currentX
                 })
                 .attr("cy", function (d) {
-                    return d.currentY
+                    return d._currentY
                 })
 
             svg.selectAll("text.node")
@@ -874,10 +874,10 @@ var TP = TP || {};
                     return d.baseID;
                 })
                 .attr("dx", function (d) {
-                    return d.currentX
+                    return d._currentX
                 })
                 .attr("dy", function (d) {
-                    return d.currentY
+                    return d._currentY
                 })
 
             var cGD = TP.Context().view[target].graphDrawing;
@@ -889,7 +889,7 @@ var TP = TP || {};
                 .select("path")
                 .attr("d", function (d) {
                     return cGD.drawOneLink(d);
-                    //return "M" + d.source.currentX + " " + d.source.currentY + " L" + d.target.currentX + " " + d.target.currentY;
+                    //return "M" + d.source._currentX + " " + d.source._currentY + " L" + d.target._currentX + " " + d.target._currentY;
                 })
         }
 
@@ -903,8 +903,8 @@ var TP = TP || {};
             var nodeDatum = svg.selectAll("g.node").data()
 
             nodeDatum.forEach(function (d) {
-                d.x = d.currentX;
-                d.y = d.currentY;
+                d.x = d._currentX;
+                d.y = d._currentY;
             });
 
             data_translation[0] = 0;

@@ -70,13 +70,13 @@ var TP = TP || {};
                 var posY = d3.event.dy;
                 currentNode.x += posX;
                 currentNode.y += posY;
-                currentNode.currentX += posX;
-                currentNode.currentY += posY;
+                currentNode._currentX += posX;
+                currentNode._currentY += posY;
             } else {
                 currentNode.x = tabb[1];
                 currentNode.y = tabb[2];
-                currentNode.currentX = tabb[3];
-                currentNode.currentY = tabb[4];
+                currentNode._currentX = tabb[3];
+                currentNode._currentY = tabb[4];
             }
 
             var currentBaseID = currentNode.baseID;
@@ -141,8 +141,8 @@ var TP = TP || {};
                 var posY = d3.event.dy;
                 currentNode.x += posX;
                 currentNode.y += posY;
-                currentNode.currentX += posX;
-                currentNode.currentY += posY;                
+                currentNode._currentX += posX;
+                currentNode._currentY += posY;                
                 var currentBaseID = currentNode.baseID;
 
                     snippet.select("rect")
@@ -259,8 +259,8 @@ var TP = TP || {};
                 })
                 .classed("node", true)
                 .attr("transform", function (d) {
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return;
                 })
                 .call(d3.behavior.drag()
@@ -299,12 +299,12 @@ var TP = TP || {};
              .classed("rect", true)
              .style("fill", TP.Context().tabNodeColor["substrate"])
              .attr("x", function (d) {
-             d.currentX = d.x;
-             return d.currentX
+             d._currentX = d.x;
+             return d._currentX
              })
              .attr("y", function (d) {
-             d.currentY = d.y;
-             return d.currentY
+             d._currentY = d.y;
+             return d._currentY
              })
              .attr("width", 2 * 5)
              .attr("height", 2 * 5)
@@ -316,12 +316,12 @@ var TP = TP || {};
              .classed("circle", true)
              .style("fill", TP.Context().tabNodeColor["catalyst"])
              .attr("cx", function (d) {
-             d.currentX = d.x;
-             return d.currentX
+             d._currentX = d.x;
+             return d._currentX
              })
              .attr("cy", function (d) {
-             d.currentY = d.y;
-             return d.currentY
+             d._currentY = d.y;
+             return d._currentY
              })
              .attr("r", 5)
              */
@@ -345,12 +345,12 @@ var TP = TP || {};
             if (view_nodes == "rect" && glyphR != null) {
                 // assert(true, "rect")
                 glyphR.attr("x", function (d) {
-                    d.currentX = d.x;
-                    return d.currentX;
+                    d._currentX = d.x;
+                    return d._currentX;
                 })
                     .attr("y", function (d) {
-                        d.currentY = d.y;
-                        return d.currentY;
+                        d._currentY = d.y;
+                        return d._currentY;
                     })
                     .attr("width", function(d){
                         d._size = 5;
@@ -361,12 +361,12 @@ var TP = TP || {};
             if (view_nodes == "circle" && glyphR != null) {
                 // assert(true, "circle");
                 glyphR.attr("cx", function (d) {
-                    d.currentX = d.x;
-                    return d.currentX;
+                    d._currentX = d.x;
+                    return d._currentX;
                 })
                     .attr("cy", function (d) {
-                        d.currentY = d.y;
-                        return d.currentY;
+                        d._currentY = d.y;
+                        return d._currentY;
                     })
                     .attr("r", function(d){
                         d._size = 5;
@@ -387,12 +387,12 @@ var TP = TP || {};
                 })
                 .classed("node", true).classed("text", true)
                 .attr("dx", function (d) {
-                    d.currentX = d.x;
-                    return d.currentX;
+                    d._currentX = d.x;
+                    return d._currentX;
                 })
                 .attr("dy", function (d) {
-                    d.currentY = d.y;
-                    return d.currentY;
+                    d._currentY = d.y;
+                    return d._currentY;
                 })
 
                 //.attr('unselectable', 'on')
@@ -430,8 +430,8 @@ var TP = TP || {};
              .append("text")
              .attr("class", function(d){return "node" + d.baseID + " " + d._type})
              .classed("node", true).classed("text", true)
-             .attr("dx", function(d){return d.currentX})
-             .attr("dy", function(d){return d.currentY})
+             .attr("dx", function(d){return d._currentX})
+             .attr("dy", function(d){return d._currentY})
              .text(function(d) {  return d.label; });
              g.arrangeLabels();     */
 
@@ -480,8 +480,8 @@ var TP = TP || {};
             node.forEach(function (d) {
                 d.x = (d.x - Xminmax[0]) * scale + leftFrame;
                 d.y = (d.y - Yminmax[0]) * scale + topFrame;
-                d.currentX = d.x;
-                d.currentY = d.y;
+                d._currentX = d.x;
+                d._currentY = d.y;
             });
 
             //g.arrangeLabels();
@@ -602,8 +602,8 @@ var TP = TP || {};
 
             var node = g.nodeContainer.selectAll("g.node")
                 .data(g.cGraph.nodes(), function (d) {
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return d.baseID;
                 });
             /*.transition()
@@ -613,8 +613,8 @@ var TP = TP || {};
 
             node.select("circle")
                 .attr("cx", function (d) {
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return d.x;
                 })
                 .attr("cy", function (d) {
@@ -625,8 +625,8 @@ var TP = TP || {};
 
             node.select("rect")
                 .attr("x", function (d) {
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return d.x;
                 })
                 .attr("y", function (d) {
@@ -663,7 +663,7 @@ var TP = TP || {};
 
             //var label = g.svg.selectAll("g.text")
             //   	.data(g.cGraph.nodes(),function(d){
-            //   	    d.currentX = d.x; d.currentY = d.y; return d.baseID;
+            //   	    d._currentX = d.x; d._currentY = d.y; return d.baseID;
             //    })
             //.transition().delay(dTime)
             // 	.select("text")
@@ -675,8 +675,8 @@ var TP = TP || {};
                 })
                 .attr("dx", function (d) {
                     //assert(false,"moving a label")
-                    d.currentX = d.x;
-                    d.currentY = d.y;
+                    d._currentX = d.x;
+                    d._currentY = d.y;
                     return d.x;
                 })
                 .attr("dy", function (d) {
@@ -698,22 +698,22 @@ var TP = TP || {};
 
             if (d.layout == undefined)
             {
-                d.layout = [[d.source.currentX, d.source.currentY], [d.target.currentX, d.target.currentY]];
+                d.layout = [[d.source._currentX, d.source._currentY], [d.target._currentX, d.target._currentY]];
             }
             
             if(TP.Context().view[currentViewID].linkCurvature == 0 || d.shape == "direct")
             {
                 d.shape = "straight";
-                d.layout = [[d.source.currentX, d.source.currentY], [d.target.currentX, d.target.currentY]];                
+                d.layout = [[d.source._currentX, d.source._currentY], [d.target._currentX, d.target._currentY]];                
             }
 
            
             if (d.shape == "curved")
             {
-                var x1 = d.source.currentX;
-                var x2 = d.target.currentX;
-                var y1 = d.source.currentY;
-                var y2 = d.target.currentY;
+                var x1 = d.source._currentX;
+                var x2 = d.target._currentX;
+                var y1 = d.source._currentY;
+                var y2 = d.target._currentY;
                 
                 var xL = x2 - x1;
                 var yL = Math.abs(y2 - y1);
@@ -731,7 +731,7 @@ var TP = TP || {};
                 var yM2 = yM + cosa*L;
                 var xM2 = xM + sina*L;
                 
-                d.layout = [[d.source.currentX, d.source.currentY], [xM2, yM2], [d.target.currentX, d.target.currentY]];
+                d.layout = [[d.source._currentX, d.source._currentY], [xM2, yM2], [d.target._currentX, d.target._currentY]];
                 shapeOperator = " Q";
             }
             
@@ -1101,12 +1101,12 @@ var TP = TP || {};
                     return trans;
                 })
                     .attr("x", function (d) {
-                    d.currentX = d.x;
-                    return d.currentX;
+                    d._currentX = d.x;
+                    return d._currentX;
                 })
                     .attr("y", function (d) {
-                        d.currentY = d.y;
-                        return d.currentY;
+                        d._currentY = d.y;
+                        return d._currentY;
                     })
                     .attr("width", function(d){var rects = g.svg.selectAll("g.node")
                                                                 .filter(function(dd){return d.baseID == dd.baseID;})
@@ -1125,12 +1125,12 @@ var TP = TP || {};
                 glyphR
                  .append(view_nodes)
                   .attr("cx", function (d) {
-                    d.currentX = d.x;
-                    return d.currentX;
+                    d._currentX = d.x;
+                    return d._currentX;
                    })
                     .attr("cy", function (d) {
-                        d.currentY = d.y;
-                        return d.currentY;
+                        d._currentY = d.y;
+                        return d._currentY;
                     })
                     .attr("r", function(d){
                         var circles = g.svg.selectAll("g.node")
@@ -1144,10 +1144,10 @@ var TP = TP || {};
             glyphR  
                 .append("text")
                 .attr("dx", function (dd) {
-                    return dd.currentX;
+                    return dd._currentX;
                 })
                 .attr("dy", function (dd) {
-                    return dd.currentY;
+                    return dd._currentY;
                 })
                 .classed("snippet", 1)
                 .style("fill",function(d){

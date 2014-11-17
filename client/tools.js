@@ -81,17 +81,17 @@ var TP = TP || {};
             //console.log(data)
             data.nodes.forEach(function (d) {
                 if ("x" in d) {
-                    d.currentX = d.x;
+                    d._currentX = d.x;
                 } else {
                     d.x = 0;
-                    d.currentX = 0;
+                    d._currentX = 0;
                 }
                 ;
                 if ("y" in d) {
-                    d.currentY = d.y;
+                    d._currentY = d.y;
                 } else {
                     d.y = 0;
-                    d.currentY = 0;
+                    d._currentY = 0;
                 }
                 ;
             })

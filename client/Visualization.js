@@ -323,8 +323,8 @@ var TP = TP || {};
              // strangely the matrix that should be applied by transform is
              //squared?! so we adapt the nodes values
              nodeDatum.forEach(function (d) {
-             d.currentX = d.x;
-             d.currentY = d.y;
+             d._currentX = d.x;
+             d._currentY = d.y;
              });
 
              svg.selectAll(".node,.link")
@@ -493,8 +493,8 @@ var TP = TP || {};
             data.nodes.forEach(function (d) {
                 d.x = (d.x - minX) * scale + buttonWidth + frame;
                 d.y = (d.y - minY) * scale + frame;
-                d.currentX = d.x;
-                d.currentY = d.y;
+                d._currentX = d.x;
+                d._currentY = d.y;
             })
         }
 
