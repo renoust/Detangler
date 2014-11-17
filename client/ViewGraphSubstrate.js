@@ -9,6 +9,11 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
+
+        var zoomCombined = 
+        [
+        ];
+        
         var linkCurvatureSlide = 
         [
             [8, {id:"linkCurvatureSlide"},{
@@ -32,13 +37,11 @@ var TP = TP || {};
         
         var viewRotationSlide = 
         [
-            [1,{id:"views"},[
-                {id:"currentR", name:"views", class:"viewRotation", text:"Current view"},
-                {id:"bothR", name:"views", class:"viewRotation", text:"Both views"}]
+            ["checkbox", {id: "bothViews"}, [{id:"bothViews_cb",text:"both views",value:"checked",checked:"false"}]
             ],
             [8, {id:"viewRotationSlide"},{
                     range: false,
-                    min: -360,//(function(){console.log(__g__.labelDisplayWidth * -1); return __g__.labelDisplayWidth * -1})(),
+                    min: -360,
                     max: +360,
                     value: 0,
                     change: function() {
@@ -51,7 +54,7 @@ var TP = TP || {};
                     }
                 },
                 "slide: "
-            ]//TP.Context().VisualizationObject.rotateView
+            ]
         ];
         
         

@@ -64,8 +64,8 @@ var TP = TP || {};
             var file = path[path.length - 1];
             var view = target.getName().split('-');
             var type = view[view.length - 1];
-            var nbElements = Object.keys(TP.Context().substrateProperties).length
-            var formString = ""
+            var nbElements = Object.keys(TP.Context().substrateProperties).length;
+            var formString = "";
             formString += "<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
                 "<li> File : " + file + "</li>" +
@@ -97,33 +97,33 @@ var TP = TP || {};
 
             $('#infoView').html(formString);
 
-            var svgF = d3.selectAll("svg.scaleFrame")
+            var svgF = d3.selectAll("svg.scaleFrame");
             for (var i = 0; i <= 100 ; i++){
                 svgF.append('rect')
-                    .attr('x', function(){if (i==0){return 0}
-                                            return 2*i + 10} )
+                    .attr('x', function(){if (i==0){return 0;}
+                                            return 2*i + 10; } )
                     .attr('y', 0)
                     .attr('height', 10)
                     .attr('fill-opacity', .5)
                     .attr('width', function()
                     {
-                        if (i == 0 || i ==100){return 10}
+                        if (i == 0 || i ==100){return 10;}
                         else return 2;
                     }
                 )
                     .attr('fill',function(){
-                        var currentColor = "black"
-                        var zeroColor = d3.rgb("white")
-                        var oneColor = d3.rgb("purple")
+                        var currentColor = "black";
+                        var zeroColor = d3.rgb("white");
+                        var oneColor = d3.rgb("purple");
                         //var inter = ['#FFFF00','#00FF00','#0000FF']
-                        var inter = ['yellow','green','steelblue']
+                        var inter = ['yellow','green','steelblue'];
                         var index = i/100;
                         if (index < 1/3){ currentColor = inter[0];}
                         else if (index < 2/3){ currentColor = inter[1];}
                         else { currentColor = inter[2];}
 
-                        currentColor = d3.hcl(currentColor)
-                        currentColor.l = 99 *(1- index)
+                        currentColor = d3.hcl(currentColor);
+                        currentColor.l = 99 *(1- index);
                         //currentIntensityColor.r = Math.round(currentIntensityColor.r * (1-TP.Context().entanglement_intensity))
                         //currentIntensityColor.g = Math.round(currentIntensityColor.g * (1-TP.Context().entanglement_intensity))
                         //currentIntensityColor.b = Math.round(currentIntensityColor.b * (1-TP.Context().entanglement_intensity))
@@ -133,7 +133,7 @@ var TP = TP || {};
                         if (index == 1){ currentColor = oneColor;}
                         return currentColor;
                     }
-                    )
+                );
 
             }
 
@@ -145,8 +145,8 @@ var TP = TP || {};
                 cView.setPreviousSourceSelection([]);
                 cView.getController().sendMessage("nodeSelected", {selList: cView.getSourceSelection()});
                 //console.log("updating weight property: ", TP.Context().substrateWeightProperty);
-            })
-        }
+            });
+        };
 
 
         // this.selectWeightProperty = function (group) {
@@ -196,7 +196,7 @@ var TP = TP || {};
             var view = null;
             view = TP.Context().view[target];
 
-            var svg = null
+            var svg = null;
             svg = view.getSvg();
 
             TP.Context().view[target].setSelectMode(!TP.Context().view[target].getSelectMode());
@@ -216,7 +216,7 @@ var TP = TP || {};
             //     objectReferences.InteractionObject.addZoom(target);
             //     view.getController().sendMessage("move");
             }
-        }
+        };
 
         
         /* this.addSettingsButton = function (target) {
@@ -328,7 +328,7 @@ var TP = TP || {};
             }
             $("#searchNode").click(function(){
                 $(this).siblings('select').toggleClass('hidden');
-            })
+            });
 
             nodesBID.change(function(){
                 var selectedNode = nodesBID[0].options[nodesBID[0].selectedIndex].value;
@@ -339,13 +339,13 @@ var TP = TP || {};
                     }
                 }
                 
-            })
+            });
 
             d3.selectAll(".glyph")
                 .on("mouseover", function (d) {
                     TP.Controller().sendMessage("mouseoverInfoBox", {node: d}, "principal", "undefined");
                 });
-        }
+        };
 
 
         this.addInfoBox = function (_event) {
@@ -355,7 +355,7 @@ var TP = TP || {};
             for (var k in node) {
                 $('#infoNodes ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
             }
-        }
+        };
 
 
         this.addCatalystList = function (_event) {
@@ -364,9 +364,9 @@ var TP = TP || {};
             //console.log("calling addCataList")
             $("#infoSync ul").empty();
             for (var k in node) {
-                $('#infoSync ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");
+                $('#infoSync ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");;
             }
-        }
+        };
 
 
         // this.setCombinedForeground = function (target) {
@@ -408,7 +408,7 @@ var TP = TP || {};
 
 
         this.throwAnnouncement = function(title, text){   
-            assert(true, 'Interface -> throwAnnouncement')       
+            assert(true, 'Interface -> throwAnnouncement');       
             $('body').append('<div id=announce></div>');
             $('#announce').dialog({
                 title: title,
@@ -418,7 +418,7 @@ var TP = TP || {};
             //$('.ui-front').css('z-index', 3000);
             $('#announce').append(text);
 
-        }
+        };
 
         this.setHeaderMenu = function(){
             $(".submenu:not('.open_at_load')").hide();
@@ -427,16 +427,16 @@ var TP = TP || {};
 
               if ($(this).next("ul.submenu:visible").length != 0) {
                 $(this).next("ul.submenu").slideUp("normal", function () {
-                  $(this).parent().removeClass("open")
+                  $(this).parent().removeClass("open");
                 });
               }
               else {
                 $("ul.submenu").slideUp("normal", function () {
-                  $(this).parent().removeClass("open")
+                  $(this).parent().removeClass("open");
                 });
                 //console.log()
                 $(this).next("ul.submenu").slideDown("normal", function () {
-                  $(this).parent().addClass("open")
+                  $(this).parent().addClass("open");
                 });
               }
               e.preventDefault();
@@ -444,7 +444,7 @@ var TP = TP || {};
             $('ul.submenu').mouseleave(function () {
               //console.log('mouseout');
               $('ul.submenu').slideUp("normal", function () {
-                $(this).parent().removeClass("open")
+                $(this).parent().removeClass("open");
               });
 
             });
@@ -454,7 +454,7 @@ var TP = TP || {};
               e.preventDefault();
             });
 
-        }
+        };
         
         this.tileViews = function(){
             var tab=[];
@@ -478,9 +478,9 @@ var TP = TP || {};
            tab.forEach(function(t){
                 //console.log("in the forEachLoop:",t); 
                 t.getController().sendMessage("rescaleView", {idView:t.getID()});
-           })
+           });
                    
-        }
+        };
 
         this.setPositionDialogs = function(tabView, x, y, h, w, horizontal){
             // assert(true, 'Interface -> setPositionDialogs') 
@@ -509,7 +509,7 @@ var TP = TP || {};
                     position: [x,y+30]
                 });
             }
-        }
+        };
 
         // gestion du menu à gauche
 
@@ -537,21 +537,21 @@ var TP = TP || {};
                 if ($(this).parent().hasClass('tglForm')) {
                     if ($(this).next("#"+menu+" div.formParam:visible").length != 0) {
                         $(this).next("#"+menu+" div.formParam").slideUp("normal", function () {
-                            $(this).parent().removeClass("open")
+                            $(this).parent().removeClass("open");
                         });
                     } else {
                         $("#"+menu+" div.formParam").slideUp("normal", function () {
 
-                            $(this).parent().removeClass("open")
+                            $(this).parent().removeClass("open");
                         });
                         $(this).next("#"+menu+" div.formParam").slideDown("normal", function () {
-                            $(this).parent().addClass("open")
+                            $(this).parent().addClass("open");
                         });
                     }
                 }
                 return false;
             });
-        }
+        };  
 
         this.togglePanelMenu = function(){
             // assert(true, 'Interface -> togglePanelMenu') 
@@ -563,73 +563,73 @@ var TP = TP || {};
                 var button = $(this);
 
                 if (parent.className === 'nosidebar') {
-                    button.eq(0).toggleClass('open')
+                    button.eq(0).toggleClass('open');
                     /*button.text('<');*/
-                    $(parent).eq(0).toggleClass('nosidebar sidebar')
+                    $(parent).eq(0).toggleClass('nosidebar sidebar');
                     //parent.className='sidebar';
                     $('.cont').each(function () {
-                        $(this).css('left', 0)
-                    })
-                    menu.css('z-index', 202)
+                        $(this).css('left', 0);
+                    });
+                    menu.css('z-index', 202);
                 }
                 else if (parent.className === 'sidebar') {
 
                     if (menu.css('z-index') == 202) {
                         /*button.text('>');*/
-                        button.eq(0).toggleClass('open')
+                        button.eq(0).toggleClass('open');
 
                         //console.log($(parent))
-                        $(parent).eq(0).toggleClass('nosidebar sidebar')
+                        $(parent).eq(0).toggleClass('nosidebar sidebar');
                         //              parent.className = 'nosidebar';
                         $('.cont').each(function () {
-                            $(this).css('z-index', 200)
-                            $(this).css('left', -301)
-                        })
+                            $(this).css('z-index', 200);
+                            $(this).css('left', -301);
+                        });
                     }
                     else {
                         $('.toggleButton').each(function () {
                             /*$(this).text('>') */
 
                             //console.log($(this).eq(0).className)
-                            $(this).eq(0).removeClass('open')
-                        })
+                            $(this).eq(0).removeClass('open');
+                        });
                         $('.cont').each(function () {
-                            $(this).css('z-index', 201)
-                        })
+                            $(this).css('z-index', 201);
+                        });
                         menu.css('z-index', 202);
                         /*button.text('<')*/
-                        button.eq(0).toggleClass('open')
+                        button.eq(0).toggleClass('open');
                         //button.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
 
                     }
                 }
                 else console.log('FAIL: toggle panel');
             });
-        }
+        };
 
         this.addPanelMenu = function (header) {
             // assert(true, 'Interface -> addPanelMenu') 
             var menuNum = contxt.menuNum++;
-            $('#bg').css('border-width','12px')
-            $('#bg').css({'height':'51px', 'width':'276px'})
+            $('#bg').css('border-width','12px');
+            $('#bg').css({'height':'51px', 'width':'276px'});
             if($('#entValues').length < 1)
                 $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
             $("<div/>", {class: 'toggleButton', id: 'toggleBtn' + menuNum, /*text:'>',*/style: 'top:' + [40 + 104 * (menuNum - 1)]  + 'px;'}).appendTo('#menu-' + menuNum);
             var head = $('<div/>', {class: 'header-menu', text: header}).appendTo('#menu-' + menuNum);
-            var cbtn = $('<div/>', {class:'close-button'}).appendTo(head)
-            $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content'}).appendTo('#menu-' + menuNum)
+            var cbtn = $('<div/>', {class:'close-button'}).appendTo(head);
+            $('<div/>', {class: 'menu-content', id: 'menu' + menuNum + '-content'}).appendTo('#menu-' + menuNum);
             
             cbtn.click(function(){
                 $("#wrap").toggleClass('nosidebar sidebar');
-                $('.toggleButton').removeClass("open")
+                $('.toggleButton').removeClass("open");
                 $('.cont').each(function(){
-                    $(this).css('z-index',200)
-                    $(this).css('left',-301)
-                })
-            })
+                    $(this).css('z-index',200);
+                    $(this).css('left',-301);
+                });
+            });
             return 'menu-' + menuNum;
-        }
+        };
 
 
         this.interactionPane = function (buttons, mode) {
@@ -639,48 +639,48 @@ var TP = TP || {};
             if (mode === 'update') {
                 for (i = 0; i < contxt.menuNum; i++) {
                     if ($('.header-menu').eq(i).text() === 'Interactions') {
-                        content = $('.header-menu').eq(i).siblings('.menu-content')
-                        document.getElementById(content.attr('id')).innerHTML = ''
+                        content = $('.header-menu').eq(i).siblings('.menu-content');
+                        document.getElementById(content.attr('id')).innerHTML = '';
                     }
                 }
             } else if (mode === 'create') {
                 menu = this.addPanelMenu('Interactions');
-                $('#' + menu).css('z-index', 202)
-                tgbutton = $('#' + menu).find('.toggleButton')
-                tgbutton.addClass('open')
+                $('#' + menu).css('z-index', 202);
+                tgbutton = $('#' + menu).find('.toggleButton');
+                tgbutton.addClass('open');
                 $('<h3/>', {text: 'Interactions'}).appendTo(tgbutton);
                 content = $("#" + menu + " .menu-content");
             }            
             $('<ul/>', {id: 'nav',class:'nav'}).appendTo(content);
 
             if (buttons.hasOwnProperty('undefined')){
-                this.createArrayButtons(buttons.undefined,'nav')
+                this.createArrayButtons(buttons.undefined,'nav');
             }
             i = 0;
             for (var key in buttons) {
                 if(key!="View" && key!='undefined'){
 
                     fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
-                    $('<a/>', {text: key}).appendTo(fam)
+                    $('<a/>', {text: key}).appendTo(fam);
                     $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
                     this.createArrayButtons(buttons[key], 'family-' + i);
                     i++;
                 }
             }
             this.toggleAccordion('nav');
-        }
+        };
 
         this.infoPane = function () {
             // assert(true, 'Interface -> infoPane')
             //console.log("calling infoPane")
             var menu = this.addPanelMenu('Informations');
             var content = $("#" + menu + " .menu-content");
-            var tgbutton = $('#' + menu).find('.toggleButton')
+            var tgbutton = $('#' + menu).find('.toggleButton');
             $('<h3/>', {text: 'Informations'}).appendTo(tgbutton);
 
-            content.css("margin",10)
+            content.css("margin",10);
 
-            $('<div/>', {id: 'entanglement-cont'}).appendTo('#' + 'entValues')//content.attr('id'))
+            $('<div/>', {id: 'entanglement-cont'}).appendTo('#' + 'entValues');//content.attr('id'))
             $('<div/>', {id: 'infoView'}).appendTo('#' + content.attr('id'));
 
 
@@ -710,7 +710,7 @@ var TP = TP || {};
             infoNodes.append(nodesBID);
             infoNodes.append("<ul></ul>");
 
-        }
+        };
 
         this.visuPane = function (buttons, mode) {
             // assert(true, 'Interface -> visuPane') 
@@ -718,30 +718,30 @@ var TP = TP || {};
             if (mode === 'update') {
                 for (i = 0; i < contxt.menuNum; i++) {
                     if ($('.header-menu').eq(i).text() === 'View settings') {
-                        content = $('.header-menu').eq(i).siblings('.menu-content')
-                        document.getElementById(content.attr('id')).innerHTML = ''
+                        content = $('.header-menu').eq(i).siblings('.menu-content');
+                        document.getElementById(content.attr('id')).innerHTML = '';
                     }
                 }
             } else if (mode === 'create') {
                 menu = this.addPanelMenu('View settings');
-                tgbutton = $('#' + menu).find('.toggleButton')
+                tgbutton = $('#' + menu).find('.toggleButton');
                 $('<h3/>', {text: 'View settings'}).appendTo(tgbutton);
                 content = $("#" + menu + " .menu-content");
             }
-            content.css('margin', 0)
+            content.css('margin', 0);
 
             //var visu = content[0];
             var view = TP.Context().activeView;
-            var nav = $('<div/>',{id:'navView', class:'nav'}).appendTo(content)
-            this.createArrayButtons(buttons.View,'navView')
+            var nav = $('<div/>',{id:'navView', class:'nav'}).appendTo(content);
+            this.createArrayButtons(buttons.View,'navView');
 
             this.toggleAccordion('navView');
-        }
+        };
 
 
         this.createElements = function(tab, parentId, evnt){
             // assert(true, 'Interface -> createElements') 
-            var par = $(parentId)
+            var par = $(parentId);
             for(var k in tab){
                 /*if (typeof (tab[k]) == "function")
                     tab[k] = tab[k].call()
@@ -762,12 +762,12 @@ var TP = TP || {};
                 if($("#"+attrElem.id).length!=0){
                     // assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
                 }
-                par.append(labelPrec)
-                switch(type){
-                    case 0: // select
+                par.append(labelPrec);
+                if (type == 0){
+                        // select
                         var div = $('<select>', attrElem).appendTo(parentId);
                         for(var opt in attrChild){
-                            $('<option/>',{value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(div)
+                            $('<option/>',{value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(div);
                         }
 
                         $("#"+attrElem.id).change((function (e) {
@@ -775,21 +775,21 @@ var TP = TP || {};
                                 var res = {};
                                 var key = this.id;
                                 var selectedOpt = $('#'+key)[0].options[$('#'+key)[0].selectedIndex];
-                                res[key] = {text:selectedOpt.text, val:selectedOpt.value}
+                                res[key] = {text:selectedOpt.text, val:selectedOpt.value};
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
-                            }
+                            };
                         })(evnt));
-                        break;
-
-                    case 1: // radio
+                 }
+                    
+                 if(type == 1){ // radio
                         var form = $('<form>', attrElem).appendTo(parentId);
-                        form.addClass('radio')
+                        form.addClass('radio');
                         for(var opt in attrChild){
-                            var input = $('<input/>',attrChild[opt]).appendTo(form)
-                            input.attr("type","radio")
-                            $('<label/>',{text:attrChild[opt].text}).appendTo(form)
-                            $(form).append("<br/>")
+                            var input = $('<input/>',attrChild[opt]).appendTo(form);
+                            input.attr("type","radio");
+                            $('<label/>',{text:attrChild[opt].text}).appendTo(form);
+                            $(form).append("<br/>");
                         }
 
                         $('#'+attrElem.id+' input[type=radio]').click((function (e) {
@@ -797,41 +797,44 @@ var TP = TP || {};
                                 if ($(this).is(":checked")){
                                     var res = {};
                                      key = $(this).attr('name');
-                                    res[key] = {text:$(this).text(), val:$(this).val()}
+                                    res[key] = {text:$(this).text(), val:$(this).val()};
                                     //console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
-                        })(evnt))
-                        break;
+                        })(evnt));
+                    }
 
-                    case 2: // checkbox
-                        var form = $('<form>', tab[k][1]).appendTo(parentId);
-                        form.addClass('checkbox')
-                        for(opt in attrChild){
-                            $('<input/>',{type:"checkbox",name:attrChild[opt].name, value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(form)
-                            $('<label/>',{text:attrChild[opt].text}).appendTo(form)
-                            $(form).append("<br/>")
+                    if (type == 2 || type =="checkbox") 
+                    {// checkbox
+                        
+                        var form = $('<form>', attrElem).appendTo(parentId);
+                        form.addClass('checkbox');
+                        for(var opt in attrChild){
+                            var input = $('<input/>',attrChild[opt]).appendTo(form);
+                            input.attr("type","checkbox");
+                            $('<label/>',{text:attrChild[opt].text}).appendTo(form);
+                            $(form).append("<br/>");
                         }
 
-                        $('#'+attrElem.id+' input').click((function (e) {
+                        $('#'+attrElem.id+' input[type=checkbox]').click((function (e) {
                             return function () {
-                                if ($(this).is(":checked")){
                                     var res = {};
                                      key = $(this).attr('name');
-                                    res[key] = {text:$(this).text(), val:$(this).val()}
+                                    res[key] = {text:$(this).text(), val:$(this).is(":checked")};
                                     //console.log(res)
                                     var c = e ? e.call(res) : null; 
-                                }
                             };
-                        })(evnt))
-                        break;
+                        })(evnt));
 
-                    case 3: // textfield
-                        var div =$('<input/>',tab[k][1]).appendTo(parentId)
-                        div.attr("type","text")
+                    }
 
-                        var id = div[0].id
+                    if(type == 3)
+                    { // textfield
+                        var div =$('<input/>',tab[k][1]).appendTo(parentId);
+                        div.attr("type","text");
+
+                        var id = div[0].id;
                         div.change((function (e) {
                             return function () {
                                 var res = {};
@@ -840,11 +843,12 @@ var TP = TP || {};
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))                        
-                        break;
+                        })(evnt));                        
+                    }
 
-                    case 4: //slider
-                        var div = $('<div/>',attrElem).appendTo(parentId)
+                    if(type == 4)
+                    { //slider
+                        var div = $('<div/>',attrElem).appendTo(parentId);
 
                         attrChild.change= ((function (e) { 
                             return function () {
@@ -856,14 +860,14 @@ var TP = TP || {};
                                 $(this).find(".ui-slider-handle").eq(1).text(val2);
 
                                 key = this.id;
-                                res[key] = {val1:val1, val2:val2}
+                                res[key] = {val1:val1, val2:val2};
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))
+                        })(evnt));
                         attrChild.slide= ((function (e) { 
                             return function () {
-                                var res = {}
+                                var res = {};
                                 var val1 = $(this).slider("values",0);
                                 var val2 = $(this).slider("values",1);
 
@@ -871,17 +875,18 @@ var TP = TP || {};
                                 $(this).find(".ui-slider-handle").eq(1).text(val2);
                                
                                 key = this.id;
-                                res[key] = {val1:val1, val2:val2}
+                                res[key] = {val1:val1, val2:val2};
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))
+                        })(evnt));
 
                         div.slider(attrChild);
-                        break;
+                 }
 
-                    case 5: //spinner
-                        var div = $('<input/>', attrElem).appendTo(parentId)
+                 if(type == 5)
+                 { //spinner
+                        var div = $('<input/>', attrElem).appendTo(parentId);
 
                         div.spinner(attrChild);
                         div.siblings('.ui-spinner-button').click(function(){
@@ -889,28 +894,30 @@ var TP = TP || {};
                         });
                         div.change((function (e){
                             return function () {
-                                var res = {}
-                                key = this.id
-                                res[key] = $(this).spinner('value')
+                                var res = {};
+                                key = this.id;
+                                res[key] = $(this).spinner('value');
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))
-                        break;
+                        })(evnt));
+                }
 
-                    case 6: //color picker
-                        var div = $('<div/>', attrElem).appendTo(parentId)
+                if (type == 6)
+                { //color picker
+                        var div = $('<div/>', attrElem).appendTo(parentId);
                         //par.append(tab[k][4])
                         var f = $.farbtastic('#'+attrElem.id);
                         f.linkTo(tab[k][5].func);
-                        break;
+                }
 
-                    case 7: //autocomplete
-                        var div = $('<input/>',attrElem).appendTo(parentId)
+                if (type == 7)
+                { //autocomplete
+                        var div = $('<input/>',attrElem).appendTo(parentId);
                         div.autocomplete(attrChild)
                             .bind('focus', function(){
                                 if(attrChild.focusCallback)
-                                    attrChild.source = attrChild.focusCallback()
+                                    attrChild.source = attrChild.focusCallback();
                                 $(this).autocomplete('search');
                             });
                         var res = {}, key;
@@ -922,10 +929,14 @@ var TP = TP || {};
                                     //console.log(res, event);
                                     var c = evnt ? evnt.call(res) : null;
                             }
-                        })
-                        break;
-                    case 8: //simplelider
-                        var div = $('<div/>',attrElem).appendTo(parentId)
+                        });
+                }                    
+
+                if(type == 8)
+                {
+                        
+                     //simplelider
+                        var div = $('<div/>',attrElem).appendTo(parentId);
 
                         attrChild.change= ((function (e) { 
                             return function () {
@@ -935,33 +946,31 @@ var TP = TP || {};
                                 $(this).find(".ui-slider-handle").eq(0).text(val1);
 
                                 key = "value";
-                                res[key] = val1
+                                res[key] = val1;
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))
+                        })(evnt));
                         attrChild.slide= ((function (e) { 
                             return function () {
-                                var res = {}
+                                var res = {};
                                 var val1 = $(this).slider("values",0);
 
                                 $(this).find(".ui-slider-handle").eq(0).text(val1);
                                
                                 key = "value";
-                                res[key] = val1
+                                res[key] = val1;
                                 //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
-                        })(evnt))
+                        })(evnt));
 
                         div.slider(attrChild);
-                        break;
-
 
                 }
-                par.append(labelSuiv + "<br/>")
+                par.append(labelSuiv + "<br/>");
             }
-        }
+        };
 
 
         this.createArrayButtons = function (buttonsData, pane) {
@@ -977,14 +986,14 @@ var TP = TP || {};
                 var fam = null;
                 if (param == '') {
                     fam = $('<li/>', {class: 'form'}).appendTo('#' + menu);
-                    var button = $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam);
                     $(button).click(evnt.click);
                 } else {
                     fam = $('<li/>', {class: 'form tglForm'}).appendTo('#' + menu);
-                    var button = $('<a/>', {text: label}).appendTo(fam)
+                    var button = $('<a/>', {text: label}).appendTo(fam);
                     if (evnt && evnt.click) $(button).click(evnt.click);
-                    var form = $('<div/>', {class: 'formParam'}).appendTo(fam)
-                    this.createElements(param,form, evnt)
+                    var form = $('<div/>', {class: 'formParam'}).appendTo(fam);
+                    this.createElements(param,form, evnt);
                     /*if(evnt){
                         var submit = $('<button/>', {class: 'submit', text: "Apply"}).appendTo(form);
                         var submit = this.createElement('button', {class: 'submit', text: "Apply"}, form)
@@ -996,7 +1005,7 @@ var TP = TP || {};
                     }*/
                 }
             }
-        }
+        };
 
 
         /*this.callbackMenu = function (param, evnt) {
@@ -1058,6 +1067,6 @@ var TP = TP || {};
 
         return __g__;
 
-    }
+    };
     TP.Interface = Interface;
 })(TP);
