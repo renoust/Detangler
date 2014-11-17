@@ -345,7 +345,12 @@ var TP = TP || {};
                 .classed("node", true)
                 .classed(view_nodes, true)
                 .style("opacity", TP.Context().defaultNodeOpacity)
-                .style("fill", TP.Context().view[currentViewID].getNodesColor());
+                .style("fill", function(d){
+                    var c = TP.Context().view[currentViewID].getNodesColor();
+                    if (d._color == undefined)
+                        d._color = c;
+                    return d._color;
+                    });
 
             if (view_nodes == "rect" && glyphR != null) {
                 // assert(true, "rect")
@@ -916,7 +921,8 @@ var TP = TP || {};
                 .select(".node")
                 .style("fill", function (d) {
                     c = color(eval('d[\"' + parameter +'\"]'));
-                    return d3.rgb(c);
+                    d._color = d3.rgb(c);
+                    return d._color;
                 });
 
             var link = g.linkContainer.selectAll("g.link")
@@ -943,7 +949,9 @@ var TP = TP || {};
 
                 node.select("g.glyph").select(".node")
                     .style("fill", function (d) {
-                        return d3.rgb(color);
+                        var c = d3.rgb(color);
+                        d._color = c;
+                        return c;
                     });
             } else if (elem === "link") {
                 var link = g.linkContainer.selectAll("g.link")
@@ -963,7 +971,8 @@ var TP = TP || {};
             } else if (elem === "label") {
                 var labels = g.svg.selectAll("text.node.text")
                     .style('fill', function (d) {
-                        return d3.rgb(color);
+                        var c = d3.rgb(color);
+                        return c;
                     })
                     .style('stroke', function (d) {
                         return d3.rgb(color);
@@ -1169,7 +1178,10 @@ var TP = TP || {};
                     return dd.currentY;
                 })
                 .classed("snippet", 1)
-                .style("fill",TP.Context().view[currentViewID].getLabelsColor())
+                .style("fill",function(d){
+                    var c = TP.Context().view[currentViewID].getLabelsColor();
+                    return c;
+                    })
                 .style("stroke",TP.Context().view[currentViewID].getLabelsColor())
                 .style("stroke-width",1)
                 .style("font-size", TP.Context().view[currentViewID].labelFontSize)
@@ -1207,7 +1219,13 @@ var TP = TP || {};
 
             var glyphG = node.select("g.glyph");
             var glyph = glyphG.select(currentGlyphClass)
-                .style('fill', currentView.getNodesColor());
+                .style('fill', function(d){
+                    var c = currentView.getNodesColor();
+                    if (d._color == undefined)
+                        d._color = c;
+
+                    return d._color;
+                    });
 
 
             if (currentGlyph == "circle") {
@@ -1307,7 +1325,7 @@ var TP = TP || {};
 
             node.select("circle.node")
                 .attr("r", function (d) {
-                    r = scale(d[parameter]);//eval("d." + parameter + "*factor+scaleMin");
+                    r = Math.abs(scale(d[parameter]));//eval("d." + parameter + "*factor+scaleMin");
                     //r = d[parameter] * factor + scaleMin
                     //if (!r || equalScales) {
                     //    r = scaleMin;
@@ -1604,14 +1622,24 @@ var TP = TP || {};
                 .classed("selected", false)
                 .style('opacity', TP.Context().defaultNodeOpacity)
                 .select("circle.node")
-                .style('fill', nodeColor)
+                .style('fill', function(d){
+                    var c = nodeColor;
+                    if (d._color == undefined)
+                        d._color = c;
+                    return d._color;
+                })
                 .style("stroke-width", 0);
             g.nodeContainer.selectAll("g.node")
                 .select("text.node")
                 .attr("visibility", "visible");
             g.nodeContainer.selectAll("g.node")
                 .select("rect.node")
-                .style('fill', nodeColor)
+                .style('fill', function(d){
+                    var c = nodeColor;
+                    if (d._color == undefined)
+                        d._color = c;
+                    return d._color;
+                })
                 .style("stroke-width", 0);
             g.linkContainer.selectAll("g.link")
                 .style('opacity', TP.Context().defaultLinkOpacity)
@@ -1652,11 +1680,13 @@ var TP = TP || {};
                 })
                 .select(".node")
                 .style('fill', function (d) {
-                    //console.log(d);
                     if (d.selected)
                         return "red";
                     else
-                        return TP.Context().view[currentViewID].getNodesColor();
+                        var c = TP.Context().view[currentViewID].getNodesColor();
+                        if (d._color == undefined)
+                            d._color = c;
+                        return d._color;
                 });
 
             //g.svg.selectAll("g.node")

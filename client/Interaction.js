@@ -166,7 +166,8 @@ var TP = TP || {};
                      return TP.Context().tabNodeColor["catalyst"];
                      else
                      return TP.Context().tabNodeColor["substrate"];*/
-                        return TP.Context().view[target].getNodesColor();
+                        return d._color;
+                        //return TP.Context().view[target].getNodesColor();
                     }
                 });
 
@@ -262,7 +263,8 @@ var TP = TP || {};
                             .style('fill', function(d){
                                 if ((e.ctrlKey || e.metaKey || e.shiftKey) && d.selected == true)
                                     return "red";
-                                return TP.Context().view[_viewID].getNodesColor();
+                                return d._color;
+                                //return TP.Context().view[_viewID].getNodesColor();
                             });
 
 
@@ -302,7 +304,8 @@ var TP = TP || {};
                     .select(".node")
                         .style('fill', function(d){
                             if (e.shiftKey)
-                                return TP.Context().view[_viewID].getNodesColor();
+                                return d._color;
+                                //return TP.Context().view[_viewID].getNodesColor();
                             return 'red';
                         });
 
@@ -396,7 +399,8 @@ var TP = TP || {};
                 catalystSvg.selectAll("g.node")
                     .style('opacity', 1.0)
                     .select("circle.node")
-                    .style('fill', catalystNodeColor)
+                    .style('fill', function(d){
+                        return d._color;})//catalystNodeColor)
                     .style("stroke-width", 0);
                 catalystSvg.selectAll("g.node")
                     .select("text.node")
@@ -404,10 +408,11 @@ var TP = TP || {};
                 catalystSvg.selectAll("g.node")
                     .select("rect.node")
                     .style('fill', function (d) {
-                        if (substrateSvg != null)
-                            return substrateView.getNodesColor();
-                        else
-                            return catalystNodeColor;
+                        return d._color;
+                        //if (substrateSvg != null)
+                        //    return substrateView.getNodesColor();
+                        //else
+                        //    return catalystNodeColor;
                     })
                     .style("stroke-width", 0);
                 catalystSvg.selectAll("g.link")
@@ -433,10 +438,12 @@ var TP = TP || {};
                     .style('opacity', 1.0)
                     .select("circle.node")
                     .style('fill', function (d) {
-                        if (catalystSvg != null)
-                            return catalystView.getNodesColor()
-                        else
-                            return substrateNodeColor;
+                        return d._color;
+                        
+                        //if (catalystSvg != null)
+                        //    return catalystView.getNodesColor()
+                        //else
+                        //    return substrateNodeColor;
                     })
                     .style("stroke-width", 0);
                 substrateSvg.selectAll("g.node")
@@ -444,7 +451,7 @@ var TP = TP || {};
                     .attr("visibility", "visible");
                 substrateSvg.selectAll("g.node")
                     .select("rect.node")
-                    .style('fill', substrateNodeColor)
+                    .style('fill', function(d){return d._color;})//substrateNodeColor)
                     .style("stroke-width", 0);
                 substrateSvg.selectAll("g.link")
                     .style('opacity', 1.0)
@@ -469,10 +476,12 @@ var TP = TP || {};
                     .style('opacity', 1.0)
                     .select("circle.node")
                     .style('fill', function (d) {
-                        if (catalystSvg != null)
-                            return catalystSvg.getNodesColor();
-                        else
-                            return combinedNodeColor;
+                        return d._color;
+                        
+                        //if (catalystSvg != null)
+                        //    return catalystSvg.getNodesColor();
+                        //else
+                        //    return combinedNodeColor;
                     })
                     .style("stroke-width", 0);
 
@@ -483,10 +492,11 @@ var TP = TP || {};
                 combinedSvg.selectAll("g.node")
                     .select("rect.node")
                     .style('fill', function (d) {
-                        if (substrateSvg != null)
-                            return substrateSvg.getNodesColor();
-                        else
-                            return combinedNodeColor;
+                        return d._color;
+                        //if (substrateSvg != null)
+                         //   return substrateSvg.getNodesColor();
+                        //else
+                        //    return combinedNodeColor;
                     })
                     .style("stroke-width", 0);
 
@@ -602,8 +612,8 @@ var TP = TP || {};
                         }
                         //return TP.Context().tabNodeColor["substrate"];
                         //return TP.Context().view[d._type].getNodesColor();
-                        var targetTmp = TP.Context().view[target].getAssociatedView(d._type)[0];
-                        return TP.Context().view[targetTmp].getNodesColor();
+                        //var targetTmp = TP.Context().view[target].getAssociatedView(d._type)[0];
+                        return d._color;//TP.Context().view[targetTmp].getNodesColor();
                     })
 
                 selList.sort()
