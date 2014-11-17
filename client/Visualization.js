@@ -18,9 +18,9 @@ var TP = TP || {};
 
             var target = _event.associatedData.source;
 
-            if (!target)return
+            if (!target) return;
 
-            var svg = null
+            var svg = null;
             svg = TP.Context().view[target].getSvg();
 
             TP.Context().view[target].setShowLinks(!TP.Context().view[target].getShowLinks());
@@ -35,21 +35,21 @@ var TP = TP || {};
                 }
                 $('li.form > a').each(function () {
                     if ($(this).text() === 'Show links') {
-                        $(this).text('Hide links')
+                        $(this).text('Hide links');
                     }
-                })
+                });
             } else {
                 $('li.form > a').each(function () {
                     if ($(this).text() === 'Hide links') {
-                        $(this).text('Show links')
+                        $(this).text('Show links');
                     }
-                })
+                });
                 var sel = svg.selectAll('g.link').attr("visibility", "hidden");
 
 
             }
 
-        }
+        };
 
         // This function updates the entanglement values displayed in the 
         //entanglement frame of the substrate view
@@ -59,11 +59,11 @@ var TP = TP || {};
 
             //console.log("entering 'entanglement caught function'")
 
-            var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603']
-            var zeroColor = d3.rgb("white")
-            var oneColor = d3.rgb("purple")
+            var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603'];
+            var zeroColor = d3.rgb("white");
+            var oneColor = d3.rgb("purple");
             //var inter = ['#FFFF00','#00FF00','#0000FF']
-            var inter = ['yellow','green','steelblue']
+            var inter = ['yellow','green','steelblue'];
             var currentIntensityColor = d3.rgb("white");
             var currentHomogeneityColor = d3.rgb("black");
 
@@ -84,8 +84,8 @@ var TP = TP || {};
                 else if (TP.Context().entanglement_intensity < 2/3){ currentIntensityColor = inter[1];}
                 else { currentIntensityColor = inter[2];}
 
-                currentIntensityColor = d3.hcl(currentIntensityColor)
-                currentIntensityColor.l = 99 *(1- TP.Context().entanglement_intensity)
+                currentIntensityColor = d3.hcl(currentIntensityColor);
+                currentIntensityColor.l = 99 *(1- TP.Context().entanglement_intensity);
                 //currentIntensityColor.r = Math.round(currentIntensityColor.r * (1-TP.Context().entanglement_intensity))
                 //currentIntensityColor.g = Math.round(currentIntensityColor.g * (1-TP.Context().entanglement_intensity))
                 //currentIntensityColor.b = Math.round(currentIntensityColor.b * (1-TP.Context().entanglement_intensity))
@@ -99,8 +99,8 @@ var TP = TP || {};
                 else if (TP.Context().entanglement_homogeneity < 2/3){ currentHomogeneityColor = inter[1];}
                 else { currentHomogeneityColor = inter[2];}
 
-                currentHomogeneityColor = d3.hcl(currentHomogeneityColor)
-                currentHomogeneityColor.l = 99 * (1- TP.Context().entanglement_homogeneity)
+                currentHomogeneityColor = d3.hcl(currentHomogeneityColor);
+                currentHomogeneityColor.l = 99 * (1- TP.Context().entanglement_homogeneity);
                 //currentHomogeneityColor.r = Math.round(currentHomogeneityColor.r * (1-TP.Context().entanglement_homogeneity))
                 //currentHomogeneityColor.g = Math.round(currentHomogeneityColor.g * (1-TP.Context().entanglement_homogeneity))
                 //currentHomogeneityColor.b = Math.round(currentHomogeneityColor.b * (1-TP.Context().entanglement_homogeneity))
@@ -110,9 +110,9 @@ var TP = TP || {};
 
 
                 //$("#bg").css("background-color",d3.rgb(currentIntensityColor));
-                d3.selectAll('#bg').style("background-color",currentIntensityColor)
+                d3.selectAll('#bg').style("background-color",currentIntensityColor);
 
-                $("#bg").css("border-color",d3.rgb(currentHomogeneityColor))
+                $("#bg").css("border-color",d3.rgb(currentHomogeneityColor));
                 //$("#bg").css("opacity",1)
                 //$("#entanglement-cont").css("opacity",.5);
 
@@ -122,7 +122,7 @@ var TP = TP || {};
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
-                $("#bg").css("background-color", "white")
+                $("#bg").css("background-color", "white");
                 $("#entanglement-cont").css("border-color","black");
             }
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
@@ -162,10 +162,10 @@ var TP = TP || {};
                             .style('stroke', currentHomogeneityColor);
 
                 }
-            })
+            });
 
 
-        }
+        };
         /*
          this.buildEdgeMatrices = function (target) { //catalyst at bingin of project, whithout generic code
          var matrixData = [];
@@ -312,8 +312,8 @@ var TP = TP || {};
 
             var target = _event.associatedData.source;
 
-            var cGraph = null
-            var svg = null
+            var cGraph = null;
+            var svg = null;
 
 
             svg = TP.Context().view[target].getSvg();
@@ -335,7 +335,7 @@ var TP = TP || {};
 
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
-            var cView =TP.Context().view[target] 
+            var cView =TP.Context().view[target]; 
             cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
 
 
@@ -343,25 +343,25 @@ var TP = TP || {};
 
 
             objectReferences.VisualizationObject.entanglementCaught(target);
-        }
+        };
 
 
         this.resetSize = function (_event) {
 
             var target = _event.associatedData.source;
 
-            var cGraph = null
-            var svg = null
+            var cGraph = null;
+            var svg = null;
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
 
             cGraph.nodes().forEach(function (d) {
                 d.viewMetric = 3;
-            })
+            });
 
-            TP.Context().view[target].getGraphDrawing().resize(cGraph, 0)
-        }
+            TP.Context().view[target].getGraphDrawing().resize(cGraph, 0);
+        };
 
 
         this.rotateGraph = function (_event) {
@@ -370,42 +370,42 @@ var TP = TP || {};
             var angle = _event.associatedData.angle;
             
             if(angle === undefined || angle == null)
-                angle = 5
+                angle = 5;
 
-            var cGraph = null
-            var svg = null
+            var cGraph = null;
+            var svg = null;
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
             //console.log("angle", angle)
 
-            TP.Context().view[target].getGraphDrawing().rotate(target, angle)
-        }
+            TP.Context().view[target].getGraphDrawing().rotate(target, angle);
+        };
 
         this.arrangeLabels = function (_event) {
             
             var target = _event.associatedData.source;
 
-            var cGraph = null
-            var svg = null
+            var cGraph = null;
+            var svg = null;
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
             TP.Context().view[target].getGraphDrawing().arrangeLabels();
-        }
+        };
 
         this.bringLabelsForward = function (target) {
             if (!target)
-                return
+                return;
 
-            var svg = null
-            var cGraph = null
+            var svg = null;
+            var cGraph = null;
 
             svg = TP.Context().view[target].getSvg();
             cGraph = TP.Context().view[target].getGraph();
 
             TP.Context().view[target].getGraphDrawing().bringLabelsForward();
-        }
+        };
 
 
         this.showhideLabels = function (_event) {
@@ -413,9 +413,9 @@ var TP = TP || {};
             var target = _event.associatedData.source;
 
             if (!target)
-                return
+                return;
 
-            var svg = null
+            var svg = null;
             svg = TP.Context().view[target].getSvg();
 
             //eval("TP.Context().show_labels_" + target + " = ! TP.Context().show_labels_" + target);
@@ -428,9 +428,9 @@ var TP = TP || {};
                 });
                 $('li.form > a').each(function () {
                     if ($(this).text() === 'Show labels') {
-                        $(this).text('Hide labels')
+                        $(this).text('Hide labels');
                     }
-                })
+                });
             } else {
                 svg.selectAll('text.node').attr("visibility", function (d) {
 
@@ -440,11 +440,11 @@ var TP = TP || {};
                 });
                 $('li.form > a').each(function () {
                     if ($(this).text() === 'Hide labels') {
-                        $(this).text('Show labels')
+                        $(this).text('Show labels');
                     }
-                })
+                });
             }
-        }
+        };
 
 
         // This function rescales the graph data in order to fit the svg window
@@ -452,51 +452,51 @@ var TP = TP || {};
         this.rescaleGraph = function (data) {
 
             // these should be set as globale variables
-            var buttonWidth = 0//130.0
-            var frame = 10.0
-            var w = TP.Context().width - (buttonWidth + 2 * frame)
-            var h = TP.Context().height - (2 * frame)
-            if (data.nodes.length <= 0) return
+            var buttonWidth = 0;//130.0
+            var frame = 10.0;
+            var w = TP.Context().width - (buttonWidth + 2 * frame);
+            var h = TP.Context().height - (2 * frame);
+            if (data.nodes.length <= 0) return;
 
-            var minX = data.nodes[0].x
-            var maxX = data.nodes[0].x
-            var minY = data.nodes[0].y
-            var maxY = data.nodes[0].y
+            var minX = data.nodes[0].x;
+            var maxX = data.nodes[0].x;
+            var minY = data.nodes[0].y;
+            var maxY = data.nodes[0].y;
 
 
             data.nodes.forEach(function (d) {
                 if (d.x < minX) {
-                    minX = d.x
+                    minX = d.x;
                 }
                 ;
                 if (d.x > maxX) {
-                    maxX = d.x
+                    maxX = d.x;
                 }
                 ;
                 if (d.y < minY) {
-                    minY = d.y
+                    minY = d.y;
                 }
                 ;
                 if (d.y > maxY) {
-                    maxY = d.y
+                    maxY = d.y;
                 }
                 ;
-            })
+            });
 
             //var sizeScale = d3.scale.linear();
             //sizeScale.range([minX, maxX])
 
 
-            var delta = 0.00000000000000000001 //to avoid division by 0
-            scale = Math.min.apply(null, [w / (maxX - minX + delta), h / (maxY - minY + delta)])
+            var delta = 0.00000000000000000001; //to avoid division by 0
+            scale = Math.min.apply(null, [w / (maxX - minX + delta), h / (maxY - minY + delta)]);
 
             data.nodes.forEach(function (d) {
                 d.x = (d.x - minX) * scale + buttonWidth + frame;
                 d.y = (d.y - minY) * scale + frame;
                 d._currentX = d.x;
                 d._currentY = d.y;
-            })
-        }
+            });
+        };
 
 
         this.sizeMapping = function (_event) {
@@ -598,7 +598,7 @@ var TP = TP || {};
                                 if (table[0].rows[0].cells[b].innerHTML!=='baseID'){
                                     toggleInput($(this));
                                 }
-                            }
+                            };
                         }(n,f));
                     }
                 }
@@ -667,13 +667,13 @@ var TP = TP || {};
             }
 
             function sortByColumn(field, reverse){
-                var key = function (x) {return x[field]};
+                var key = function (x) {return x[field];};
                 return function (a,b) {
                     var A = key(a), B = key(b);
                     return ( (A < B) ? -1 : ((A > B) ? 1 : 0) ) * [-1,1][+!!reverse];                  
                 };
             }
-        }
+        };
 
 
 
@@ -708,19 +708,19 @@ var TP = TP || {};
                 if (targetView != null)
                 {    
                     //targetView.viewRotation = angle;
-                    targetView.getController().sendMessage("rotateGraph", {angle: delta})
+                    targetView.getController().sendMessage("rotateGraph", {angle: delta});
                     if (targetView.getType() == "catalyst")
                         TP.ObjectReferences().ClientObject.updateLayout(targetView.getID());
                 }                  
             }
             
             view.viewRotation = angle; 
-            view.getController().sendMessage("rotateGraph", {angle: delta})
+            view.getController().sendMessage("rotateGraph", {angle: delta});
             if (typeGraph == "catalyst")
                         TP.ObjectReferences().ClientObject.updateLayout(view.getID());
             
             
-        }
+        };
 
 
         this.changeColor = function () {
@@ -743,7 +743,7 @@ var TP = TP || {};
                 view.setLabelsColor(f.color);
                 view.getGraphDrawing().changeColor(IDView, cGraph, "label", view.getLabelsColor());
             }
-        }
+        };
 
         this.tulipLayout = function (_event) {
             var id = TP.Context().activeView;
@@ -751,7 +751,7 @@ var TP = TP || {};
             var cGraph = view.getGraph();
             TP.Context().Client().callLayout(_event);
 
-        }
+        };
 
         /*this.changeNodesSettings = function(_event) {
             var id = TP.Context().activeView;
@@ -772,6 +772,6 @@ var TP = TP || {};
         
 
         return __g__;
-    }
+    };
     TP.Visualization = Visualization;
 })(TP);
