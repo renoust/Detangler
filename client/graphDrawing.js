@@ -68,13 +68,11 @@ var TP = TP || {};
             if (tabb[1] == null) {
                 var posX = d3.event.dx;
                 var posY = d3.event.dy;
-                // console.log("first");
                 currentNode.x += posX;
                 currentNode.y += posY;
                 currentNode.currentX += posX;
                 currentNode.currentY += posY;
             } else {
-                // console.log("second");
                 currentNode.x = tabb[1];
                 currentNode.y = tabb[2];
                 currentNode.currentX = tabb[3];
@@ -111,15 +109,12 @@ var TP = TP || {};
                     return currentNode.y;
                 });
 
-            // console.log("current svg:", g.svg, g.cGraph.links());
             var links = g.linkContainer.selectAll("g.link").data(g.cGraph.links(), function (d) {
                 return d.baseID;
             });
             links.select("path.link")
                 .attr("d", function (d) {
                     return g.drawOneLink(d);
-                    //console.log("updating the graph");
-                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 })
                 .style("stroke-width", function (d) {
                     return 1;
@@ -176,12 +171,9 @@ var TP = TP || {};
                         return currentNode.y;
                     });
 
-                // console.log("current svg:", g.svg, g.cGraph.links());
                 var links = g.svg.selectAll("path.snippet")
                 .attr("d", function (d) {
                     return g.drawOneLink(d);
-                    //console.log("updating the graph");
-                    //return "M" + d.source.x + " " + d.source.y + " L" + d.target.x + " " + d.target.y;
                 });
             }
         };
@@ -263,7 +255,6 @@ var TP = TP || {};
                 .enter()
                 .append("g")
                 .attr("class", function (d) {
-                    //console.log(d._type);
                     return d._type;
                 })
                 .classed("node", true)
@@ -287,7 +278,6 @@ var TP = TP || {};
                     //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
                 })
                 .on("mouseover", function (d) {
-                    //console.log("appending a snippet");
                     if (g.dragStarted == true) return;
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
@@ -409,7 +399,6 @@ var TP = TP || {};
                     return limitLabel(d.label);
                 })
                 .on("mouseover", function (d) {
-                    //console.log("appending a snippet");
                     if (g.dragStarted == true) return;
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 });
@@ -426,22 +415,18 @@ var TP = TP || {};
 
         g.drawLabels = function () {
             return;                  // return???
-            //console.log("drawLabels " + g.svg.attr("id"));
             /*var labelNode = g.svg.selectAll("text.node")
              .data(g.cGraph.nodes(),function(d){return d.baseID}).enter().append("g")
              .attr("class", function(d){return d._type})
              .classed("text", true)
              .style("fill", TP.Context().view[currentViewID].getLabelsColor())
-             console.log(TP.Context().view[currentViewID].getLabelsColor())
-             console.log("GraphDrawing -> drawLabels")
              var labelContent= labelNode
              .append("text")
              .attr("class", function(d){return "node" + d.baseID + " " + d._type})
              .classed("node", true).classed("text", true)
              .attr("dx", function(d){return d.currentX})
              .attr("dy", function(d){return d.currentY})
-             .text(function(d) { console.log(d); return d.label; });
-             console.log(labelNode)
+             .text(function(d) {  return d.label; });
              g.arrangeLabels();     */
 
         };
@@ -473,8 +458,7 @@ var TP = TP || {};
             var h = height_ - (topFrame + bottomFrame);
 
             var node = graph.nodes();
-            //console.log("Rescaling the graphe, here is the data: ", data);
-
+            
             if (node.length <= 0)
                 return;
 
@@ -516,12 +500,11 @@ var TP = TP || {};
 
             g.cGraph.nodes().forEach(
                 function (d) {
-                    //console.log(d.x +" "+ d.y);
                     x_tmp = (Math.cos(angle) * (d.x - x_center)) + (Math.sin(angle) * (d.y - y_center)) + x_center;
                     y_tmp = ((-1 * Math.sin(angle)) * (d.x - x_center)) + (Math.cos(angle) * (d.y - y_center)) + y_center;
                     d.x = x_tmp;
                     d.y = y_tmp;
-                    //console.log("res:", d.x, d.y)
+                    
                 }
             );
             
@@ -558,15 +541,13 @@ var TP = TP || {};
             var transform = null;
 
             if (!links.empty()) {
-                //console.log("link transforms: ", links.attr("transform"));
                 transform = links.attr("transform");
             }
             g.linkContainer.selectAll("g.link")
                 .data([])
                 .exit()
                 .remove();
-            //console.log("the current trasformation", transform);
-
+            
             var link = g.linkContainer.selectAll("g.link")
                 .data(g.cGraph.links(), function (d) {
                     return d.baseID;
@@ -608,10 +589,7 @@ var TP = TP || {};
         // and associate 
         // the new x and y values (d3 does the transition) 
         g.changeLayout = function (_graph, dTime) {
-            //console.log("this is layout change")
-
-            // assert(true, "que le move soit avec toi (maitre Yoda)");
-
+            
             g.cGraph = _graph;
 
             //assert(true, "assigning g.node_s")
@@ -699,9 +677,6 @@ var TP = TP || {};
                     return d.y;
                 });
 
-            //console.log("arrangeLabels after GraphDrawing.move()");
-
-            //assert(true, "arranging labels")
             g.arrangeLabels();
 
 
@@ -735,7 +710,7 @@ var TP = TP || {};
                 var y2 = d.target.currentY;
                 
                 var xL = x2 - x1;
-                var yL = y2 - y1;
+                var yL = Math.abs(y2 - y1);
                 var ab = Math.sqrt(xL*xL + yL*yL);
                 
                 var cosa = (ab>0) ? xL / ab : 0;
@@ -756,7 +731,6 @@ var TP = TP || {};
             
             var drawString = "M" + d.layout[0] + shapeOperator;
             d.layout.forEach(function(p, i){ if (i>0) drawString += p + " ";});//p[0] + " " + p[1] + " "})
-            //console.log(drawString)
             return drawString;
 
         };
@@ -781,8 +755,7 @@ var TP = TP || {};
             if (params.metric) parameter = params.metric;
             if (params.scaleMin) scaleMin = params.scaleMin;
             if (params.scaleMax) scaleMax = params.scaleMax;
-            //console.log("params.metric : ", params.metric)
-
+            
             if (parameter == "") return;
 
 
@@ -790,10 +763,8 @@ var TP = TP || {};
             var valMax = null;
             g.cGraph.nodes()
                 .forEach(function (n) {
-                    //console.log("node:", n)
                     val = eval("n[\"" + parameter + "\"]");
                     if(!val)val = 3;
-                    //console.log("val:", val)
                     if (valMin == null | val < valMin)
                         valMin = val;
                     if (valMax == null | val > valMax)
@@ -823,7 +794,6 @@ var TP = TP || {};
             //error: d n'a plus de ViewMetric par défaut...
             node.select("rect.node")
                 .attr("width", function (d) {
-                    //console.log(d)
                     var val = eval('d[\"'+parameter+ '\"]');
                     if(!val)val = 3;
                     return 2 * scale(val);
@@ -888,7 +858,6 @@ var TP = TP || {};
         g.nodeColorMap = function (_graph, dTime, parameter, diff) {
             diff = true;
             g.cGraph = _graph;
-            //console.log(g.cGraph);
             //we would like it better as a parameter
             //assert(false, "turlututu");
             scaleMin = 3.0;
@@ -939,8 +908,6 @@ var TP = TP || {};
         /********************************** ON GOING **********************************/
         g.changeColor = function (graphName, _graph, elem, color) {
             g.cGraph = _graph;
-            // console.log(g);
-            // console.log(g.cGraph);
             if (elem == "node") {
                 var node = g.nodeContainer.selectAll("g.node")
                     .data(g.cGraph.nodes(), function (d) {
@@ -986,9 +953,7 @@ var TP = TP || {};
         };
 
         g.changeSettingsLabels = function(graphName, _graph, elem, value){
-            console.log(elem, value);
             g.cGraph = _graph;
-            //console.log(elem, value)
             g.labelContainer.selectAll("text.node.text")
                 .style(elem,value);
 
@@ -1092,8 +1057,6 @@ var TP = TP || {};
 
                     })
                     .on("drag", function (d) {
-                        //console.log("dragging")
-                        //return
                         TP.Context().view[currentViewID].getController().sendMessage("dragNode", 
                             {snippet: d3.select(this), 
                                  node:g.svg.selectAll(view_nodes+".node").filter(function(dd){return d.baseID == dd.baseID;})
@@ -1412,7 +1375,6 @@ var TP = TP || {};
                 .forEach(function (d) {
                     linkIds.push(d.baseID);
                 });
-            //console.log(nodeIds)
             var node = g.nodeContainer.selectAll("g.node")
                 .data(_graph.nodes(), function (d) {
                     return d.baseID;
@@ -1476,9 +1438,6 @@ var TP = TP || {};
             
             labels[0].forEach(function (d) {
                 
-                //labelsArray.push(d3.select(d));
-                //console.log(d.getBBox(), d3.select(d).data()[0].x, d3.select(d).data()[0].y, d3.select(d).data()[0].currentX, d3.select(d).data()[0].currentY)
-                //iterArray.push(d.getBBox());
                 
                 combineArray.push([d3.select(d), d.getBBox()]);
             });
@@ -1486,7 +1445,6 @@ var TP = TP || {};
             if(metricOrdering != null)
             {
                 combineArray.sort(function(a, b){
-                    //console.log(a[0].data()[0][metricOrdering])
                     return (b[0].data()[0][metricOrdering] - a[0].data()[0][metricOrdering]);
                 });
             }else{
@@ -1666,10 +1624,8 @@ var TP = TP || {};
                     nodeList.push(d);
                 }
             });
-            //assert(true, "the node list");
-            //console.log(nodeList);
             var nodes = g.svg.selectAll("g.node");
-            //console.log(nodes);
+
             //does the selection work with only the array of baseID?
             //.data(nodeList, function(d){return d.baseID;})
             //should we reassign the data each time to access the data?
