@@ -352,8 +352,11 @@ var TP = TP || {};
                         d.currentY = d.y;
                         return d.currentY;
                     })
-                    .attr("width", 2 * 5)
-                    .attr("height", 2 * 5);
+                    .attr("width", function(d){
+                        d._size = 5;
+                        return 2 * d._size;
+                        })
+                    .attr("height", function(d){return 2*d._size;});
             }
             if (view_nodes == "circle" && glyphR != null) {
                 // assert(true, "circle");
@@ -365,7 +368,10 @@ var TP = TP || {};
                         d.currentY = d.y;
                         return d.currentY;
                     })
-                    .attr("r", 5);
+                    .attr("r", function(d){
+                        d._size = 5;
+                        return d._size;
+                    });
             }
 
 
@@ -788,7 +794,8 @@ var TP = TP || {};
             node.select("circle.node").attr("r", function (d) {
                 var val = eval('d[\"'+parameter+'\"]');
                 if(!val)val = 1;
-                return scale(val);
+                d._size = scale(val); 
+                return d._size;
 
             });
             //error: d n'a plus de ViewMetric par défaut...
@@ -796,12 +803,14 @@ var TP = TP || {};
                 .attr("width", function (d) {
                     var val = eval('d[\"'+parameter+ '\"]');
                     if(!val)val = 3;
-                    return 2 * scale(val);
+                    d._size = scale(val); 
+                    return 2 * d._size;
                 })
                 .attr("height", function (d) {
-                    var val = eval('d[\"'+parameter+ '\"]');
-                    if(!val)val = 3;
-                    return 2 * scale(val);
+                    //var val = eval('d[\"'+parameter+ '\"]');
+                    //if(!val)val = 3;
+                    //d._size = scale(val);
+                    return 2 * d._size;
                 });
 
             var link = g.linkContainer.selectAll("g.link")
@@ -1192,13 +1201,19 @@ var TP = TP || {};
 
 
             if (currentGlyph == "circle") {
-                glyph.attr('r', 5)
+                glyph.attr('r', function(d){
+                        return d._size;
+                    })
                     .style("stroke-width", 0)
                     .style("stroke", "black");
             }
             if (currentGlyph == "rect") {
-                glyph.attr('width', 2 * 5)
-                    .attr('height', 2 * 5)
+                glyph.attr('width', function(d){
+                        return 2*d._size;
+                    })
+                    .attr('height', function(d){
+                        return 2* d._size;
+                    })
                     .style("stroke-width", 0)
                     .style("stroke", "black");
             }
@@ -1288,12 +1303,8 @@ var TP = TP || {};
 
             node.select("circle.node")
                 .attr("r", function (d) {
-                    r = Math.abs(scale(d[parameter]));//eval("d." + parameter + "*factor+scaleMin");
-                    //r = d[parameter] * factor + scaleMin
-                    //if (!r || equalScales) {
-                    //    r = scaleMin;
-                    //}
-                    return r;
+                    d._size = Math.abs(scale(d[parameter]));  
+                    return d._size;
                 })
                 .style("stroke-width", function (d) {
                     return 3;
