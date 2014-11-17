@@ -693,8 +693,7 @@ var TP = TP || {};
             var delta = angle - currentViewRotation;
                 
             if (delta == 0) return;
-            
-            if ($('#bothR').is(":checked")) {
+            if ($('#bothViews_cb').is(":checked")) {
                 var targetView = null;
                 if (typeGraph == 'substrate' && view.getAssociatedView("catalyst") != null){
                     targetView = TP.Context().view[IDView].getAssociatedView("catalyst")[0];

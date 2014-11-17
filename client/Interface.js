@@ -763,8 +763,8 @@ var TP = TP || {};
                     // assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
                 }
                 par.append(labelPrec);
-                switch(type){
-                    case 0: // select
+                if (type == 0){
+                        // select
                         var div = $('<select>', attrElem).appendTo(parentId);
                         for(var opt in attrChild){
                             $('<option/>',{value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(div);
@@ -780,9 +780,9 @@ var TP = TP || {};
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
-                        break;
-
-                    case 1: // radio
+                 }
+                    
+                 if(type == 1){ // radio
                         var form = $('<form>', attrElem).appendTo(parentId);
                         form.addClass('radio');
                         for(var opt in attrChild){
@@ -803,31 +803,34 @@ var TP = TP || {};
                                 }
                             };
                         })(evnt));
-                        break;
+                    }
 
-                    case 2: // checkbox
-                        var form = $('<form>', tab[k][1]).appendTo(parentId);
+                    if (type == 2 || type =="checkbox") 
+                    {// checkbox
+                        
+                        var form = $('<form>', attrElem).appendTo(parentId);
                         form.addClass('checkbox');
-                        for(opt in attrChild){
-                            $('<input/>',{type:"checkbox",name:attrChild[opt].name, value:attrChild[opt].value, text:attrChild[opt].text}).appendTo(form);
+                        for(var opt in attrChild){
+                            var input = $('<input/>',attrChild[opt]).appendTo(form);
+                            input.attr("type","checkbox");
                             $('<label/>',{text:attrChild[opt].text}).appendTo(form);
                             $(form).append("<br/>");
                         }
 
-                        $('#'+attrElem.id+' input').click((function (e) {
+                        $('#'+attrElem.id+' input[type=checkbox]').click((function (e) {
                             return function () {
-                                if ($(this).is(":checked")){
                                     var res = {};
                                      key = $(this).attr('name');
-                                    res[key] = {text:$(this).text(), val:$(this).val()};
+                                    res[key] = {text:$(this).text(), val:$(this).is(":checked")};
                                     //console.log(res)
                                     var c = e ? e.call(res) : null; 
-                                }
                             };
                         })(evnt));
-                        break;
 
-                    case 3: // textfield
+                    }
+
+                    if(type == 3)
+                    { // textfield
                         var div =$('<input/>',tab[k][1]).appendTo(parentId);
                         div.attr("type","text");
 
@@ -841,9 +844,10 @@ var TP = TP || {};
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));                        
-                        break;
+                    }
 
-                    case 4: //slider
+                    if(type == 4)
+                    { //slider
                         var div = $('<div/>',attrElem).appendTo(parentId);
 
                         attrChild.change= ((function (e) { 
@@ -878,9 +882,10 @@ var TP = TP || {};
                         })(evnt));
 
                         div.slider(attrChild);
-                        break;
+                 }
 
-                    case 5: //spinner
+                 if(type == 5)
+                 { //spinner
                         var div = $('<input/>', attrElem).appendTo(parentId);
 
                         div.spinner(attrChild);
@@ -896,16 +901,18 @@ var TP = TP || {};
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
-                        break;
+                }
 
-                    case 6: //color picker
+                if (type == 6)
+                { //color picker
                         var div = $('<div/>', attrElem).appendTo(parentId);
                         //par.append(tab[k][4])
                         var f = $.farbtastic('#'+attrElem.id);
                         f.linkTo(tab[k][5].func);
-                        break;
+                }
 
-                    case 7: //autocomplete
+                if (type == 7)
+                { //autocomplete
                         var div = $('<input/>',attrElem).appendTo(parentId);
                         div.autocomplete(attrChild)
                             .bind('focus', function(){
@@ -923,8 +930,12 @@ var TP = TP || {};
                                     var c = evnt ? evnt.call(res) : null;
                             }
                         });
-                        break;
-                    case 8: //simplelider
+                }                    
+
+                if(type == 8)
+                {
+                        
+                     //simplelider
                         var div = $('<div/>',attrElem).appendTo(parentId);
 
                         attrChild.change= ((function (e) { 
@@ -955,8 +966,6 @@ var TP = TP || {};
                         })(evnt));
 
                         div.slider(attrChild);
-                        break;
-
 
                 }
                 par.append(labelSuiv + "<br/>");
