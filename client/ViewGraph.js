@@ -52,6 +52,7 @@ var TP = TP || {};
         __g__.labelFontSize = parameters.labelFontSize;
         __g__.linkCurvature = parameters.linkCurvature;
         __g__.viewRotation = 0;
+        __g__.viewZoomLevel = 0;
         
         __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;

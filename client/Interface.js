@@ -763,7 +763,7 @@ var TP = TP || {};
                     // assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
                 }
                 par.append(labelPrec);
-                if (type == 0){
+                if (type == 0 || type == "select"){
                         // select
                         var div = $('<select>', attrElem).appendTo(parentId);
                         for(var opt in attrChild){
@@ -782,7 +782,7 @@ var TP = TP || {};
                         })(evnt));
                  }
                     
-                 if(type == 1){ // radio
+                 if(type == 1 || type == "radio"){ // radio
                         var form = $('<form>', attrElem).appendTo(parentId);
                         form.addClass('radio');
                         for(var opt in attrChild){
@@ -829,7 +829,7 @@ var TP = TP || {};
 
                     }
 
-                    if(type == 3)
+                    if(type == 3 || type == "textfield")
                     { // textfield
                         var div =$('<input/>',tab[k][1]).appendTo(parentId);
                         div.attr("type","text");
@@ -846,7 +846,7 @@ var TP = TP || {};
                         })(evnt));                        
                     }
 
-                    if(type == 4)
+                    if(type == 4 || type == "slider_range")
                     { //slider
                         var div = $('<div/>',attrElem).appendTo(parentId);
 
@@ -884,7 +884,7 @@ var TP = TP || {};
                         div.slider(attrChild);
                  }
 
-                 if(type == 5)
+                 if(type == 5 || type == "spinner")
                  { //spinner
                         var div = $('<input/>', attrElem).appendTo(parentId);
 
@@ -903,7 +903,7 @@ var TP = TP || {};
                         })(evnt));
                 }
 
-                if (type == 6)
+                if (type == 6 || type == "colorpicker")
                 { //color picker
                         var div = $('<div/>', attrElem).appendTo(parentId);
                         //par.append(tab[k][4])
@@ -911,7 +911,7 @@ var TP = TP || {};
                         f.linkTo(tab[k][5].func);
                 }
 
-                if (type == 7)
+                if (type == 7 || type == "autocomplete")
                 { //autocomplete
                         var div = $('<input/>',attrElem).appendTo(parentId);
                         div.autocomplete(attrChild)
@@ -932,7 +932,7 @@ var TP = TP || {};
                         });
                 }                    
 
-                if(type == 8)
+                if(type == 8 || type == "simpleslider")
                 {
                         
                      //simplelider
@@ -951,6 +951,7 @@ var TP = TP || {};
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
+                        
                         attrChild.slide= ((function (e) { 
                             return function () {
                                 var res = {};
@@ -967,6 +968,13 @@ var TP = TP || {};
 
                         div.slider(attrChild);
 
+                }
+                if (type == "free"){
+                    //var div = $('<div/>',attrElem).appendTo(parentId);
+                    //console.log(attrElem, attrChild.html)
+                    parentId.append(attrChild.html);
+                    attrChild.code.call();
+                    
                 }
                 par.append(labelSuiv + "<br/>");
             }

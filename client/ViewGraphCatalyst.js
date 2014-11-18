@@ -9,6 +9,40 @@ var TP = TP || {};
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
         
+        var zoomCombined = 
+        [
+            ["free", {id:"zoomAll"}, 
+                                     {html:"<button id='zout'>-</button>\
+                                            <div id='zslider'></div>\
+                                            <button id='zin'>+</button>", 
+                                      code:function(){
+                                           $(function() {
+                                                $( "#zslider").slider({min:-100, max:100, value:0});
+                                            });
+                                            $("#zslider").css({width:"70%", display: "inline-block"});
+                                            $("#zout").on("click", function()
+                                            {
+                                                 __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                            });
+                                            $("#zin").on("click", function()
+                                            {
+                                                 __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                            });
+                                           $("#zslider").on("slide", function(v,u){
+                                               if (u.value == 0){
+                                                   __g__.viewZoomLevel = 0;
+                                                }
+                                                var delta = u.value - __g__.viewZoomLevel;
+                                                __g__.viewZoomLevel = u.value;
+                                                __g__.getController().sendMessage("runZoom", {wheelDelta: delta, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                                 
+                                           }); 
+                                        }
+                                      }
+         ] 
+        ];
+
+        
         var linkCurvatureSlide = 
         [
             [8, {id:"linkCurvatureSlide"},{
@@ -236,20 +270,15 @@ var TP = TP || {};
             {interactorLabel:'Hide links', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("Hide links")
             }}, interactorGroup:"View"},
-            {interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("arrangeLabels")
-            }}, interactorGroup:"View"},
-            {interactorLabel:'Zoom in', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-            }}, interactorGroup:"View"},
-            {interactorLabel:'Zoom out', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]})
-            }}, interactorGroup:"View"},
+            //{interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
+            //    __g__.getController().sendMessage("arrangeLabels")
+            //}}, interactorGroup:"View"},
     
-            {interactorLabel:'Size mapping scale', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
+            {interactorLabel:'Scale node size', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
                __g__.getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales})
             }}, interactorGroup:"View"},
     
+            {interactorLabel:'Zoom', interactorParameters: zoomCombined, callbackBehavior:null, interactorGroup:"View"},
             {interactorLabel:'Color settings', interactorParameters: colorSettings, callbackBehavior:null, interactorGroup:"View"},
             
     
