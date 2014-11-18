@@ -73,49 +73,49 @@ var TP = TP || {};
 
         __g__.getHighlightSelection = function () {
             return highlightSelection;
-        }
+        };
 
         __g__.setHighlightSelection = function (_selection) {
             highlightSelection = _selection;
-        }
+        };
 
         __g__.getSourceSelection = function () {
             return sourceSelection;
-        }
+        };
 
         __g__.setSourceSelection = function (_selection) {
             sourceSelection = _selection;
-        }
+        };
         __g__.getTargetSelection = function () {
             return targetSelection;
-        }
+        };
 
         __g__.setTargetSelection = function (_selection) {
             targetSelection = _selection;
-        }
+        };
 
         __g__.getPreviousHighlightSelection = function () {
             return previousHighlightSelection;
-        }
+        };
 
         __g__.setPreviousHighlightSelection = function (_selection) {
             previousHighlightSelection = _selection;
-        }
+        };
 
         __g__.getPreviousSourceSelection = function () {
             return previousSourceSelection;
-        }
+        };
 
         __g__.setPreviousSourceSelection = function (_selection) {
             previousSourceSelection = _selection;
-        }
+        };
         __g__.getPreviousTargetSelection = function () {
             return previousTargetSelection;
-        }
+        };
 
         __g__.setPreviousTargetSelection = function (_selection) {
             previousTargetSelection = _selection;
-        }
+        };
 
         __g__.interactorListTreatment = function () {
 
@@ -127,31 +127,31 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
 
             }
-        }
+        };
 
         __g__.getSvg = function () {
             return __g__.svg;
-        }
+        };
 
         __g__.getGraphDrawing = function () {
             return __g__.graphDrawing;
-        }
+        };
 
         __g__.getTabLinks = function () {
             return __g__.tabLinks;
-        }
+        };
 
         __g__.viewInitialized = function () {
             return __g__.viewInitialized;
-        }
+        };
 
         __g__.getName = function () {
             return __g__.name;
-        }
+        };
 
         __g__.getID = function () {
             return __g__.ID;
-        }
+        };
 
         __g__.addAssociatedView = function (linkType, view) {
             if (__g__.tabLinks[linkType] != null) {
@@ -161,7 +161,7 @@ var TP = TP || {};
                 __g__.tabLinks[linkType] = new Array();
                 __g__.tabLinks[linkType].push(view);
             }
-        }
+        };
 
 
         __g__.getAssociatedView = function (linkType) {
@@ -173,15 +173,15 @@ var TP = TP || {};
             }
             else
                 return null;
-        }
+        };
 
         __g__.getType = function () {
             return __g__.typeView;
-        }
+        };
 
         __g__.getController = function () {
             return __g__.controller;
-        }
+        };
 
 
         __g__.updateLinks = function (idSourceAssociatedView)
@@ -191,7 +191,7 @@ var TP = TP || {};
                 tmp.addAssociatedView(__g__.typeView, __g__);
                 __g__.addAssociatedView(tmp.getType(), tmp);
             }
-        }
+        };
 
         __g__.buildLinks = function () {
             if (__g__.idSourceAssociatedView != null) {
@@ -212,7 +212,7 @@ var TP = TP || {};
 
                 }
             }
-        }
+        };
 
 
         __g__.createDialog = function () {
@@ -282,20 +282,20 @@ var TP = TP || {};
 
 
             if (__g__.typeView === "substrate") {
-                __g__.titlebar.addClass("active")
+                __g__.titlebar.addClass("active");  
             }
 
 
             __g__.dialog.parent().click(function () {
-                var oldID = TP.Context().activeView
+                var oldID = TP.Context().activeView;
                 TP.Context().activeView = __g__.ID;
                 //console.log("hashbuttons: ", __g__.hashButton)
                 if (oldID != TP.Context().activeView) {
-                    TP.Context().InterfaceObject.interactionPane(__g__.hashInteractorList, 'update')
-                    TP.Context().InterfaceObject.visuPane(__g__.hashInteractorList, 'update')
+                    TP.Context().InterfaceObject.interactionPane(__g__.hashInteractorList, 'update');
+                    TP.Context().InterfaceObject.visuPane(__g__.hashInteractorList, 'update');
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
-                TP.Context().InterfaceObject.attachInfoBox(__g__.ID)
+                TP.Context().InterfaceObject.attachInfoBox(__g__.ID);
                 // $('.ui-dialog-titlebar').each(function () {
                 //     $(this).removeClass('active')
                 //     // $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
@@ -306,20 +306,20 @@ var TP = TP || {};
 
             __g__.dialog.parent().mousedown(function(){
                 $('.ui-dialog-titlebar').each(function () {
-                    $(this).removeClass('active')
+                    $(this).removeClass('active');
                     // $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
-                })
-                __g__.titlebar.addClass('active')
+                });
+                __g__.titlebar.addClass('active');
 
-            })
-            $("#zone" + __g__.ID).parent().appendTo("#container")
+            });
+            $("#zone" + __g__.ID).parent().appendTo("#container");
 
             $('#zone' + __g__.ID).parent().find('.ui-dialog-titlebar-close').click(function(){
                 $('#zone' + __g__.ID).remove();
-            })
+            });
 
 
-        }
+        };
 
             __g__.updateOtherViews = function(obj, message){ //propagation of updateEvent
 
@@ -339,7 +339,7 @@ var TP = TP || {};
                         }
                     }
                 }
-            }
+            };
 
 
         __g__.removeViewTemplate = function () {
@@ -360,13 +360,13 @@ var TP = TP || {};
             __g__.titlebar = null;
             __g__.idSourceAssociatedView = null;
 
-        }
+        };
         
         __g__.addView = function () {
-        }
+        };
 
         return __g__;
-    }
+    };
 
     TP.ViewTemplate = ViewTemplate;
     
