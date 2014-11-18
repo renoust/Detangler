@@ -631,6 +631,44 @@ var TP = TP || {};
             return 'menu-' + menuNum;
         };
 
+        this.interactorsPane = function(buttons, mode)
+        {
+            console.log("adding here")
+            var menu, tgbutton, content, fam, i = 0;
+
+            if (mode === 'update') {
+                for (i = 0; i < contxt.menuNum; i++) {
+                    if ($('.header-menu').eq(i).text() === 'Interactors') {
+                        content = $('.header-menu').eq(i).siblings('.menu-content');
+                        document.getElementById(content.attr('id')).innerHTML = '';
+                    }
+                }
+            } else if (mode === 'create') {
+                menu = this.addPanelMenu('Interactors');
+                $('#' + menu).css('z-index', 202);
+                tgbutton = $('#' + menu).find('.toggleButton');
+                tgbutton.addClass('open');
+                $('<h3/>', {text: 'Interactors'}).appendTo(tgbutton);
+                content = $("#" + menu + " .menu-content");
+            }            
+            $('<ul/>', {id: 'nav',class:'nav'}).appendTo(content);
+
+            if (buttons.hasOwnProperty('undefined')){
+                this.createArrayButtons(buttons.undefined,'nav');
+            }
+            i = 0;
+            for (var key in buttons) {
+                if(key!="Interactor" && key!="View" && key!='undefined'){
+
+                    fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
+                    $('<a/>', {text: key}).appendTo(fam);
+                    $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
+                    this.createArrayButtons(buttons[key], 'family-' + i);
+                    i++;
+                }
+            }
+            this.toggleAccordion('nav');
+        };
 
         this.interactionPane = function (buttons, mode) {
             // assert(true, 'Interface -> interactionPane') 

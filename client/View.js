@@ -282,6 +282,8 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.interactionPane(hashButton, 'create');
                 TP.ObjectReferences().InterfaceObject.infoPane();
                 TP.ObjectReferences().InterfaceObject.visuPane();
+                TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
+                
             }
 
             var elem = document.getElementById("bouton" + ID);
