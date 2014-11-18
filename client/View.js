@@ -73,33 +73,33 @@ var TP = TP || {};
 
         __g__.getTabLinks = function () {
             return tabLinks;
-        }
+        };  
 
         __g__.setTypeEvent = function (name, typeEvent) {
             tabTypeEvent[name] = typeEvent;
-        }
+        };
 
         __g__.getGraphDrawing = function () {
             return graphDrawing;
-        }
+        };
 
 
         __g__.viewInitialized = function () {
             return viewInitialized;
-        }
+        };  
 
         __g__.getGraph = function () {
             return graph;
-        }
+        };
 
         __g__.getName = function () {
             return name;
-        }
+        };
 
         __g__.getID = function () {
             //return name;
             return ID;
-        }
+        };
 
         __g__.setAssociatedView = function (linkType, view) {
             if (tabLinks[linkType] != null) {
@@ -109,7 +109,7 @@ var TP = TP || {};
                 tabLinks[linkType] = new Array();
                 tabLinks[linkType].push(view);
             }
-        }
+        };
 
 
         __g__.getAssociatedView = function (linkType) {
@@ -121,132 +121,132 @@ var TP = TP || {};
             }
             else
                 return null;
-        }
+        };
 
 
         __g__.getType = function () {
             return typeView;
-        }
+        };
 
 
         __g__.getDataTranslation = function () {
             return DataTranslation;
-        }
+        };
 
         __g__.setDataTranslation = function (value) {
             DataTranslation = value;
-        }
+        };
 
 
         __g__.setMetric_BC = function (value) {
             metric_BC = value;
-        }
+        };
 
         __g__.getMetric_BC = function () {
             return metric_BC;
-        }
+        };
 
         __g__.setMetric_SP = function (value) {
             metric_SP = value;
-        }
+        };
 
         __g__.getMetric_SP = function () {
             return metric_SP;
-        }
+        };
 
         __g__.setLasso = function (value) {
             lasso = value;
-        }
+        };
 
         __g__.getLasso = function (value) {
             return lasso;
-        }
+        };
 
         __g__.getController = function () {
             return controller;
-        }
+        };
 
         __g__.getSvg = function () {
             return svg;
-        }
+        };
 
         __g__.getNodesColor = function () {
             return nodesColor;
-        }
+        };
 
         __g__.setNodesColor = function (value) {
             nodesColor = value;
-        }
+        };
 
         __g__.getLinksColor = function () {
             return linksColor;
-        }
+        };
 
         __g__.setLinksColor = function (value) {
             linksColor = value;
-        }
+        };
 
         __g__.getBgColor = function () {
             return bgColor;
-        }
+        };
 
         __g__.setBgColor = function (value) {
             bgColor = value;
-        }
+        };
 
 
         __g__.getLabelsColor = function () {
             return labelsColor;
-        }
+        };
 
         __g__.setLabelsColor = function (value) {
             labelsColor = value;
-        }
+        };
 
         __g__.getViewNodes = function () {
             return viewNodes;
-        }
+        };
 
         __g__.getSelectMode = function () {
             return selectMode;
-        }
+        };
 
         __g__.setSelectMode = function (value) {
             selectMode = value;
-        }
+        };
 
         __g__.getMoveMode = function () {
             return moveMode;
-        }
+        };
 
         __g__.setMoveMode = function (value) {
             moveMode = value;
-        }
+        };
 
         __g__.getShowLabels = function () {
             return showLabels;
-        }
+        };
 
         __g__.setShowLabels = function (value) {
             showLabels = value;
-        }
+        };
 
 
         __g__.getShowLinks = function () {
             return showLinks;
-        }
+        };
 
         __g__.setShowLinks = function (value) {
             showLinks = value;
-        }
+        };
 
         __g__.getNodeInformation = function () {
             return nodeInformation;
-        }
+        };
 
         __g__.setNodeInformation = function (value) {
             nodeInformation = value;
-        }
+        };
 
 
         __g__.addView = function () {
@@ -369,18 +369,18 @@ var TP = TP || {};
             //$("#toggle"+ID).click(function_event)_event.type = tabTypeEvent["toggle"+ID]; $("#principalController").trigger(tabTypeEvent["toggle"+ID], [{type:event.type, viewBase_event.data},_event]);})
 
 
-            var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
+            var minWidth = dialog.parents('.ui-dialog').find('.ui-dialog-title').width();
             dialog.parents('.ui-dialog').find('.ui-button').each(function () {
-                minWidth += $(this).width()
-            })
-            dialog.dialog({minWidth: minWidth + 25})
+                minWidth += $(this).width();
+            });
+            dialog.dialog({minWidth: minWidth + 25});
 
             if (typeView === "substrate") {
-                titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
+                titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x");
             }
 
             dialog.parent().click(function () {
-                var oldID = TP.Context().activeView
+                var oldID = TP.Context().activeView;
                 TP.Context().activeView = ID;
 
                 if (oldID != TP.Context().activeView) {
@@ -389,11 +389,11 @@ var TP = TP || {};
                 }
                 TP.Context().InterfaceObject.addInfoButton(__g__);
 
-                TP.Context().InterfaceObject.attachInfoBox()
+                TP.Context().InterfaceObject.attachInfoBox();
                 $('.ui-dialog-titlebar').each(function () {
-                    $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x")
-                })
-                titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x")
+                    $(this).css('background', "url(css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x");
+                });
+                titlebar.css('background', "url(css/smoothness/images/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x");
                 /*
                  var num = 0;
                  $(".arrayButtons").remove();
@@ -488,7 +488,7 @@ var TP = TP || {};
                 TP.Context().GroupOfView[viewGroup][typeView] = __g__;
             }*/
 
-            $("#zone" + ID).parent().appendTo("#container")
+            $("#zone" + ID).parent().appendTo("#container");
 
             viewInitialized = 1;
 
@@ -498,7 +498,7 @@ var TP = TP || {};
 
 //     	 d3.select("#zone"+ID)[0][0].addEventListener("mousedown", function(){TP.Context().getViewEvent(__g__.id.split("zone")[1]);}, false);
 //     	 d3.select("#zone"+ID)[0][0].addEventListener("mouseup", function(){TP.Context().delSelectionView();}, false);
-        }
+        };
 
         __g__.buildLinks = function () {
             if (idAssociation != null) {
@@ -523,7 +523,7 @@ var TP = TP || {};
 
 
             }
-        }
+        };
 
         __g__.remove = function () {
 
@@ -575,10 +575,10 @@ var TP = TP || {};
             type = null;
             idAssociation = null;
             graphDrawing = null;
-        }
+        };
 
         return __g__;
 
-    }
+    };
     TP.View = View;
 })(TP);
