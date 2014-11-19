@@ -1042,6 +1042,22 @@ var TP = TP || {};
             //console.log(objectReferences.ClientObject.getSelection(cAssociatedView.getID()));
             objectReferences.ClientObject.syncGraph(objectReferences.ClientObject.getSelection(cAssociatedView.getID()), cAssociatedView.getID());
         };
+        
+        this.searchInNodes = function (prop, val, _currentViewID)
+        {
+            if (!prop || !val) return;
+            var cView = TP.Context().view[_currentViewID];
+            var cGraph = cView.getGraph();
+            var graph_drawing = cView.getGraphDrawing();
+            nodeList = [];
+            cGraph.nodes().forEach(function(d){
+                if (String(d[prop]).indexOf(String(val))>-1 )
+                    nodeList.push(d.baseID); 
+            });
+            graph_drawing.resetSelection();
+            graph_drawing.setSelection(nodeList);
+            return nodeList;  
+        };
 
 
         // Removes the lasso interactor from a specific svg target's callbacks 

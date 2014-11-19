@@ -54,6 +54,9 @@ var TP = TP || {};
         __g__.viewRotation = 0;
         __g__.viewZoomLevel = 0;
         
+        __g__.searchProperty = null;
+        __g__.searchQuery = null;
+        
         __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;
         __g__.dataTranslation = null;

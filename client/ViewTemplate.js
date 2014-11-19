@@ -124,7 +124,7 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.infoPane();
                 TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashInteractorList,'create');
                 TP.ObjectReferences().InterfaceObject.togglePanelMenu();
-                TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
+                //TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
 
             }
         };

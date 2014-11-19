@@ -869,11 +869,13 @@ var TP = TP || {};
 
                     if(type == 3 || type == "textfield")
                     { // textfield
-                        var div =$('<input/>',tab[k][1]).appendTo(parentId);
+                        
+                        var div =$('<input/>',attrElem).appendTo(parentId);
                         div.attr("type","text");
 
-                        var id = div[0].id;
-                        div.change((function (e) {
+                        var id = attrElem.id;
+                        $('#'+attrElem.id).
+                         change((function (e) {
                             return function () {
                                 var res = {};
                                 var key = this.id;
@@ -962,10 +964,12 @@ var TP = TP || {};
                         div.autocomplete({
                             select: function (e, ui) {
                                     key = this.id;
-                                    //console.log(key)
                                     res[key] = ui.item.value;
-                                    //console.log(res, event);
-                                    var c = evnt ? evnt.call(res) : null;
+                                    //var c = (evnt && evnt != undefined) ? evnt.call(res) : null;
+                                    if(evnt && evnt != undefined)
+                                    {
+                                        evnt.call(res);
+                                    }
                             }
                         });
                 }                    
@@ -1011,7 +1015,8 @@ var TP = TP || {};
                     //var div = $('<div/>',attrElem).appendTo(parentId);
                     //console.log(attrElem, attrChild.html)
                     parentId.append(attrChild.html);
-                    attrChild.code.call();
+                    if (attrChild.code)
+                        attrChild.code.call();
                     
                 }
                 par.append(labelSuiv + "<br/>");
