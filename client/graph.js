@@ -34,8 +34,8 @@ var TP = TP || {};
                 g.nodes_array.push(jQuery.extend(true, {}, d));
             });
             g.nodes_array.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             return g.nodes_array;
         };
 
@@ -47,15 +47,15 @@ var TP = TP || {};
                 g.nodes_array.push(jQuery.extend(true, {}, d));
             });
             g.nodes_array.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             return g.nodes_array;
         };
 
         this.updateNodes = function (nodes, updateExisting) {
             var newArray = [];
             nodes.sort(function (a, b) {
-                return a.baseID - b.baseID
+                return a.baseID - b.baseID;
             });
             if (nodes.length != g.nodes_array.length) {
                 assert(false, "updateNodes, cannot match both arrays, what should I do?");
@@ -69,14 +69,14 @@ var TP = TP || {};
                 }
             });
 
-        }
+        };
 
         this.subsetNodes = function (nodes, type) {
             var newArray = [];
             var baseIDArray = [];
             nodes.forEach(function (n) {
                 baseIDArray.push(n.baseID);
-            })
+            });
 
             g.nodes_array.forEach(function (d, i) {
                 if (baseIDArray.indexOf(d.baseID) != -1) {
@@ -87,7 +87,7 @@ var TP = TP || {};
 
             g.nodes_array = newArray;
             return g.nodes_array;
-        }
+        };
 
 
         this.subsetLinks = function (links, type) {
@@ -95,7 +95,7 @@ var TP = TP || {};
             var baseIDArray = [];
             links.forEach(function (n) {
                 baseIDArray.push(n.baseID);
-            })
+            });
 
             g.links_array.forEach(function (d, i) {
                 if (baseIDArray.indexOf(d.baseID) != -1) {
@@ -106,14 +106,14 @@ var TP = TP || {};
 
             g.links_array = newArray;
             return g.links_array;
-        }
+        };
 
         this.updateNodeAttributes = function (nodes, _attributes, updateExisting) {
             //attributes should be of the form [{in:name_in, out:name_out}], out is optional
-            var newArray = []
+            var newArray = [];
             nodes.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             if (nodes.length != g.nodes_array.length) {
                 assert(false, "updateNodes, cannot match both arrays, what should I do?");
             }
@@ -127,29 +127,29 @@ var TP = TP || {};
                     //console.log(keys, _attributes)
                     var keyIn = keys["in"];
                     if (keyIn in nodes[i]) {
-                        var keyOut = keyIn
+                        var keyOut = keyIn;
                         if ("out" in keys)
                             keyOut = keys["out"];
 
                         if (updateExisting || !(keyOut in d)) {
-                            d[keyOut] = nodes[i][keyIn]
+                            d[keyOut] = nodes[i][keyIn];
                         }
                     }
                 }
             });
 
-        }
+        };
 
 
         this.updateLinkAttributes = function (links, _attributes, updateExisting) {
             //attributes should be of the form [{in:name_in, out:name_out}], out is optional
 
-            var newArray = []
+            var newArray = [];
             links.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             if (links.length != g.links_array.length) {
-                assert(false, "updateLinks, cannot match both arrays, what should I do?")
+                assert(false, "updateLinks, cannot match both arrays, what should I do?");
             }
 
             g.links_array.forEach(function (d, i) {
@@ -158,42 +158,42 @@ var TP = TP || {};
 
                 for (var j = 0; j < end; j++)//nodes[i])
                 {
-                    var keys = _attributes[j]
+                    var keys = _attributes[j];
                     var keyIn = keys["in"];
                     if (keyIn in links[i]) {
-                        var keyOut = keyIn
+                        var keyOut = keyIn;
                         if ("out" in keys)
                             keyOut = keys["out"];
 
                         if (keyOut != "source" && keyOut != "target" && (updateExisting || !(keyOut in d))) {
-                            d[keyOut] = links[i][keyIn]
+                            d[keyOut] = links[i][keyIn];
                         }
                     }
                 }
 
             });
 
-        }
+        };
 
 
         this.updateLinks = function (links, updateExisting) {
-            var newArray = []
+            var newArray = [];
             links.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             if (links.length != g.links_array.length) {
-                assert(false, "updateLinks, cannot match both arrays, what should I do?")
+                assert(false, "updateLinks, cannot match both arrays, what should I do?");
             }
 
             g.links_array.forEach(function (d, i) {
                 for (var key in links[i]) {
                     if (key != "source" && key != "target" && (updateExisting || !(key in d))) {
-                        d[key] = links[i][key]
+                        d[key] = links[i][key];
                     }
                 }
             });
 
-        }
+        };
 
 
         // setter/getter (with/without argument) of the link array
@@ -204,7 +204,7 @@ var TP = TP || {};
                 return g.links_array;
             //console.log("Reassigning edges");
 
-            g.links_array = []
+            g.links_array = [];
             x.forEach(function (d) {
                 g.links_array.push(jQuery.extend(true, {}, d));
                 var o = g.links_array[g.links_array.length - 1];
@@ -217,8 +217,8 @@ var TP = TP || {};
                     o.target = o.target.baseID;
             });
             g.links_array.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             return g.links_array;
         };
 
@@ -232,8 +232,8 @@ var TP = TP || {};
                 g.links_array.push(jQuery.extend(true, {}, d));
             });
             g.links_array.sort(function (a, b) {
-                return a.baseID - b.baseID
-            })
+                return a.baseID - b.baseID;
+            });
             return g.links_array;
         };
 
@@ -267,7 +267,7 @@ var TP = TP || {};
                     [l.target];
             }
             //console.log("The binding: ", g.links_array);
-        }
+        };
 
 
         this.specialEdgeBinding = function (sourceType, targetType) {
@@ -292,7 +292,7 @@ var TP = TP || {};
                     [l.target];
             }
             //console.log("The binding: ", g.links_array);
-        }
+        };
 
 
         // previous binding based on indexing (d3.force) inspired
@@ -317,21 +317,21 @@ var TP = TP || {};
                 if (typeof o.target == "number")
                     o.target = g.nodes_array[o.target];
             }
-        }
+        };
                 
         this.opposite= function (sourceNode, sourceLink)
         {
             if (sourceLink.source == sourceNode)
-                return sourceLink.target
+                return sourceLink.target;
             if (sourceLink.target == sourceNode)
-                return sourceLink.source
-            return null
-        }
+                return sourceLink.source;
+            return null;
+        };
         
         this.neighborhood = function (sourceNode){
             var m = g.links_array.length;
-            var returnLinks = []
-            var returnNodes = []
+            var returnLinks = [];
+            var returnNodes = [];
             for(var i =0; i<m; ++i){
                o = g.links_array[i];
                if (o.source == sourceNode || o.target == sourceNode)
@@ -340,11 +340,11 @@ var TP = TP || {};
                     returnNodes.push(g.opposite(sourceNode,o));
                } 
             }
-            return {nodes:returnNodes, links:returnLinks}
-        }
+            return {nodes:returnNodes, links:returnLinks};
+        };
 
 
         return g;
-    }
+    };
     TP.Graph = Graph;
 })(TP);
