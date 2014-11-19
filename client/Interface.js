@@ -66,15 +66,20 @@ var TP = TP || {};
             var type = view[view.length - 1];
             var nbElements = Object.keys(TP.Context().substrateProperties).length;
             var formString = "";
-            formString += "<p> GLOBAL INFORMATIONS: </p>" +
+            formString += (function(){
+                var res = "<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
                 "<li> File : " + file + "</li>" +
                 "<li> View : " + type + "</li>" +
                 "<li> - " + cGraph.nodes().length + " nodes </li>" +
-                "<li> - " + cGraph.links().length + " links </li>" +
-                "</ul>"+
-                "<form><select id=weightPropSel>" +
+                "<li> - " + cGraph.links().length + " substrate links </li>";
+                var nbLinks = cGraph.updateMultiplexLinks();
+                if (nbLinks > 0)
+                    res += "<li> - " + nbLinks + " multiplex links </li>";
+                res += "</ul>"+
+                "<br/>Weight property: <form><select id=weightPropSel>" +
                 " <option value=\"\"><i>--</i></option>";
+                return res;})();
 
             Object.keys(TP.Context().substrateProperties)
                 .forEach(function (k, i) {

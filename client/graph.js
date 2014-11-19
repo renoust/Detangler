@@ -21,6 +21,7 @@ var TP = TP || {};
         this.nodes_array = [];
         this.links_array = [];
         this.type;
+        this.multiplexLinks = 0;
 
         // setter/getter (with/without argument) of the node array 
         // x: an array of nodes
@@ -236,6 +237,36 @@ var TP = TP || {};
             });
             return g.links_array;
         };
+                
+        this.updateMultiplexLinks = function()
+        {
+
+                function Object_keys(obj) {
+                    var keys = [],
+                        name;
+                    for (name in obj) {
+                        if (obj.hasOwnProperty(name)) {
+                            keys.push(name);
+                        }
+                    }
+                    return keys;
+                };
+          
+          g.multiplexLinks = 0;
+          g.links_array.forEach(function(l){
+              if(l["descriptors"] != undefined && l["descriptors"] != "")
+              {
+                  var dList = l["descriptors"].split(';');
+                  if (dList)
+                  {
+                      g.multiplexLinks += dList.length;
+                  }
+              }
+              
+          });
+          return g.multiplexLinks;  
+        };
+            
 
 
         // this function needs to be called to bind the connected nodes to each
