@@ -67,7 +67,7 @@ var TP = TP || {};
             var currentIntensityColor = d3.rgb("white");
             var currentHomogeneityColor = d3.rgb("black");
 
-            var target_source = CurrentViewID;
+            //var target_source = CurrentViewID;
 
             if (nothing == null) {
 
@@ -107,13 +107,16 @@ var TP = TP || {};
 
                 if (TP.Context().entanglement_homogeneity == 0){ currentHomogeneityColor = oneColor; }
                 if (TP.Context().entanglement_homogeneity == 1){ currentHomogeneityColor = oneColor;}
-
-
                 //$("#bg").css("background-color",d3.rgb(currentIntensityColor));
-                d3.selectAll('#bg').style("background-color",currentIntensityColor);
-
-                $("#bg").css("border-color",d3.rgb(currentHomogeneityColor));
-                //$("#bg").css("opacity",1)
+                if(TP.Context().currentEntanglementInner == "intensity")
+                {
+                    d3.selectAll('#bg').style("background-color",currentIntensityColor);
+                    $("#bg").css("border-color",d3.rgb(currentHomogeneityColor));
+                }else{
+                    d3.selectAll('#bg').style("background-color",currentHomogeneityColor);
+                    $("#bg").css("border-color",d3.rgb(currentIntensityColor));                    
+                }
+                                //$("#bg").css("opacity",1)
                 //$("#entanglement-cont").css("opacity",.5);
 
             }
@@ -136,11 +139,21 @@ var TP = TP || {};
             //                          .style("stroke", brewerSeq[indexH]);
 
 
-            d3.selectAll("rect.view").style("fill", currentIntensityColor)
-                .style("stroke", currentHomogeneityColor);
-            d3.selectAll("rect.brush").style("fill", currentIntensityColor)
-                .style("stroke", currentHomogeneityColor)*TP.Context();
-
+    
+            if(TP.Context().currentEntanglementInner == "intensity")
+            {
+                    d3.selectAll("rect.view").style("fill", currentIntensityColor)
+                        .style("stroke", currentHomogeneityColor);
+                    d3.selectAll("rect.brush").style("fill", currentIntensityColor)
+                        .style("stroke", currentHomogeneityColor)*TP.Context();
+            }
+            else
+            {
+                d3.selectAll("rect.view").style("fill", currentHomogeneityColor)
+                        .style("stroke", currentIntensityColor);
+                    d3.selectAll("rect.brush").style("fill", currentHomogeneityColor)
+                        .style("stroke", currentIntensityColor)*TP.Context();
+            }
 
             //d3.selectAll("polygon.brush").style("fill", brewerSeq[index])
 
@@ -153,13 +166,22 @@ var TP = TP || {};
 
                 if (TP.Context().view[k].getType() in {"substrate":0, "catalyst":0})
                 {
-                    //console.log("svg found: ", TP.Context().view[k].getSvg())
-                    TP.Context().view[k].getSvg()
-                        .selectAll(".lasso")
-                            //.style('fill',brewerSeq[indexI])
-                            //.style('stroke', brewerSeq[indexH]);
-                            .style('fill', currentIntensityColor)
-                            .style('stroke', currentHomogeneityColor);
+                    if(TP.Context().currentEntanglementInner == "intensity")
+                    {
+                        //console.log("svg found: ", TP.Context().view[k].getSvg())
+                        TP.Context().view[k].getSvg()
+                            .selectAll(".lasso")
+                                //.style('fill',brewerSeq[indexI])
+                                //.style('stroke', brewerSeq[indexH]);
+                                .style('fill', currentIntensityColor)
+                                .style('stroke', currentHomogeneityColor);
+                    }else{
+                        TP.Context().view[k].getSvg()
+                            .selectAll(".lasso")
+                                .style('fill', currentHomogeneityColor)
+                                .style('stroke', currentIntensityColor);
+                        
+                    }
 
                 }
             });

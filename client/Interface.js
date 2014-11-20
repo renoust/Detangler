@@ -617,6 +617,29 @@ var TP = TP || {};
             var menuNum = contxt.menuNum++;
             $('#bg').css('border-width','12px');
             $('#bg').css({'height':'51px', 'width':'276px'});
+            $("#entanglement").on("click", function(){
+                if(TP.Context().currentEntanglementInner=="intensity")
+                {
+                    TP.Context().currentEntanglementInner="homogeneity";
+                    //d3.selectAll('#bg').style("background-color",TP.Context().currentHomogeneityColor);
+                    //$("#bg").css("border-color",d3.rgb(TP.Context().currentIntensityColor));                    
+
+                }else{
+                    TP.Context().currentEntanglementInner="intensity";
+                    //d3.selectAll('#bg').style("background-color",TP.Context().currentIntensityColor);
+                    //$("#bg").css("border-color",d3.rgb(TP.Context().currentHomogeneityColor));                    
+
+                }
+                
+                var entul=$('#entul');
+                entul.children().each(
+                    function(i,li){entul.prepend(li);}
+                );
+                
+                objectReferences.VisualizationObject.entanglementCaught(0,null);
+                })
+                ;
+
             if($('#entValues').length < 1)
                 $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
@@ -638,7 +661,6 @@ var TP = TP || {};
 
         this.interactorsPane = function(buttons, mode)
         {
-            console.log("adding here")
             var menu, tgbutton, content, fam, i = 0;
 
             if (mode === 'update') {
@@ -727,16 +749,28 @@ var TP = TP || {};
             $('<div/>', {id: 'infoView'}).appendTo('#' + content.attr('id'));
 
 
-            document.getElementById('entanglement-cont').innerHTML +=
-                "<div id='bg'></div>" +
+            document.getElementById('entanglement-cont').innerHTML += 
+            (function()
+            {
+                var res = "<div id='bg'></div>" +
                     "<div id='entanglement'>" +
                     "<p>ENTANGLEMENT:</br>" +
-                    "<ul type='none' style:'margin-top:2px'>" +
-                    "<li>Intensity: <text id='intensity'></text></br></li>" +
-                    "<li>Homogeneity: <text id='homogeneity'></text></li>" +
-                    "</ul>" +
+                    "<ul id= 'entul' type='none' style:'margin-top:2px'>";
+                if(TP.Context().currentEntanglementInner=="intensity")
+                {    
+                    res += "<li>Intensity: <text id='intensity'></text></br></li>" +
+                    "<li>Homogeneity: <text id='homogeneity'></text></li>" ;
+                }else{
+                    res += 
+                        "<li>Homogeneity: <text id='homogeneity'></text></li>" +
+                        "<li>Intensity: <text id='intensity'></text></br></li>" ;
+                    
+                }    
+                res += "</ul>" +
                     "</p>" +
                     "</div>";
+                 return res;
+            })();
             
             $('<div/>', {id: 'infoSync'}).appendTo('#' + content.attr('id'));
             var infoSync = $('#infoSync');
