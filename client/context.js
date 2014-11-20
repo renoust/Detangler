@@ -30,13 +30,13 @@ var TP = TP || {};
 
 
         //URLparameters = document.URL.split("?")[1]
-        indexGURL = document.URL.indexOf("graphurl=")
+        indexGURL = document.URL.indexOf("graphurl=");
         if(indexGURL !=-1)
         {
-            URLaddress = document.URL.substring(indexGURL+9)
+            URLaddress = document.URL.substring(indexGURL+9);
             if (URLaddress.indexOf("?") !=-1)
             {
-                console.log("appending")
+                console.log("appending");
                 __g__.json_address = URLaddress+"&callback=?";
             }else{
                 __g__.json_address = URLaddress+"?callback=?";
@@ -116,7 +116,7 @@ var TP = TP || {};
         __g__.defaultLabelPadding = 1;
         __g__.defaultLabelFontSize = 12;
         __g__.defaultLinkCurvature = 0.20; 
-        __g__.currentOrientation = "vertical"
+        __g__.currentOrientation = "vertical";
 
         __g__.sessionSid = 0;
 
@@ -136,12 +136,12 @@ var TP = TP || {};
         __g__.dataTypes = {none:"NONE",
                            substrate:"SUBSTRATE",
                            catalyst:"CATALYST"
-                           }
+                       };
         
         __g__.viewTypes = {substrate:"SUBSTRATE",
                            catalyst:"CATALYST",
                            barchart:"BARCHART"            
-        }
+        };
         
 
         __g__.getViewGraph = function (viewID) {
@@ -159,7 +159,7 @@ var TP = TP || {};
         {
             var viewID = String(__g__.getIndiceView());
             __g__.view[viewID] = viewInstance;
-        }
+        };
 
 
         __g__.clearInterface = function () {
@@ -192,25 +192,25 @@ var TP = TP || {};
                 __g__.stateStack = [];
 
             }
-        }
+        };
         
         __g__.updateTulipLayoutAlgorithms = function(layoutList)
         {       
             for (var index in layoutList) {
-                key = layoutList[index]
+                key = layoutList[index];
                 if (!(key in __g__.tulipLayoutAlgorithms))
-                    __g__.tulipLayoutAlgorithms[key] = {}
+                    __g__.tulipLayoutAlgorithms[key] = {};
             }
-        }
+        };
         
         __g__.updateTulipDoubleAlgorithms = function(doubleList)
         {       
             for (var index in doubleList) {
-                key = doubleList[index]
+                key = doubleList[index];
                 if (!(key in __g__.tulipDoubleAlgorithms))
-                    __g__.tulipDoubleAlgorithms[key] = {}
+                    __g__.tulipDoubleAlgorithms[key] = {};
             }
-        }
+        };
 
         
         __g__.initStates = function () {
@@ -248,23 +248,23 @@ var TP = TP || {};
             __g__.controller.addEventState("simpleSelectionMade", function(_event){
                 __g__.simpleSelectionReceived(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
-        }
+        };
 
         __g__.simpleSelectionReceived = function(_event)
         {
             TP.Interaction().updateViewFromSimpleSelection(_event.associatedData.associated, _event.associatedData.selection);
-        }
+        };
 
         __g__.initController = function (ID, typeC) {
             __g__.controller.initController(ID, typeC);
-        }
+        };
 
         __g__.getController = function () {
             return __g__.controller;
-        }
+        };
 
         return __g__;
-    }
+    };
 
     TP.Context = Context;
 })(TP);
