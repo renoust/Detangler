@@ -44,8 +44,8 @@ var TP = TP || {};
                 {'in': 'y'}
             ], true);
 
-            var cView = TP.Context().view[viewID] 
-            cView.getGraphDrawing().clear()
+            var cView = TP.Context().view[viewID]; 
+            cView.getGraphDrawing().clear();
             cView.getGraphDrawing().draw();
             cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
 
@@ -150,14 +150,14 @@ var TP = TP || {};
             //    TP.Controller().sendMessage("arrangeLabels", null, getCatalyst, getCatalyst);
             //}
 
-        }
+        };
 
 
         this.buildGraphFromData = function (data, target, forceLinks) { //substrate at bigin of project
 
             //console.log('creating in tulip, and recieved data: ', data)
             //console.log("here should be sid: ", data.data.sid)
-            TP.Context().sessionSid = data.data.sid
+            TP.Context().sessionSid = data.data.sid;
             //console.log("the session sid has just been affected: ", TP.Context().sessionSid);
             //objectReferences.VisualizationObject.rescaleGraph(data)
 
@@ -168,12 +168,12 @@ var TP = TP || {};
 
             var graph = TP.Context().view[target].getGraph();
 
-            graph.nodes(data.nodes, typeGraph) //substrate
-            graph.links(data.links, typeGraph) //substrate
+            graph.nodes(data.nodes, typeGraph); //substrate
+            graph.links(data.links, typeGraph); //substrate
 
             TP.Context().view[target].getGraphDrawing().rescaleGraph(graph);
 
-            graph.edgeBinding() //...
+            graph.edgeBinding(); //...
 
             //graph_drawing.move(TP.Context().view[target].getGraph(), 0)
             TP.Context().view[target].getGraphDrawing().clear();
@@ -182,7 +182,7 @@ var TP = TP || {};
 
             //assert(true, "arrangeLabels appele dans buildgraph")
             //graph_drawing.arrangeLabels();
-        }
+        };
 
 
         this.applySubstrateAnalysisFromData = function (data, target) { //catalyst at bingin of project, without generic programmation
@@ -201,7 +201,7 @@ var TP = TP || {};
                 //console.log(d);
                 if ("entanglementIndex" in d)
                 {
-                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)
+                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision);
                 }
             });
 
@@ -218,14 +218,14 @@ var TP = TP || {};
             TP.Context().view[target].getGraphDrawing().clear();
             TP.Context().view[target].getGraphDrawing().draw();
 
-            TP.Context().entanglement_homogeneity = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision)
-            TP.Context().entanglement_intensity = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision)
+            TP.Context().entanglement_homogeneity = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
+            TP.Context().entanglement_intensity = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
 
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
             objectReferences.VisualizationObject.entanglementCaught(target);
             TP.Context().view[target].getController().sendMessage("sizeMapping", {parameter:"entanglementIndex", idView: target});
-        }
+        };
 
 
         this.applyLayoutFromData = function (data, graphName) {
@@ -255,7 +255,7 @@ var TP = TP || {};
             //TP.Context().view[graphName].getGraphDrawing().draw();
             TP.Context().view[graphName].getGraphDrawing().changeLayout(graph, 0);
 
-        }
+        };
 
 
         this.applyInducedSubGraphFromData = function (data, graphName, rescale) {
@@ -263,7 +263,7 @@ var TP = TP || {};
             var svg = null;
 
             if (!rescale)
-                rescale = false
+                rescale = false;
 
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().view[graphName].getGraph();
@@ -278,8 +278,8 @@ var TP = TP || {};
 
             if (rescale) {
                 TP.Context().view[graphName].getGraphDrawing().rescaleGraph(graph);
-                TP.Context().view[graphName].getGraphDrawing().clear()
-                TP.Context().view[graphName].getGraphDrawing().draw()
+                TP.Context().view[graphName].getGraphDrawing().clear();
+                TP.Context().view[graphName].getGraphDrawing().draw();
             }
 
             var _viewGraphCatalystParameters = {
@@ -290,21 +290,21 @@ var TP = TP || {};
                 labelColor:TP.Context().defaultLabelColor,
                 nodeShape:"circle",
                 type:"catalyst"
-            }
+            };
 
             TP.Context().view[graphName].getController().sendMessage("analyseGraph", (function(){
                 var params = _viewGraphCatalystParameters;
                 params.idSourceAssociatedView = graphName;
                 return {viewIndex: graphName,
-                    viewGraphCatalystParameters: params}
-            })())
-        }
+                    viewGraphCatalystParameters: params};
+            })());
+        };
 
 
         this.applyFloatAlgorithmFromData = function (data, graphName, attributeName, unsetViewMetric) {
 
             if (!attributeName)
-                attributeName = "viewMetric"
+                attributeName = "viewMetric";
 
             //assert(true, "here");;
             TP.Context().view[graphName].getGraph().updateNodeAttributes(data.nodes, [
@@ -365,7 +365,7 @@ var TP = TP || {};
              return d.x;
              });*/
 
-            pileCentrality.TreatmentAction(graphName, "viewMetric"/*,["Libye", "tolerance"]*/)
+            pileCentrality.TreatmentAction(graphName, "viewMetric"/*,["Libye", "tolerance"]*/);
 
 
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));
@@ -374,24 +374,25 @@ var TP = TP || {};
             //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
             //objectReferences.VisualizationObject.entanglementCaught(graphName);
-        }
+        };
 
 
         this.syncGraphRequestFromData = function (data, selection, graphName) {
+            //console.log("in syncGraphRequestFromData line381 UpdateViews");
 
 
             data.nodes.forEach(function(d){
                 //console.log(d);
                 if ("entanglementIndex" in d)
                 {
-                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision)
+                    d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision);
                 }
             });
 
             //console.log("within syncGraphRequestFromData")
 
-            var graph = null
-            var svg = null
+            var graph = null;
+            var svg = null;
             var targetView = null;
 
             var associatedViewFound = false;
@@ -402,7 +403,7 @@ var TP = TP || {};
                 //if(TP.Context().view[graphName].getAssociatedView("catalyst")[0].viewInitialized() == 1){
                 var tmp = TP.Context().view[graphName].getAssociatedView("catalyst");
                 var tmpEvent = {};
-                tmpEvent.associatedData = {}
+                tmpEvent.associatedData = {};
                 tmpEvent.associatedData.catalystList = {} ;
                 data.nodes.forEach(function (d) {
                     //console.log(d)
@@ -447,14 +448,14 @@ var TP = TP || {};
             //console.log("received data after synchronization: ")
             //console.log(data);
 
-            var tempGraph = new TP.Graph()
-            tempGraph.nodes(data.nodes, typeGraph)
-            tempGraph.links(data.links, typeGraph)
+            var tempGraph = new TP.Graph();
+            tempGraph.nodes(data.nodes, typeGraph);
+            tempGraph.links(data.links, typeGraph);
             tempGraph.edgeBinding();
 
 
             if (typeGraph == 'catalyst') {
-                TP.Context().syncNodes = []
+                TP.Context().syncNodes = [];
                 data.nodes.forEach(function (d) {
                     TP.Context().syncNodes.push(d.baseID);
                 });
@@ -464,10 +465,10 @@ var TP = TP || {};
 
             //sets the target view selection as a list of nodes 
             //(later we might want it to be graph)
-            nodeList = []
+            nodeList = [];
             data.nodes.forEach(function (d) {
                 nodeList.push(d.baseID);
-            })
+            });
             //assert(true, "SETTING VIEW TARGET SELECTION");
             //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
             //TP.Context().view[targetView].setTargetSelection(nodeList);
@@ -475,22 +476,21 @@ var TP = TP || {};
 
             //sets the target view selection as a list of nodes 
             //(later we might want it to be graph)
-            nodeList = []
-            data.nodes.forEach(function (d) {
-                nodeList.push(d.baseID);
-            })
+            //nodeList = [];
+            //data.nodes.forEach(function (d) {
+            //    nodeList.push(d.baseID);
+            //});
             //assert(true, "SETTING VIEW TARGET SELECTION");
             //console.log(targetView, TP.Context().view[targetView].getType(), nodeList)
             TP.Context().view[targetView].setTargetSelection(nodeList);
-
-            TP.Context().view[targetView].getGraphDrawing().show(tempGraph)
-
+            TP.Context().view[targetView].getGraphDrawing().show(tempGraph);
 
 
-        }
+
+        };
 
 
         return __g__;
-    }
+    };
     TP.UpdateViews = UpdateViews;
 })(TP);

@@ -619,17 +619,10 @@ var TP = TP || {};
             $('#bg').css({'height':'51px', 'width':'276px'});
             $("#entanglement").on("click", function(){
                 if(TP.Context().currentEntanglementInner=="intensity")
-                {
                     TP.Context().currentEntanglementInner="homogeneity";
-                    //d3.selectAll('#bg').style("background-color",TP.Context().currentHomogeneityColor);
-                    //$("#bg").css("border-color",d3.rgb(TP.Context().currentIntensityColor));                    
 
-                }else{
+                else
                     TP.Context().currentEntanglementInner="intensity";
-                    //d3.selectAll('#bg').style("background-color",TP.Context().currentIntensityColor);
-                    //$("#bg").css("border-color",d3.rgb(TP.Context().currentHomogeneityColor));                    
-
-                }
                 
                 var entul=$('#entul');
                 entul.children().each(
@@ -637,8 +630,7 @@ var TP = TP || {};
                 );
                 
                 objectReferences.VisualizationObject.entanglementCaught(0,null);
-                })
-                ;
+            });
 
             if($('#entValues').length < 1)
                 $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");

@@ -233,6 +233,33 @@ var TP = TP || {};
            return label;
 
         }
+        
+        g.attachNodeInteraction = function()
+        {
+             g.nodeContainer.selectAll("g.node")
+                            .call(d3.behavior.drag()
+                    .on("dragstart", function (d) {
+
+                    })
+                    .on("drag", function (d) {
+                        //TP.Context().view[currentViewID].getController().sendMessage("dragNode", {node: d3.select(this)});
+                    })
+
+                    .on("dragend", function () {
+                        //TP.Context().view[currentViewID].getController().sendMessage("dragNodeEnd", {node: d3.select(this)});
+                    }))
+                .on("click", function (d) {
+                    //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
+                })
+                .on("mouseover", function (d) {
+                    if (g.dragStarted == true) return;
+                    TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
+                })
+                .on("mouseout", function () {
+                    
+                });
+
+        };
 
         // this function draws the nodes using d3
         // we associate to each graph node an svg:g (indexed by baseID)
@@ -263,6 +290,8 @@ var TP = TP || {};
                     d._currentY = d.y;
                     return;
                 })
+                
+                /*
                 .call(d3.behavior.drag()
                     .on("dragstart", function (d) {
 
@@ -276,14 +305,17 @@ var TP = TP || {};
                     }))
                 .on("click", function (d) {
                     //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
-                })
+                })*/
+                
+                /*
                 .on("mouseover", function (d) {
                     if (g.dragStarted == true) return;
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
                 .on("mouseout", function () {
                     
-                })
+                })*/
+               
                 .append("g")
                 .attr("class", function (d) {
                     return d._type;
@@ -701,7 +733,7 @@ var TP = TP || {};
                 d.layout = [[d.source._currentX, d.source._currentY], [d.target._currentX, d.target._currentY]];
             }
             
-            if(TP.Context().view[currentViewID].linkCurvature == 0 || d.shape == "direct")
+            if((TP.Context().view[currentViewID].linkCurvature < 10/100 && TP.Context().view[currentViewID].linkCurvature > -10/100) || d.shape == "direct")
             {
                 d.shape = "straight";
                 d.layout = [[d.source._currentX, d.source._currentY], [d.target._currentX, d.target._currentY]];                
@@ -1180,7 +1212,7 @@ var TP = TP || {};
             // redraw the previous nodes to the default values
             //g.arrangeLabels();
             //g.resetDrawing();
-
+           
             currentView = TP.Context().view[currentViewID];
             currentGlyph = currentView.getViewNodes();
             currentGlyphClass = currentGlyph + ".node";
@@ -1240,11 +1272,24 @@ var TP = TP || {};
             var scaleMin = 3.0;
             var scaleMax = 12.0;
             var parameter = "entanglementIndex";
-
             var valMin = null;
             var valMax = null;
 
-            _graph.nodes()
+            var nodeIDList = []; 
+            var paramMap = {};
+             _graph.nodes().forEach(function(d){
+                 nodeIDList.push(d.baseID);
+                 var val = d[parameter];
+                 paramMap[d.baseID] = val;
+                    if (valMin == null | val < valMin)
+                        valMin = val;
+                    if (valMax == null | val > valMax)
+                        valMax = val;
+
+             });
+
+
+            /*_graph.nodes()
                 .forEach(function (n) {
                     val = eval("n." + parameter);
                     //val = n[parameter]
@@ -1252,7 +1297,7 @@ var TP = TP || {};
                         valMin = val;
                     if (valMax == null | val > valMax)
                         valMax = val;
-                });
+                });*/
 
             //linear
 
@@ -1265,10 +1310,6 @@ var TP = TP || {};
             var dom = [valMin, valMax];
             var range = [scaleMin, scaleMax];
             var scale = d3.scale.linear().domain(dom).range(range);
-            var nodeIDList = []; 
-             _graph.nodes().forEach(function(d){
-                 nodeIDList.push(d.baseID);
-             });
 
             var linkIDList = []; 
              _graph.links().forEach(function(d){
@@ -1303,7 +1344,7 @@ var TP = TP || {};
 
             node.select("circle.node")
                 .attr("r", function (d) {
-                    d._size = Math.abs(scale(d[parameter]));  
+                    d._size = Math.abs(scale(paramMap[d.baseID]));  
                     return d._size;
                 })
                 .style("stroke-width", function (d) {

@@ -38,25 +38,25 @@ var TP = TP || {};
                     })
                     .success(function (data, b) {
                         if ("response" in data)
-                            data = data.response
+                            data = data.response;
                         //console.log(data)
-                        objectReferences.ToolObject.addBaseID(data, "id")
-                        var jsonData = JSON.stringify(data)
-                        objectReferences.ToolObject.loadJSON(data, target)
+                        objectReferences.ToolObject.addBaseID(data, "id");
+                        var jsonData = JSON.stringify(data);
+                        objectReferences.ToolObject.loadJSON(data, target);
                         TP.Client().createTulipGraph(jsonData, target);
 
 
                         //this.analyseGraph(target)
                     });
             } else {
-                data = $.parseJSON(json)
-                objectReferences.ToolObject.addBaseID(data, "id")
-                json = JSON.stringify(data)
+                data = $.parseJSON(json);
+                objectReferences.ToolObject.addBaseID(data, "id");
+                json = JSON.stringify(data);
 
-                objectReferences.ToolObject.loadJSON(data, target)
+                objectReferences.ToolObject.loadJSON(data, target);
                 //console.log("I am creating the graph in Tulip")
                 //console.log(data);
-                this.createTulipGraph(json, target)
+                this.createTulipGraph(json, target);
                 //console.log("I should now analyse the graph",contxt.sessionSid)
                 //this.analyseGraph(target)
 
@@ -75,7 +75,7 @@ var TP = TP || {};
              objectContext.TulipPosyInterfaceObject.addInterfaceSubstrate();
              objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
              objectContext.TulipPosyVisualizationObject.entanglementCaught();*/
-        }
+        };
 
 
         // This function calls a special case of creation of a graph, instead 
@@ -92,12 +92,12 @@ var TP = TP || {};
                 type: 'POST',
                 success: function (data) {
                     //console.log('sending search request in tulip, and recieved data: ', data)
-                    data = JSON.parse(data)
-                    recieved_data = data
+                    data = JSON.parse(data);
+                    recieved_data = data;
                 }
             });
-            return JSON.stringify(recieved_data)
-        }
+            return JSON.stringify(recieved_data);
+        };
 
 
         this.sendQuery = function (params) {
@@ -109,7 +109,7 @@ var TP = TP || {};
                 success: function () {
                 },
                 successParameters: []
-            }
+            };
 
             for (var p in defaultParams) {
                 if (!(p in params))
@@ -134,7 +134,7 @@ var TP = TP || {};
                     params['success'].apply(this, args);
                 }
             });
-        }
+        };
 
 
         // This function creates a new substrate graph in tulip, initializes, 
@@ -144,45 +144,45 @@ var TP = TP || {};
             var params = {
                 type: "creation",
                 graph: json
-            }
+            };
             __g__.sendQuery({
                 parameters: params,
                 async: false,
                 //success: objectReferences.UpdateViewsObject.buildGraphFromData
                 success: function (data) {
-                    objectReferences.UpdateViewsObject.buildGraphFromData(data, target)
+                    objectReferences.UpdateViewsObject.buildGraphFromData(data, target);
                     if ($('#analyse').is(':checked')) {
                         //console.log(target);
                         var viewGraphSubstrate = TP.Context().view[target];
                         ['Bipartite analysis', '', {click: function () {
                             __g__.getController().sendMessage("analyseGraph", (function(){
-                                var params = __g__.viewGraphCatalystParameters()
+                                var params = __g__.viewGraphCatalystParameters();
                                 params.idSourceAssociatedView = __g__.getID();
                                 return {
                                     viewIndex: __g__.getID(),
                                     viewGraphCatalystParameters: params
-                                }
-                            })())
+                                };
+                            })());
                         }}, "Open View"],
 
 
                             viewGraphSubstrate.getController().sendMessage("analyseGraph", (function(){
-                                var params = viewGraphSubstrate.viewGraphCatalystParameters()
+                                var params = viewGraphSubstrate.viewGraphCatalystParameters();
                                 params.idSourceAssociatedView = viewGraphSubstrate.getID();
                                 return {
                                     viewIndex: viewGraphSubstrate.getID(),
                                     viewGraphCatalystParameters: params
-                                }
+                                };
                             })());
                         //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
                     }
                     if ($('#sync').is(':checked')) {                        
-                        TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID(), true, true)
+                       TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID(), true, true);
                     }
                     TP.Context().InterfaceObject.tileViews();
                 }
             });
-        }
+        };
 
 
         // This function calls through tulip the analysis of a substrate graph, 
@@ -191,7 +191,7 @@ var TP = TP || {};
         this.analyseGraph = function (_event) {
 
             var idViewSource = _event.associatedData.source;
-            var viewGraphCatalystParameters = _event.associatedData.viewGraphCatalystParameters
+            var viewGraphCatalystParameters = _event.associatedData.viewGraphCatalystParameters;
 
             if (TP.Context().view[idViewSource].getType() !== "substrate") {
                 assert(false, "not substrate type");
@@ -233,7 +233,7 @@ var TP = TP || {};
                 type: 'analyse',
                 target: TP.Context().view[idViewSource].getType(),//idViewSource,//'substrate',
                 weight: TP.Context().substrateWeightProperty
-            }
+            };
 
             //console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
 
@@ -244,7 +244,7 @@ var TP = TP || {};
 
             TP.Context().view[idViewSource].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
 
-        }
+        };
 
 
         this.analyseGraphSendQuery = function (_event) {
@@ -262,7 +262,7 @@ var TP = TP || {};
                 }
             });
 
-        }
+        };
 
 
         this.answerAnalyseGraph = function (_event) {
@@ -275,7 +275,7 @@ var TP = TP || {};
 
 
             objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
-        }
+        };
 
 
         // This function send to the tulip server a selection of nodes and 
@@ -296,7 +296,7 @@ var TP = TP || {};
                 parameters: JSON.stringify(updateParams),
                 graph: json,
                 target: TP.Context().view[idView].getType()
-            }
+            };
 
             TP.Context().view[idView].getController().sendMessage("selectionSendQuery", {params: params}, "principal");
 
@@ -316,7 +316,7 @@ var TP = TP || {};
                 }
             });
 
-        }
+        };
 
 
         this.answerSendSelection = function (_event) {
@@ -330,7 +330,7 @@ var TP = TP || {};
 
 
 
-        }
+        };
 
 
         this.getPlugins = function (_event) {
@@ -358,7 +358,7 @@ var TP = TP || {};
                    //TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
                    //assert(true, "Grabbed algorithms:")
                    // console.log(data)
-                    endHandler.call(TP.Context(), data)
+                    endHandler.call(TP.Context(), data);
                 }
             });
                         
@@ -391,7 +391,7 @@ var TP = TP || {};
                 parameters: JSON.stringify(layoutParams)
             };
 
-            TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery", {params: params}, "principal")
+            TP.Context().view[idView].getController().sendMessage("callLayoutSendQuery", {params: params}, "principal");
 
         };
         
@@ -411,7 +411,7 @@ var TP = TP || {};
                 }
             });
 
-        }
+        };
 
 
         this.AnswerCallLayout = function (_event) {
@@ -420,13 +420,13 @@ var TP = TP || {};
             var data = _event.associatedData.data;
 
             objectReferences.UpdateViewsObject.applyLayoutFromData(data, idView);
-        }
+        };
 
 
         this.updateLayout = function (graphName, json) {
             json = JSON.stringify({
                 nodes: TP.Context().view[graphName].getGraph().nodes()
-            })
+            });
             var updateParams = {
                 type: "layout",
                 target: TP.Context().view[graphName].getType(),
@@ -464,11 +464,11 @@ var TP = TP || {};
                 sid: contxt.sessionSid,
                 type: 'algorithm',
                 parameters: JSON.stringify(floatParams)
-            }
-            floatAlgorithmName, idView
+            };
+            //floatAlgorithmName, idView;
             TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params: params, floatAlgorithmName:floatAlgorithmName}, "principal");
 
-        }
+        };
 
 
         this.FloatAlgorithmSendQuery = function (_event) {
@@ -486,7 +486,7 @@ var TP = TP || {};
                 }
             });
 
-        }
+        };
 
 
         this.AnswerFloatAlgorithm = function (_event) {
@@ -495,7 +495,7 @@ var TP = TP || {};
             var floatAlgorithmName = _event.associatedData.floatAlgorithmName;
 
             objectReferences.UpdateViewsObject.applyFloatAlgorithmFromData(data, idView, floatAlgorithmName);
-        }
+        };
 
 
         // This function calls the synchronization from a given graph through 
@@ -519,7 +519,7 @@ var TP = TP || {};
                 target: syncTarget,
                 operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
                 weight: TP.Context().substrateWeightProperty
-            }
+            };
             //console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
 
 
@@ -527,11 +527,10 @@ var TP = TP || {};
                 parameters: params,
                 async: false,
                 success: function (data) {
-                    //console.log("updated", data)
                     objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
                 }
             });
-        }
+        };
 
 
         this.syncLayouts = function (currentGraph, async, rescale) {
@@ -560,9 +559,9 @@ var TP = TP || {};
                     if(rescale){
                         if($(window).height() / $(window).width() < 1)
                         {
-                            TP.Context().currentOrientation = "vertical"
+                            TP.Context().currentOrientation = "vertical";
                         }else{
-                            TP.Context().currentOrientation = "horizontal"                            
+                            TP.Context().currentOrientation = "horizontal";                            
                         } 
                         TP.Context().InterfaceObject.tileViews();
                     }
@@ -602,6 +601,6 @@ var TP = TP || {};
         };
 
         return __g__;
-    }
+    };
     TP.Client = Client;
 })(TP);

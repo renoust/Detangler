@@ -238,7 +238,6 @@ var TP = TP || {};
 
             //assert(true, "checkIntersect");
 
-
             var currentViewID = _viewID;
             var svg = TP.Context().view[currentViewID].getSvg();
 
@@ -518,7 +517,7 @@ var TP = TP || {};
              objectReferences.VisualizationObject.resetSize("catalyst");
              objectReferences.VisualizationObject.resetSize("combined");*/
 
-            prevSelList = selList.slice(0);
+            prevSelList = (selList) ? selList.slice(0) : [];
             TP.Context().view[currentViewID].setPreviousSourceSelection([]);
             if (catalystSvg != null)
             //TP.ObjectReferences().VisualizationObject.sizeMapping("entanglementIndice", catalystName);
@@ -1008,7 +1007,8 @@ var TP = TP || {};
         };
 
         this.toggleSelection = function (_currentViewID) {
-            //console.log(this);
+            
+            //console.log("TOGGLE SELECTION 1012 INTERACTION_JS");
             var cView = TP.Context().view[_currentViewID];
             var cGraph = cView.getGraph();
             var cSvg = cView.getSvg();
