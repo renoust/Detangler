@@ -66,15 +66,20 @@ var TP = TP || {};
             var type = view[view.length - 1];
             var nbElements = Object.keys(TP.Context().substrateProperties).length;
             var formString = "";
-            formString += "<p> GLOBAL INFORMATIONS: </p>" +
+            formString += (function(){
+                var res = "<p> GLOBAL INFORMATIONS: </p>" +
                 "<ul>" +
                 "<li> File : " + file + "</li>" +
                 "<li> View : " + type + "</li>" +
                 "<li> - " + cGraph.nodes().length + " nodes </li>" +
-                "<li> - " + cGraph.links().length + " links </li>" +
-                "</ul>"+
-                "<form><select id=weightPropSel>" +
+                "<li> - " + cGraph.links().length + " substrate links </li>";
+                var nbLinks = cGraph.updateMultiplexLinks();
+                if (nbLinks > 0)
+                    res += "<li> - " + nbLinks + " multiplex links </li>";
+                res += "</ul>"+
+                "<br/>Weight property: <form><select id=weightPropSel>" +
                 " <option value=\"\"><i>--</i></option>";
+                return res;})();
 
             Object.keys(TP.Context().substrateProperties)
                 .forEach(function (k, i) {
@@ -612,6 +617,21 @@ var TP = TP || {};
             var menuNum = contxt.menuNum++;
             $('#bg').css('border-width','12px');
             $('#bg').css({'height':'51px', 'width':'276px'});
+            $("#entanglement").on("click", function(){
+                if(TP.Context().currentEntanglementInner=="intensity")
+                    TP.Context().currentEntanglementInner="homogeneity";
+
+                else
+                    TP.Context().currentEntanglementInner="intensity";
+                
+                var entul=$('#entul');
+                entul.children().each(
+                    function(i,li){entul.prepend(li);}
+                );
+                
+                objectReferences.VisualizationObject.entanglementCaught(0,null);
+            });
+
             if($('#entValues').length < 1)
                 $("<div/>", {class: 'cont', id: 'entValues', style:'height:'+75+'px; z-index:210; width:300; position:absolute'}).appendTo("#wrap");
             $("<div/>", {class: 'cont', id: 'menu-' + menuNum, style:'top:'+78+'px;'}).appendTo("#wrap");
@@ -631,6 +651,43 @@ var TP = TP || {};
             return 'menu-' + menuNum;
         };
 
+        this.interactorsPane = function(buttons, mode)
+        {
+            var menu, tgbutton, content, fam, i = 0;
+
+            if (mode === 'update') {
+                for (i = 0; i < contxt.menuNum; i++) {
+                    if ($('.header-menu').eq(i).text() === 'Interactors') {
+                        content = $('.header-menu').eq(i).siblings('.menu-content');
+                        document.getElementById(content.attr('id')).innerHTML = '';
+                    }
+                }
+            } else if (mode === 'create') {
+                menu = this.addPanelMenu('Interactors');
+                $('#' + menu).css('z-index', 202);
+                tgbutton = $('#' + menu).find('.toggleButton');
+                tgbutton.addClass('open');
+                $('<h3/>', {text: 'Interactors'}).appendTo(tgbutton);
+                content = $("#" + menu + " .menu-content");
+            }            
+            $('<ul/>', {id: 'nav',class:'nav'}).appendTo(content);
+
+            if (buttons.hasOwnProperty('undefined')){
+                this.createArrayButtons(buttons.undefined,'nav');
+            }
+            i = 0;
+            for (var key in buttons) {
+                if(key!="Interactor" && key!="View" && key!='undefined'){
+
+                    fam = $('<li/>', { class: 'tglFamily'}).appendTo('#nav');
+                    $('<a/>', {text: key}).appendTo(fam);
+                    $('<ul/>', {id: 'family-' + i, class: 'family'}).appendTo(fam);
+                    this.createArrayButtons(buttons[key], 'family-' + i);
+                    i++;
+                }
+            }
+            this.toggleAccordion('nav');
+        };
 
         this.interactionPane = function (buttons, mode) {
             // assert(true, 'Interface -> interactionPane') 
@@ -684,16 +741,28 @@ var TP = TP || {};
             $('<div/>', {id: 'infoView'}).appendTo('#' + content.attr('id'));
 
 
-            document.getElementById('entanglement-cont').innerHTML +=
-                "<div id='bg'></div>" +
+            document.getElementById('entanglement-cont').innerHTML += 
+            (function()
+            {
+                var res = "<div id='bg'></div>" +
                     "<div id='entanglement'>" +
                     "<p>ENTANGLEMENT:</br>" +
-                    "<ul type='none' style:'margin-top:2px'>" +
-                    "<li>Intensity: <text id='intensity'></text></br></li>" +
-                    "<li>Homogeneity: <text id='homogeneity'></text></li>" +
-                    "</ul>" +
+                    "<ul id= 'entul' type='none' style:'margin-top:2px'>";
+                if(TP.Context().currentEntanglementInner=="intensity")
+                {    
+                    res += "<li>Intensity: <text id='intensity'></text></br></li>" +
+                    "<li>Homogeneity: <text id='homogeneity'></text></li>" ;
+                }else{
+                    res += 
+                        "<li>Homogeneity: <text id='homogeneity'></text></li>" +
+                        "<li>Intensity: <text id='intensity'></text></br></li>" ;
+                    
+                }    
+                res += "</ul>" +
                     "</p>" +
                     "</div>";
+                 return res;
+            })();
             
             $('<div/>', {id: 'infoSync'}).appendTo('#' + content.attr('id'));
             var infoSync = $('#infoSync');
@@ -763,7 +832,7 @@ var TP = TP || {};
                     // assert(false, "Warning: The id " + tab[k][1].id + " already exists.")
                 }
                 par.append(labelPrec);
-                if (type == 0){
+                if (type == 0 || type == "select"){
                         // select
                         var div = $('<select>', attrElem).appendTo(parentId);
                         for(var opt in attrChild){
@@ -782,7 +851,7 @@ var TP = TP || {};
                         })(evnt));
                  }
                     
-                 if(type == 1){ // radio
+                 if(type == 1 || type == "radio"){ // radio
                         var form = $('<form>', attrElem).appendTo(parentId);
                         form.addClass('radio');
                         for(var opt in attrChild){
@@ -829,13 +898,15 @@ var TP = TP || {};
 
                     }
 
-                    if(type == 3)
+                    if(type == 3 || type == "textfield")
                     { // textfield
-                        var div =$('<input/>',tab[k][1]).appendTo(parentId);
+                        
+                        var div =$('<input/>',attrElem).appendTo(parentId);
                         div.attr("type","text");
 
-                        var id = div[0].id;
-                        div.change((function (e) {
+                        var id = attrElem.id;
+                        $('#'+attrElem.id).
+                         change((function (e) {
                             return function () {
                                 var res = {};
                                 var key = this.id;
@@ -846,7 +917,7 @@ var TP = TP || {};
                         })(evnt));                        
                     }
 
-                    if(type == 4)
+                    if(type == 4 || type == "slider_range")
                     { //slider
                         var div = $('<div/>',attrElem).appendTo(parentId);
 
@@ -884,7 +955,7 @@ var TP = TP || {};
                         div.slider(attrChild);
                  }
 
-                 if(type == 5)
+                 if(type == 5 || type == "spinner")
                  { //spinner
                         var div = $('<input/>', attrElem).appendTo(parentId);
 
@@ -903,7 +974,7 @@ var TP = TP || {};
                         })(evnt));
                 }
 
-                if (type == 6)
+                if (type == 6 || type == "colorpicker")
                 { //color picker
                         var div = $('<div/>', attrElem).appendTo(parentId);
                         //par.append(tab[k][4])
@@ -911,7 +982,7 @@ var TP = TP || {};
                         f.linkTo(tab[k][5].func);
                 }
 
-                if (type == 7)
+                if (type == 7 || type == "autocomplete")
                 { //autocomplete
                         var div = $('<input/>',attrElem).appendTo(parentId);
                         div.autocomplete(attrChild)
@@ -924,15 +995,17 @@ var TP = TP || {};
                         div.autocomplete({
                             select: function (e, ui) {
                                     key = this.id;
-                                    //console.log(key)
                                     res[key] = ui.item.value;
-                                    //console.log(res, event);
-                                    var c = evnt ? evnt.call(res) : null;
+                                    //var c = (evnt && evnt != undefined) ? evnt.call(res) : null;
+                                    if(evnt && evnt != undefined)
+                                    {
+                                        evnt.call(res);
+                                    }
                             }
                         });
                 }                    
 
-                if(type == 8)
+                if(type == 8 || type == "simpleslider")
                 {
                         
                      //simplelider
@@ -951,6 +1024,7 @@ var TP = TP || {};
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
+                        
                         attrChild.slide= ((function (e) { 
                             return function () {
                                 var res = {};
@@ -967,6 +1041,14 @@ var TP = TP || {};
 
                         div.slider(attrChild);
 
+                }
+                if (type == "free"){
+                    //var div = $('<div/>',attrElem).appendTo(parentId);
+                    //console.log(attrElem, attrChild.html)
+                    parentId.append(attrChild.html);
+                    if (attrChild.code)
+                        attrChild.code.call();
+                    
                 }
                 par.append(labelSuiv + "<br/>");
             }

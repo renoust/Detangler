@@ -12,6 +12,35 @@ var TP = TP || {};
 
         var zoomCombined = 
         [
+            ["free", {id:"zoomAll"}, 
+                                     {html:"<button id='zout'>-</button>\
+                                            <div id='zslider'></div>\
+                                            <button id='zin'>+</button>", 
+                                      code:function(){
+                                           $(function() {
+                                                $( "#zslider").slider({min:-100, max:100, value:0});
+                                            });
+                                            $("#zslider").css({width:"70%", display: "inline-block"});
+                                            $("#zout").on("click", function()
+                                            {
+                                                 __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                            });
+                                            $("#zin").on("click", function()
+                                            {
+                                                 __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                            });
+                                           $("#zslider").on("slide", function(v,u){
+                                               if (u.value == 0){
+                                                   __g__.viewZoomLevel = 0;
+                                                }
+                                                var delta = u.value - __g__.viewZoomLevel;
+                                                __g__.viewZoomLevel = u.value;
+                                                __g__.getController().sendMessage("runZoom", {wheelDelta: delta, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
+                                                 
+                                           }); 
+                                        }
+                                      }
+         ] 
         ];
         
         var linkCurvatureSlide = 
@@ -206,6 +235,28 @@ var TP = TP || {};
                     },
                     minLength: 0
                 }]];
+                
+          var searchBox = [
+            ["autocomplete", {id:"searchBox"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = ["--"];
+                        var oneNode = __g__.getGraph().nodes()[0];
+                        for (var prop in oneNode)
+                        {
+                            //var patt = new RegExp(searchStr.term.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'i');
+                            //var isAlgo = patt.test(prop);
+                            //if (isAlgo && typeof(oneNode[prop]) == "number") 
+                            propertyList.push(prop);
+                        }
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }, "In"],
+              //
+              ["textfield", {id:"textsearch"}, 
+                {call:function(d){console.log("this looks like an ugly hack");}}, "search", ""]  
+            ];
 
 
         /*
@@ -294,18 +345,16 @@ var TP = TP || {};
             {interactorLabel:'Hide links', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("Hide links");
             }}, interactorGroup:"View"},
-            {interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("arrangeLabels");
-            }}, interactorGroup:"View"},
-            {interactorLabel:'Size mapping', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
+            //{interactorLabel:'Arrange labels', interactorParameters: '', callbackBehavior: {click: function () {
+            //    __g__.getController().sendMessage("arrangeLabels");
+            //}}, interactorGroup:"View"},
+            {interactorLabel:'Scale node size', interactorParameters: paramSizeMap, callbackBehavior: {call: function (scales) {
                 __g__.getController().sendMessage("sizeMapping", {parameter: 'viewMetric', idView: TP.Context().activeView, scales: scales});
             }}, interactorGroup:"View"},
-            {interactorLabel:'Zoom in', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("runZoom", {wheelDelta: 120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
-            }}, interactorGroup:"View"},
-            {interactorLabel:'Zoom out', interactorParameters: '', callbackBehavior: {click: function () {
+            {interactorLabel:'Zoom', interactorParameters: zoomCombined, callbackBehavior:null, interactorGroup:"View"},
+            /*{interactorLabel:'Zoom out', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("runZoom", {wheelDelta: -120, mousePos: [TP.Context().width / 2, TP.Context().height / 2]});
-            }}, interactorGroup:"View"},
+            }}, interactorGroup:"View"},*/
             {interactorLabel:'Color settings', interactorParameters: colorSettings,callbackBehavior:null, interactorGroup:"View"},
             /*{interactorLabel:'Nodes settings', interactorParameters: setting, callbackBehavior:{call: function (value) {
                  __g__.getController().sendMessage("changeNodesSettings", {value: value, idView: __g__.getID()})
@@ -323,6 +372,33 @@ var TP = TP || {};
                 call:function(algo){
                     __g__.getController().sendMessage("callFloatAlgorithm", {floatAlgorithmName: algo.algoTulip, idView: __g__.getID()});
                 }}, interactorGroup:"Measure"},
+                
+            {interactorLabel:'Search in nodes', interactorParameters: searchBox, callbackBehavior: 
+                {call:function (x) {
+                    if(x.searchBox)
+                    {
+                        if(x.searchBox == "--"){
+                            __g__.searchProperty = null;
+                            __g__.graphDrawing.resetSelection();
+                        }else{
+                            __g__.searchProperty = x.searchBox;
+                        }
+                        $("#textsearch").value = "";
+                        __g__.getController().sendMessage("emptySelection", {selList:[]});
+                    }
+                    if (x.textsearch !== undefined)
+                        if (x.textsearch != __g__.searchQuery){
+                            __g__.searchQuery = x.textsearch;
+                            var nodeList = TP.Interaction().searchInNodes(__g__.searchProperty, __g__.searchQuery, __g__.getID());
+                            //__g__.getController().sendMessage("simpleSelectionMadeView",{selection:nodeList, idView:__g__.getID()});
+                            if(nodeList && nodeList.length > 0)
+                                __g__.getController().sendMessage("nodeSelected", {selList: nodeList, prevSelList: []});
+                            else
+                                __g__.getController().sendMessage("emptySelection", {selList:[]});
+                        }
+                }                        
+            }, interactorGroup:"Selection"},
+
 
             {interactorLabel:'Multiplex analysis', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("analyseGraph", (function(){
@@ -402,7 +478,9 @@ var TP = TP || {};
             {interactorLabel:'Link curvature', interactorParameters: linkCurvatureSlide, callbackBehavior: {call: function (scales) {
                     __g__.linkCurvature = scales.value/100;
                     __g__.graphDrawing.changeLayout(__g__.graph, 0);
-            }}, interactorGroup:"View"}
+            }}, interactorGroup:"View"},
+
+ 
             
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],
             // ['b5','random layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Random', __g__.getID())}}],        

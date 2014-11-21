@@ -11,26 +11,26 @@ var TP = TP || {};
         var __g__ = new TP.ViewTemplate(parameters);
         
         if(!('nodeColor' in parameters) || parameters.nodeColor === undefined)
-            parameters.nodeColor = "steelblue"
+            parameters.nodeColor = "steelblue";
             
         if(!('linkColor' in parameters) || parameters.linkColor === undefined)
-            parameters.linkColor = "#D0D0D0"
+            parameters.linkColor = "#D0D0D0";
             
         if (!('backgroundColor' in parameters) || parameters.backgroundColor === undefined)
-            parameters.backgroundColor = "white"
+            parameters.backgroundColor = "white";
 
         if (!('labelColor' in parameters) || parameters.labelColor === undefined)
-            parameters.labelColor = "black"
+            parameters.labelColor = "black";
             
         //todo rename viewNodes to nodeShape
         if (!('nodeShape' in parameters) || parameters.nodeShape === undefined)
-            parameters.nodeShape = null
+            parameters.nodeShape = null;
 
         if (!('labelPadding' in parameters) || parameters.labelPadding === undefined)
             parameters.labelPadding = TP.Context().defaultLabelPadding;
 
         if (!('labelMetric' in parameters) || parameters.labelMetric === undefined)
-            parameters.labelMetric = null
+            parameters.labelMetric = null;
 
         if (!('labelDisplayWidth' in parameters) || parameters.labelDisplayWidth === undefined)
             parameters.labelDisplayWidth = TP.Context().defaultLabelMaxLength;
@@ -52,6 +52,10 @@ var TP = TP || {};
         __g__.labelFontSize = parameters.labelFontSize;
         __g__.linkCurvature = parameters.linkCurvature;
         __g__.viewRotation = 0;
+        __g__.viewZoomLevel = 0;
+        
+        __g__.searchProperty = null;
+        __g__.searchQuery = null;
         
         __g__.viewNodes = parameters.nodeShape;
         __g__.lasso = null;
@@ -73,117 +77,117 @@ var TP = TP || {};
         
         __g__.getGraph = function () {
             return __g__.graph;
-        }
+        };
 
         __g__.getDataTranslation = function () {
             return __g__.dataTranslation;
-        }
+        };
 
         __g__.setDataTranslation = function (value) {
             __g__.dataTranslation = value;
-        }
+        };
 
 
         __g__.setMetric_BC = function (value) {
             __g__.metric_BC = value;
-        }
+        };
 
         __g__.getMetric_BC = function () {
             return __g__.metric_BC;
-        }
+        };
 
         __g__.setMetric_SP = function (value) {
             __g__.metric_SP = value;
-        }
+        };
 
         __g__.getMetric_SP = function () {
             return __g__.metric_SP;
-        }
+        };
 
         __g__.setLasso = function (value) {
             __g__.lasso = value;
-        }
+        };
 
         __g__.getLasso = function (value) {
             return __g__.lasso;
-        }
+        };
 
         __g__.getNodesColor = function () {
             return __g__.nodesColor;
-        }
+        };
 
         __g__.setNodesColor = function (value) {
             __g__.nodesColor = value;
-        }
+        };
 
         __g__.getLinksColor = function () {
             return __g__.linksColor;
-        }
+        };
 
         __g__.setLinksColor = function (value) {
             __g__.linksColor = value;
-        }
+        };
 
         __g__.getBgColor = function () {
             return __g__.bgColor;
-        }
+        };
 
         __g__.setBgColor = function (value) {
             __g__.bgColor = value;
-        }
+        };
 
         __g__.getLabelsColor = function () {
             return __g__.labelsColor;
-        }
+        };
 
         __g__.setLabelsColor = function (value) {
             __g__.labelsColor = value;
-        }
+        };
 
         __g__.getViewNodes = function () {
             return __g__.viewNodes;
-        }
+        };
 
         __g__.getSelectMode = function () {
             return __g__.selectMode;
-        }
+        };
 
         __g__.setSelectMode = function (value) {
             __g__.selectMode = value;
-        }
+        };
 
         __g__.getMoveMode = function () {
             return __g__.moveMode;
-        }
+        };
 
         __g__.setMoveMode = function (value) {
             __g__.moveMode = value;
-        }
+        };
 
         __g__.getShowLabels = function () {
             return __g__.showLabels;
-        }
+        };
 
         __g__.setShowLabels = function (value) {
             __g__.showLabels = value;
-        }
+        };
 
 
         __g__.getShowLinks = function () {
             return __g__.showLinks;
-        }
+        };
 
         __g__.setShowLinks = function (value) {
             __g__.showLinks = value;
-        }
+        };
 
         __g__.getNodeInformation = function () {
             return __g__.nodeInformation;
-        }
+        };
 
         __g__.setNodeInformation = function (value) {
             __g__.nodeInformation = value;
-        }
+        };
 
         __g__.addView = function () {
 
@@ -230,7 +234,7 @@ var TP = TP || {};
                 if(!down){
                     dialog.dialog('option', 'draggable', false);
                 }
-            })
+            });
             
             
             toggle.mouseout(function(){
@@ -239,12 +243,12 @@ var TP = TP || {};
                     containment: "#container",
                     opacity: 0.70
                 });
-            })
+            });
             toggle.change(function(){
                 var interact = document.getElementById("toggle" + __g__.ID).options[document.getElementById("toggle" + __g__.ID).selectedIndex].text;
                 __g__.controller.sendMessage(interact)
                 //console.log(choice)
-            })
+            });
 
             /*var minWidth = __g__.dialog.parents('.ui-dialog').find('.ui-dialog-title').width()
             __g__.dialog.parents('.ui-dialog').find('.ui-button').each(function () {
@@ -319,7 +323,7 @@ var TP = TP || {};
             __g__.graphDrawing = new TP.GraphDrawing(__g__.graph, __g__.svg, __g__.ID);
 
 
-            __g__.lasso = d3.custom.Lasso()
+            __g__.lasso = d3.custom.Lasso();
 
 
 
@@ -354,16 +358,25 @@ var TP = TP || {};
                     .on("brushDrawMove", function(d, i){ //console.log("brushDrawMove");
                     })
 
-                    .on("brushDrawEnd", function(d, i){ __g__.getController().drawingState = false; __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDrawEnd", function(d, i){
+                         __g__.getController().drawingState = false; 
+                         __g__.getController().sendMessage("simpleSelectionMadeView", 
+                                                           {selection: d.data(), idView:__g__.getID()}); 
+                                                          })
                     .on("brushDragStart", function(d, i){ __g__.getController().drawingState = true; })
                     .on("brushDragMove", function(d, i){ __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
-                    .on("brushDragEnd", function(d, i){ __g__.getController().drawingState = false; __g__.getController().sendMessage("simpleSelectionMadeView", {selection: d.data(), idView:__g__.getID()}); })
+                    .on("brushDragEnd", function(d, i){ __g__.getController().drawingState = false; 
+                                                        __g__.getController().sendMessage("emptySelection", {selList: null});
+
+                                                        __g__.getController().sendMessage("simpleSelectionMadeView", 
+                                                                                          {selection: d.data(), idView:__g__.getID()}); 
+                                                     })
                     .on("brushDoubleClick", function(d, i){__g__.getController().sendMessage("doubleClickOnLasso", {idView:__g__.getID()}); });
 
                 __g__.svg.on('mouseover', function(d, i){
                     var nodeSelection = __g__.svg.selectAll('.glyph .node');
                     __g__.lasso.shapes(nodeSelection);
-                })
+                });
 
                 __g__.svg.call(__g__.lasso);
                 
@@ -406,7 +419,7 @@ var TP = TP || {};
 
             __g__.controller.sendMessage("Select");
 
-        }
+        };
 
         __g__.remove = function () {
             
@@ -432,15 +445,15 @@ var TP = TP || {};
             __g__.combined_foreground = null;
             __g__.acceptedGraph = null;
             __g__.graph = null;
-        }
+        };
 
 
          __g__.initStates = function () {
 
-        }
+        };
 
         return __g__;
-    }
+    };
 
     TP.ViewGraph = ViewGraph;
 })(TP);
