@@ -1102,10 +1102,6 @@ var TP = TP || {};
                 }
 
             }
-            /*
-             TP.Context().view[target].getSvg().selectAll("g.toggleCatalystOp")
-             .select("text")
-             .text("operator " + TP.Context().tabOperator[target])*/
         };
 
 
