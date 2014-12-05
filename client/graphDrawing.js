@@ -307,12 +307,12 @@ var TP = TP || {};
                     //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", {node: d3.select(this)})
                 })*/
                 
-                /*
+                
                 .on("mouseover", function (d) {
                     if (g.dragStarted == true) return;
                     TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
-                .on("mouseout", function () {
+                /*.on("mouseout", function () {
                     
                 })*/
                
@@ -1116,10 +1116,10 @@ var TP = TP || {};
                     })
                 )
                 .on("click", function (d) {
-                    TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", 
-                      {snippet: d3.select(this), 
-                       node:g.svg.selectAll(view_nodes+".node").filter(function(dd){return d.baseID == dd.baseID;})
-                    });
+                    //TP.Context().view[currentViewID].getController().sendMessage("showHideLabelNode", 
+                    //  {snippet: d3.select(this), 
+                    //   node:g.svg.selectAll(view_nodes+".node").filter(function(dd){return d.baseID == dd.baseID;})
+                    //});
                 });
 
             if (view_nodes == "rect" && glyphR != null) {
