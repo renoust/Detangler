@@ -88,6 +88,8 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
     for n in docG.getNodes():
         if descP[n] != "":
             nodeDescList = frozenset([t for tt in [descP.getEdgeValue(e).split(';') for e in docG.getInOutEdges(n)] for t in tt])
+            if len(nodeDescList) == 0:
+                nodeDescList = frozenset(descP.getNodeValue(n).split(';'))
             if nodeDescList not in docNToN:
                 docNToN[nodeDescList] = []
             docNToN[nodeDescList].append(DocGNToN[n])
