@@ -154,6 +154,7 @@ var TP = TP || {};
                     if ($('#analyse').is(':checked')) {
                         //console.log(target);
                         var viewGraphSubstrate = TP.Context().view[target];
+                        //this chunk should be dropped shouldn't it?
                         ['Bipartite analysis', '', {click: function () {
                             __g__.getController().sendMessage("analyseGraph", (function(){
                                 var params = __g__.viewGraphCatalystParameters();

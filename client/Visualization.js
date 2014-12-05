@@ -57,7 +57,8 @@ var TP = TP || {};
         //following a Brewer's scale (www.colorbrewer2.org).
         this.entanglementCaught = function (CurrentViewID, nothing) {
 
-            //console.log("entering 'entanglement caught function'")
+            //console.log("entering 'entanglement caught function'", nothing);
+            // WARNING THIS EVENT IS CALLED TWICE?????
 
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603'];
             var zeroColor = d3.rgb("white");
