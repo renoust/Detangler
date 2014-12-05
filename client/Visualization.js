@@ -73,7 +73,7 @@ var TP = TP || {};
             if (nothing == null) {
                 
                 //TP.Context().entanglement_intensity = TP.Context().entanglement_homogeneity;//1 - Math.acos(TP.Context().entanglement_intensity)/(Math.PI/2);
-                TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
+                //TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
                 
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, TP.Context().digitPrecision);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, TP.Context().digitPrecision);

@@ -220,7 +220,8 @@ var TP = TP || {};
 
             TP.Context().entanglement_homogeneity = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
             TP.Context().entanglement_intensity = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
-
+            TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
+            
             //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
             //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
             objectReferences.VisualizationObject.entanglementCaught(target);
@@ -435,7 +436,8 @@ var TP = TP || {};
 
                 TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
                 TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
-
+                TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
+            
                 //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
                 //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
                 //console.log("should be entering 'entanglement caught'");
