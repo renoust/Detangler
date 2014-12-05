@@ -96,9 +96,7 @@ var TP = TP || {};
 
 
                 if (TP.Context().entanglement_intensity == 0){ currentIntensityColor = zeroColor; }
-                if (TP.Context().entanglement_intensity == 1){ currentIntensityColor = oneColor;}
-
-
+                else if (TP.Context().entanglement_intensity == 1){ currentIntensityColor = oneColor;}
                 else if (TP.Context().entanglement_homogeneity < 1/3){ currentHomogeneityColor = inter[0];}
                 else if (TP.Context().entanglement_homogeneity < 2/3){ currentHomogeneityColor = inter[1];}
                 else { currentHomogeneityColor = inter[2];}
@@ -134,8 +132,11 @@ var TP = TP || {};
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
                 $("#bg").css("background-color", "white");
-                $("#entanglement-cont").css("border-color","black");
+                $("#bg").css("border-color","black");
+                currentIntensityColor = "white";
+                currentHomogeneityColor = "black";
             }
+            
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
              .transition()
