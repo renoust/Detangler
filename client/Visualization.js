@@ -57,7 +57,8 @@ var TP = TP || {};
         //following a Brewer's scale (www.colorbrewer2.org).
         this.entanglementCaught = function (CurrentViewID, nothing) {
 
-            //console.log("entering 'entanglement caught function'")
+            //console.log("entering 'entanglement caught function'", nothing);
+            // WARNING THIS EVENT IS CALLED TWICE?????
 
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603'];
             var zeroColor = d3.rgb("white");
@@ -72,7 +73,7 @@ var TP = TP || {};
             if (nothing == null) {
                 
                 //TP.Context().entanglement_intensity = TP.Context().entanglement_homogeneity;//1 - Math.acos(TP.Context().entanglement_intensity)/(Math.PI/2);
-                TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
+                //TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
                 
                 $('#homogeneity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_homogeneity, TP.Context().digitPrecision);
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round(TP.Context().entanglement_intensity, TP.Context().digitPrecision);
@@ -95,9 +96,7 @@ var TP = TP || {};
 
 
                 if (TP.Context().entanglement_intensity == 0){ currentIntensityColor = zeroColor; }
-                if (TP.Context().entanglement_intensity == 1){ currentIntensityColor = oneColor;}
-
-
+                else if (TP.Context().entanglement_intensity == 1){ currentIntensityColor = oneColor;}
                 else if (TP.Context().entanglement_homogeneity < 1/3){ currentHomogeneityColor = inter[0];}
                 else if (TP.Context().entanglement_homogeneity < 2/3){ currentHomogeneityColor = inter[1];}
                 else { currentHomogeneityColor = inter[2];}
@@ -133,8 +132,11 @@ var TP = TP || {};
                 $('#intensity')[0].innerHTML = objectReferences.ToolObject.round("0", 5);
 
                 $("#bg").css("background-color", "white");
-                $("#entanglement-cont").css("border-color","black");
+                $("#bg").css("border-color","black");
+                currentIntensityColor = "white";
+                currentHomogeneityColor = "black";
             }
+            
             /*TP.Context().svg_substrate.selectAll("rect.entanglementframe")
 
              .transition()
