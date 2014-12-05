@@ -48,6 +48,7 @@ var TP = TP || {};
             cView.getGraphDrawing().clear();
             cView.getGraphDrawing().draw();
             cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
+            cView.getGraphDrawing().changeLayout(cGraph, 0);
 
 
             var newGraph = JSON.parse(data.data.graph);
@@ -68,6 +69,7 @@ var TP = TP || {};
                 combinedGraph.links(newLinks);
                 combinedGraph.specialEdgeBinding("substrate", "catalyst");
             }
+            
 
             /*********** TO BE REDONE
 
@@ -243,19 +245,21 @@ var TP = TP || {};
             var svg = null;
             svg = TP.Context().view[graphName].getSvg();
             graph = TP.Context().view[graphName].getGraph();
-
+            var cView = TP.Context().view[graphName];
             //TP.GraphDrawing(graph,svg,graphName).rescaleGraph(contxt,data);
             //objectReferences.VisualizationObject.rescaleGraph(data);
             //graph.nodes(data.nodes, graphName);
             //graph.links(data.links, graphName);
             //graph.edgeBinding();
 
-            TP.Context().view[graphName].getGraphDrawing().rescaleGraph(graph);
+            //cView.getGraphDrawing().rescaleGraph(graph);
             //graph_drawing.move(graph, 0);
             //TP.Context().view[graphName].getGraphDrawing().clear();
             //TP.Context().view[graphName].getGraphDrawing().draw();
-            TP.Context().view[graphName].getGraphDrawing().changeLayout(graph, 0);
-
+            //cView.getGraphDrawing().changeLayout(graph, 0);
+            cView.getGraphDrawing().rescaleGraph(graph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
+            cView.getGraphDrawing().changeLayout(graph, 0);
+            
         };
 
 
@@ -381,12 +385,13 @@ var TP = TP || {};
         this.syncGraphRequestFromData = function (data, selection, graphName) {
             //console.log("in syncGraphRequestFromData line381 UpdateViews");
 
-
+                
             data.nodes.forEach(function(d){
                 //console.log(d);
                 if ("entanglementIndex" in d)
                 {
                     d.entanglementIndex = objectReferences.ToolObject.round(d.entanglementIndex, TP.Context().digitPrecision);
+                    
                 }
             });
 
