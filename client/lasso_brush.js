@@ -17,6 +17,8 @@ d3.custom.Lasso = function module() {
     var lassoAlreadyDisplayed = false;
     var mouseOffsetX = 0;
     var mouseOffsetY = 0;
+    var svgOffsetX = 10;
+    var svgOffsetY = 10;
     var rectIsAlive = true;
     var shapes = null;
     var lassoGroup = null;
@@ -29,7 +31,7 @@ d3.custom.Lasso = function module() {
     var defaultStrokeWidth = 10;
     var defaultStrokeOpacity = .5;
     var defaultFillOpacity = .5;
-
+    
     function exports(svg) {
 
         currentSvg = svg;
@@ -93,7 +95,7 @@ d3.custom.Lasso = function module() {
                 lasso.attr({display: 'none'});
             }
             var mousePos = d3.mouse(svg.node());
-            rectPoints = [mousePos, mousePos, mousePos, mousePos]
+            rectPoints = [mousePos, mousePos, mousePos, mousePos];
             rectBrush.attr({
                 display: 'block',
                 d: 'M' + rectPoints.join('L') + 'Z'
@@ -188,8 +190,8 @@ d3.custom.Lasso = function module() {
 
         return shapes.filter(function () {
             shapeBBox = this.getBBox();
-            x = shapeBBox.x + shapeBBox.width / 2 - lassoTranslate[0];
-            y = shapeBBox.y + shapeBBox.height / 2 - lassoTranslate[1];
+            x = shapeBBox.x + shapeBBox.width / 2 - lassoTranslate[0] - svgOffsetX;
+            y = shapeBBox.y + shapeBBox.height / 2 - lassoTranslate[1] - svgOffsetY;
             w = shapeBBox.width;
             var end1 = polygon.length;
             var end2 = end1 - 1;
@@ -211,8 +213,8 @@ d3.custom.Lasso = function module() {
     function findIntersectBBox(shapes, polygon, lasso){
         var lassoTranslate = d3.transform(lasso.attr('transform')).translate;
         var lassoBBox = lasso.node().getBBox();
-        var lassoX = lassoBBox.x + lassoTranslate[0];
-        var lassoY = lassoBBox.y + lassoTranslate[1];
+        var lassoX = lassoBBox.x + lassoTranslate[0] + svgOffsetX;
+        var lassoY = lassoBBox.y + lassoTranslate[1] + svgOffsetY;;
         return shapes.filter(function(d, i){
             var shapeBBox = this.getBBox();
             var shapeX = shapeBBox.x;
@@ -245,6 +247,13 @@ d3.custom.Lasso = function module() {
         shapes = _x;
         return this;
     };
+    
+    exports.svgOffsets = function(_x, _y)
+    {
+        svgOffsetX=_x;
+        svgOffsetY=_y;
+        return this;
+    };
 
     exports.reset = function ()
     {
@@ -264,6 +273,8 @@ d3.custom.Lasso = function module() {
         lassoAlreadyDisplayed = false;
         mouseOffsetX = 0;
         mouseOffsetY = 0;
+        svgOffsetX = 0;
+        svgOffsetY = 0;
         rectIsAlive = true;
         shapes = null;
         lassoGroup = null;

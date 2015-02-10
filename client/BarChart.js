@@ -8,9 +8,9 @@ var TP = TP || {};
         var __g__ = this;
 
         __g__.mouseoverBarChartRect = function (_event) {
-            var targetView =_event.associatedData.targetView
-            var obj =_event.associatedData.obj
-            var svg =_event.associatedData.svg
+            var targetView =_event.associatedData.targetView;
+            var obj =_event.associatedData.obj;
+            var svg =_event.associatedData.svg;
 
             obj.style('fill', 'red');
             //if(click == 0){
@@ -25,7 +25,7 @@ var TP = TP || {};
                 .select(/*"rect"*/TP.Context().view[targetView].getViewNodes())
                 .data(value[1], function (ddd) { /*console.log(ddd);*/
                     return ddd.baseID;
-                })
+                });
 
             node.style("fill", function (d) {
                 if (!d.nbselect) d.nbselect = 0;
@@ -37,7 +37,7 @@ var TP = TP || {};
             //console.log(node);
             //}
             TP.Context().view[_event.associatedData.source].getController().sendMessage("updateOtherView", {data:obj.data()[0], type:"simpleSelect"});
-        }
+        };
 
         __g__.mouseoutBarChartRect = function (_event) {
 
@@ -60,16 +60,16 @@ var TP = TP || {};
                 .select(TP.Context().view[targetView].getViewNodes())
                 .data(value[1], function (ddd) { /*console.log(ddd);*/
                     return ddd.baseID;
-                })
+                });
 
             node.style("fill", function (d) {
                 d.nbselect--;
                 if (d.nbselect == 0) {
-                    return TP.Context().view[targetView].getNodesColor()
+                    return TP.Context().view[targetView].getNodesColor();
                 }
                 return "red";
             });
-        }
+        };
 
 
         __g__.mouseclickBarChartRect = function (_event) {
@@ -94,12 +94,12 @@ var TP = TP || {};
                     .select(TP.Context().view[targetView].getViewNodes())
                     .data(value[1], function (ddd) { /*console.log(ddd);*/
                         return ddd.baseID;
-                    })
+                    });
 
                 node.style("fill", function (d) {
                     d.nbselect--;
                     if (d.nbselect == 1) {
-                        return TP.Context().view[targetView].getNodesColor()
+                        return TP.Context().view[targetView].getNodesColor();
                     }
                     return "red";
                 });
@@ -115,7 +115,7 @@ var TP = TP || {};
                         .select(TP.Context().view[targetView].getViewNodes())
                         .data(value[1], function (ddd) { /*console.log(ddd);*/
                             return ddd.baseID;
-                        })
+                        });
 
                     node.style("fill", function (d) {
                         d.nbselect++;
@@ -127,7 +127,7 @@ var TP = TP || {};
             //console.log("tableau2 : "+tabClick[""+value[2]]);
             //obj.style('fill','red');
 
-        }
+        };
 
 
         __g__.drawBarChart = function (_event) {
@@ -137,11 +137,12 @@ var TP = TP || {};
             var smell =_event.associatedData.smell;
 
 
-            var svg = null
+            var svg = null;
             svg = TP.Context().view[target].getSvg();
 
             var tabMetric = TP.Context().view[target].getMetric_BC();
 
+            console.log(tabMetric)
             var numberMetric = tabMetric[0];
             var metric = tabMetric[1];
             var tabSommet = tabMetric[2];
@@ -212,7 +213,7 @@ var TP = TP || {};
                     })
                     .attr("height", 20)
                     .style("stroke", "white")
-                    .style("fill", "steelblue")
+                    .style("fill", "steelblue");
 
 
                 chart.selectAll("text.score")
@@ -312,7 +313,7 @@ var TP = TP || {};
                     .data(tabSommet)
                     .enter().append("text")
                     .attr("x", function (d, i) {
-                        return (x(d[2]) + (bar_width + 1) / 2)
+                        return (x(d[2]) + (bar_width + 1) / 2);
                     })
                     .attr("y", function (d) {
                         return y(d[0]) + 11;
@@ -348,19 +349,19 @@ var TP = TP || {};
 
             chart.selectAll("rect")
                 .on('mouseover', function (d, i) {
-                    TP.Context().view[id].getController().sendMessage("mouseoverBarChartRect", {obj: d3.select(this), targetView: target, svg: svg})
+                    TP.Context().view[id].getController().sendMessage("mouseoverBarChartRect", {obj: d3.select(this), targetView: target, svg: svg});
                 })
                 .on('mouseout', function (d, i) {
-                    TP.Context().view[id].getController().sendMessage("mouseoutBarChartRect", {obj: d3.select(this), targetView: target, svg: svg, tabClick: tabClick})
+                    TP.Context().view[id].getController().sendMessage("mouseoutBarChartRect", {obj: d3.select(this), targetView: target, svg: svg, tabClick: tabClick});
                 })
                 .on('click', function (d, i) {
-                    TP.Context().view[id].getController().sendMessage("mouseclickBarChartRect", {obj: d3.select(this), tabClick: tabClick, targetView: target, svg: svg})
+                    TP.Context().view[id].getController().sendMessage("mouseclickBarChartRect", {obj: d3.select(this), tabClick: tabClick, targetView: target, svg: svg});
                 });
-        }
+        };
 
         return __g__;
 
-    }
+    };
 
     TP.BarChart = BarChart;
 

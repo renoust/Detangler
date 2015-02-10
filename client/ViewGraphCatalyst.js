@@ -550,7 +550,7 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("drawScatterPlotNVD3",  function (_event) {
-                TP.ViewNVD3().drawScatterPlot(_event);
+                TP.ViewNVD3ScatterPlot().drawScatterPlot(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.setCurrentState("select");

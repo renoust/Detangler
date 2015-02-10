@@ -21,7 +21,7 @@ var TP = TP || {};
             var dataNodes = TP.Context().view[target].getSvg();
             dataNodes = dataNodes.selectAll("g.node").data();
 
-            var paramIsDefine = (specificParam != null) ? true : false
+            var paramIsDefine = (specificParam != null) ? true : false;
 
             var intTest = 0;
 
@@ -90,7 +90,7 @@ var TP = TP || {};
                     }
                 }
             }
-        }
+        };
 
 
         __g__.addMetric = function (numS, nodee) {
@@ -125,7 +125,7 @@ var TP = TP || {};
                 current = pileTMP;
                 taille++;
             }
-        }
+        };
 
         /*
          g.supprimerPile = function()
@@ -188,17 +188,17 @@ var TP = TP || {};
             tab[3] = ["metrics", "numberNodes"];
 
             return tab;
-        }
+        };
 
 
         __g__.afficher = function (target) {
             // console.log("pileMetric de " + target + " :")
             // console.log(current);
 
-        }
+        };
 
         return __g__;
-    }
+    };
 
     TP.Metric = Metric;
 })(TP);

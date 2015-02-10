@@ -409,9 +409,14 @@ var TP = TP || {};
                      })());
             }}, interactorGroup:"Open View"},
 
-            {interactorLabel:'Scatter plot (nvd3 - experimental)', interactorParameters:'', callbackBehavior:{click: function () {
+            {interactorLabel:'Scatter plot (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
                 __g__.getController().sendMessage("drawScatterPlotNVD3");
             }}, interactorGroup:"Open View"},
+
+            {interactorLabel:'Bar chart (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
+                __g__.getController().sendMessage("drawBarChartNVD3");
+            }}, interactorGroup:"Open View"},
+
 
             {interactorLabel:'Spreadsheet (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage("drawDataBase");
@@ -567,7 +572,11 @@ var TP = TP || {};
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("drawScatterPlotNVD3",  function (_event) {
-                TP.ViewNVD3().drawScatterPlot(_event);
+                TP.ViewNVD3ScatterPlot().drawScatterPlot(_event);
+            }, {bindings:null, fromAll:true, useless:true, activate:true});
+
+            __g__.controller.addEventState("drawBarChartNVD3",  function (_event) {
+                TP.ViewNVD3BarChart().drawBarChart(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("runZoom",  function (_event) {

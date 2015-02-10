@@ -67,7 +67,7 @@ var TP = TP || {};
         __g__.showLinks = null;
         __g__.nodeInformation = null;
 
-        __g__.metric_BC = null;
+        __g__.metric_BC = "viewMetric";
         __g__.metric_SP = null;
         __g__.combined_foreground = null;
         __g__.acceptedGraph = [];

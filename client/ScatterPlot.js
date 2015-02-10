@@ -54,7 +54,7 @@ var TP = TP || {};
                 .attr("y", function (d) {
                     //console.log(d[1]);
                     return y(d[1]) - 5;
-                })
+                });
 
             //console.log("mouseover : " + tab[0] );
             //console.log(valeurx-50);
@@ -67,7 +67,7 @@ var TP = TP || {};
                 })
                 .style("fill", "red");
 
-        }
+        };
 
 
         __g__.mouseoutScatterPlot = function (_event) {
@@ -104,7 +104,7 @@ var TP = TP || {};
                     .style("fill", TP.Context().view[targetView].getNodesColor());
 
             }
-        }
+        };
 
 
         __g__.mouseclickScatterPlot = function (_event) {
@@ -124,7 +124,7 @@ var TP = TP || {};
                     tabClick["" + result] = 1;
                 }
             }
-        }
+        };
 
         __g__.zoomScatterPlot = function (_event) {
 
@@ -148,25 +148,30 @@ var TP = TP || {};
                 .attr("cy", function (d) {
                     return y(d[1]);
                 })
-                .attr("r", 3.5)
+                .attr("r", 3.5);
         };
+        
+        __g__.xMetric = "baseID";
+        __g__.yMetric = "baseID";
 
         __g__.drawScatterPlot = function (_event) {
 
             var target = _event.associatedData.source;
 
-            var svg = null
+            var svg = null;
             svg = TP.Context().view[target].getSvg();
 
-            var margin = {top: 20, right: 15, bottom: 60, left: 60}
+            var margin = {top: 20, right: 15, bottom: 60, left: 60};
 
 
             var tabMetric = TP.Context().view[target].getMetric_SP();
+            
+            console.log(tabMetric);
 
-            var numberMetric = tabMetric[0];
-            var metrics = tabMetric[1];
-            var metric = tabMetric[2];
-            var axesNames = tabMetric[3];
+            var numberMetric = 0; //tabMetric[0];
+            var metrics = []; //tabMetric[1];
+            var metric = []; //tabMetric[2];
+            var axesNames = [];//tabMetric[3];
 
 
             var width = 960 - margin.left - margin.right;
@@ -214,7 +219,7 @@ var TP = TP || {};
                 .range([ height, minY ]);
 
 
-            var scatterP = d3.select("#zone" + id)
+            var scatterP = d3.select("#zone" + id);
             /*
              var scatter = scatterP.append("svg")
              .attr('class', 'scatterPlot'+id)
@@ -235,7 +240,7 @@ var TP = TP || {};
                 .orient('left');
 
             scatterP.call(d3.behavior.zoom().x(x).y(y).scaleExtent([0, Infinity]).on("zoom", function () {
-                TP.Context().view[id].getController().sendMessage("zoomScatterPlot", {id: id, x: x, y: y, scatter: scatterP, xAxis: xAxis, yAxis: yAxis})
+                TP.Context().view[id].getController().sendMessage("zoomScatterPlot", {id: id, x: x, y: y, scatter: scatterP, xAxis: xAxis, yAxis: yAxis});
             }));
 
 
@@ -266,38 +271,88 @@ var TP = TP || {};
                 .attr("y", 6)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
-                .text(axesNames[1])
+                .text(axesNames[1]);
 
 
+            function getScatterData()
+            {
+                 var graph = TP.Context().view[target].getGraph();
+                 //for (var i=0; i<graph.nodes().length; i++)
+                 //{
+                 //}
+                 return graph.nodes();
+            }
+            
             scatter.selectAll(".dot")
-                .data(metric)
+                .data(function(){return getScatterData();})
                 .enter()
                 .append("circle")
                 .attr("cx", function (d) {
-                    return x(d[0]);
+                    if (__g__.xMetric in d)
+                        return d[__g__.xMetric];
+                    else
+                        return 0;
+                    //return x(d[0]);
                 })
                 .attr("cy", function (d) {
-                    return y(d[1]);
+                    if (__g__.yMetric in d)
+                        return d[__g__.yMetric];
+                    else
+                        return 0;
+                    //return y(d[1]);
                 })
                 .attr("r", 3.5)
                 .style("stroke", "#000")
-                .style("fill", "steelblue")
+                .style("fill", "steelblue");
+                
+                /*
                 .on('mouseover', function (d) {
-                    TP.Context().view[id].getController().sendMessage("mouseoverScatterPlot", {id: id, obj: d3.select(this), targetView: target, scatter: scatter, svg: svg, x: x, y: y})
+                    TP.Context().view[id].getController().sendMessage("mouseoverScatterPlot", {id: id, obj: d3.select(this), targetView: target, scatter: scatter, svg: svg, x: x, y: y});
                 })
                 .on('mouseout', function (d) {
-                    TP.Context().view[id].getController().sendMessage("mouseoutScatterPlot", {id: id, obj: d3.select(this), targetView: target, scatter: scatter, svg: svg, tabClick: tabClick})
+                    TP.Context().view[id].getController().sendMessage("mouseoutScatterPlot", {id: id, obj: d3.select(this), targetView: target, scatter: scatter, svg: svg, tabClick: tabClick});
                 })
                 .on('click', function (d, i) {
                     //click = 1;
-                    TP.Context().view[id].getController().sendMessage("mouseclickScatterPlot", {obj: d3.select(this), tabClick: tabClick})
-                });
+                    TP.Context().view[id].getController().sendMessage("mouseclickScatterPlot", {obj: d3.select(this), tabClick: tabClick});
+                });*/
 
-        }
+        };
+        
+        __g__.updateMetrics = function(_event)
+        {
+            
+            if ('x' in _event)
+                __g__.xMetric = _event['x'];
+            if ('y' in _event)
+                __g__.yMetric = _event['y'];
+                
+            console.log(_event);
+            var scatter = TP.Context().view[_event.idView].getSvg()
+            var graph = TP.Context().view[TP.Context().view[_event.idView].idSourceAssociatedView].getGraph() 
+            scatter.selectAll(".dot")
+                .data(function(){return graph.nodes()})
+                .enter()
+                .append("circle")
+                .attr("cx", function (d) {
+                    if (__g__.xMetric in d)
+                        return d[__g__.xMetric];
+                    else
+                        return 0;
+                    //return x(d[0]);
+                })
+                .attr("cy", function (d) {
+                    if (__g__.yMetric in d)
+                        return d[__g__.yMetric];
+                    else
+                        return 0;
+                    //return y(d[1]);
+                });
+        };
 
         return __g__;
 
-    }
+    };
 
     TP.ScatterPlot = ScatterPlot;
 
