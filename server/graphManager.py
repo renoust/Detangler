@@ -247,7 +247,8 @@ class graphManager():
                 graph = self.substrate
 
         viewL = graph.getLayoutProperty("viewLayout")
-        graph.computeLayoutProperty("Random", viewL)
+        #graph.computeLayoutProperty("Random", viewL)
+        graph.applyLayoutAlgorithm("Random", viewL)
         
         for n in graph.getNodes():
                 viewL[n] *= 10
@@ -389,7 +390,8 @@ class graphManager():
                 entanglementHomogeneity = float(c.entanglementHomogeneity[mainComponent])
 
                 vL = c.catalystGraph.getLayoutProperty("viewLayout")
-                c.catalystGraph.computeLayoutProperty("GEM (Frick)", vL)
+                #c.catalystGraph.computeLayoutProperty("GEM (Frick)", vL)
+                c.catalystGraph.applyLayoutAlgorithm("GEM (Frick)", vL)
 
                 tName = c.catalystGraph.getStringProperty("catalystName")
                 label = c.catalystGraph.getStringProperty("label")
@@ -573,7 +575,8 @@ class graphManager():
                 g = self.catalyst                
 
         vL = g.getLayoutProperty("viewLayout")
-        g.computeLayoutProperty(layoutName, vL)
+        #g.computeLayoutProperty(layoutName, vL)
+        g.applyLayoutAlgorithm(layoutName, vL)
         return g
 
 
@@ -590,7 +593,8 @@ class graphManager():
         print 'computing double algorithm: ',doubleName,' on ',graphTarget,' with ' ,g.numberOfNodes(), ' / ', g.numberOfEdges()
         vM = g.getDoubleProperty("viewMetric")
         viewLabel = g.getStringProperty("catalyst")
-        g.computeDoubleProperty(doubleName, vM)
+        #g.computeDoubleProperty(doubleName, vM)
+        g.applyDoubleAlgorithm(doubleName, vM)
         #print "the computation result"
         #print [vM[n] for n in g.getNodes()]
         #print [[e.id, g.source(e), g.target(e)] for e in g.getEdges()]
