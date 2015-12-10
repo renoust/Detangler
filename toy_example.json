@@ -1,0 +1,42 @@
+{"nodes":[
+	{
+		"id":1,
+		"label":"node1",
+		"x":0,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)"
+	},
+	{
+		"id":2,
+		"label":"node2",
+		"x":1,
+		"y":1,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
+	},
+	{
+		"id":3,
+		"label":"node3",
+		"x":2,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(=)"
+	}],
+"links":[
+	{
+		"id":1,
+		"source":1,
+		"target":2,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
+	},
+	{
+		"id":2,
+		"source":1,
+		"target":3,
+		"descriptors":"catalyst(-);catalyst(=)"
+	},
+	{
+		"id":3,
+		"source":2,
+		"target":3,
+		"descriptors":"catalyst(-)"
+	}]
+}

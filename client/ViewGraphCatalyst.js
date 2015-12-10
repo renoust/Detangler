@@ -353,22 +353,6 @@ var TP = TP || {};
                 }}, interactorGroup:"Measure"},
 
 
-            {interactorLabel:'Scatter plot (nvd3 - experimental)', interactorParameters:'', callbackBehavior:{click: function () {
-                __g__.getController().sendMessage("drawScatterPlotNVD3");
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'Spreadsheet (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawDataBase");
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'Barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'});
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'Horizontal barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'base'});
-            }}, interactorGroup:"Open View"},
-            {interactorLabel:'ScatterPlot (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawScatterPlot");
-            }}, interactorGroup:"Open View"},
-
             {interactorLabel:'Node size mapping',interactorParameters:tl2,callbackBehavior:{
                 //click:function(){console.log('click on the button');},
                 call:function(paramList){

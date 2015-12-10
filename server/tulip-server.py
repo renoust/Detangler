@@ -40,7 +40,6 @@ from tulip import *
 from graphManager import *
 from session import *
 
-import mds
 
 globalSessionMan = TPSession()
 '''
@@ -357,16 +356,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 if 'type' in params and 'name' in params:
                         if params['type'] == 'layout':
                                 layoutName = params['name'].encode("utf-8")
-                                g = None
-                                if layoutName == 'MDS':
-                                        print "calling mds layout"
-                                        g = self.getGraphMan(request).substrate
-                                        descP = g.getStringProperty("descriptors")
-                                        #res = mds.MDS(g, descP).points()
-                                        res = mds.MDS(g, descP).sklearn_mds()
-                                        print res                        
-                                else:
-                                    g = self.getGraphMan(request).callLayoutAlgorithm(layoutName, params['target'].encode("utf-8"))
+                                g = self.getGraphMan(request).callLayoutAlgorithm(layoutName, params['target'].encode("utf-8"))
                                 if g:
                                     graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})
                                     self.sendJSON(graphJSON)

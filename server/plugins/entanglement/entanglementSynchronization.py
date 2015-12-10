@@ -309,7 +309,10 @@ class EntanglementSynchronization():
             for n in nodeList:
                 subgraphSelector[n] = True
             for e in edgeList:
-                subgraphSelector[e] = True
+                s,t = self.substrateGraph.ends(e)
+                if subgraphSelector[s] == True and subgraphSelector[t] == True:
+                    subgraphSelector[e] = True
+                
             
             substrateSubgraph = self.substrateGraph.addSubGraph(subgraphSelector)
             if self.substrateGraph.existLocalProperty("_entanglementSelector"):

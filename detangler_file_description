@@ -1,0 +1,160 @@
+#############################################################################################
+#
+# Detangler JSON File Description, HowTo:
+#
+#############################################################################################
+
+
+#############################################################################################
+# 
+# {"nodes": [...], "links": []}
+#
+# The highest level contains the lists of nodes and links
+#
+#############################################################################################
+
+
+#############################################################################################
+#
+# {"nodes":[
+#    {
+# 	"id": 1,
+# 	"label": "NodeLabel",
+# 	"x": 123,
+# 	"y": 456,
+# 	"descriptors": "catalyst1;catalyst2;catalyst3"
+#    },
+#    ...
+#  ],
+# ...}
+#
+# One node object, in the node list is described as follows:
+# - It has a unique "id" to be recognizable later by edges
+# - A label to be displayed
+# - X and Y position (numerical values) for the graph's initial layout
+# - descriptors: a list of catalysts separated by a semicolon ';'
+#                if catalysts do not apply to nodes, just concatenate the catalyst 
+#                of the node's connecting edges
+#
+#############################################################################################
+
+
+#############################################################################################
+#
+# {...,
+# "links":[
+#    {
+#     "id": 1,
+#     "source": 1,
+#     "target": 2,
+#     "descriptors": "catalyst3;catalyst4"
+#    },
+#    ...
+# ]}
+#
+# One link object, in the links list, is described as follow:
+# - It has a unique identifier 'id'
+# - A node ID as the source, the link's source node
+# - A node ID as the target, the link's target node
+# - descriptors: the list of catalysts that connect the source node to the target node
+#
+#############################################################################################
+
+
+#############################################################################################
+#
+# How to apply the model of the paper "Detangler: Visual Analytics for Multiplex Networks"?
+#
+#############################################################################################
+
+In this model, we describe a multiplex networks where nodes (substrates) are connected
+by different families of edges (catalysts).
+
+To translate this data model to detangler's file description you need to 'flatten' the
+multiplex network.
+
+For every pair of nodes, you will create only 1 link that concatenates all the catalysts
+joining the two nodes.
+
+If catalysts are not natively attached to nodes, you can attach to every node its connecting
+catalysts.
+
+For example imagine you have the situation:
+
+"node1 --- node2", where "node1" and "node2" are two different nodes, and "---" is a catalyst
+connecting "node1" and "node2", we will refer to "---" as the 'catalyst(-)'
+
+Now consider the following multiplex graph:
+
+a-  node1 --- node2
+b-  node1 +++ node2
+c-  node1 ~~~ node2
+d-  node1 === node3
+e-  node1 --- node3
+f-  node2 --- node3
+
+
+"node1" and "node2" are connected through catalysts: catalyst(-), catalyst(+), and catalyst(~)
+concatenating a-, b-, and c-
+
+"node1" and "node3" are connected through catalysts: catalyst(+), and catalyst(=)
+concatenating d-, e-
+
+"node2" and "node3" are connected through catalysts: catalyst(-)
+from f-
+
+the surrounding catalysts of "node1" are: catalyst(-), catalyst(+), catalyst(~) and catalyst(=)
+because of links a-, b-, c-, d-, and e-
+
+the surrounding catalysts of "node2" are: catalyst(-), catalyst(+), and catalyst(~)
+because of links a-, b-, and c-
+
+the surrounding catalysts of "node3" are: catalyst(-), and catalyst(=)
+because of links d-, e-, and f-
+
+
+the description of this graph will be (available as toy_example.json):
+{"nodes":[
+	{
+		"id":1,
+		"label":"node1",
+		"x":0,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)"
+	},
+	{
+		"id":2,
+		"label":"node2",
+		"x":1,
+		"y":1,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
+	},
+	{
+		"id":3,
+		"label":"node3",
+		"x":2,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(=)"
+	}],
+"links":[
+	{
+		"id":1,
+		"source":1,
+		"target":2,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
+	},
+	{
+		"id":2,
+		"source":1,
+		"target":3,
+		"descriptors":"catalyst(-);catalyst(=)"
+	},
+	{
+		"id":3,
+		"source":2,
+		"target":3,
+		"descriptors":"catalyst(-)"
+	}]
+}
+
+

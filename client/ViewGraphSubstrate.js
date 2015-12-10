@@ -304,9 +304,6 @@ var TP = TP || {};
             {interactorLabel:'Force layout', interactorParameters: '', callbackBehavior: {click: function () {
                 __g__.getController().sendMessage('callLayout', {layoutName: 'FM^3 (OGDF)', idView: __g__.getID()});
             }}, interactorGroup:"Layout"},
-            {interactorLabel:'MDS layout', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage('callLayout', {layoutName: 'MDS', idView: __g__.getID()});
-            }}, interactorGroup:"Layout"},
             /*{interactorLabel:'Tulip layout algorithm', interactorParameters:tl, callbackBehavior:{call: function (layout) {
                 __g__.getController().sendMessage('callLayout', {layoutName: layout.selectedAlgo, idView: __g__.getID()})
             }}, interactorGroup:"Layout"},
@@ -409,31 +406,6 @@ var TP = TP || {};
                      })());
             }}, interactorGroup:"Open View"},
 
-            {interactorLabel:'Scatter plot (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
-                __g__.getController().sendMessage("drawScatterPlotNVD3");
-            }}, interactorGroup:"Open View"},
-
-            {interactorLabel:'Bar chart (nvd3)', interactorParameters:'', callbackBehavior:{click: function () {
-                __g__.getController().sendMessage("drawBarChartNVD3");
-            }}, interactorGroup:"Open View"},
-
-
-            {interactorLabel:'Spreadsheet (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawDataBase");
-            }}, interactorGroup:"Open View"},
-
-
-            {interactorLabel:'Barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'rotate'});
-            }}, interactorGroup:"Open View"},
-
-            {interactorLabel:'Horizontal barchart (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawBarChart", {smell: 'base'});
-            }}, interactorGroup:"Open View"},
-
-            {interactorLabel:'Scatter plot (experimental)', interactorParameters: '', callbackBehavior: {click: function () {
-                __g__.getController().sendMessage("drawScatterPlot");
-            }}, interactorGroup:"Open View"},
 
             {interactorLabel:'Node size mapping',interactorParameters:tl2,callbackBehavior:{
                 //click:function(){console.log('click on the button');},
@@ -562,21 +534,6 @@ var TP = TP || {};
 
             __g__.controller.addEventState("rotateGraph",  function (_event) {
                 TP.Visualization().rotateGraph(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});
-
-            __g__.controller.addEventState("drawBarChart",  function (_event) {
-                TP.BarChart().drawBarChart(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});
-            __g__.controller.addEventState("drawScatterPlot",  function (_event) {
-                TP.ScatterPlot().drawScatterPlot(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});
-
-            __g__.controller.addEventState("drawScatterPlotNVD3",  function (_event) {
-                TP.ViewNVD3ScatterPlot().drawScatterPlot(_event);
-            }, {bindings:null, fromAll:true, useless:true, activate:true});
-
-            __g__.controller.addEventState("drawBarChartNVD3",  function (_event) {
-                TP.ViewNVD3BarChart().drawBarChart(_event);
             }, {bindings:null, fromAll:true, useless:true, activate:true});
 
             __g__.controller.addEventState("runZoom",  function (_event) {
