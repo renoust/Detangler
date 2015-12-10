@@ -1,0 +1,73 @@
+
+On Ubuntu
+
+1- install the current Tulip from sources
+http://sourceforge.net/projects/auber/files/tulip/tulip-4.7.0/tulip-4.7.0_src.tar.gz/download
+
+a- install synaptic (apt-get install synaptic) so we can install the dev packages (with headers etc.)
+
+- install cmake
+- install cmake-gui (cmake-qt-gui)
+- install zlib (zlib1g-dev)
+- install glut (freeglut3-dev)
+- install glew (libglew-dev)
+- install ljpeg (ibjpeg-dev)
+- install png (libpng-dev)
+- install freetype (libfreetype6-dev)
+- install qt (libqt4-dev)
+- install qmake (qt4-qmake)
+- install blas (libopenblas-dev)
+- install lapack (liblapack-dev & liblapacke-dev)
+- install fortran (gfortran)
+- install python (libpython2.7-dev)
+
+b- launch cmake-gui (we are now preparing the compilation of Tulip), a few settings first
+
+- place the source code where you've uncompressed the tar.gz (hereafter "tlproot/")
+- place the builds where you want (tlproot/build is advised)
+hit generate to have a bunch of variables showing:
+- place CMAKE-INSTALL-PREFIX where you want (advised tlproot/install)
+
+now hit the button configure twice, and generate (once or twice I forgot) 
+(you may get a few warnings concerning doxygen, sphinx, binutils, quazip, these are optionnal dependencies)
+
+
+- ## normally no need to set it, but if the build fails, you may need to place CMAKE-BUILD-TYPE as Debug
+
+go to your BUILD folder (tlproot/build/)
+>> make && make install
+
+... it should take a while
+
+
+- install python pip (apt-get install python-pip)
+(so we can install the python dependencies)
+
+- install tornado (pip install tornado)
+- install scipy (pip install scipy - this one can be a bitch as well, but if you have all the packages right installed, you're safe, it's just long :))
+- install numpy (pip install numpy)
+- install scikit-learn (pip install scikit-learn)
+
+####################
+# here starts detangler
+####################
+
+- import from git the branch demo (the branch "ready to use"):
+git clone -b demo --single-branch https://github.com/renoust/Detangler.git
+
+- edit the config file in Detangler/server, to put the location of libtulip(-python ...).so
+in out example it's: 
+      tulip_lib_path="tlproot/install/lib/"
+      tulip_python_path="tlproot/install/lib/python/"
+
+execute the server in
+Detangler/server/
+tulip-server.sh
+
+now the prototype only works well with "Chrome"
+to launch the prototype, in chrome:
+
+http://localhost:31497
+# this weird port was set to bypass internal administrative policies, but you can change it in the code
+
+Then you can load some datasets...
