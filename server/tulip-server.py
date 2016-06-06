@@ -39,6 +39,8 @@ from tulip import *
 
 from graphManager import *
 from session import *
+from importDF import *
+
 
 
 globalSessionMan = TPSession()
@@ -54,6 +56,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
     def initialize(self, path):
         print "initialising:", path
         self.sessionMan = globalSessionMan
+        self.utilImportDF = importDF()
         #self.sessionMan.start()
         self.utilGraphMan = graphManager()
         newPath = path.split("/")
@@ -238,6 +241,11 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 #length = int(self.headers.getheader('content-length'))
                 #postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
 
+        if ctype == 'text/csv':
+                       
+            fileName = self.request.headers.get('X-File-Name')
+            self.handleCSVUpload(self.request.body, fileName)
+
 
 
     '''
@@ -262,6 +270,17 @@ class MyRequestHandler(tornado.web.RequestHandler):
                         
                 if request['type'][0] == 'plugin':
                         self.getPlugins(request)
+
+                # need more documentation of those concerning CSV process
+                if request['type'][0] == 'adjust':
+                        self.adjustBase(request)
+                        
+                if request['type'][0] == 'adjustDraw':
+                        self.adjustDraw(request)
+                
+                if request['type'][0] == 'exportCSV':
+                        self.exportCSV(request)
+
 
 
     '''
@@ -325,6 +344,18 @@ class MyRequestHandler(tornado.web.RequestHandler):
         self.write(jsonFile)#.encode('utf-8'))
         self.finish()
                 
+
+    def handleCSVUpload(self, csvFile, fileName):
+         self.set_status(200)
+         self.set_header("Content-type", "application/json")
+         print 'Got a CSV file'
+         print csvFile
+         df = self.utilImportDF.buildDataFrame(csvFile,fileName)
+         dico = self.utilImportDF.goToJson(df,fileName)
+         #dico = self.utilImportDF.buildDFEssai(csvFile, fileName)
+         self.write(dico)
+         self.finish()
+
 
     '''
     Sends a json string to the d3 interface.
@@ -397,6 +428,55 @@ class MyRequestHandler(tornado.web.RequestHandler):
                         self.getGraphMan(request).updateLayout(graphSelection, params['target'])
                         #update the layout here from the target graph
                         #shouldn't we check the sid beforehand?
+
+
+
+
+
+    def adjustDraw(self, request):
+        print 'its a hell of a seasonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+        dictNodes = self.utilImportDF.buildNodesFromParameters(request)
+        jsonFile = self.utilImportDF.buildLinksFromParameters(request, dictNodes)
+        #jsonFile = self.utilImportDF.buildJSONFromParameters(request)
+        loa = json.loads(jsonFile)
+        self.handleFileUpload(json.dumps(loa))
+         
+        
+    
+    
+     
+    def exportCSV(self, request):
+        print 'export is great'
+        name = request['name'][0]
+        path = request['path'][0]
+        self.utilImportDF.exportDFInCSV(name, path) 
+     
+     
+                        
+    def adjustBase(self, request):
+        print 'adjust is great'
+        name = request['name'][0]
+        op = request['operation'][0]
+        if op == 'edit': 
+            df = self.utilImportDF.adjustDataFrameFromEdit(request['expression'][0], name)
+        elif op == 'subLines':
+            df = self.utilImportDF.adjustDataFrameFromSubsetLines(request['firstLine'][0], request['secondLine'][0], name)
+        elif op == 'choiceDrop':
+            df = self.utilImportDF.adjustDataFrameFromDropLines(request['nameColumn'][0],name)
+        elif op == 'choiceColumn':
+            df = self.utilImportDF.adjustDataFrameFromSubsetColumns(request['text'][0], name)
+        elif op == 'keepSpeValues':
+            df = self.utilImportDF.adjustDataFrameFromKeepinSpeValues(request['mode'][0], request['column'][0], request['text'][0], request['operator'][0], name)
+        elif op == 'prec':
+            df = self.utilImportDF.adjustDataFrameFromPrec(name)
+        elif op == 'suiv':
+            df = self.utilImportDF.adjustDataFrameFromSuiv(name)
+        dico = self.utilImportDF.goToJson(df,name)
+        self.write(dico)
+        self.finish() 
+
+
+
 
 
     '''

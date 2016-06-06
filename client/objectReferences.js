@@ -26,6 +26,7 @@ var TP = TP || {};
         this.InteractionObject = new TP.Interaction();
         this.UpdateViewsObject = new TP.UpdateViews();
         this.ToolObject = new TP.Tools();
+        this.ViewImportObject = new TP.ViewImport();
 
         return __g__;
     }

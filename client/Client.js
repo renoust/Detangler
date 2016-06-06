@@ -17,12 +17,17 @@ var TP = TP || {};
         var objectReferences = TP.ObjectReferences();
 
 
+        var arrayDF  = {}
+        var arrayFile = []
+        var currentDF = null
+
+
         // Loads the data from a json file, if no JSON is passed, then we load
         // the default JSON stored in 'contxt.json_address', otherwise it loads
         // the given json file.
         // It is first formatted correctly, locally, then sent to tulip to be 
         //initialized (so it is modified again), and analyzed.
-        this.loadData = function (json, target) {
+        this.loadData = function (json, target, okCSV) {
             //for local use
             if (json == "" || json == null) {
                 //console.log(contxt.json_address)
@@ -49,18 +54,36 @@ var TP = TP || {};
                         //this.analyseGraph(target)
                     });
             } else {
-                data = $.parseJSON(json);
-                objectReferences.ToolObject.addBaseID(data, "id");
-                json = JSON.stringify(data);
+                if (okCSV) {
+                    console.log('ok tas capte cest un csv')
+                    var data2 = JSON.stringify(json)
+                    var data3 = JSON.parse(data2)
+                    var data4 = $.parseJSON(data3)
+                    console.log('data4', typeof(data4), data4)
+                    currentDF = data4
+                    dataDF = data4['df']
+                    dataColumns = data4['columns']
+                    console.log('data Columns    '+ data4['columns'])
+                    dataName = data4['name']
+                    dataSize = data4['size']
+                    this.createGraphFromCSV(data4,target, 'start', {});
+                    objectReferences.ViewImportObject.redirectFromLoad(data4)
+                    
+                }
+                else {
+                    data = $.parseJSON(json);
+                    objectReferences.ToolObject.addBaseID(data, "id");
+                    json = JSON.stringify(data);
 
-                objectReferences.ToolObject.loadJSON(data, target);
-                //console.log("I am creating the graph in Tulip")
-                //console.log(data);
-                this.createTulipGraph(json, target);
-                //console.log("I should now analyse the graph",contxt.sessionSid)
-                //this.analyseGraph(target)
+                    objectReferences.ToolObject.loadJSON(data, target);
+                    //console.log("I am creating the graph in Tulip")
+                    //console.log(data);
+                    this.createTulipGraph(json, target);
+                    //console.log("I should now analyse the graph",contxt.sessionSid)
+                    //this.analyseGraph(target)
 
-                //console.log("graph analysed", contxt.sessionSid)
+                    //console.log("graph analysed", contxt.sessionSid)
+                }
             }
             //TP.ObjectReferences().ClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndex", "catalyst");
@@ -76,6 +99,225 @@ var TP = TP || {};
              objectContext.TulipPosyInterfaceObject.addInterfaceCatalyst();
              objectContext.TulipPosyVisualizationObject.entanglementCaught();*/
         };
+
+
+        this.createGraphFromCSV = function(data,target, option, parameters) {
+            
+            var opl = document.getElementById('nodesVroo').checked
+            
+            if (opl) {
+                opl = 'linked'
+            }
+            else {
+                opl = 'no linked'
+            }
+            
+            nameCSV = data['name']
+            console.log('violet gorge')
+            if (option == 'start') {
+                console.log('rouge gorge')
+                var params = {
+                    type: 'adjustDraw',
+                    //coefficient: coef,
+                    name: nameCSV,
+                    option: 'start', 
+                    node: 'default',
+                    optPart: opl,
+                    label: 'default'
+                    
+                }
+            }
+            else if (option == 'coefficient') {
+                console.log('les jolies colonies de travail')
+                var lab = document.getElementById('nodes').options[document.getElementById('nodes').selectedIndex].value
+                var coef = document.getElementById('borneCoef').value
+                var params = {
+                    type: 'adjustDraw',
+                    coefficient: coef,
+                    name: nameCSV,
+                    option: 'coefficient', 
+                    node: 'default',
+                    optPart: opl,
+                    label: lab
+                    
+                }
+            }
+            else if (option  == 'equat') {
+                var equa = document.getElementById('equaTXT').value
+                var lab = document.getElementById('nodes').options[document.getElementById('nodes').selectedIndex].value
+                console.log('equat'+equa)
+                var params = {
+                    type: 'adjustDraw', 
+                    name: nameCSV, 
+                    option: 'equat',
+                    equation: equa,
+                    node: 'default',
+                    optPart: opl,
+                    label: lab
+                }
+                
+            }
+            else if(option == 'jacquard') {
+                var coefLeft = document.getElementById('borneLeft').value
+                var coefRight = document.getElementById('borneRight').value
+                var lab = document.getElementById('nodes').options[document.getElementById('nodes').selectedIndex].value
+                
+                var params = {
+                    type: 'adjustDraw', 
+                    name: nameCSV, 
+                    option: 'jacquard',
+                    borneLeft: coefLeft,
+                    borneRight: coefRight,
+                    node: 'default',
+                    optPart: opl,
+                    label: lab
+                }
+                
+            }
+                __g__.sendQuery({
+                    parameters: params,
+                    async: false,
+                    success: function(data) {
+                        console.log(data)
+                        var target =0;
+                        objectReferences.ToolObject.addBaseID(data, "id")
+                        json = JSON.stringify(data)
+                        console.log('rrtrrrr')
+                        objectReferences.ToolObject.loadJSON(data, target)
+                        //console.log("I am creating the graph in Tulip")
+                        console.log('dara')
+                        console.log(data);
+                    
+                        TP.Client().createTulipGraph(json, target);
+                    }
+                })
+            
+            
+        }
+        
+        this.handleVersionBases = function(name, kWord) {
+            if (kWord == 'prec') {
+                var params = {
+                    type: 'adjust',
+                    operation: 'prec',
+                    name: dataName
+                }
+            }
+            else if (kWord == 'suiv') {
+                var params = {
+                    type: 'adjust',
+                    operation: 'suiv',
+                    name: dataName
+                }
+            }
+            
+            __g__.sendQuery({
+                parameters: params,
+                async: false,
+                success: function (data) {
+                    console.log('bla bla bla bla')
+                    var target = 0
+                    console.log(data)
+                    objectReferences.ViewImportObject.updateSelectedBase(data) 
+                    TP.Client().createGraphFromCSV(data,target, 'start', {})   
+                }
+            });
+            
+        }
+        
+
+        this.updateNewBase = function(dataName, kWord) {
+            console.log('dataName:  ' , dataName)
+            console.log('kWord:   ', kWord)
+            
+            if (kWord == 'edit') {
+                expr = document.getElementById('txt').value
+                var params = {
+                    type: 'adjust',
+                    operation: 'edit',
+                    expression: expr,
+                    name: dataName
+                }
+            }
+            else if (kWord == 'subsetLines') {
+                firstVal = document.getElementById('firstLine').value
+                secondVal = document.getElementById('secondLine').value
+                var params = {
+                    type: 'adjust',
+                    operation: 'subLines',
+                    firstLine: firstVal,
+                    secondLine: secondVal,
+                    name: dataName
+                }
+            }
+            else if (kWord == 'choiceDrop') {
+                name2 = document.getElementById('choiceDrop').options[document.getElementById('choiceDrop').selectedIndex].value
+                var params = {
+                    type: 'adjust',
+                    operation: 'choiceDrop',
+                    name: dataName,
+                    nameColumn: name2
+                }
+            }
+            else if (kWord == 'choiceColumn') {
+                txt = document.getElementById('choiceCol').value
+                var params = {
+                    type: 'adjust', 
+                    operation: 'choiceColumn',
+                    text: txt,
+                    name: dataName
+                }
+            }
+            else if (kWord == 'keepSpeValues') {
+                operator = document.getElementById('choiceOp').options[document.getElementById('choiceOp').selectedIndex].value
+                column = document.getElementById('choiceC').options[document.getElementById('choiceC').selectedIndex].value
+                mode =  document.getElementById('choiceMode').options[document.getElementById('choiceMode').selectedIndex].value
+                txt = document.getElementById('valEnr').value
+                
+                var params = {
+                    type: 'adjust', 
+                    operation: 'keepSpeValues',
+                    text: txt,
+                    mode: mode,
+                    column: column,
+                    operator: operator,
+                    name: name
+                }
+            }
+            
+            __g__.sendQuery({
+                parameters: params,
+                async: false,
+                success: function (data) {
+                    console.log('bla bla bla bla')
+                    console.log(data)
+                    var target = 0
+                    objectReferences.ViewImportObject.updateSelectedBase(data)
+                    TP.Client().createGraphFromCSV(data,target, 'start', {})  
+                }
+            });
+            
+        }
+        
+        
+        this.exportCSV = function(dataName, pat) {
+            var params = {
+                type: 'exportCSV',
+                name: dataName,
+                path: pat
+            }
+            
+            __g__.sendQuery({
+                parameters: params,
+                async: false,
+                success: function (data) {
+                    console.log('bla bla bla bla')
+                    console.log(data)
+                    //objectReferences.ViewImportObject.updateSelectedBase(data)  
+                }
+            });
+            
+        }
 
 
         // This function calls a special case of creation of a graph, instead 

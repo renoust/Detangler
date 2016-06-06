@@ -28,6 +28,8 @@
   <script type="text/javascript" src="States.js"></script>
   <script type="text/javascript" src="StatesChange.js"></script>
   <script type="text/javascript" src="Store.js"></script>
+  <script type="text/javascript" src="ViewImport.js"></script>
+
   <script type="text/javascript" src="UpdateViews.js"></script>
   <script type="text/javascript" src="ViewGraphCatalyst.js"></script>
   <script type="text/javascript" src="ViewGraphSubstrate.js"></script>
@@ -73,6 +75,7 @@
         <ul class='submenu'>
 
           <li><a id='opfile'>Open File</a></li>
+          <li><a id='csvFile'>Import from CSV</a></li>
           <li><a><input id='analyse' type='checkbox' checked="checked"></input>Entanglement analysis</a></li>
           <li><a><input id='sync' type='checkbox' checked="checked"></input>Harmonize layouts</a></li>
 
@@ -102,6 +105,10 @@
 
 <div style="opacity:0;display:none;">
   <input id="files" type="file">
+</div>
+
+<div style="opacity:0;display:none;">
+  <input id="fileCSV" type="file">
 </div>
 
 <div id="Controller"></div>

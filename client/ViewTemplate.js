@@ -125,6 +125,8 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.visuPane(__g__.hashInteractorList,'create');
                 TP.ObjectReferences().InterfaceObject.togglePanelMenu();
                 //TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
+                TP.ObjectReferences().InterfaceObject.importPane();
+
 
             }
         };

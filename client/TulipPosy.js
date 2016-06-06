@@ -19,7 +19,7 @@
 
 
 
-var TulipPosy = function (originalJSON) {
+var TulipPosy = function (originalJSON, okCSV) {
 
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
@@ -76,7 +76,7 @@ var TulipPosy = function (originalJSON) {
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
             TP.ObjectReferences().ClientObject.loadData(recievedGraph, viewGraphSubstrate.getID());
         } else if ('file' in originalJSON) {
-            TP.ObjectReferences().ClientObject.loadData(originalJSON.file, viewGraphSubstrate.getID());
+            TP.ObjectReferences().ClientObject.loadData(originalJSON.file, viewGraphSubstrate.getID(), okCSV);
         } else TP.ObjectReferences().ClientObject.loadData(null, viewGraphSubstrate.getID());
     }
     else {
@@ -137,8 +137,7 @@ var TulipPosy = function (originalJSON) {
 
     //check if Google Chrome browser is used, if not, warn the user
      if(!window.chrome){
-        TP.Context().InterfaceObject.throwAnnouncement("Warning","This application is optimized for Google Chrome browser. If you see this message, please "+
-            "use Google Chrome or... run you fools.")
+        TP.Context().InterfaceObject.throwAnnouncement("Warning","This application is optimized for Google Chrome browser.")
     }
 
 

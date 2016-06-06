@@ -283,6 +283,7 @@ var TP = TP || {};
                 TP.ObjectReferences().InterfaceObject.infoPane();
                 TP.ObjectReferences().InterfaceObject.visuPane();
                 TP.ObjectReferences().InterfaceObject.interactorsPane([], 'create');
+                TP.ObjectReferences().InterfaceObject.importPane();
                 
             }
 
