@@ -388,10 +388,8 @@ var TP = TP || {};
                 }}, interactorGroup:"Mapping"},
 
             {interactorLabel:'To labels',interactorParameters:allproperty,callbackBehavior:{
-                //click:function(){console.log('click on the button');},
                 call:function(paramList){
-                    //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
-                    TP.ObjectReferences().VisualizationObject.labelMapping(paramList.nodeProperty, __g__.getID());
+                    __g__.label_property = paramList.nodeProperty;
                     __g__.getController().sendMessage("arrangeLabels");
                 }}, interactorGroup:"Mapping"},
 

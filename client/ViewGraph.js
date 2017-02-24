@@ -72,6 +72,8 @@ var TP = TP || {};
         __g__.combined_foreground = null;
         __g__.acceptedGraph = [];
         __g__.graph = null;
+        __g__.label_property = "label";
+        __g__.descriptors_property = "descriptors";
         
         __g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
         

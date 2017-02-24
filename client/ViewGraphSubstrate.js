@@ -411,10 +411,11 @@ var TP = TP || {};
             }, interactorGroup:"Selection"},
 
 
-            {interactorLabel:'Multiplex analysis', interactorParameters: '', callbackBehavior: {click: function () {
+            {interactorLabel:'Multiplex analysis', interactorParameters: allproperty, callbackBehavior: {call: function (paramList) {
                 __g__.getController().sendMessage("analyseGraph", (function(){
                     var params = __g__.viewGraphCatalystParameters();
                     params.idSourceAssociatedView = __g__.getID();
+                    params.multiplex_property = paramList.nodeProperty;
                     return {viewIndex: __g__.getID(), 
                             viewGraphCatalystParameters: params};
                      })());
@@ -435,10 +436,8 @@ var TP = TP || {};
                 }}, interactorGroup:"Mapping"},
 
             {interactorLabel:'To labels',interactorParameters:allproperty,callbackBehavior:{
-                //click:function(){console.log('click on the button');},
                 call:function(paramList){
-                    //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
-                    TP.ObjectReferences().VisualizationObject.labelMapping(paramList.nodeProperty, __g__.getID());
+                    __g__.label_property = paramList.nodeProperty;
                     __g__.getController().sendMessage("arrangeLabels");
                 }}, interactorGroup:"Mapping"},
 

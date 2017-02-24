@@ -582,17 +582,6 @@ var TP = TP || {};
             //objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
-        this.labelMapping = function (parameter, graphName) {
-
-            var cGraph = null;
-            var svg = null;
-
-            svg = TP.Context().view[graphName].getSvg();
-            cGraph = TP.Context().view[graphName].getGraph();
-
-            TP.Context().view[graphName].getGraphDrawing().labelMap(cGraph, 0, parameter);
-        };
-
 
         this.drawDataBase = function (_event) {
             var target = _event.associatedData.source;

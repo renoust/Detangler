@@ -785,16 +785,6 @@ var TP = TP || {};
             g.nodeSizeMap(_graph, dTime, {metric: "viewMetric"});
         };
 
-        g.labelMap = function (_graph, dTime, params) {
-            var parameter = "";
-            g.cGraph.nodes()
-                .forEach(function (n) {
-                    n.label = eval("n[\"" + params + "\"]");
-                });
-            
-        };
-
-
         g.nodeSizeMap = function (_graph, dTime, params) {
             g.cGraph = _graph;
 
@@ -1490,7 +1480,7 @@ var TP = TP || {};
                     return TP.Context().view[currentViewID].labelFontSize;
                 })
                 .text(function(dd){
-                    return limitLabel(dd.label);
+                    return limitLabel(dd[TP.Context().view[currentViewID].label_property]);
                 });
             var labelsArray = [];
             var iterArray = [];
