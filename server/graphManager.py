@@ -246,9 +246,11 @@ class graphManager():
         if not graph:
                 graph = self.substrate
 
-        viewL = graph.getLayoutProperty("viewLayout")
+        ##### update for tulip-4.10
+        #viewL = graph.getLayoutProperty("viewLayout")
         #graph.computeLayoutProperty("Random", viewL)
-        graph.applyLayoutAlgorithm("Random", viewL)
+        layoutDataSet = tlp.getDefaultPluginParameters("Random", graph)
+        graph.applyLayoutAlgorithm("Random", layoutDataSet)
         
         for n in graph.getNodes():
                 viewL[n] *= 10
@@ -389,9 +391,12 @@ class graphManager():
                 entanglementIntensity = float(c.entanglementIntensity[mainComponent])
                 entanglementHomogeneity = float(c.entanglementHomogeneity[mainComponent])
 
-                vL = c.catalystGraph.getLayoutProperty("viewLayout")
+                
+                ##### update for tulip-4.10
+                #vL = c.catalystGraph.getLayoutProperty("viewLayout")
                 #c.catalystGraph.computeLayoutProperty("GEM (Frick)", vL)
-                c.catalystGraph.applyLayoutAlgorithm("GEM (Frick)", vL)
+                layoutDataSet = tlp.getDefaultPluginParameters("GEM (Frick)", c.catalystGraph)
+                c.catalystGraph.applyLayoutAlgorithm("GEM (Frick)", layoutDataSet)
 
                 tName = c.catalystGraph.getStringProperty("catalystName")
                 label = c.catalystGraph.getStringProperty("label")
@@ -574,9 +579,12 @@ class graphManager():
         if graphTarget == 'catalyst':
                 g = self.catalyst                
 
-        vL = g.getLayoutProperty("viewLayout")
+        ##### update for tulip-4.10
+        #vL = g.getLayoutProperty("viewLayout")
         #g.computeLayoutProperty(layoutName, vL)
-        g.applyLayoutAlgorithm(layoutName, vL)
+        layoutDataSet = tlp.getDefaultPluginParameters(layoutName, g)
+        g.applyLayoutAlgorithm(layoutName, layoutDataSet)
+
         return g
 
 
@@ -593,8 +601,11 @@ class graphManager():
         print 'computing double algorithm: ',doubleName,' on ',graphTarget,' with ' ,g.numberOfNodes(), ' / ', g.numberOfEdges()
         vM = g.getDoubleProperty("viewMetric")
         viewLabel = g.getStringProperty("catalyst")
+        ##### update for tulip-4.10
         #g.computeDoubleProperty(doubleName, vM)
-        g.applyDoubleAlgorithm(doubleName, vM)
+        layoutDataSet = tlp.getDefaultPluginParameters(doubleName, g)
+        g.applyDoubleAlgorithm(doubleName, layoutDataSet)
+
         #print "the computation result"
         #print [vM[n] for n in g.getNodes()]
         #print [[e.id, g.source(e), g.target(e)] for e in g.getEdges()]

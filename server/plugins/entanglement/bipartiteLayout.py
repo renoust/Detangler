@@ -116,8 +116,10 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
         dataSet = tlp.getDefaultPluginParameters("LinLog Layout (Noack)", resGraph)
         dataSet["skip nodes"] = skipNodeP
         dataSet["result"] = viewLayout
+
+        ##### update for tulip-4.10
         #resGraph.computeLayoutProperty("LinLog Layout (Noack)", viewLayout, dataSet)
-        resGraph.applyLayoutAlgorithm("LinLog Layout (Noack)", viewLayout, dataSet)
+        resGraph.applyLayoutAlgorithm("LinLog Layout (Noack)", dataSet)
 
     
     if (tlp.getTulipRelease().split(".")[0] == '4'):
@@ -125,19 +127,29 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
         dataSet["skip nodes"] = skipNodeP
         dataSet["initial layout"] = viewLayout
         dataSet["result"] = viewLayout
+
+        ##### update for tulip-4.10
         #resGraph.computeLayoutProperty("LinLog", viewLayout, dataSet)
-        resGraph.applyLayoutAlgorithm("LinLog", viewLayout, dataSet)    
+        resGraph.applyLayoutAlgorithm("LinLog", dataSet)
+    
+
     '''
     dataSet = tlp.getDefaultPluginParameters("Anchored GEM (Frick)", resGraph)
     dataSet["skip nodes"] = skipNodeP
     dataSet["initial layout"] = viewLayout
-    resGraph.computeLayoutProperty("Anchored GEM (Frick)", viewLayout, dataSet)
+    ##### update for tulip-4.10
+    #resGraph.computeLayoutProperty("Anchored GEM (Frick)", viewLayout, dataSet)
+    resGraph.applyLayoutAlgorithm("Anchored GEM (Frick)", dataSet)
     '''
     
     if (tlp.getTulipRelease().split(".")[0] == '3'):
         tlp.loadPlugin("/home/brenoust/.Tulip-3.8/plugins/libfastoverlapremoval-3.8.0.so")
+
+    ##### update for tulip-4.10
     #resGraph.computeLayoutProperty("Fast Overlap Removal", viewLayout)
-    resGraph.applyLayoutAlgorithm("Fast Overlap Removal", viewLayout)
+    dataSet = tlp.getDefaultPluginParameters("Fast Overlap Removal", resGraph)
+    resGraph.applyLayoutAlgorithm("Fast Overlap Removal", dataSet)
+
             
     for n in resGraph.getNodes():
             if n in nToDocGN :
