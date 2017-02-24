@@ -497,6 +497,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
         result = 0
         weightProperty = ""
         operator = "OR"
+        multiplex_property = "descriptors"
 
         print 'the analysis request : ',request
 
@@ -507,13 +508,15 @@ class MyRequestHandler(tornado.web.RequestHandler):
                 weightProperty = request['weight'][0]
         if 'operator' in request:
                 operator = request['operator'][0]
+        if 'multiplex_property' in request:
+                multiplex_property = request['multiplex_property'][0]
 
         # request the analysis for the given substrate selection 
         if request['target'][0] == 'substrate':
                 print "the weight property: ",weightProperty
         print "graphMan: ",self.getGraphMan(request)
         print "request: ",request
-        result = self.getGraphMan(request).analyseGraph(selection, weightProperty)
+        result = self.getGraphMan(request).analyseGraph(selection, multiplex_property, weightProperty)
         graphJSON = self.getGraphMan(request).graphToJSON(result[0], {'nodes':[{'type':'float', 'name':'weight'}, {'type':'string', 'name':'label'}, {'type':'float', 'name':'entanglementIndex'},{'type':'float', 'name':'frequency'}],'links':[{'type':'string', 'name':'conditionalFrequency'}, {'type':'float', 'name':'weight'}], 'data':{'entanglement intensity':result[1], 'entanglement homogeneity':result[2]}})
         #print "Analysis return: "                                        
 

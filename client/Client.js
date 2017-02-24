@@ -233,8 +233,12 @@ var TP = TP || {};
                 sid: contxt.sessionSid,
                 type: 'analyse',
                 target: TP.Context().view[idViewSource].getType(),//idViewSource,//'substrate',
-                weight: TP.Context().substrateWeightProperty
+                weight: TP.Context().substrateWeightProperty,
+                multiplex_property: 'descriptors'
             };
+
+            if ('multiplex_property' in viewGraphCatalystParameters)
+                params.multiplex_property = viewGraphCatalystParameters.multiplex_property;
 
             //console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
 
@@ -284,7 +288,7 @@ var TP = TP || {};
                 }
             })
 
-
+            TP.Context().view[idView].getAssociatedView("catalyst")[0].descriptors_property = TP.Context().view[idView].descriptors_property;
             objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
         };
 
@@ -294,6 +298,7 @@ var TP = TP || {};
         // json, the json string of the graph
         // graphName, the string value corresponding to the graph
         this.sendSelection = function (_event) {
+
 
             var idView = _event.associatedData.idView;
             var json = _event.associatedData.json;
@@ -517,6 +522,7 @@ var TP = TP || {};
         this.syncGraph = function (selection, graphName) {
 
             //assert(true, "syncGraph : "+graphName);
+            console.log('sync graph', TP.Context().view[graphName].descriptors_property)
 
             var syncTarget = TP.Context().view[graphName].getType();
 
@@ -529,7 +535,8 @@ var TP = TP || {};
                 graph: selection,
                 target: syncTarget,
                 operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
-                weight: TP.Context().substrateWeightProperty
+                weight: TP.Context().substrateWeightProperty,
+                multiplex_property: TP.Context().view[graphName].descriptors_property
             };
             //console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
 

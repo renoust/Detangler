@@ -8,7 +8,6 @@ var TP = TP || {};
         
         //id, bouton, name, nodeColor, linkColor, backgroundColor, labelColor, nodeShape, type, idAssociation
         var __g__ = this;
-        
         var zoomCombined = 
         [
             ["free", {id:"zoomAll"}, 
@@ -448,7 +447,8 @@ var TP = TP || {};
         
         parameters.interactorList = interactors;
         
-        __g__ = new TP.ViewGraph(parameters);    
+        __g__ = new TP.ViewGraph(parameters);
+    
 
         __g__.initStates = function () {
 

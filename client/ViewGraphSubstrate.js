@@ -415,6 +415,7 @@ var TP = TP || {};
                 __g__.getController().sendMessage("analyseGraph", (function(){
                     var params = __g__.viewGraphCatalystParameters();
                     params.idSourceAssociatedView = __g__.getID();
+                    __g__.descriptors_property = paramList.nodeProperty;
                     params.multiplex_property = paramList.nodeProperty;
                     return {viewIndex: __g__.getID(), 
                             viewGraphCatalystParameters: params};

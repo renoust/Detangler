@@ -337,7 +337,7 @@ class graphManager():
     jsonGraph, a JSON graph object of a selection of nodes to analyse
     return an array containing [the catalyst graph, entanglement intensity, entanglement homogeneity]
     '''        
-    def analyseGraph(self, jsonGraph = 0, weightProperty = ""):
+    def analyseGraph(self, jsonGraph = 0, multiplex_property = "descriptors", weightProperty = ""):
 
         graph = self.substrate
         entanglementIntensity = 0
@@ -366,9 +366,9 @@ class graphManager():
 
         # this has to be set because of the clusterAnalysis script
 
-        if not graph.existProperty("descripteurs"):                
+        if True:#not graph.existProperty("descripteurs"):                
                 descP = graph.getStringProperty("descripteurs")
-                o_descP = graph.getStringProperty("descriptors")
+                o_descP = graph.getStringProperty(multiplex_property)
                 for n in graph.getNodes():
                         descP[n] = o_descP[n]
                         #print 'node ', descP[n]
