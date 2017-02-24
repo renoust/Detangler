@@ -144,6 +144,8 @@ var TP = TP || {};
                            barchart:"BARCHART"            
         };
         
+        //storing here temporarily
+        __g__.layerData = {}
 
         __g__.getViewGraph = function (viewID) {
             return __g__.tabGraph["graph_" + viewID];

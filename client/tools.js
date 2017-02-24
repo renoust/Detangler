@@ -125,6 +125,12 @@ var TP = TP || {};
             //console.log("the data to store:", data);
             this.grabDataProperties(data);
             var typeGraph = TP.Context().view[target].getType();
+            if (data["layers"] != undefined)
+            {
+                TP.Context().layerData = data.layers;
+            }
+            //if ("layers" in layers)
+            //    
             TP.Context().view[target].getGraph().nodes(data.nodes, typeGraph);
             TP.Context().view[target].getGraph().links(data.links, typeGraph);
             TP.Context().view[target].getGraph().edgeBinding();

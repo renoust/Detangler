@@ -274,6 +274,16 @@ var TP = TP || {};
             var data = _event.associatedData.data;
             //console.log("toutou2 : ", data)
 
+            //console.log("GRAPH ANALYSED ",data);
+            data.nodes.forEach(function(d){
+                if (d.label in TP.Context().layerData)
+                {
+                    //console.log(d, TP.Context().layerData[parseInt(d.label)]);
+                    var layer_info = TP.Context().layerData[parseInt(d.label)];
+                    for (var attrname in layer_info) { d[attrname] = layer_info[attrname]; }
+                }
+            })
+
 
             objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
         };
