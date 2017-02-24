@@ -253,7 +253,8 @@ var TP = TP || {};
                 })
                 .on("mouseover", function (d) {
                     if (g.dragStarted == true) return;
-                    TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
+                    g.showLabelNode(d)
+                    //TP.Context().view[currentViewID].getController().sendMessage("mouseoverShowLabelNode", {data: d});
                 })
                 .on("mouseout", function () {
                     
@@ -369,6 +370,7 @@ var TP = TP || {};
                 .style("opacity", TP.Context().defaultNodeOpacity)
                 .style("fill", function(d){
                     var c = TP.Context().view[currentViewID].getNodesColor();
+                    //var c = g.nodesColor;
                     if (d._color == undefined)
                         d._color = c;
                     return d._color;
@@ -781,6 +783,15 @@ var TP = TP || {};
         g.resize = function (_graph, dTime) {
             //For backward compatibility only
             g.nodeSizeMap(_graph, dTime, {metric: "viewMetric"});
+        };
+
+        g.labelMap = function (_graph, dTime, params) {
+            var parameter = "";
+            g.cGraph.nodes()
+                .forEach(function (n) {
+                    n.label = eval("n[\"" + params + "\"]");
+                });
+            
         };
 
 

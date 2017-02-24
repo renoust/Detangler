@@ -255,6 +255,19 @@ var TP = TP || {};
                     minLength: 0
                 }]];
 
+        var allproperty = [
+            [7,{id:"nodeProperty"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = ["--"];
+                        var oneNode = __g__.getGraph().nodes()[0];
+                        for (var prop in oneNode)
+                            propertyList.push(prop);
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }]];
+
 
         var interactors = [
 
@@ -372,6 +385,14 @@ var TP = TP || {};
                 call:function(paramList){
                     //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
                     TP.ObjectReferences().VisualizationObject.colorMapping(paramList.nodeProperty, __g__.getID());
+                }}, interactorGroup:"Mapping"},
+
+            {interactorLabel:'To labels',interactorParameters:allproperty,callbackBehavior:{
+                //click:function(){console.log('click on the button');},
+                call:function(paramList){
+                    //__g__.getController().sendMessage('color mapping', {nodeProperty:paramList.nodeProperty, idView: TP.Context().activeView})
+                    TP.ObjectReferences().VisualizationObject.labelMapping(paramList.nodeProperty, __g__.getID());
+                    __g__.getController().sendMessage("arrangeLabels");
                 }}, interactorGroup:"Mapping"},
 
             {interactorLabel:'Label metric ordering',interactorParameters:tl2,callbackBehavior:{
