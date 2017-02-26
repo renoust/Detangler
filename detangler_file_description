@@ -36,6 +36,9 @@
 #                if catalysts do not apply to nodes, just concatenate the catalyst 
 #                of the node's connecting edges
 #
+# Any other properties can be attached to nodes as well
+# Alternative lists of catalysts can also be attached
+#
 #############################################################################################
 
 
@@ -157,4 +160,166 @@ the description of this graph will be (available as toy_example.json):
 	}]
 }
 
+#############################################################################################
+#
+# Additionnal information
+#
+#############################################################################################
+
+#############################################################################################
+# Multiple properties can be attached to nodes, links and layers. 
+# This is done with an additional "layers" dictionary such as:
+
+{"nodes":[
+	{
+		"id":1,
+		"label":"node1",
+		"x":0,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)",
+	},
+	{
+		"id":2,
+		"label":"node2",
+		"x":1,
+		"y":1,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+	},
+	{
+		"id":3,
+		"label":"node3",
+		"x":2,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(=)",
+	}],
+"links":[
+	{
+		"id":1,
+		"source":1,
+		"target":2,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+	},
+	{
+		"id":2,
+		"source":1,
+		"target":3,
+		"descriptors":"catalyst(-);catalyst(=)",
+	},
+	{
+		"id":3,
+		"source":2,
+		"target":3,
+		"descriptors":"catalyst(-)",
+	}],
+"layers":{
+	"catalyst(-)":
+	{
+		"other":"minus",
+		"order":2
+	},
+	"catalyst(+)":
+	{
+		"other":"plus",
+		"order":2
+	},
+	"catalyst(~)":
+	{
+		"other":"tilde",
+		"order":2
+	},
+	"catalyst(=)":
+	{
+		"other":"equal",
+		"order":2
+	}}
+}
+
+#############################################################################################
+# Multiple types of multilayer are supported (through the OpenView in the subtrate graph)
+# Multiple multilayers can be coordinated together
+# The file format should then be:
+
+{"nodes":[
+	{
+		"id":1,
+		"label":"node1",
+		"x":0,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)",
+		"something_else":"(a);(b);(c);(d)",
+	},
+	{
+		"id":2,
+		"label":"node2",
+		"x":1,
+		"y":1,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+		"something_else":"(a);(b);(c);(d)",
+	},
+	{
+		"id":3,
+		"label":"node3",
+		"x":2,
+		"y":0,
+		"descriptors":"catalyst(-);catalyst(=)",
+		"something_else":"(a);(b);(c);(d)",
+	}],
+"links":[
+	{
+		"id":1,
+		"source":1,
+		"target":2,
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+		"something_else":"(a);(b);(c);(d)",
+	},
+	{
+		"id":2,
+		"source":1,
+		"target":3,
+		"descriptors":"catalyst(-);catalyst(=)",
+		"something_else":"(a);(b);(c);(d)",
+	},
+	{
+		"id":3,
+		"source":2,
+		"target":3,
+		"descriptors":"catalyst(-)",
+		"something_else":"(a);(b);(c);(d)",
+	}],
+"layers":{
+	"catalyst(-)":
+	{
+		"other":"minus",
+		"order":2
+	},
+	"catalyst(+)":
+	{
+		"other":"plus",
+		"order":2
+	},
+	"catalyst(~)":
+	{
+		"other":"tilde",
+		"order":2
+	},
+	"catalyst(=)":
+	{
+		"other":"equal",
+		"order":2
+	},
+	"(a)":
+	{
+		"other":"equal",
+		"order":2
+	}}
+}
+
+#############################################################################################
+#
+# Paper reference:
+# "Detangler: Visual Analytics for Multiplex Networks" 
+# Benjamin Renoust, Guy Melançon, Tamara Munzner. Computer Graphics Forum, May. 2015.
+# DOI: 10.1111/cgf.12644    http://renoust.com/pub/detangler.pdf
+#
+#############################################################################################
 

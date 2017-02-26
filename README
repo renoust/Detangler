@@ -1,3 +1,70 @@
+(10/06/2015)
+Installation on Ubuntu
+
+1- install Tulip from pip: pip install tulip
+(apt-get install python-pip if you need pip)
+
+or install the current Tulip from sources
+http://sourceforge.net/projects/auber/files/tulip/
+
+Tulip dependencies
+- install cmake
+- install cmake-gui (cmake-qt-gui)
+- install zlib (zlib1g-dev)
+- install glut (freeglut3-dev)
+- install glew (libglew-dev)
+- install ljpeg (ibjpeg-dev)
+- install png (libpng-dev)
+- install freetype (libfreetype6-dev)
+- install qt (libqt4-dev)
+- install qmake (qt4-qmake)
+- install blas (libopenblas-dev)
+- install lapack (liblapack-dev & liblapacke-dev)
+- install fortran (gfortran)
+- install python (libpython2.7-dev)
+
+
+cmake-gui (we are now preparing the compilation of Tulip), a few settings first
+
+- place the source code where you've uncompressed the tar.gz (hereafter "tlproot/")
+- place the builds where you want (tlproot/build is advised)
+- place CMAKE-INSTALL-PREFIX where you want (advised tlproot/install)
+
+- if the build fails, you may need to place CMAKE-BUILD-TYPE as Debug
+
+go to your BUILD folder (tlproot/build/)
+make && make install
+
+
+
+Detangler's dependencies:
+
+- install tornado (pip install tornado)
+- install scipy (pip install scipy)
+- install numpy (pip install numpy)
+- install scikit-learn (pip install scikit-learn)
+
+
+Advised, work from the demo branch (the master branch includes many unstable features)
+git clone -b demo --single-branch https://github.com/renoust/Detangler.git
+
+- edit the config file in Detangler/server, to put the location of libtulip(-python ...).so
+in out example it's: 
+      tulip_lib_path="tlproot/install/lib/"
+      tulip_python_path="tlproot/install/lib/python/"
+
+execute the server in
+Detangler/server/
+tulip-server.sh
+
+Currently the prototype only works well with "Chrome"
+to launch the prototype, in chrome:
+
+http://localhost:31497
+
+
+------
+
 Licensed under the X11 license sometimes reffered as MIT license.
 
 Copyright (c) 2012---2017 Benjamin Renoust, Guy Melançon
