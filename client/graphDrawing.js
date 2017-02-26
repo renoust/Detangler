@@ -901,7 +901,6 @@ var TP = TP || {};
             diff = true;
             g.cGraph = _graph;
             //we would like it better as a parameter
-            //assert(false, "turlututu");
             scaleMin = 3.0;
             scaleMax = 12.0;
 
@@ -1192,7 +1191,7 @@ var TP = TP || {};
                 .style("font-size", TP.Context().view[currentViewID].labelFontSize)
                 .text(function (dd) {
                     if(dd.visible || dd.baseID == currentNode.baseID)
-                        return dd.label;
+                        return dd[TP.Context().view[currentViewID].label_property];
                 });
             
             return;
