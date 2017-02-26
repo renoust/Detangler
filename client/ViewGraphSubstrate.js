@@ -236,11 +236,30 @@ var TP = TP || {};
                     minLength: 0
                 }]];
 
+        var mxproperty = [
+            [7,{id:"mxProperty"},
+                {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = [];
+                        var oneNode = __g__.getGraph().nodes()[0];
+                        
+
+                        for (var v in __g__.getAssociatedView("catalyst"))
+                        {
+                            var cview = __g__.getAssociatedView("catalyst")[v]
+                            propertyList.push(cview.descriptors_property);
+                        }
+
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }]];
+
         var allproperty = [
             [7,{id:"nodeProperty"},
                 {
                     source: function(searchStr, sourceCallback){
-                        var propertyList = ["--"];
+                        var propertyList = ['--'];
                         var oneNode = __g__.getGraph().nodes()[0];
                         for (var prop in oneNode)
                             propertyList.push(prop);
@@ -248,7 +267,6 @@ var TP = TP || {};
                     },
                     minLength: 0
                 }]];
-
                 
           var searchBox = [
             ["autocomplete", {id:"searchBox"},
@@ -329,8 +347,10 @@ var TP = TP || {};
                 call:function(layout){
                     __g__.getController().sendMessage('changeLayout', {layoutName:layout.algoTulip, idView: TP.Context().activeView});
             }}, interactorGroup:"Layout"},
-            {interactorLabel:'Harmonize layout from catalysts', interactorParameters: '', callbackBehavior: {click: function () {
-                TP.ObjectReferences().ClientObject.syncLayouts(__g__.getID());
+
+            {interactorLabel:'Harmonize layout from catalysts', interactorParameters: mxproperty, callbackBehavior: {call: function (paramList) {
+
+                TP.ObjectReferences().ClientObject.syncLayouts(__g__.getID(), undefined, undefined, paramList.mxProperty);
             }}, interactorGroup:"Layout"},
 
 

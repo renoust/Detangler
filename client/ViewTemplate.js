@@ -12,10 +12,10 @@ var TP = TP || {};
         var __g__ = this;
     
         //checking parameters
-             
-        if (!('id' in parameters) || parameters.id === undefined)
+
+        if (!('id' in parameters) || parameters.id === undefined || parseInt(parameters.id) < TP.Context().viewMeter)
             parameters.id = String(TP.Context().getIndiceView());
-        
+
         if (!('name' in parameters) || parameters.name === undefined) 
             parameters.name = "View"+id;
         
@@ -28,7 +28,7 @@ var TP = TP || {};
         if(!('interactorList' in parameters) || parameters.interactorList === undefined)
             parameters.interactorList = null;
         
- 
+
         __g__.controller = new TP.Controller();
         __g__.tabLinks = {};
         __g__.graphDrawing = null;

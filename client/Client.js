@@ -25,21 +25,19 @@ var TP = TP || {};
         this.loadData = function (json, target) {
             //for local use
             if (json == "" || json == null) {
-                //console.log(contxt.json_address)
                 var jqxhr = $.getJSON(contxt.json_address, function () {
-                    console.log("success");
+                    console.log("data loading success");
                 })
 
                     .error(function (e) {
-                        alert("error!!", e);
+                        alert("data loading error!!", e);
                     })
                     .complete(function () {
-                        console.log("complete");
+                        console.log("data loading complete");
                     })
                     .success(function (data, b) {
                         if ("response" in data)
                             data = data.response;
-                        //console.log(data)
                         objectReferences.ToolObject.addBaseID(data, "id");
                         var jsonData = JSON.stringify(data);
                         objectReferences.ToolObject.loadJSON(data, target);
@@ -54,13 +52,7 @@ var TP = TP || {};
                 json = JSON.stringify(data);
 
                 objectReferences.ToolObject.loadJSON(data, target);
-                //console.log("I am creating the graph in Tulip")
-                //console.log(data);
                 this.createTulipGraph(json, target);
-                //console.log("I should now analyse the graph",contxt.sessionSid)
-                //this.analyseGraph(target)
-
-                //console.log("graph analysed", contxt.sessionSid)
             }
             //TP.ObjectReferences().ClientObject.syncLayouts();
             //TP.ObjectContext().TulipPosyVisualizationObject.sizeMapping("entanglementIndex", "catalyst");
@@ -84,14 +76,12 @@ var TP = TP || {};
         // query, the query to pass to the search engine
         this.callSearchQuery = function (query) {
             var recieved_data = {};
-            //console.log('calling search query ', query)
             $.ajax({
                 url: contxt.tulip_address,
                 async: false,
                 data: {type: "creation", 'search': query['query']},
                 type: 'POST',
                 success: function (data) {
-                    //console.log('sending search request in tulip, and recieved data: ', data)
                     data = JSON.parse(data);
                     recieved_data = data;
                 }
@@ -152,7 +142,6 @@ var TP = TP || {};
                 success: function (data) {
                     objectReferences.UpdateViewsObject.buildGraphFromData(data, target);
                     if ($('#analyse').is(':checked')) {
-                        //console.log(target);
                         var viewGraphSubstrate = TP.Context().view[target];
                         //this chunk should be dropped shouldn't it?
                         ['Bipartite analysis', '', {click: function () {
@@ -178,7 +167,7 @@ var TP = TP || {};
                         //{viewIndex: viewGraphSubstrate.getID(), viewGraphCatalystParameters: viewGraphSubstrate.viewGraphCatalystParameters()});
                     }
                     if ($('#sync').is(':checked')) {                        
-                       TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID(), true, true);
+                       TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID(), true, true, "descriptors");
                     }
                     TP.Context().InterfaceObject.tileViews();
                 }
@@ -193,6 +182,10 @@ var TP = TP || {};
 
             var idViewSource = _event.associatedData.source;
             var viewGraphCatalystParameters = _event.associatedData.viewGraphCatalystParameters;
+            var multiplex_property = "descriptors";
+            if ('multiplex_property' in viewGraphCatalystParameters)
+                multiplex_property = viewGraphCatalystParameters.multiplex_property;
+
 
             if (TP.Context().view[idViewSource].getType() !== "substrate") {
                 assert(false, "not substrate type");
@@ -200,52 +193,34 @@ var TP = TP || {};
             }
 
 
-            if (TP.Context().view[idViewSource].getAssociatedView("catalyst") == null && Object.keys(viewGraphCatalystParameters).length != null) {
+            var already_created = false;
+            for (var v in TP.Context().view[idViewSource].getAssociatedView("catalyst"))
+            {
+                var cview = TP.Context().view[idViewSource].getAssociatedView("catalyst")[v]
+                if (cview.descriptors_property == multiplex_property)
+                    already_created = true;
 
-                //assert(false, tabCatalyst[0])
-                //assert(false, tabCatalyst[8])
-                //assert(false, tabCatalyst[9])
-
-                //console.log(tabCatalyst);
-
-                /*
-                var myView = new TP.ViewGraphCatalyst({id:tabCatalyst[0], 
-                                                       name:tabCatalyst[2], 
-                                                       nodeColor:tabCatalyst[3], 
-                                                       linkColor:tabCatalyst[4], 
-                                                       backgroundColor:tabCatalyst[5], 
-                                                       labelColor:tabCatalyst[6], 
-                                                       nodeShape:tabCatalyst[7], 
-                                                       type:tabCatalyst[8], 
-                                                       idSourceAssociatedView:idView});
-                 */                              
-
+            }
+            //if (TP.Context().view[idViewSource].getAssociatedView("catalyst") == null 
+            if (! already_created 
+                && Object.keys(viewGraphCatalystParameters).length != null) {
+                
                 var myView = new TP.ViewGraphCatalyst(viewGraphCatalystParameters);
 
 
                 myView.buildLinks();
                 myView.addView();
+                myView.descriptors_property = TP.Context().view[idViewSource].descriptors_property;
 
             }
 
-            //assert(true, "analyseGraph");
             var params = {
                 sid: contxt.sessionSid,
                 type: 'analyse',
                 target: TP.Context().view[idViewSource].getType(),//idViewSource,//'substrate',
                 weight: TP.Context().substrateWeightProperty,
-                multiplex_property: 'descriptors'
+                multiplex_property: multiplex_property
             };
-
-            if ('multiplex_property' in viewGraphCatalystParameters)
-                params.multiplex_property = viewGraphCatalystParameters.multiplex_property;
-
-            //console.log("sending analyseGraphRequest with weight: ", TP.Context().substrateWeightProperty);
-
-
-            //assert(false, "idView : " + idView);
-            //console.log(TP.Context().view[idView]);
-            //console.log(TP.Context().view[idView].getController());
 
             TP.Context().view[idViewSource].getController().sendMessage("analyseGraphSendQuery", {params: params}, "principal");
 
@@ -257,13 +232,11 @@ var TP = TP || {};
             var source = _event.associatedData.source;
             var params = _event.associatedData.params;
 
-            //console.log("succes")
-
             __g__.sendQuery({
                 parameters: params,
                 success: function (data) {
 
-                    TP.Context().getController().sendMessage("answerAnalyseGraph", {data: data}, source);
+                    TP.Context().getController().sendMessage("answerAnalyseGraph", {data: data, multiplex_property:params.multiplex_property}, source);
                 }
             });
 
@@ -271,25 +244,31 @@ var TP = TP || {};
 
 
         this.answerAnalyseGraph = function (_event) {
-            //console.log("toutou")
 
             var idView = _event.associatedData.target;
-            //console.log("toutou1 : ", idView)
             var data = _event.associatedData.data;
-            //console.log("toutou2 : ", data)
+            var multiplex_property = _event.associatedData.multiplex_property;
 
-            //console.log("GRAPH ANALYSED ",data);
             data.nodes.forEach(function(d){
                 if (d.label in TP.Context().layerData)
                 {
-                    //console.log(d, TP.Context().layerData[parseInt(d.label)]);
                     var layer_info = TP.Context().layerData[parseInt(d.label)];
                     for (var attrname in layer_info) { d[attrname] = layer_info[attrname]; }
                 }
             })
 
-            TP.Context().view[idView].getAssociatedView("catalyst")[0].descriptors_property = TP.Context().view[idView].descriptors_property;
-            objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[0].getID());
+            var mxViewIndex = -1;
+            for (var v in TP.Context().view[idView].getAssociatedView("catalyst"))
+            {
+                var cview = TP.Context().view[idView].getAssociatedView("catalyst")[v]
+                if (cview.descriptors_property == multiplex_property)
+                {
+                    mxViewIndex = v;
+                    break;
+                }
+            }
+
+            objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[mxViewIndex].getID());
         };
 
 
@@ -327,8 +306,6 @@ var TP = TP || {};
             __g__.sendQuery({
                 parameters: params,
                 success: function (data) {
-
-                    //console.log("analyzed data", data)
                 }
             });
 
@@ -372,8 +349,6 @@ var TP = TP || {};
                parameters: params,
                success: function (data) {
                    //TP.Context().getController().sendMessage("answerGetPlugins",{data:data, endHandler:endHandler}, "principal");
-                   //assert(true, "Grabbed algorithms:")
-                   // console.log(data)
                     endHandler.call(TP.Context(), data);
                 }
             });
@@ -404,6 +379,7 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'algorithm',
+                multiplex_property: TP.Context().view[idView].descriptors_property,
                 parameters: JSON.stringify(layoutParams)
             };
 
@@ -451,6 +427,7 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'update',
+                multiplex_property: TP.Context().view[graphName].descriptors_property,
                 parameters: JSON.stringify(updateParams)
             };
 
@@ -479,7 +456,8 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'algorithm',
-                parameters: JSON.stringify(floatParams)
+                parameters: JSON.stringify(floatParams),
+                multiplex_property: TP.Context().view[idView].descriptors_property,
             };
             //floatAlgorithmName, idView;
             TP.Context().view[idView].getController().sendMessage("FloatAlgorithmSendQuery", {params: params, floatAlgorithmName:floatAlgorithmName}, "principal");
@@ -521,37 +499,54 @@ var TP = TP || {};
         // graphName, the graph origin of the selection
         this.syncGraph = function (selection, graphName) {
 
-            //assert(true, "syncGraph : "+graphName);
-            console.log('sync graph', TP.Context().view[graphName].descriptors_property)
 
             var syncTarget = TP.Context().view[graphName].getType();
 
             if (syncTarget == 'combined')
                 syncTarget = TP.Context().view[contxt.combined_foreground].getType();
 
-            var params = {
-                sid: contxt.sessionSid,
-                type: 'analyse',
-                graph: selection,
-                target: syncTarget,
-                operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
-                weight: TP.Context().substrateWeightProperty,
-                multiplex_property: TP.Context().view[graphName].descriptors_property
-            };
-            //console.log("sending synGraph with weight: ", TP.Context().substrateWeightProperty);
-
-
-            __g__.sendQuery({
-                parameters: params,
-                async: false,
-                success: function (data) {
-                    objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName);
+            var multiplex_properties = []
+            if (syncTarget == "substrate")
+            {
+                for (var v in TP.Context().view[graphName].getAssociatedView("catalyst"))
+                {
+                    var cview = TP.Context().view[graphName].getAssociatedView("catalyst")[v];
+                    multiplex_properties.push(cview.descriptors_property);
                 }
-            });
+            }
+            else
+                multiplex_properties.push(TP.Context().view[graphName].descriptors_property);
+
+
+            for (var i in multiplex_properties)
+            {
+                multiplex_property = multiplex_properties[i];
+
+                var params = {
+                    sid: contxt.sessionSid,
+                    type: 'analyse',
+                    graph: selection,
+                    target: syncTarget,
+                    operator: TP.Context().tabOperator[graphName],//contxt.catalyst_sync_operator,
+                    weight: TP.Context().substrateWeightProperty,
+                    multiplex_property: multiplex_property
+                };
+
+
+                __g__.sendQuery({
+                    parameters: params,
+                    async: false,
+                    success: function (data) {
+                        objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName, multiplex_property);
+                    }
+                });
+
+            }
+
         };
 
 
-        this.syncLayouts = function (currentGraph, async, rescale) {
+        this.syncLayouts = function (currentGraph, async, rescale, multiplex_property) {
 
             //assert(true, "syncLayouts");
 
@@ -565,8 +560,10 @@ var TP = TP || {};
             var params = {
                 sid: contxt.sessionSid,
                 type: 'algorithm',
-                parameters: JSON.stringify(syncLayoutParams)
+                parameters: JSON.stringify(syncLayoutParams),
+                multiplex_property: multiplex_property,
             };
+
 
             __g__.sendQuery({
                 parameters: params,
@@ -603,14 +600,12 @@ var TP = TP || {};
 
             var nodeS = svg.selectAll("g.node.selected").data();
 
-            //console.log(u);
-
             var toStringify = {};
             toStringify.nodes = new Array();
 
             var end = nodeS.length;
 
-            for (i = 0; i < end; i++) {
+            for (var i = 0; i < end; i++) {
                 var node = {};
                 node.baseID = nodeS[i].baseID;
                 toStringify.nodes.push(node);

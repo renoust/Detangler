@@ -38,7 +38,7 @@ class graphManager():
     root_deprecated = 0
     graph_deprecated = 0
     substrate = 0
-    catalyst = 0
+    catalyst = {}
 
     '''
     This method converts a graph to a JSON string, given some parameters:
@@ -162,7 +162,7 @@ class graphManager():
     target, the graph to target ('substrate' or 'catalyst')
     Returns the induced subgraph
     '''
-    def inducedSubGraph(self, jsonGraph, target):        
+    def inducedSubGraph(self, jsonGraph, target, multiplex_property="descriptors"):        
         nodeList = []
         graphNList = []
         for n in jsonGraph[u'nodes']:
@@ -170,7 +170,7 @@ class graphManager():
 
         graph = self.substrate
         if target == 'catalyst':
-                graph = self.catalyst
+                graph = self.catalyst[multiplex_property]
 
         #print target,' graph: ', [n for n in graph.getNodes()],' ', [e for e in graph.getEdges()]," with ", nodeList
 
@@ -213,7 +213,7 @@ class graphManager():
         
         return graph
 
-    def updateLayout(self, jsonGraph, target):
+    def updateLayout(self, jsonGraph, target, multiplex_property="descriptors"):
         
         
         print "updating the layout:"
@@ -228,7 +228,7 @@ class graphManager():
 
         graph = self.substrate
         if target == 'catalyst':
-                graph = self.catalyst
+                graph = self.catalyst[multiplex_property]
                 
         baseIDP = graph.getDoubleProperty("baseID")
         vLayoutP = graph.getLayoutProperty("viewLayout")
@@ -367,7 +367,7 @@ class graphManager():
                         print "there is only one node in the selection"
 
         # this has to be set because of the clusterAnalysis script
-
+        '''
         if True:#not graph.existProperty("descripteurs"):                
                 descP = graph.getStringProperty("descripteurs")
                 o_descP = graph.getStringProperty(multiplex_property)
@@ -377,11 +377,13 @@ class graphManager():
                 for e in graph.getEdges():
                         descP[e] = o_descP[e]
                         #print 'edge ', descP[e]
+        '''
 
         labelList = []
 
         if not onlyOneNode:                                        
-            c = entanglementAnalysisLgt.EntanglementAnalysis(graph, "descripteurs", _weightProperty = weightProperty)
+            #c = entanglementAnalysisLgt.EntanglementAnalysis(graph, "descripteurs", _weightProperty = weightProperty)
+            c = entanglementAnalysisLgt.EntanglementAnalysis(graph, multiplex_property, _weightProperty = weightProperty)
 
             if c.catalystGraph.numberOfNodes() > 0:
                 resLen = [len(k) for k in c.catalystToEntIndex]
@@ -432,12 +434,14 @@ class graphManager():
 
 
                 # associates the right baseIDs
-                if self.catalyst:
-                    labelCatalystP = self.catalyst.getStringProperty("label")
-                    baseIDCatalystP = self.catalyst.getDoubleProperty("baseID")
+                #if self.catalyst:
+                if multiplex_property in self.catalyst:
+
+                    labelCatalystP = self.catalyst[multiplex_property].getStringProperty("label")
+                    baseIDCatalystP = self.catalyst[multiplex_property].getDoubleProperty("baseID")
                     
                     nbAssign = 0
-                    for n in self.catalyst.getNodes():
+                    for n in self.catalyst[multiplex_property].getNodes():
                         if labelCatalystP[n] in labelList:
                             baseID[labelToCatalystGraphNode[labelCatalystP[n]]] = baseIDCatalystP[n]
                             nbAssign += 1
@@ -445,7 +449,7 @@ class graphManager():
                             break
 
                     nbAssign = 0
-                    for e in self.catalyst.getEdges():
+                    for e in self.catalyst[multiplex_property].getEdges():
                         edgeLabel = labelCatalystP[e]
                         if edgeLabel in labelEList:
                             baseID[labelToCatalystGraphEdge[edgeLabel]] = baseIDCatalystP[e] 
@@ -462,15 +466,16 @@ class graphManager():
                 if jsonGraph:
                         return [c.catalystGraph, entanglementIntensity, entanglementHomogeneity]
 
-                if not self.catalyst:
-                        self.catalyst = tlp.newGraph()
+                #if not self.catalyst:
+                if not multiplex_property in self.catalyst:
+                        self.catalyst[multiplex_property] = tlp.newGraph()
                 else:
-                        self.catalyst.clear()
+                        self.catalyst[multiplex_property].clear()
 
-                tlp.copyToGraph(self.catalyst, c.catalystGraph)
+                tlp.copyToGraph(self.catalyst[multiplex_property], c.catalystGraph)
                
 
-                return [self.catalyst, entanglementIntensity, entanglementHomogeneity]
+                return [self.catalyst[multiplex_property], entanglementIntensity, entanglementHomogeneity]
 
 
 
@@ -480,25 +485,28 @@ class graphManager():
 
 
         if onlyOneNode or onlySingleEdges:
-            descP = graph.getStringProperty("descripteurs")
+            #descP = graph.getStringProperty("descripteurs")
+            descP = graph.getStringProperty(multiplex_property)
             returnGraph = tlp.newGraph()
             labelList = []
             if onlyOneNode:
                 labelList = descP[graphNList[0]].split(';')
             if onlySingleEdges:
-                descP = graph.getStringProperty("descripteurs")
+                #descP = graph.getStringProperty("descripteurs")
+                descP = graph.getStringProperty(multiplex_property)
                 for e in graph.getEdges():
                     labelList.extend(descP[e].split(';'))
                 labelList = list(set(labelList))
 
-            if self.catalyst:
-                labelCatalystP = self.catalyst.getStringProperty("label")
-                baseIDCatalystP = self.catalyst.getDoubleProperty("baseID")
+            if multiplex_property in self.catalyst:
+            #if self.catalyst:
+                labelCatalystP = self.catalyst[multiplex_property].getStringProperty("label")
+                baseIDCatalystP = self.catalyst[multiplex_property].getDoubleProperty("baseID")
                 label = returnGraph.getStringProperty("label")
                 baseID = returnGraph.getDoubleProperty("baseID")
 
                 nbAssign = 0
-                for n in self.catalyst.getNodes():
+                for n in self.catalyst[multiplex_property].getNodes():
                     if labelCatalystP[n] in labelList:
                         nn = returnGraph.addNode()
                         label[nn] = labelCatalystP[n]
@@ -510,12 +518,13 @@ class graphManager():
             if jsonGraph:
                     return [returnGraph, entanglementIntensity, entanglementHomogeneity]
 
-            if not self.catalyst:
-                    self.catalyst = tlp.newGraph()
+            if multiplex_property not in self.catalyst:
+            #if not self.catalyst:
+                    self.catalyst[multiplex_property] = tlp.newGraph()
             else:
-                    self.catalyst.clear()
+                    self.catalyst[multiplex_property].clear()
 
-            return [self.catalyst, entanglementIntensity, entanglementHomogeneity]
+            return [self.catalyst[multiplex_property], entanglementIntensity, entanglementHomogeneity]
 
 
 
@@ -525,7 +534,7 @@ class graphManager():
     jsonGraph, a JSON graph object of a selection of nodes to analyse
     In the future we should include the entanglement calculation and send it back too.
     '''
-    def synchronizeFromCatalyst(self, jsonGraph, operator, weightProperty=None):
+    def synchronizeFromCatalyst(self, jsonGraph, operator, weightProperty=None, multiplex_property="descriptors"):
 
         nodeList = []
         graphNList = []
@@ -534,10 +543,10 @@ class graphManager():
         for n in jsonGraph[u'nodes']:
                 nodeList.append(n[u'baseID'])
 
-        baseIDP = self.catalyst.getDoubleProperty("baseID")
-        label = self.catalyst.getStringProperty("label")
+        baseIDP = self.catalyst[multiplex_property].getDoubleProperty("baseID")
+        label = self.catalyst[multiplex_property].getStringProperty("label")
 
-        for n in self.catalyst.getNodes():
+        for n in self.catalyst[multiplex_property].getNodes():
                 if baseIDP[n] in nodeList:
                         graphNList.append(n)
                         cataList.append(label[n])
@@ -545,9 +554,13 @@ class graphManager():
         nList = []
         eList = []
 
-        descP = self.substrate.getStringProperty("descripteurs")
+        #### adapting for multiple multiplex
+        #descP = self.substrate.getStringProperty("descripteurs")
+        #sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs", _weightProperty = weightProperty)
         
-        sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, "descripteurs", _weightProperty = weightProperty)
+        descP = self.substrate.getStringProperty(multiplex_property)
+        sync = entanglementSynchronization.EntanglementSynchronization(self.substrate, multiplex_property, _weightProperty = weightProperty)
+
         syncRes = sync.synchronizeFromCatalyst(cataList, _operator=operator)
         toPrint = [n for n in syncRes['substrate'].getNodes()]
         resLen = [len(k) for k in syncRes['catalystAnalysis'].catalystToEntIndex]
@@ -558,8 +571,8 @@ class graphManager():
         return self.graphToJSON(syncRes['substrate'], {'nodes':[{'type':'string', 'name':'label'}], 'data':{'entanglement intensity':entanglementIntensity, 'entanglement homogeneity':entanglementHomogeneity}})
     
    
-    def synchronizeLayouts(self):
-        bLResult = bipartiteLayout.draw(self.substrate, self.catalyst)
+    def synchronizeLayouts(self, multiplex_property="descriptors"):
+        bLResult = bipartiteLayout.draw(self.substrate, self.catalyst[multiplex_property], descPName=multiplex_property)
         #print "layout synchronized ",vectors
         #vector = {k:v for k,v in bLResult.items() if k != "graph"}
         resGraph = bLResult['graph']
@@ -574,10 +587,10 @@ class graphManager():
     layoutName, the name of the layout algorithm to call
     graphTarget, the string value of the graph onto apply the algorithm (substrate or catalyst)
     '''
-    def callLayoutAlgorithm(self, layoutName, graphTarget):
+    def callLayoutAlgorithm(self, layoutName, graphTarget, multiplex_property="descriptors"):
         g = self.substrate
         if graphTarget == 'catalyst':
-                g = self.catalyst                
+                g = self.catalyst[multiplex_property]                
 
         ##### update for tulip-4.10
         #vL = g.getLayoutProperty("viewLayout")
@@ -593,18 +606,18 @@ class graphManager():
     doubleName, the name of the double algorithm to call
     graphTarget, the string value of the graph onto apply the algorithm (substrate or catalyst)
     '''
-    def callDoubleAlgorithm(self, doubleName, graphTarget):
+    def callDoubleAlgorithm(self, doubleName, graphTarget, multiplex_property="descriptors"):
         g = self.substrate
         if graphTarget == 'catalyst':
-                g = self.catalyst
+                g = self.catalyst[multiplex_property]
         
         print 'computing double algorithm: ',doubleName,' on ',graphTarget,' with ' ,g.numberOfNodes(), ' / ', g.numberOfEdges()
         vM = g.getDoubleProperty("viewMetric")
         viewLabel = g.getStringProperty("catalyst")
         ##### update for tulip-4.10
         #g.computeDoubleProperty(doubleName, vM)
-        layoutDataSet = tlp.getDefaultPluginParameters(doubleName, g)
-        g.applyDoubleAlgorithm(doubleName, layoutDataSet)
+        doubleDataSet = tlp.getDefaultPluginParameters(doubleName, g)
+        g.applyDoubleAlgorithm(doubleName, doubleDataSet)
 
         #print "the computation result"
         #print [vM[n] for n in g.getNodes()]

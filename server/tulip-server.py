@@ -352,23 +352,27 @@ class MyRequestHandler(tornado.web.RequestHandler):
         if 'parameters' in request.keys():
                 params = request['parameters'][0]
                 params = json.loads(params)
+                multiplex_property = 'descriptors'
+                if 'multiplex_property' in request:
+                    multiplex_property = request['multiplex_property'][0]
+
                 print 'parameters:', params, ' type:', params['type']
                 if 'type' in params and 'name' in params:
                         if params['type'] == 'layout':
                                 layoutName = params['name'].encode("utf-8")
-                                g = self.getGraphMan(request).callLayoutAlgorithm(layoutName, params['target'].encode("utf-8"))
+                                g = self.getGraphMan(request).callLayoutAlgorithm(layoutName, params['target'].encode("utf-8"), multiplex_property=multiplex_property)
                                 if g:
                                     graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'string', 'name':'label'}]})
                                     self.sendJSON(graphJSON)
 
                         if params['type'] == 'float':
-                                g = self.getGraphMan(request).callDoubleAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"))
+                                g = self.getGraphMan(request).callDoubleAlgorithm(params['name'].encode("utf-8"), params['target'].encode("utf-8"), multiplex_property=multiplex_property)
                                 graphJSON = self.getGraphMan(request).graphToJSON(g, {'nodes':[{'type':'float', 'name':'viewMetric'}, {'type':'string', 'name':'label'}]})                                        
                                 self.sendJSON(graphJSON)
 
                         if params['type'] == 'synchronize layouts':
-                                print "calling layout sync"
-                                graphJSON = self.getGraphMan(request).synchronizeLayouts()
+                                print "calling layout sync with mx=",multiplex_property
+                                graphJSON = self.getGraphMan(request).synchronizeLayouts(multiplex_property=multiplex_property)
                                 self.sendJSON(graphJSON)
 
     '''
@@ -379,12 +383,15 @@ class MyRequestHandler(tornado.web.RequestHandler):
         if 'parameters' in request.keys():
                 params = request['parameters'][0]
                 params = json.loads(params)
+                multiplex_property = "descriptors"
+                if 'multiplex_property' in request:
+                    multiplex_property = request['multiplex_property'][0]
 
                 if 'type' in params:
                     if params['type'] == 'induced':
                         #print "update request: ",request
                         graphSelection = json.loads(request['graph'][0]) 
-                        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0])
+                        g = self.getGraphMan(request).inducedSubGraph(graphSelection, request['target'][0], multiplex_property=multiplex_property)
                         #g = self.getGraphMan(request).modifyGraph(g)
                         #print 'recieved this list: ',graphSelection
                         graphJSON = self.getGraphMan(request).graphToJSON(g,{'nodes':[{'type':'string', 'name':'label'}]})
@@ -394,7 +401,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
                     if params['type'] == 'layout':
                         
                         graphSelection = json.loads(params['graph'])
-                        self.getGraphMan(request).updateLayout(graphSelection, params['target'])
+                        self.getGraphMan(request).updateLayout(graphSelection, params['target'], multiplex_property=multiplex_property)
                         #update the layout here from the target graph
                         #shouldn't we check the sid beforehand?
 
@@ -522,7 +529,7 @@ class MyRequestHandler(tornado.web.RequestHandler):
 
         # request the synchronization for the given catalyst selection
         if request['target'][0] == 'catalyst':
-                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection, operator, weightProperty)
+                graphJSON = self.getGraphMan(request).synchronizeFromCatalyst(selection, operator, weightProperty, multiplex_property)
          
         # send back the resulting graph
         self.sendJSON(graphJSON)
