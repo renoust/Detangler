@@ -290,10 +290,10 @@ var TP = TP || {};
                 var oldID = TP.Context().activeView;
                 TP.Context().activeView = __g__.ID;
                 //console.log("hashbuttons: ", __g__.hashButton)
-                if (oldID != TP.Context().activeView) {
+                //if (oldID != TP.Context().activeView) {
                     TP.Context().InterfaceObject.interactionPane(__g__.hashInteractorList, 'update');
                     TP.Context().InterfaceObject.visuPane(__g__.hashInteractorList, 'update');
-                }
+                //}
                 TP.Context().InterfaceObject.addInfoButton(__g__);
                 TP.Context().InterfaceObject.attachInfoBox(__g__.ID);
                 // $('.ui-dialog-titlebar').each(function () {

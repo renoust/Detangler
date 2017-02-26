@@ -3,7 +3,7 @@
  * window but for the clients needs, this interface was removed and
  * recreated with html elements.
  * @requires d3.js
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -149,7 +149,6 @@ var TP = TP || {};
                 var cView = TP.Context().view[TP.Context().activeView];
                 cView.setPreviousSourceSelection([]);
                 cView.getController().sendMessage("nodeSelected", {selList: cView.getSourceSelection()});
-                //console.log("updating weight property: ", TP.Context().substrateWeightProperty);
             });
         };
 
@@ -318,9 +317,7 @@ var TP = TP || {};
 
 
         this.attachInfoBox = function (target) {
-            //console.log("calling attach")
-            // assert(true, 'Interface -> attachInfoBox')
-
+            
             var infoNodes = $('#infoNodes');
             var nodesBID = $('<select/>',{class:"hidden"});
 
@@ -366,7 +363,6 @@ var TP = TP || {};
         this.addCatalystList = function (_event) {
             // assert(true, 'Interface -> addInfoBox')
             var node = _event.associatedData.catalystList;
-            //console.log("calling addCataList")
             $("#infoSync ul").empty();
             for (var k in node) {
                 $('#infoSync ul').append("<li><label style='font-weight:bold'>" + k + ":</label> " + node[k] + "</li>");;
@@ -426,7 +422,10 @@ var TP = TP || {};
         };
 
         this.setHeaderMenu = function(){
+            //hides the menu at start
             $(".submenu:not('.open_at_load')").hide();
+
+            
 
             $("li.hmenu > a").click(function (e) {
 
@@ -439,25 +438,26 @@ var TP = TP || {};
                 $("ul.submenu").slideUp("normal", function () {
                   $(this).parent().removeClass("open");
                 });
-                //console.log()
                 $(this).next("ul.submenu").slideDown("normal", function () {
                   $(this).parent().addClass("open");
                 });
               }
               e.preventDefault();
             });
+
+
             $('ul.submenu').mouseleave(function () {
-              //console.log('mouseout');
               $('ul.submenu').slideUp("normal", function () {
                 $(this).parent().removeClass("open");
               });
 
             });
 
+            
             $('#opfile').click(function (e) {
               $('#files').click();
               e.preventDefault();
-            });
+            });            
 
         };
         
@@ -471,7 +471,7 @@ var TP = TP || {};
             var x0 = 300+paddingV;
             var y0 = paddingH;
             if (orientation == true){
-                y0 = 5;
+                y0 = 35;
             }
             
             
@@ -481,7 +481,6 @@ var TP = TP || {};
                                                             orientation);
 
            tab.forEach(function(t){
-                //console.log("in the forEachLoop:",t); 
                 t.getController().sendMessage("rescaleView", {idView:t.getID()});
            });
                    
@@ -491,7 +490,7 @@ var TP = TP || {};
             // assert(true, 'Interface -> setPositionDialogs') 
             var length = tabView.length;
             if(length === 1){
-                drawDialog(x,y,h,w,tabView[0]);
+                drawDialog(x,y,h,w,tabView[0], horizontal);
                 return x;
             }else{
                 var tmp = changesens(h,w,horizontal);
@@ -507,12 +506,23 @@ var TP = TP || {};
                     return {h:h, w:w/2};
                 }
             }
-            function drawDialog(x,y,h,w,view){
-                view.dialog.dialog({
-                    width:w-4,
-                    height:h,
-                    position: [x,y+30]
-                });
+            function drawDialog(x,y,h,w,view, horizontal){
+                if (horizontal)
+                {
+                    view.dialog.dialog({
+                        width:w-4,
+                        height:h,
+                        position: [x,y+30]
+                    });
+                }else
+                {
+                    view.dialog.dialog({
+                        width:w-4,
+                        height:h,
+                        position: [x,y]
+                    });
+
+                }
             }
         };
 
@@ -583,7 +593,6 @@ var TP = TP || {};
                         /*button.text('>');*/
                         button.eq(0).toggleClass('open');
 
-                        //console.log($(parent))
                         $(parent).eq(0).toggleClass('nosidebar sidebar');
                         //              parent.className = 'nosidebar';
                         $('.cont').each(function () {
@@ -595,7 +604,6 @@ var TP = TP || {};
                         $('.toggleButton').each(function () {
                             /*$(this).text('>') */
 
-                            //console.log($(this).eq(0).className)
                             $(this).eq(0).removeClass('open');
                         });
                         $('.cont').each(function () {
@@ -629,7 +637,7 @@ var TP = TP || {};
                     function(i,li){entul.prepend(li);}
                 );
                 
-                objectReferences.VisualizationObject.entanglementCaught(0,null);
+                //objectReferences.VisualizationObject.entanglementCaught(0,null);
             });
 
             if($('#entValues').length < 1)
@@ -690,6 +698,7 @@ var TP = TP || {};
         };
 
         this.interactionPane = function (buttons, mode) {
+
             // assert(true, 'Interface -> interactionPane') 
             var menu, tgbutton, content, fam, i = 0;
 
@@ -729,7 +738,6 @@ var TP = TP || {};
 
         this.infoPane = function () {
             // assert(true, 'Interface -> infoPane')
-            //console.log("calling infoPane")
             var menu = this.addPanelMenu('Informations');
             var content = $("#" + menu + " .menu-content");
             var tgbutton = $('#' + menu).find('.toggleButton');
@@ -783,6 +791,8 @@ var TP = TP || {};
 
         this.visuPane = function (buttons, mode) {
             // assert(true, 'Interface -> visuPane') 
+            //                        mode = "create";
+            
             var menu, content, tgbutton;
             if (mode === 'update') {
                 for (i = 0; i < contxt.menuNum; i++) {
@@ -809,6 +819,11 @@ var TP = TP || {};
 
 
         this.createElements = function(tab, parentId, evnt){
+
+            function isFunction(functionToCheck) {
+                 var getType = {};
+                 return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+            }
             // assert(true, 'Interface -> createElements') 
             var par = $(parentId);
             for(var k in tab){
@@ -824,6 +839,12 @@ var TP = TP || {};
                 var type = tab[k][0];
                 var attrElem = tab[k][1];
                 var attrChild = tab[k][2];
+
+                if (typeof attrChild == 'function')
+                {
+                    attrChild = attrChild();                            
+                }
+
 
                 var labelPrec = (tab[k][3]!= null && tab[k][3]!=undefined) ? tab[k][3] : "";
                 var labelSuiv = (tab[k][4]!= null && tab[k][4]!=undefined) ? tab[k][4] : "";
@@ -845,7 +866,6 @@ var TP = TP || {};
                                 var key = this.id;
                                 var selectedOpt = $('#'+key)[0].options[$('#'+key)[0].selectedIndex];
                                 res[key] = {text:selectedOpt.text, val:selectedOpt.value};
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -867,7 +887,6 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).val()};
-                                    //console.log(res)
                                     var c = e ? e.call(res) : null; 
                                 }
                             };
@@ -891,7 +910,6 @@ var TP = TP || {};
                                     var res = {};
                                      key = $(this).attr('name');
                                     res[key] = {text:$(this).text(), val:$(this).is(":checked")};
-                                    //console.log(res)
                                     var c = e ? e.call(res) : null; 
                             };
                         })(evnt));
@@ -911,7 +929,6 @@ var TP = TP || {};
                                 var res = {};
                                 var key = this.id;
                                 res[key] = this.value;
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));                        
@@ -932,7 +949,6 @@ var TP = TP || {};
 
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2};
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -947,7 +963,6 @@ var TP = TP || {};
                                
                                 key = this.id;
                                 res[key] = {val1:val1, val2:val2};
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -968,7 +983,6 @@ var TP = TP || {};
                                 var res = {};
                                 key = this.id;
                                 res[key] = $(this).spinner('value');
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -1020,7 +1034,6 @@ var TP = TP || {};
 
                                 key = "value";
                                 res[key] = val1;
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -1034,7 +1047,6 @@ var TP = TP || {};
                                
                                 key = "value";
                                 res[key] = val1;
-                                //console.log(res)
                                 var c = e ? e.call(res) : null;
                             };
                         })(evnt));
@@ -1044,7 +1056,6 @@ var TP = TP || {};
                 }
                 if (type == "free"){
                     //var div = $('<div/>',attrElem).appendTo(parentId);
-                    //console.log(attrElem, attrChild.html)
                     parentId.append(attrChild.html);
                     if (attrChild.code)
                         attrChild.code.call();
@@ -1143,7 +1154,6 @@ var TP = TP || {};
                 res[key] = $(this).spinner('value')
             })
 
-            console.log(res)
             evnt.call(res)
         }*/
 

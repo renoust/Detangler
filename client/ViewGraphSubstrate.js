@@ -255,6 +255,56 @@ var TP = TP || {};
                     minLength: 0
                 }]];
 
+        var syncviews = [
+            [2,{id:"syncviews"},
+                  
+                    function(){
+                        var returnArray = []
+                        for (var v in __g__.getAssociatedView("catalyst"))
+                        {
+                            var cview = __g__.getAssociatedView("catalyst")[v];
+
+                            var checked = false;
+                            if (__g__.synchronized_views.indexOf(cview.descriptors_property)>-1)
+                            {
+                                checked = true;
+                            }
+                            returnArray.push({name:"checked", value:"checked", checked:checked, text:cview.descriptors_property})
+
+                        }
+
+                        return returnArray;//[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]
+                    }
+                    
+                  ,"catalyst"]
+
+            //            function()
+            //{
+            //    return  ["checkbox", {id: "bothViews"}, [{id:"bothViews_cb",text:"both views",value:"checked",checked:"false"}]],
+            //    [2, {id:"checkbox"},,
+
+
+            //}
+
+
+              /*  {
+                    source: function(searchStr, sourceCallback){
+                        var propertyList = [];
+                        var oneNode = __g__.getGraph().nodes()[0];
+                        
+
+                        for (var v in __g__.getAssociatedView("catalyst"))
+                        {
+                            var cview = __g__.getAssociatedView("catalyst")[v]
+                            propertyList.push(cview.descriptors_property);
+                        }
+
+                        sourceCallback(propertyList);
+                    },
+                    minLength: 0
+                }
+                */];
+
         var allproperty = [
             [7,{id:"nodeProperty"},
                 {
@@ -500,6 +550,21 @@ var TP = TP || {};
                     __g__.graphDrawing.changeLayout(__g__.graph, 0);
             }}, interactorGroup:"View"},
 
+            {interactorLabel:'Leapfrog target', interactorParameters: mxproperty, callbackBehavior: {call: function (paramList) {
+                __g__.leapfrog_target = paramList.mxProperty;
+            }}, interactorGroup:"View"},
+
+            {interactorLabel:'Synchronized views', interactorParameters: syncviews, callbackBehavior: {call: function (checked) {
+                    var prop = checked["checked"].text;
+                    var val = checked["checked"].val;
+                    var index = __g__.synchronized_views.indexOf(prop);
+
+                    if (!val && index > -1)
+                        __g__.synchronized_views.splice(index, 1);
+
+                    if (val && index == -1)
+                        __g__.synchronized_views.push(prop);
+            }}, interactorGroup:"View"},
  
             
             // ['b3','circular layout','',{click:function(){TP.ObjectReferences().ClientObject.callLayout('Circular', __g__.getID())}}],

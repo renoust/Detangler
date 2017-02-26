@@ -1,6 +1,6 @@
 /************************************************************************
  * This module sends the json file to the server
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -39,7 +39,8 @@ document.getElementById('files').addEventListener('change', function (e) {
              remove("svg_catalyst");
              remove("svg_combined");*/
 
-            TulipPosy({file: xhr.responseText})
+            TulipPosy({file: xhr.responseText}, true);
+
 
         }
 

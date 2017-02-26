@@ -74,6 +74,8 @@ var TP = TP || {};
         __g__.graph = null;
         __g__.label_property = "label";
         __g__.descriptors_property = "descriptors";
+        __g__.leapfrog_target = "descriptors";
+        __g__.synchronized_views = ["descriptors"];
         
         __g__.updateEventHandler = new TP.UpdateEventHandler("graph", __g__.ID);
         

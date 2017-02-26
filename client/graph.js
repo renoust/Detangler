@@ -3,7 +3,7 @@
  * This container stores basically a list of nodes and links and binds
  * them together
  * @requires jQuery
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  **************************************************************************/
 

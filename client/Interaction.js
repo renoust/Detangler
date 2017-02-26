@@ -2,7 +2,7 @@
  * This module contains the interactors with the graph
  * (e.g. node selection and zoom)
  * @requires d3.js
- * @authors Guy Melancon, Benjamin Renoust, Damien Rosmorduc
+ * @authors Benjamin Renoust, Guy Melancon, Damien Rosmorduc
  * @created May 2012
  ***********************************************************************/
 
@@ -369,16 +369,36 @@ var TP = TP || {};
             var substrateName = null;
 
 
-            if (TP.Context().view[currentViewID].getAssociatedView("catalyst") != null || TP.Context().view[currentViewID].getType() == "catalyst") {
-                catalystName = (TP.Context().view[currentViewID].getType() == "catalyst") ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("catalyst")[0].getID();
-                catalystView = TP.Context().view[catalystName];
-                catalystSvg = (TP.Context().view[currentViewID].getType() == "catalyst") ? svg : catalystView.getSvg();
+            if (TP.Context().view[currentViewID].getAssociatedView("catalyst") != null 
+                || TP.Context().view[currentViewID].getType() == "catalyst") {
+                    var substrate_view = null;
+                    if (TP.Context().view[currentViewID].getType() == "catalyst")
+                    {
+                        substrate_view = TP.Context().view[currentViewID].getAssociatedView("substrate")[0].getID();
+                    }else{
+                        substrate_view = currentViewID;
+                    }
+
+                    var catalystNames = [];
+                    var catalystSvgs = [];
+                    var catalystViews = [];
+
+                    for (var v in TP.Context().view[substrate_view].getAssociatedView("catalyst")){
+                        var cname = TP.Context().view[substrate_view].getAssociatedView("catalyst")[v].getID();
+                        var cview = TP.Context().view[cname];
+                        catalystNames.push(cname);
+                        catalystViews.push(cview);
+                        catalystSvgs.push(cview.getSvg());
+                    }
+
+                //catalystName = () ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("catalyst")[0].getID();
+                //catalystView = TP.Context().view[catalystName];
+                //catalystSvg = (TP.Context().view[currentViewID].getType() == "catalyst") ? svg : catalystView.getSvg();
             }
 
 
             if (TP.Context().view[currentViewID].getAssociatedView("substrate") != null || TP.Context().view[currentViewID].getType() == "substrate") {
                 substrateName = (TP.Context().view[currentViewID].getType() == "substrate") ? currentViewID : TP.Context().view[currentViewID].getAssociatedView("substrate")[0].getID();
-                ;
                 substrateView = TP.Context().view[substrateName];
                 substrateSvg = (TP.Context().view[currentViewID].getType() == "substrate") ? svg : substrateView.getSvg();
             }
@@ -390,41 +410,49 @@ var TP = TP || {};
                 combinedSvg = (TP.Context().view[currentViewID].getType() == "combined") ? svg : combinedView.getSvg();
             }
 
-            if (catalystSvg != null) {
+            if (catalystSvgs.length > 0) {
+
+                for (var i in catalystSvgs)
+                {
+                    catalystSvg = catalystSvgs[i];
+                    catalystView = catalystViews[i];
+                    catalystName = catalystNames[i];
 
 
-                var catalystNodeColor = catalystView.getNodesColor();
+                    var catalystNodeColor = catalystView.getNodesColor();
 
-                catalystSvg.selectAll("g.node")
-                    .style('opacity', 1.0)
-                    .select("circle.node")
-                    .style('fill', function(d){
-                        return d._color;})//catalystNodeColor)
-                    .style("stroke-width", 0);
-                catalystSvg.selectAll("g.node")
-                    .select("text.node")
-                    .attr("visibility", "visible");
-                catalystSvg.selectAll("g.node")
-                    .select("rect.node")
-                    .style('fill', function (d) {
-                        return d._color;
-                        //if (substrateSvg != null)
-                        //    return substrateView.getNodesColor();
-                        //else
-                        //    return catalystNodeColor;
-                    })
-                    .style("stroke-width", 0);
-                catalystSvg.selectAll("g.link")
-                    .style('opacity', 1.0)
-                    .select("path.link")
-                    .style('stroke', catalystView.getLinksColor())
-                    .style('stroke-width', 1);
+                    catalystSvg.selectAll("g.node")
+                        .style('opacity', 1.0)
+                        .select("circle.node")
+                        .style('fill', function(d){
+                            return d._color;})//catalystNodeColor)
+                        .style("stroke-width", 0);
+                    catalystSvg.selectAll("g.node")
+                        .select("text.node")
+                        .attr("visibility", "visible");
+                    catalystSvg.selectAll("g.node")
+                        .select("rect.node")
+                        .style('fill', function (d) {
+                            return d._color;
+                            //if (substrateSvg != null)
+                            //    return substrateView.getNodesColor();
+                            //else
+                            //    return catalystNodeColor;
+                        })
+                        .style("stroke-width", 0);
+                    catalystSvg.selectAll("g.link")
+                        .style('opacity', 1.0)
+                        .select("path.link")
+                        .style('stroke', catalystView.getLinksColor())
+                        .style('stroke-width', 1);
 
 
-                //objectReferences.VisualizationObject.resetSize(catalystName);
-                catalystSvg.selectAll("text.node").style("opacity", 1);
-                //objectReferences.VisualizationObject.arrangeLabels(catalystName);
-                TP.Controller().sendMessage("arrangeLabels", null, catalystName, catalystName);
+                    //objectReferences.VisualizationObject.resetSize(catalystName);
+                    catalystSvg.selectAll("text.node").style("opacity", 1);
+                    //objectReferences.VisualizationObject.arrangeLabels(catalystName);
+                    TP.Controller().sendMessage("arrangeLabels", null, catalystName, catalystName);
+
+                }
 
 
             }
@@ -1015,15 +1043,30 @@ var TP = TP || {};
             var typeGraph = cView.getType();
             var associatedSelection = null;
             var associatedViews = null;
+            var cAssociatedView = null; 
             if (typeGraph == "substrate")
+            {
                 associatedViews = cView.getAssociatedView("catalyst");
+                for (var v in associatedViews)
+                {
+                    if (associatedViews[v].descriptors_property == cView.leapfrog_target)
+                    {
+                        cAssociatedView = associatedViews[v];
+                        break;
+                    }
+                }
+
+            }
             if (typeGraph == "catalyst")
+            {
                 associatedViews = cView.getAssociatedView("substrate");
+                cAssociatedView = associatedViews[0];
+            }
+
             if (!associatedViews) return;
             //console.log("the current type: ",typeGraph);
             //assert("true", "we have the associated view!");
             //console.log(associatedViews[0].getType());
-            var cAssociatedView = associatedViews[0];
             associatedSelection = cAssociatedView.getTargetSelection();
 
             //console.log(associatedSelection);

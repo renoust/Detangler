@@ -4,7 +4,7 @@
  **************************************************************************
  * This class provides an http server that waits for JSON formatted orders
  * to operate on graphs, and returns answers unders JSON format too.
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon, 
  * @created May 2012
  **************************************************************************
 '''

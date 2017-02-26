@@ -2,7 +2,7 @@
  * This module contains all the requests to the server that the client
  * has to do in order to get the graph, or to modify some of its nodes.
  * @requires jquery.js
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -205,12 +205,21 @@ var TP = TP || {};
             if (! already_created 
                 && Object.keys(viewGraphCatalystParameters).length != null) {
                 
-                var myView = new TP.ViewGraphCatalyst(viewGraphCatalystParameters);
+                var mxprop = TP.Context().view[idViewSource].descriptors_property;
+                var newParameters = jQuery.extend({}, viewGraphCatalystParameters);
+                newParameters.name += " - "+mxprop;
+
+                var myView = new TP.ViewGraphCatalyst(newParameters);
+                TP.Context().view[idViewSource].leapfrog_target = mxprop;
+                if (TP.Context().view[idViewSource].synchronized_views.indexOf(mxprop) < 0)
+                    TP.Context().view[idViewSource].synchronized_views.push(mxprop);
 
 
                 myView.buildLinks();
                 myView.addView();
-                myView.descriptors_property = TP.Context().view[idViewSource].descriptors_property;
+                myView.descriptors_property = mxprop;
+                TP.Context().InterfaceObject.tileViews();
+
 
             }
 
@@ -268,7 +277,7 @@ var TP = TP || {};
                 }
             }
 
-            objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[mxViewIndex].getID());
+            objectReferences.UpdateViewsObject.applySubstrateAnalysisFromData(data, TP.Context().view[idView].getAssociatedView("catalyst")[mxViewIndex].getID(), multiplex_property);
         };
 
 
@@ -511,7 +520,8 @@ var TP = TP || {};
                 for (var v in TP.Context().view[graphName].getAssociatedView("catalyst"))
                 {
                     var cview = TP.Context().view[graphName].getAssociatedView("catalyst")[v];
-                    multiplex_properties.push(cview.descriptors_property);
+                    if (TP.Context().view[graphName].synchronized_views.indexOf(cview.descriptors_property) > -1)
+                        multiplex_properties.push(cview.descriptors_property);
                 }
             }
             else

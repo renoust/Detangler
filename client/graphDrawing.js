@@ -10,7 +10,7 @@
  * useful either.
  *
  * @requires d3.js
- * @authors Guy Melancon, Benjamin Renoust, Damien Rosmorduc
+ * @authors Benjamin Renoust, Guy Melancon, Damien Rosmorduc
  * @created May 2012
  ***********************************************************************/
 

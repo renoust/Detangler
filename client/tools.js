@@ -2,7 +2,7 @@
  * This module contains various tools for the application. They were put
  * here because they didn't really belong to any other modules.
  *
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 

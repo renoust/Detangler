@@ -3,7 +3,7 @@
  * This module updates the graph views by drawing a new graph from a
  * given set of data
  * @requires d3.js
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -180,7 +180,7 @@ var TP = TP || {};
         };
 
 
-        this.applySubstrateAnalysisFromData = function (data, target) { //catalyst at bingin of project, without generic programmation
+        this.applySubstrateAnalysisFromData = function (data, target, multiplex_property) { //catalyst at bingin of project, without generic programmation
             //TP.GraphDrawing(TP.Context().view[target].getGraph(),TP.Context().view[target].getSvg(), target).rescaleGraph(data);
 
             //objectReferences.VisualizationObject.rescaleGraph(data)
@@ -214,9 +214,7 @@ var TP = TP || {};
             TP.Context().entanglement_intensity = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
             TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
             
-            //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
-            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
-            objectReferences.VisualizationObject.entanglementCaught(target);
+            objectReferences.VisualizationObject.entanglementCaught(target, null, multiplex_property);
             TP.Context().view[target].getController().sendMessage("sizeMapping", {parameter:"entanglementIndex", idView: target});
         };
 
@@ -364,9 +362,6 @@ var TP = TP || {};
             TP.Context().view[graphName].setMetric_BC(pileCentrality.transformToArray("BarChart"));
             TP.Context().view[graphName].setMetric_SP(pileCentrality.transformToArray("ScatterPlot"));
 
-            //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
-            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-            //objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 
@@ -429,16 +424,18 @@ var TP = TP || {};
 
             if ('data' in data) {
 
-                data['data']['entanglement homogeneity'] = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
-                data['data']['entanglement intensity'] = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
+                if (typeGraph == "catalyst" || TP.Context().view[graphName].leapfrog_target == multiplex_property)
+                {
 
-                TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
-                TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
-                TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
-            
-                //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
-                //objectReferences.VisualizationObject.entanglementCaught(graphName, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-                objectReferences.VisualizationObject.entanglementCaught(graphName);
+                    data['data']['entanglement homogeneity'] = objectReferences.ToolObject.round(data['data']['entanglement homogeneity'], TP.Context().digitPrecision);
+                    data['data']['entanglement intensity'] = objectReferences.ToolObject.round(data['data']['entanglement intensity'], TP.Context().digitPrecision);
+
+                    TP.Context().entanglement_homogeneity = data['data']['entanglement homogeneity'];
+                    TP.Context().entanglement_intensity = data['data']['entanglement intensity'];
+                    TP.Context().entanglement_homogeneity = 1 - Math.acos(TP.Context().entanglement_homogeneity)/(Math.PI/2);
+                
+                    objectReferences.VisualizationObject.entanglementCaught(graphName, null, multiplex_property);
+                }
 
             }
 

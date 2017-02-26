@@ -1,7 +1,7 @@
 /************************************************************************
  * This module manipulates the svg representation of the graphs
  * (e.g it can rearrange layouts, hide labels ...)
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  ***********************************************************************/
 
@@ -55,10 +55,14 @@ var TP = TP || {};
         //entanglement frame of the substrate view
         // The entanglement intensity drives the color of the frame 
         //following a Brewer's scale (www.colorbrewer2.org).
-        this.entanglementCaught = function (CurrentViewID, nothing) {
+        this.entanglementCaught = function (CurrentViewID, nothing, multiplex_property) {
 
             //console.log("entering 'entanglement caught function'", nothing);
             // WARNING THIS EVENT IS CALLED TWICE?????
+            if (multiplex_property == undefined)
+                multiplex_property = ""
+
+            $("#entanglement>p")[0].innerHTML = "ENTANGLEMENT ("+multiplex_property+")"
 
             var brewerSeq = ['#FEEDDE', '#FDD0A2', '#FDAE6B', '#FD8D3C', '#E6550D', '#A63603'];
             var zeroColor = d3.rgb("white");
@@ -364,8 +368,6 @@ var TP = TP || {};
              return 12;
              });*/
 
-            //if(TP.Context().view[target].getAssociatedView("catalyst") != null)
-            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[target].getAssociatedView("catalyst")[0].getID());
             var cView =TP.Context().view[target]; 
             cView.getGraphDrawing().rescaleGraph(cGraph, cView.dialog.dialog().width(), cView.dialog.dialog().height());
 
@@ -561,8 +563,7 @@ var TP = TP || {};
             cGraph = TP.Context().view[idView].getGraph();
 
             TP.Context().view[idView].getGraphDrawing().nodeSizeMap(cGraph, 0, {metric: parameter, scaleMin: scaleMin, scaleMax: scaleMax });
-            objectReferences.VisualizationObject.entanglementCaught(idView);
-
+            
         };
 
 
@@ -577,9 +578,6 @@ var TP = TP || {};
 
             TP.Context().view[graphName].getGraphDrawing().nodeColorMap(cGraph, 0, parameter);
 
-            //if(TP.Context().view[graphName].getAssociatedView("catalyst") != null)
-            //objectReferences.VisualizationObject.entanglementCaught(target, TP.Context().view[graphName].getAssociatedView("catalyst")[0].getID());
-            //objectReferences.VisualizationObject.entanglementCaught(graphName);
         };
 
 

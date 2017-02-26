@@ -3,7 +3,7 @@
 '''
  **************************************************************************
  * This class performs most of the graph manipulations.
- * @authors Guy Melancon, Benjamin Renoust
+ * @authors Benjamin Renoust, Guy Melancon
  * @created May 2012
  **************************************************************************
 '''

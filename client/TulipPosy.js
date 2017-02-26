@@ -19,7 +19,7 @@
 
 
 
-var TulipPosy = function (originalJSON) {
+var TulipPosy = function (originalJSON, initialized) {
 
     var objectReferences = TP.ObjectReferences();
     var contxt = TP.Context();
@@ -29,7 +29,7 @@ var TulipPosy = function (originalJSON) {
     var path = $('#files').val().split('\\');
     var name = path[path.length - 1].split('.')[0];
 
-    if (!originalJSON){
+    if (!initialized){
         TP.Context().InterfaceObject.setHeaderMenu();
     }
 
@@ -70,9 +70,7 @@ var TulipPosy = function (originalJSON) {
     // if it is a given file we load it normally
     // other wise we load the default function
     if (originalJSON != null && originalJSON != "") {
-        //console.log('originalJSON not null', originalJSON)
         if ('query' in originalJSON) {
-            //console.log('query is in json', originalJSON)
             var recievedGraph = objectReferences.ClientObject.callSearchQuery(originalJSON)
             TP.ObjectReferences().ClientObject.loadData(recievedGraph, viewGraphSubstrate.getID());
         } else if ('file' in originalJSON) {
@@ -112,16 +110,19 @@ var TulipPosy = function (originalJSON) {
         TP.ObjectReferences().ClientObject.syncLayouts(viewGraphSubstrate.getID())
     }*/
 
-    $('#tile').click(function(){
-        if(TP.Context().currentOrientation == "horizontal")
-        {
-            TP.Context().currentOrientation = "vertical";
-        }else{
-            TP.Context().currentOrientation = "horizontal";            
-        }   
-        TP.Context().InterfaceObject.tileViews();
-    })
-    
+    if(!initialized)
+    {
+        $('#tile').click(function(){
+            if(TP.Context().currentOrientation == "horizontal")
+            {
+                TP.Context().currentOrientation = "vertical";
+            }else{
+                TP.Context().currentOrientation = "horizontal";            
+            }   
+            TP.Context().InterfaceObject.tileViews();
+        })
+    }
+
     $("#saveSVG").click(function(){
         TP.Context().InterfaceObject.throwAnnouncement("Warning","Coming soon...")
     })
