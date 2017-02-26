@@ -272,6 +272,7 @@ var TP = TP || {};
                             returnArray.push({name:"checked", value:"checked", checked:checked, text:cview.descriptors_property})
 
                         }
+                        returnArray.push({name:"onthefly", value:"checked", checked:false, text:"Leapfrog on the fly?"});
 
                         return returnArray;//[{name:"letter",value:"4", text:"delta"},{name:"alpha",value:"5",text:"epsilon"}]
                     }
@@ -555,15 +556,23 @@ var TP = TP || {};
             }}, interactorGroup:"View"},
 
             {interactorLabel:'Synchronized views', interactorParameters: syncviews, callbackBehavior: {call: function (checked) {
-                    var prop = checked["checked"].text;
-                    var val = checked["checked"].val;
-                    var index = __g__.synchronized_views.indexOf(prop);
+                    if (checked["checked"])
+                    {
+                        console.log("changing checked")
+                        var prop = checked["checked"].text;
+                        var val = checked["checked"].val;
+                        var index = __g__.synchronized_views.indexOf(prop);
 
-                    if (!val && index > -1)
-                        __g__.synchronized_views.splice(index, 1);
+                        if (!val && index > -1)
+                            __g__.synchronized_views.splice(index, 1);
 
-                    if (val && index == -1)
-                        __g__.synchronized_views.push(prop);
+                        if (val && index == -1)
+                            __g__.synchronized_views.push(prop);
+                    }
+                    if (checked["onthefly"])
+                    {
+                        TP.Context().leapfrogOnTheFly = checked["onthefly"].val;
+                    }
             }}, interactorGroup:"View"},
  
             

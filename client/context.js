@@ -118,6 +118,7 @@ var TP = TP || {};
         __g__.defaultLinkCurvature = 0.20; 
         __g__.currentOrientation = "vertical";
         __g__.currentEntanglementInner = "intensity";
+        __g__.leapfrogOnTheFly = false;
 
         __g__.sessionSid = 0;
 

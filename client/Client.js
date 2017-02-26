@@ -546,9 +546,12 @@ var TP = TP || {};
                 __g__.sendQuery({
                     parameters: params,
                     async: false,
-                    success: function (data) {
-                        objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName, multiplex_property);
-                    }
+                    success: (function(syncTarget){
+                        return function (data) {
+                            objectReferences.UpdateViewsObject.syncGraphRequestFromData(data, selection, graphName, multiplex_property);
+                            if (syncTarget == "catalyst" && TP.Context().leapfrogOnTheFly)
+                                TP.ObjectReferences().InteractionObject.toggleSelection(graphName);
+                        }})(syncTarget)
                 });
 
             }
