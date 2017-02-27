@@ -261,7 +261,7 @@ var TP = TP || {};
             data.nodes.forEach(function(d){
                 if (d.label in TP.Context().layerData)
                 {
-                    var layer_info = TP.Context().layerData[parseInt(d.label)];
+                    var layer_info = TP.Context().layerData[d.label];
                     for (var attrname in layer_info) { d[attrname] = layer_info[attrname]; }
                 }
             })
