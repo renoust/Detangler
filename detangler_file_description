@@ -176,40 +176,40 @@ the description of this graph will be (available as toy_example.json):
 		"label":"node1",
 		"x":0,
 		"y":0,
-		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)",
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)"
 	},
 	{
 		"id":2,
 		"label":"node2",
 		"x":1,
 		"y":1,
-		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
 	},
 	{
 		"id":3,
 		"label":"node3",
 		"x":2,
 		"y":0,
-		"descriptors":"catalyst(-);catalyst(=)",
+		"descriptors":"catalyst(-);catalyst(=)"
 	}],
 "links":[
 	{
 		"id":1,
 		"source":1,
 		"target":2,
-		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
+		"descriptors":"catalyst(-);catalyst(+);catalyst(~)"
 	},
 	{
 		"id":2,
 		"source":1,
 		"target":3,
-		"descriptors":"catalyst(-);catalyst(=)",
+		"descriptors":"catalyst(-);catalyst(=)"
 	},
 	{
 		"id":3,
 		"source":2,
 		"target":3,
-		"descriptors":"catalyst(-)",
+		"descriptors":"catalyst(-)"
 	}],
 "layers":{
 	"catalyst(-)":
@@ -246,7 +246,7 @@ the description of this graph will be (available as toy_example.json):
 		"x":0,
 		"y":0,
 		"descriptors":"catalyst(-);catalyst(+);catalyst(~);catalyst(=)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	},
 	{
 		"id":2,
@@ -254,7 +254,7 @@ the description of this graph will be (available as toy_example.json):
 		"x":1,
 		"y":1,
 		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	},
 	{
 		"id":3,
@@ -262,7 +262,7 @@ the description of this graph will be (available as toy_example.json):
 		"x":2,
 		"y":0,
 		"descriptors":"catalyst(-);catalyst(=)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	}],
 "links":[
 	{
@@ -270,21 +270,21 @@ the description of this graph will be (available as toy_example.json):
 		"source":1,
 		"target":2,
 		"descriptors":"catalyst(-);catalyst(+);catalyst(~)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	},
 	{
 		"id":2,
 		"source":1,
 		"target":3,
 		"descriptors":"catalyst(-);catalyst(=)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	},
 	{
 		"id":3,
 		"source":2,
 		"target":3,
 		"descriptors":"catalyst(-)",
-		"something_else":"(a);(b);(c);(d)",
+		"something_else":"(a);(b);(c);(d)"
 	}],
 "layers":{
 	"catalyst(-)":
