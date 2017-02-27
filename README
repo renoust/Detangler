@@ -1,8 +1,10 @@
 (10/06/2015)
 Installation on Ubuntu
 
-1- install Tulip from pip: pip install tulip
+1- install Tulip from pip: 
 (apt-get install python-pip if you need pip)
+pip install tulip
+pip install tulip-python
 
 or install the current Tulip from sources
 http://sourceforge.net/projects/auber/files/tulip/
