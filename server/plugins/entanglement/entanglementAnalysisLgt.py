@@ -4,29 +4,11 @@ from random import *
 import os
 import sys
 
-#for specific imports as numpy
-#sys.path.append("/usr/lib/python2.6/dist-packages/PIL")
-#sys.path.append("/usr/lib/python2.6/dist-packages")
-#sys.path.append("C:\Users\melancon\Documents\Dropbox\OTMedia\lighterPython")
-#sys.path.append("/home/brenoust/Dropbox/OTMedia/lighterPython")
-
 import os
-
-dir = "C:\Users\melancon\Documents\Dropbox\OTMedia\lighterPython\entanglement"
-#if not os.path.isdir(dir) :
-#    dir = "/work/svn/renoust/lighterPython"
-
-if not os.path.isdir(dir) :
-    dir = "/home/brenoust/Dropbox/OTMedia/lighterPython/entanglement"
-
-if not os.path.isdir(dir) :
-    print "cannot find the required library folder"
-
 import numpy as np
 
 import entanglementComputationLgt
 reload(entanglementComputationLgt)
-#from entanglementComputationLgt import *
 
 '''
 Computes the coherence metric from a specifically formatted graph and

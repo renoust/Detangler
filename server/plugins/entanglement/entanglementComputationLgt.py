@@ -2,10 +2,6 @@ import datetime
 import math
 import sys
 
-#for specific imports as numpy
-#sys.path.append("/usr/lib/python2.6/dist-packages/PIL")
-#sys.path.append("/usr/lib/python2.6/dist-packages")
-
 import numpy as np
 
 
