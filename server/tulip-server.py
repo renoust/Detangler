@@ -19,24 +19,8 @@ import re
 import mimetypes
 
 print sys.path
-# this should point to your tulip directory
-#libtulip_dir = "/work/tulip-dev/tulip_3_8-build/release/install/lib/python"
-#sys.path.append(libtulip_dir)
-#libtulip_dir = "/work/svn/renoust/workspace/tulip_3_6_maint-build/release/install/lib"
-#sys.path.append(libtulip_dir)
-#libtulip_dir = "/work/github/TulipPosy/tulip-server"
-#sys.path.append(libtulip_dir)
 
 from tulip import *
-
-# custom python scripts for graph and query analysis, might be released soon
-#lgtPython_dir = "/home/brenoust/Dropbox/OTMedia/lighterPython" 
-#sys.path.append(lgtPython_dir)
-#lgtPython_dir = "/home/brenoust/Dropbox/MultiClientDev/tulip-server" 
-#sys.path.append(lgtPython_dir)
-
-#import searchQuery
-
 from graphManager import *
 from session import *
 
@@ -46,8 +30,6 @@ globalSessionMan = TPSession()
 This class handles all the requests given through POST queries
 GET queries are also managed but basically do nothing
 We might in the future use a different webserver such as 'tornado'
-!!!!!! GOT to undersand if one instance of requestHandler is created at each reception?!
-
 '''
 class MyRequestHandler(tornado.web.RequestHandler):
 

@@ -1,25 +1,5 @@
-# Powered by Python 2.7
-
-# To cancel the modifications performed by the script
-# on the current graph, click on the undo button.
-
-# Some useful keyboards shortcuts : 
-#   * Ctrl + D : comment selected lines.
-#   * Ctrl + Shift + D  : uncomment selected lines.
-#   * Ctrl + Space  : run script.
-#   * Ctrl + F  : find selected text.
-#   * Ctrl + R  : replace selected text.
-
 from tulip import *
 
-# the updateVisualization(centerViews = True) function can be called
-# during script execution to update the opened views
-
-# the pauseScript() function can also be called to pause the script execution.
-# To resume the script execution, you will have to click on the "Run script " button.
-
-# the main(graph) function must be defined 
-# to run the script on the current graph
 
 def applyRedraw(graph) : 
     docG = graph
@@ -122,7 +102,7 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
         resGraph.applyLayoutAlgorithm("LinLog Layout (Noack)", dataSet)
 
     
-    if (tlp.getTulipRelease().split(".")[0] == '4'):
+    if (int(tlp.getTulipRelease().split(".")[0]) > 3):
         dataSet = tlp.getDefaultPluginParameters("LinLog", resGraph)
         dataSet["skip nodes"] = skipNodeP
         dataSet["initial layout"] = viewLayout
@@ -165,7 +145,6 @@ def draw(docG, descG, descPName="descripteurs", occPName='weight', catPName = "c
     descOut = [{'baseID':bIDDesc[n],'x':viewLayoutDescG[n][0], 'y':viewLayoutDescG[n][1]} for n in pairDesc]
     return {"substrate":docOut, "catalyst":descOut, "graph":resGraph}
     
-    #resGraph.delNodes(resGraph.getNodes(), True)
     
     
 def main(graph):
